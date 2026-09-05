@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex 高级配置 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/codex/codex-config-advanced.html" />
+<meta name="keywords" content="Codex 高级配置">
+<meta name="description" content="Codex 高级配置 Codex CLI 的高级配置层让我们可以精细控制模型提供商、沙箱权限、Hooks 钩子、遥测数据与终端行为。 如果你是第一次接触 Codex，先阅读 Config basics（配置基础）建立整体认知；本文默认你已了解 ~/.codex/config.toml 的存在与作用。   配置层级全景 Codex 的配置由多层叠加而成，理解这一点是后续所有高级用法的基石。 从底层到顶层依次是：系统层 → 用户层（~/.c..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>Codex 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="ChatGPT (Codex) 教程"  href="/codex/codex-tutorial.html" >
+			ChatGPT (Codex) 教程			</a>
+						<a target="_top" data-p="par" title="CodeX  简介"  href="/codex/codex-intro.html" >
+			CodeX  简介			</a>
+			<a target="_top"   title="Codex 核心概念" href="/codex/codex-concepts.html">Codex 核心概念</a>			<a target="_top" data-p="par" title="Codex 安装与使用"  href="/codex/codex-install.html" >
+			Codex 安装与使用			</a>
+			<a target="_top" title="Codex 桌面应用" href="/codex/codex-app.html">Codex 桌面应用</a>			<a target="_top" data-p="par" title="Codex 基础入门"  href="/codex/codex-usage.html" >
+			Codex 基础入门			</a>
+			<a target="_top" title="Codex  接入 DeepSeek (官方)" href="/codex/codex-deepseek.html">Codex  接入 DeepSeek (官方)</a>
+<a target="_top" title="Codex DeepSeek (CCSwitch)" href="/codex/codex-deepseek-setup.html">Codex DeepSeek (CCSwitch)</a>
+<a target="_top"  title="Codex App 界面说明" href="/codex/codex-app-interface.html">Codex App 界面说明</a>			<a target="_top" data-p="par" title="Codex 配置与定制"  href="/codex/codex-config-file.html" >
+			Codex 配置与定制			</a>
+			<a target="_top" title="Codex 高级配置" href="/codex/codex-config-advanced.html">Codex 高级配置</a>
+<a target="_top" title="Codex App 界面说明" href="/codex/codex-permission-settings.html">Codex 权限设置</a>
+<a target="_top" title="Codex 斜杆 / 命令" href="/codex/slash-commands.html">Codex 斜杆 / 命令</a>
+<a target="_top" title="Codex 电脑操控" href="/codex/codex-computer-use.html">Codex 电脑操控</a>			<a target="_top" data-p="par" title="Codex 进阶使用技巧"  href="/codex/codex-advanced.html" >
+			Codex 进阶使用技巧			</a>
+						<a target="_top" data-p="par" title="Codex 速查表"  href="/codex/codex-commands.html" >
+			Codex 速查表			</a>
+						<a target="_top" data-p="par" title="Codex IDE 扩展"  href="/codex/codex-ide.html" >
+			Codex IDE 扩展			</a>
+						<a target="_top" data-p="par" title="Codex 命令行工具"  href="/codex/codex-cli.html" >
+			Codex 命令行工具			</a>
+						<a target="_top" data-p="par" title="Codex 云端版本"  href="/codex/codex-web.html" >
+			Codex 云端版本			</a>
+						<a target="_top" data-p="par" title="Codex 集成与连接"  href="/codex/codex-integrations.html" >
+			Codex 集成与连接			</a>
+						<a target="_top" data-p="par" title="Codex 自动化与 CI/CD"  href="/codex/codex-automation.html" >
+			Codex 自动化与 CI/CD			</a>
+						<a target="_top" data-p="par" title="Codex 工作流模式"  href="/codex/codex-workflows.html" >
+			Codex 工作流模式			</a>
+						<a target="_top" data-p="par" title="Codex 提示词最佳实践"  href="/codex/codex-prompting.html" >
+			Codex 提示词最佳实践			</a>
+						<a target="_top" data-p="par" title="Codex 安全与企业管理"  href="/codex/codex-security.html" >
+			Codex 安全与企业管理			</a>
+						<a target="_top" data-p="par" title="Codex 模型选择"  href="/codex/codex-models.html" >
+			Codex 模型选择			</a>
+			<a target="_top" title="Codex Agent Skills" href="/codex/codex-agent-skills.html">Codex Agent Skills</a>
+<a target="_top" title="Codex 子代理" href="/codex/codex-subagents.html">Codex 子代理</a>
+<a target="_top" title="Codex MCP" href="/codex/codex-mcp.html">Codex MCP</a>
+<a target="_top" title="Codex 规则与钩子" href="/codex/codex-hooks.html">Codex 规则与钩子</a>
+<a target="_top" title="Codex 非交互模式" href="/codex/codex-noninteractive.html">Codex 非交互模式</a>
+<a target="_top" title="Codex AGENTS.md" href="/codex/codex-agents-md.html">Codex AGENTS.md</a>
+<a target="_top" title="Codex GitHub 集成" href="/codex/codex-github.html">Codex GitHub 集成</a>
+<a target="_top" title="Codex Windows " href="/codex/codex-windows.html">Codex Windows</a>
+<a target="_top" title="Codex Worktrees 使用
+" href="/codex/codex-worktrees.html">Codex Worktrees 使用
+</a>
+
+
+
+
+
+
+<br><h2 class="left">Codex <span class="left_h2">Cli</span> </h2>
+			<a target="_top" data-p="par" title="Codex CLI 配置"  href="/codex/codex-config.html" >
+			Codex CLI 配置			</a>
+						<a target="_top" data-p="par" title="Codex CLI Skills"  href="/codex/codex-cli-skills.html" >
+			Codex CLI Skills			</a>
+						<a target="_top" data-p="par" title="Codex CLI 沙箱与安全"  href="/codex/codex-sandbox.html" >
+			Codex CLI 沙箱与安全			</a>
+						<a target="_top" data-p="par" title="Codex CLI 实用示例"  href="/codex/codex-examples.html" >
+			Codex CLI 实用示例			</a>
+						<a target="_top" data-p="par" title="Codex CLI 提示词技巧"  href="/codex/codex-cli-prompting.html" >
+			Codex CLI 提示词技巧			</a>
+						<a target="_top" data-p="par" title="Codex CLI 模型选择"  href="/codex/codex-cli-models.html" >
+			Codex CLI 模型选择			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/codex/codex-computer-use.html" rel="prev"> Codex Computer Use（电脑操控）</a> </div>
+			<div class="next-design-link"><a href="/codex/codex-deepseek.html" rel="next"> Codex 接入 Deepseek 官方配置</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Codex 高级配置</h1>
+<p><span class="marked">Codex CLI</span> 的高级配置层让我们可以精细控制模型提供商、沙箱权限、Hooks 钩子、遥测数据与终端行为。</p>
+<p>如果你是第一次接触 Codex，先阅读 <a href="/codex/codex-config-file.html" target="_blank"><span class="marked">Config basics</span>（配置基础）</a>建立整体认知；本文默认你已了解 <span class="marked">~/.codex/config.toml</span> 的存在与作用。</p>
+<hr>
+
+<h2>配置层级全景</h2>
+<p>Codex 的配置由多层叠加而成，理解这一点是后续所有高级用法的基石。</p>
+<p>从底层到顶层依次是：系统层 → 用户层（<span class="marked">~/.codex/config.toml</span>） → Profile 层 → 项目层（<span class="marked">.codex/config.toml</span>） → CLI 命令行参数。</p>
+<p>上层会覆盖下层同名配置，离当前工作目录最近的项目配置优先级最高。</p>
+
+<svg viewBox="0 0 800 460"
+     xmlns="http://www.w3.org/2000/svg"
+     style="width:100%;height:auto;">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <linearGradient id="topGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2c3e50"/>
+      <stop offset="100%" stop-color="#e74c3c"/>
+    </linearGradient>
+    <linearGradient id="midGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#16a085"/>
+      <stop offset="100%" stop-color="#2980b9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 标题 -->
+  <text x="400" y="30" text-anchor="middle" fill="#2c3e50" font-size="18" font-family="sans-serif" font-weight="bold">Codex 配置层级（底层 → 顶层，依次覆盖）</text>
+
+  <!-- 第 5 层：CLI -->
+  <rect x="260" y="50" width="280" height="46" rx="6" fill="url(#topGrad)"/>
+  <text x="400" y="71" text-anchor="middle" fill="#fff" font-size="14" font-family="sans-serif" font-weight="bold">① CLI 命令行参数（最高优先级）</text>
+  <text x="400" y="87" text-anchor="middle" fill="#fde2e2" font-size="11" font-family="sans-serif">--model、--config、--profile</text>
+
+  <line x1="400" y1="96" x2="400" y2="118" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 第 4 层：项目级 -->
+  <rect x="240" y="118" width="320" height="46" rx="6" fill="#e67e22"/>
+  <text x="400" y="139" text-anchor="middle" fill="#fff" font-size="14" font-family="sans-serif" font-weight="bold">② 项目级 .codex/config.toml</text>
+  <text x="400" y="155" text-anchor="middle" fill="#fdebd0" font-size="11" font-family="sans-serif">仓库内 .codex/ 目录（需项目被信任）</text>
+
+  <line x1="400" y1="164" x2="400" y2="186" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 第 3 层：Profile -->
+  <rect x="220" y="186" width="360" height="46" rx="6" fill="#9b59b6"/>
+  <text x="400" y="207" text-anchor="middle" fill="#fff" font-size="14" font-family="sans-serif" font-weight="bold">③ Profile 命名配置（--profile）</text>
+  <text x="400" y="223" text-anchor="middle" fill="#ebdef0" font-size="11" font-family="sans-serif">~/.codex/&lt;name&gt;.config.toml</text>
+
+  <line x1="400" y1="232" x2="400" y2="254" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 第 2 层：用户级 -->
+  <rect x="200" y="254" width="400" height="46" rx="6" fill="url(#midGrad)"/>
+  <text x="400" y="275" text-anchor="middle" fill="#fff" font-size="14" font-family="sans-serif" font-weight="bold">④ 用户级 ~/.codex/config.toml</text>
+  <text x="400" y="291" text-anchor="middle" fill="#d6eaf8" font-size="11" font-family="sans-serif">CODEX_HOME 目录下的个人默认配置</text>
+
+  <line x1="400" y1="300" x2="400" y2="322" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 第 1 层：系统级 -->
+  <rect x="240" y="322" width="320" height="46" rx="6" fill="#7f8c8d"/>
+  <text x="400" y="343" text-anchor="middle" fill="#fff" font-size="14" font-family="sans-serif" font-weight="bold">⑤ 系统级 / 团队共享配置</text>
+  <text x="400" y="359" text-anchor="middle" fill="#ecf0f1" font-size="11" font-family="sans-serif">Team Config 共享规则与系统级文件</text>
+
+  <!-- 右侧说明 -->
+  <line x1="610" y1="73" x2="760" y2="73" stroke="#e74c3c" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="685" y="68" text-anchor="middle" fill="#e74c3c" font-size="11" font-family="sans-serif">单次运行覆盖</text>
+
+  <line x1="630" y1="141" x2="760" y2="141" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="695" y="136" text-anchor="middle" fill="#e67e22" font-size="11" font-family="sans-serif">项目级强制</text>
+
+  <line x1="600" y1="209" x2="760" y2="209" stroke="#9b59b6" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="680" y="204" text-anchor="middle" fill="#9b59b6" font-size="11" font-family="sans-serif">场景切换</text>
+
+  <line x1="620" y1="277" x2="760" y2="277" stroke="#2980b9" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="690" y="272" text-anchor="middle" fill="#2980b9" font-size="11" font-family="sans-serif">个人默认</text>
+
+  <line x1="580" y1="345" x2="760" y2="345" stroke="#7f8c8d" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="670" y="340" text-anchor="middle" fill="#7f8c8d" font-size="11" font-family="sans-serif">团队基线</text>
+
+  <!-- 底部说明 -->
+  <rect x="60" y="400" width="680" height="44" rx="6" fill="#fef9e7" stroke="#f1c40f" stroke-width="1"/>
+  <text x="400" y="420" text-anchor="middle" fill="#7d6608" font-size="12" font-family="sans-serif" font-weight="bold">合并规则：同名 key 后面覆盖前面；点号语法可定位嵌套字段</text>
+  <text x="400" y="436" text-anchor="middle" fill="#7d6608" font-size="11" font-family="sans-serif">例：--config mcp_servers.context7.enabled=false 关闭单个 MCP 服务</text>
+</svg>
+
+<blockquote><p>判断当前生效配置最稳妥的方式是 <span class="marked">codex --help</span> 配合日志，或者显式使用 <span class="marked">codex exec "show my current config"</span> 让模型帮你解读。</p></blockquote>
+<hr>
+
+<h2>Profiles 命名配置层</h2>
+<p><span class="marked">Profile</span> 是 Codex 推荐的"场景化切换"方案：把一组配置另存为 TOML 文件，按需通过 <span class="marked">--profile</span> 加载。</p>
+<p>Profile 文件位于 <span class="marked">~/.codex/&lt;name&gt;.config.toml</span>，其中 <span class="marked">&lt;name&gt;</span> 只能包含字母、数字、连字符、下划线。</p>
+
+<h3>创建并使用一个 Profile</h3>
+<p>假设你经常进行深度代码审查，希望使用更强的推理能力：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/deep-review.config.toml</span><br />
+model = <span style="color: #a10;">&quot;gpt-5.5&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 使用推理能力更强的模型</span><br />
+model_reasoning_effort = <span style="color: #a10;">&quot;xhigh&quot;</span> &nbsp; <span style="color: #666666; font-style: italic;"># 推理强度拉到最高</span><br />
+approval_policy = <span style="color: #a10;">&quot;on-request&quot;</span> &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 每次工具调用都提示审批</span><br />
+model_catalog_json = <span style="color: #a10;">&quot;/Users/me/.codex/model-catalogs/deep-review.json&quot;</span> &nbsp;<span style="color: #666666; font-style: italic;"># 可选：自定义模型目录</span><br />
+
+</div>
+</div>
+
+<p>使用 Profile 启动 Codex：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 启动交互式 TUI</span><br />
+codex <span style="color: #660033;">--profile</span> deep-review<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 或在非交互式 exec 模式使用</span><br />
+codex <span style="color: #7a0874; font-weight: bold;">exec</span> <span style="color: #660033;">--profile</span> deep-review <span style="color: #a10;">&quot;review this change&quot;</span><br />
+
+</div>
+</div>
+
+<h3>Profile 的合并语义</h3>
+<p>Profile 文件不是完整配置，它是在用户级 <span class="marked">~/.codex/config.toml</span> 之上的一层增量覆盖。</p>
+<p>这意味着 Profile 里只需要写"和默认配置不同"的字段，其它字段会自动继承用户级设置。</p>
+<p>如果用户级和 Profile 同时设置 <span class="marked">model_catalog_json</span>，<span class="marked">Profile 的值会优先生效</span>。</p>
+
+<blockquote><p>从 Codex 0.134.0 开始，<span class="marked">--profile</span> 不再读取 <span class="marked">config.toml</span> 里的 <span class="marked">[profiles.&lt;name&gt;]</span> 表，也不再支持顶层的 <span class="marked">profile = "name"</span> 选择器。所有历史 Profile 设置必须迁移到独立的 <span class="marked">~/.codex/&lt;name&gt;.config.toml</span> 文件。</p></blockquote>
+
+<h3>从旧配置迁移到 Profile</h3>
+<p>如果你之前的 <span class="marked">config.toml</span> 长这样：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 旧写法（已废弃）</span><br />
+profile = <span style="color: #a10;">&quot;deep-review&quot;</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>profiles.deep-review<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+model = <span style="color: #a10;">&quot;gpt-5.5&quot;</span><br />
+model_reasoning_effort = <span style="color: #a10;">&quot;xhigh&quot;</span><br />
+
+</div>
+</div>
+
+<p>需要拆分为两个文件：</p>
+
+<pre>
+# 文件路径：~/.codex/config.toml（保留非 profile 部分）
+# 注意：删除了 profile = "deep-review" 选择器</pre>
+<pre>
+# 文件路径：~/.codex/deep-review.config.toml
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"</pre>
+
+<p>迁移完成后，原来的 <span class="marked">codex --profile deep-review</span> 命令行用法保持不变。</p>
+<hr>
+
+<h2>命令行一次性覆盖</h2>
+<p>有时你只想临时改一两个字段跑一次任务，不想污染配置文件。这时可以用 CLI 覆盖：</p>
+
+<h3>优先使用专用标志</h3>
+<p>如果官方提供了专用参数（如 <span class="marked">--model</span>），<span class="marked">优先用专用标志</span>，可读性最好：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 用专用标志切换模型</span><br />
+codex <span style="color: #660033;">--model</span> gpt-<span style="color: #000000;">5.4</span><br />
+
+</div>
+</div>
+
+<h3>使用 --config 覆盖任意键</h3>
+<p>对于没有专用标志的字段，用 <span class="marked">-c</span> 或 <span class="marked">--config</span> 覆盖。值是 TOML 格式，不是 JSON。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 字符串值要用双引号嵌套引号</span><br />
+codex <span style="color: #660033;">--config</span> <span style="color: #007800;">model</span>=<span style="color: #a10;">'&quot;gpt-5.4&quot;'</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 布尔值直接写</span><br />
+codex <span style="color: #660033;">--config</span> sandbox_workspace_write.network_access=<span style="color: #c20cb9; font-weight: bold;">true</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 数组使用 TOML 数组语法</span><br />
+codex <span style="color: #660033;">--config</span> <span style="color: #a10;">'shell_environment_policy.include_only=[&quot;PATH&quot;,&quot;HOME&quot;]'</span><br />
+
+</div>
+</div>
+
+<p>几条易踩坑的规则：</p>
+<ul>
+<li>使用点号语法定位嵌套字段，例如 <span class="marked">mcp_servers.context7.enabled=false</span></li>
+<li><span class="marked">--config</span> 的值会被当作 TOML 解析，含空格的字符串务必加引号</li>
+<li>解析失败时，Codex 会把整个值当成字符串处理</li>
+</ul>
+
+<blockquote><p>判断一次覆盖是否生效，最快的办法是在命令后跟一个简单问题："what model are you using?"，让 Codex 主动报告当前配置。</p></blockquote>
+<hr>
+
+<h2>配置文件与状态位置</h2>
+<p>Codex 把所有本地状态都放在 <span class="marked">CODEX_HOME</span> 目录下，默认是 <span class="marked">~/.codex</span>。</p>
+<p>常见文件与含义：</p>
+
+<table class="reference">
+<tr><th>文件</th><th>作用</th><th>是否敏感</th></tr>
+<tr><td><span class="marked">config.toml</span></td><td>本地主配置，所有自定义项都写这里</td><td>否</td></tr>
+<tr><td><span class="marked">auth.json</span></td><td>文件式凭据（若未使用系统钥匙串）</td><td>是，建议 600 权限</td></tr>
+<tr><td><span class="marked">history.jsonl</span></td><td>会话历史（可关闭）</td><td>可能含敏感内容</td></tr>
+<tr><td>logs/、caches/</td><td>运行日志与缓存</td><td>可能含请求体片段</td></tr>
+</table>
+
+<h3>只想换 OpenAI 基础 URL？</h3>
+<p>很多同学用 LLM 代理、路由器或数据驻留项目，只需要修改 <span class="marked">openai</span> 内置提供商的 base URL。</p>
+<p>此时直接设置 <span class="marked">openai_base_url</span>，不要新建 <span class="marked">[model_providers.openai]</span>，因为内置 ID 不可覆盖：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #666666; font-style: italic;"># 把内置 openai 提供商的 base URL 指向代理</span><br />
+openai_base_url = <span style="color: #a10;">&quot;https://us.api.openai.com/v1&quot;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>项目级配置 .codex/config.toml</h2>
+<p>项目级配置放在仓库根的 <span class="marked">.codex/config.toml</span>，用于团队共享默认值。</p>
+<p>Codex 会从工作目录向上逐级查找，<span class="marked">离当前工作目录最近的文件优先级最高</span>。</p>
+
+<h3>项目级配置的边界</h3>
+<p>出于安全考虑，<span class="marked">只有项目被标记为"已信任"</span>时才会加载项目级 .codex/ 层（包括 config.toml、本地 hooks、本地 rules）。</p>
+<p>未受信任的项目中，下表里的敏感键会被忽略并打印启动警告：</p>
+
+<table class="reference">
+<tr><th>被忽略的键</th><th>原因</th></tr>
+<tr><td><span class="marked">openai_base_url</span>、<span class="marked">chatgpt_base_url</span></td><td>防止重定向凭据 / 改变 host 元数据</td></tr>
+<tr><td><span class="marked">apps_mcp_product_sku</span></td><td>影响 Codex Apps 产品识别</td></tr>
+<tr><td><span class="marked">model_provider</span>、<span class="marked">model_providers</span></td><td>防止替换凭据 / 提供商身份</td></tr>
+<tr><td><span class="marked">notify</span></td><td>防止执行任意机器本地命令</td></tr>
+<tr><td><span class="marked">profile</span>、<span class="marked">profiles</span></td><td>项目级不能选择 config profile</td></tr>
+<tr><td><span class="marked">experimental_realtime_ws_base_url</span>、<span class="marked">otel</span></td><td>遥测与实时通道</td></tr>
+</table>
+
+<p>这些键必须放在用户级 <span class="marked">~/.codex/config.toml</span> 中。</p>
+<p>相对路径（如 <span class="marked">model_instructions_file</span>）相对于其 <span class="marked">.codex/</span> 所在目录解析。</p>
+
+<blockquote><p>如果项目未受信任而你设置了 <span class="marked">model_provider = "proxy"</span>，启动时 Codex 会打印警告并使用默认 provider；这是安全设计，不是 bug。</p></blockquote>
+<hr>
+
+<h2>Hooks 生命周期钩子</h2>
+<p>Hooks 让你在工具调用、回合开始等关键节点插入自定义脚本，适合做审计、敏感词过滤、commit 检查等。</p>
+<p>Hooks 配置支持两种形式，且事件结构完全相同：</p>
+
+<table class="reference">
+<tr><th>形式</th><th>位置</th><th>适合场景</th></tr>
+<tr><td><span class="marked">hooks.json</span> 文件</td><td>与 config.toml 同目录</td><td>JSON 工具链友好，便于复用</td></tr>
+<tr><td>内联 <span class="marked">[[hooks.*]]</span> 表</td><td>config.toml 内</td><td>所有配置集中管理</td></tr>
+</table>
+
+<p>四个最常用的加载位置：</p>
+<ul>
+<li><span class="marked">~/.codex/hooks.json</span></li>
+<li><span class="marked">~/.codex/config.toml</span></li>
+<li><span class="marked">&lt;repo&gt;/.codex/hooks.json</span></li>
+<li><span class="marked">&lt;repo&gt;/.codex/config.toml</span></li>
+</ul>
+
+<p>项目级 hooks 仅在项目受信任时加载，用户级 hooks 始终独立加载。</p>
+
+<h3>内联 TOML Hook 示例</h3>
+<p>下面是一个在 Bash 工具调用前执行的预检钩子：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #666666; font-style: italic;"># 匹配所有 Bash 工具调用</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #7a0874; font-weight: bold;">&#91;</span>hooks.PreToolUse<span style="color: #7a0874; font-weight: bold;">&#93;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+matcher = <span style="color: #a10;">&quot;^Bash$&quot;</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #7a0874; font-weight: bold;">&#91;</span>hooks.PreToolUse.hooks<span style="color: #7a0874; font-weight: bold;">&#93;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+<span style="color: #7a0874; font-weight: bold;">type</span> = <span style="color: #a10;">&quot;command&quot;</span><br />
+<span style="color: #666666; font-style: italic;"># 调用仓库内的预检脚本（路径相对于 .codex/ 所在目录）</span><br />
+<span style="color: #7a0874; font-weight: bold;">command</span> = <span style="color: #a10;">'/usr/bin/python3 &quot;$(git rev-parse --show-toplevel)/.codex/hooks/pre_tool_use_policy.py&quot;'</span><br />
+timeout = <span style="color: #000000;">30</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 超时秒数，超时后视为拒绝</span><br />
+statusMessage = <span style="color: #a10;">&quot;Checking Bash command&quot;</span> &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 状态栏提示</span><br />
+
+</div>
+</div>
+
+<p>如果同一层既存在 <span class="marked">hooks.json</span> 又存在内联 <span class="marked">[hooks]</span> 表，Codex 会同时加载两者并打印警告。<span class="marked">建议每层只选一种形式</span>，避免维护成本翻倍。</p>
+<hr>
+
+<h2>自定义模型提供商</h2>
+<p>当你需要让 Codex 接入 LLM 代理、Ollama、Mistral、Azure 等非 OpenAI 官方端点时，<span class="marked">model_providers</span> 是入口。</p>
+<p>内置 provider ID（<span class="marked">openai</span>、<span class="marked">ollama</span>、<span class="marked">lmstudio</span>）<span class="marked">不能复用</span>，否则会冲突。</p>
+
+<h3>基本定义</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+model = <span style="color: #a10;">&quot;gpt-5.4&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 模型名由所选 provider 决定</span><br />
+model_provider = <span style="color: #a10;">&quot;proxy&quot;</span> &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 指向下面的 [model_providers.proxy]</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.proxy<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;OpenAI using LLM proxy&quot;</span> &nbsp;<span style="color: #666666; font-style: italic;"># 显示名</span><br />
+base_url = <span style="color: #a10;">&quot;http://proxy.example.com&quot;</span><br />
+env_key = <span style="color: #a10;">&quot;OPENAI_API_KEY&quot;</span> &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 从环境变量读取密钥</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.local_ollama<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;Ollama&quot;</span><br />
+base_url = <span style="color: #a10;">&quot;http://localhost:11434/v1&quot;</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.mistral<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;Mistral&quot;</span><br />
+base_url = <span style="color: #a10;">&quot;https://api.mistral.ai/v1&quot;</span><br />
+env_key = <span style="color: #a10;">&quot;MISTRAL_API_KEY&quot;</span><br />
+
+</div>
+</div>
+
+<h3>添加 HTTP 头</h3>
+<p>有些代理需要额外的 header（如租户标识、特性开关）：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.example<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+<span style="color: #666666; font-style: italic;"># 静态 header：每次请求都带上</span><br />
+http_headers = <span style="color: #7a0874; font-weight: bold;">&#123;</span> <span style="color: #a10;">&quot;X-Example-Header&quot;</span> = <span style="color: #a10;">&quot;example-value&quot;</span> <span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+<span style="color: #666666; font-style: italic;"># 动态 header：值从环境变量读取</span><br />
+env_http_headers = <span style="color: #7a0874; font-weight: bold;">&#123;</span> <span style="color: #a10;">&quot;X-Example-Features&quot;</span> = <span style="color: #a10;">&quot;EXAMPLE_FEATURES&quot;</span> <span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>命令式认证（Command-backed Auth）</h3>
+<p>当提供商的 bearer token 需要从外部凭据助手动态拉取时，使用 <span class="marked">[model_providers.&lt;id&gt;.auth]</span>：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.proxy<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;OpenAI using LLM proxy&quot;</span><br />
+base_url = <span style="color: #a10;">&quot;https://proxy.example.com/v1&quot;</span><br />
+wire_api = <span style="color: #a10;">&quot;responses&quot;</span> &nbsp; <span style="color: #666666; font-style: italic;"># 走 Responses API 协议</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.proxy.auth<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+<span style="color: #7a0874; font-weight: bold;">command</span> = <span style="color: #a10;">&quot;/usr/local/bin/fetch-codex-token&quot;</span><br />
+args = <span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #a10;">&quot;--audience&quot;</span>, <span style="color: #a10;">&quot;codex&quot;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+timeout_ms = <span style="color: #000000;">5000</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 单次拉取超时</span><br />
+refresh_interval_ms = <span style="color: #000000;">300000</span> <span style="color: #666666; font-style: italic;"># 主动刷新周期（5 分钟）</span><br />
+
+</div>
+</div>
+
+<p>auth 命令的运行约束：</p>
+<ul>
+<li>不接收 <span class="marked">stdin</span>，必须把 token 输出到 <span class="marked">stdout</span></li>
+<li>Codex 会自动 trim 前后空白，空 token 视为错误</li>
+<li>设置 <span class="marked">refresh_interval_ms = 0</span> 表示仅在认证失败后刷新</li>
+<li><span class="marked">不能与 env_key、experimental_bearer_token、requires_openai_auth 同时使用</span></li>
+</ul>
+
+<h3>Amazon Bedrock 内置提供商</h3>
+<p>Codex 自带 <span class="marked">amazon-bedrock</span> 内置 provider，可以直接通过 <span class="marked">model_provider</span> 引用：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+model_provider = <span style="color: #a10;">&quot;amazon-bedrock&quot;</span><br />
+model = <span style="color: #a10;">&quot;&lt;bedrock-model-id&gt;&quot;</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.amazon-bedrock.aws<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+profile = <span style="color: #a10;">&quot;default&quot;</span> &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># AWS profile；不填则走标准凭据链</span><br />
+region = <span style="color: #a10;">&quot;eu-central-1&quot;</span> &nbsp;<span style="color: #666666; font-style: italic;"># Bedrock 区域</span><br />
+
+</div>
+</div>
+
+<blockquote><p>Bedrock 内置 provider 只支持嵌套 <span class="marked">.aws</span> 下的 profile 与 region 覆盖；其它自定义项请走标准 <span class="marked">model_providers.&lt;id&gt;</span> 流程。</p></blockquote>
+<hr>
+
+<h2>OSS 本地模式</h2>
+<p>Codex 支持连接本地"开源"模型（如 Ollama、LM Studio），通过 <span class="marked">--oss</span> 启动。</p>
+<p>如果只传 <span class="marked">--oss</span> 不指定 provider，Codex 会读 <span class="marked">oss_provider</span> 选择默认：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #666666; font-style: italic;"># 默认本地 provider，可选 ollama 或 lmstudio</span><br />
+oss_provider = <span style="color: #a10;">&quot;ollama&quot;</span><br />
+
+</div>
+</div>
+
+<p>使用示例：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 使用默认 oss_provider（ollama）</span><br />
+codex <span style="color: #660033;">--oss</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 显式指定本会话使用 lmstudio</span><br />
+codex <span style="color: #660033;">--oss</span> <span style="color: #660033;">--oss-provider</span> lmstudio<br />
+
+</div>
+</div>
+<hr>
+
+<h2>Azure 提供商与微调</h2>
+<p>Azure OpenAI 接入示例，演示请求级参数与重试策略：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.azure<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;Azure&quot;</span><br />
+base_url = <span style="color: #a10;">&quot;https://YOUR_PROJECT_NAME.openai.azure.com/openai&quot;</span><br />
+env_key = <span style="color: #a10;">&quot;AZURE_OPENAI_API_KEY&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 从环境变量读取 key</span><br />
+query_params = <span style="color: #7a0874; font-weight: bold;">&#123;</span> api-version = <span style="color: #a10;">&quot;2025-04-01-preview&quot;</span> <span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+wire_api = <span style="color: #a10;">&quot;responses&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 走 Responses API 协议</span><br />
+request_max_retries = <span style="color: #000000;">4</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 普通请求重试次数</span><br />
+stream_max_retries = <span style="color: #000000;">10</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 流式请求重试次数</span><br />
+stream_idle_timeout_ms = <span style="color: #000000;">300000</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 流式空闲超时（5 分钟）</span><br />
+
+</div>
+</div>
+
+<p>需要修改内置 <span class="marked">openai</span> provider 的 base URL 时，使用 <span class="marked">openai_base_url</span>，不要新建 <span class="marked">[model_providers.openai]</span>。</p>
+<hr>
+
+<h2>ChatGPT 数据驻留项目</h2>
+<p>启用了"数据驻留"（Data Residency）的 ChatGPT 项目需要使用带区域前缀的 base URL：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+model_provider = <span style="color: #a10;">&quot;openaidr&quot;</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>model_providers.openaidr<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;OpenAI Data Residency&quot;</span><br />
+<span style="color: #666666; font-style: italic;"># 将 &quot;us&quot; 替换为数据驻留文档要求的前缀（如 eu、jp 等）</span><br />
+base_url = <span style="color: #a10;">&quot;https://us.api.openai.com/v1&quot;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>不是所有模型都支持数据驻留；选择前请查阅 OpenAI 数据驻留文档中的"eligible models"清单。</p></blockquote>
+<hr>
+
+<h2>模型推理、详细度与上下文</h2>
+<p>控制模型行为的最常用四件套：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+model_reasoning_summary = <span style="color: #a10;">&quot;none&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 关闭推理摘要</span><br />
+model_verbosity = <span style="color: #a10;">&quot;low&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 缩短回答长度</span><br />
+model_supports_reasoning_summaries = <span style="color: #c20cb9; font-weight: bold;">true</span> <span style="color: #666666; font-style: italic;"># 强制要求模型输出推理</span><br />
+model_context_window = <span style="color: #000000;">128000</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 覆盖上下文窗口大小</span><br />
+
+</div>
+</div>
+
+<p>其中 <span class="marked">model_verbosity</span> 仅在使用 Responses API 的 provider 上生效，Chat Completions provider 会忽略该设置。</p>
+<hr>
+
+<h2>审批策略与沙箱模式</h2>
+<p><span class="marked">approval_policy</span> 控制 Codex 何时停下来请求人工确认，<span class="marked">sandbox_mode</span> 控制它能访问哪些文件与网络。</p>
+<p>两个维度独立组合，下面是一组典型配置：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+approval_policy = <span style="color: #a10;">&quot;untrusted&quot;</span> &nbsp; <span style="color: #666666; font-style: italic;"># 其它选项：on-request、never，或 { granular = { ... } }</span><br />
+approvals_reviewer = <span style="color: #a10;">&quot;user&quot;</span> &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># &quot;auto_review&quot; 走自动审阅</span><br />
+sandbox_mode = <span style="color: #a10;">&quot;workspace-write&quot;</span><br />
+allow_login_shell = <span style="color: #c20cb9; font-weight: bold;">false</span> &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 关闭 login shell（加固项）</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 细粒度审批策略示例（按 prompt 类别区分）</span><br />
+<span style="color: #666666; font-style: italic;"># approval_policy = { granular = {</span><br />
+<span style="color: #666666; font-style: italic;"># &nbsp; sandbox_approval = true,</span><br />
+<span style="color: #666666; font-style: italic;"># &nbsp; rules = true,</span><br />
+<span style="color: #666666; font-style: italic;"># &nbsp; mcp_elicitations = true,</span><br />
+<span style="color: #666666; font-style: italic;"># &nbsp; request_permissions = false, &nbsp; # 请求权限类直接 fail-closed</span><br />
+<span style="color: #666666; font-style: italic;"># &nbsp; skill_approval = false &nbsp; &nbsp; &nbsp; &nbsp; # skill 脚本类直接 fail-closed</span><br />
+<span style="color: #666666; font-style: italic;"># } }</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>sandbox_workspace_write<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+exclude_tmpdir_env_var = <span style="color: #c20cb9; font-weight: bold;">false</span> &nbsp;<span style="color: #666666; font-style: italic;"># 允许 $TMPDIR 写入</span><br />
+exclude_slash_tmp = <span style="color: #c20cb9; font-weight: bold;">false</span> &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 允许 /tmp 写入</span><br />
+writable_roots = <span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #a10;">&quot;/Users/YOU/.pyenv/shims&quot;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span> &nbsp; <span style="color: #666666; font-style: italic;"># 额外可写目录</span><br />
+network_access = <span style="color: #c20cb9; font-weight: bold;">false</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 默认禁止外网</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>auto_review<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+policy = <span style="color: #a10;">&quot;&quot;</span><span style="color: #a10;">&quot;<br />
+Use your organization's automatic review policy.<br />
+&quot;</span><span style="color: #a10;">&quot;&quot;</span><br />
+
+]</div>
+</div>
+
+<h3>常见组合速查</h3>
+<table class="reference">
+<tr><th>场景</th><th>approval_policy</th><th>sandbox_mode</th><th>说明</th></tr>
+<tr><td>本地日常开发</td><td>on-request</td><td>workspace-write</td><td>每次工具调用前提示，最安全</td></tr>
+<tr><td>CI 自动化</td><td>never</td><td>workspace-write</td><td>无人工干预，需在沙箱中测试</td></tr>
+<tr><td>完全信任的环境</td><td>never</td><td>danger-full-access</td><td>关闭沙箱；仅在隔离环境使用</td></tr>
+<tr><td>审计严格场景</td><td>untrusted</td><td>workspace-write</td><td>所有写操作都需要二次确认</td></tr>
+</table>
+
+<h3>关闭沙箱（慎用）</h3>
+<p>当你的环境本身已经做了进程级隔离时，可以关闭 Codex 沙箱：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+sandbox_mode = <span style="color: #a10;">&quot;danger-full-access&quot;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>在 <span class="marked">workspace-write</span> 模式下，部分环境会把 <span class="marked">.git/</span> 与 <span class="marked">.codex/</span> 保持只读。这意味着 <span class="marked">git commit</span> 等命令在沙箱外执行时仍需审批。如需在沙箱内直接提交，请通过 <span class="marked">rules</span> 显式放行。</p></blockquote>
+<hr>
+
+<h2>Shell 环境变量策略</h2>
+<p><span class="marked">shell_environment_policy</span> 控制 Codex 启动子进程时透传哪些环境变量。<span class="marked">默认目标</span>是"少泄露密钥 + 保留任务所需路径"。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>shell_environment_policy<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+inherit = <span style="color: #a10;">&quot;none&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 干净起步（推荐）</span><br />
+<span style="color: #000000; font-weight: bold;">set</span> = <span style="color: #7a0874; font-weight: bold;">&#123;</span> PATH = <span style="color: #a10;">&quot;/usr/bin&quot;</span>, MY_FLAG = <span style="color: #a10;">&quot;1&quot;</span> <span style="color: #7a0874; font-weight: bold;">&#125;</span> <span style="color: #666666; font-style: italic;"># 显式设置变量</span><br />
+ignore_default_excludes = <span style="color: #c20cb9; font-weight: bold;">false</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 保留默认 KEY/SECRET/TOKEN 过滤</span><br />
+exclude = <span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #a10;">&quot;AWS_*&quot;</span>, <span style="color: #a10;">&quot;AZURE_*&quot;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># 再额外排除匹配 globs 的变量</span><br />
+include_only = <span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #a10;">&quot;PATH&quot;</span>, <span style="color: #a10;">&quot;HOME&quot;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 只透传白名单（覆盖 exclude）</span><br />
+
+</div>
+</div>
+
+<p>模式语法：大小写不敏感的 glob，<span class="marked">*</span> 匹配任意字符，<span class="marked">?</span> 匹配单字符，<span class="marked">[A-Z]</span> 是字符类。</p>
+<p><span class="marked">ignore_default_excludes = false</span> 会保留 Codex 内置的 KEY/SECRET/TOKEN 过滤器，在 include/exclude 之前生效。</p>
+<hr>
+
+<h2>MCP 服务器</h2>
+<p>MCP（Model Context Protocol）服务器让 Codex 接入外部工具集。</p>
+<p>完整的 MCP 配置说明见官方 <span class="marked">MCP 文档</span>，不在本文展开。常见模式：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>mcp_servers.context7<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+<span style="color: #7a0874; font-weight: bold;">command</span> = <span style="color: #a10;">&quot;npx&quot;</span><br />
+args = <span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #a10;">&quot;-y&quot;</span>, <span style="color: #a10;">&quot;@upstash/context7-mcp&quot;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+enabled = <span style="color: #c20cb9; font-weight: bold;">true</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 用 --config 临时关闭某个 MCP 服务</span><br />
+<span style="color: #666666; font-style: italic;"># codex --config mcp_servers.context7.enabled=false</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>可观测性与遥测（OTel）</h2>
+<p>Codex 支持通过 OpenTelemetry 导出运行日志，默认关闭。开启方式：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>otel<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+environment = <span style="color: #a10;">&quot;staging&quot;</span> &nbsp; <span style="color: #666666; font-style: italic;"># 默认 dev</span><br />
+exporter = <span style="color: #a10;">&quot;none&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 可选：otlp-http 或 otlp-grpc</span><br />
+log_user_prompt = <span style="color: #c20cb9; font-weight: bold;">false</span> &nbsp; <span style="color: #666666; font-style: italic;"># 不导出用户 prompt 内容（推荐）</span><br />
+
+</div>
+</div>
+
+<h3>选择 HTTP 导出器</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>otel<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+exporter = <span style="color: #7a0874; font-weight: bold;">&#123;</span> otlp-http = <span style="color: #7a0874; font-weight: bold;">&#123;</span><br />
+&nbsp; endpoint = <span style="color: #a10;">&quot;https://otel.example.com/v1/logs&quot;</span>,<br />
+&nbsp; protocol = <span style="color: #a10;">&quot;binary&quot;</span>,<br />
+&nbsp; headers = <span style="color: #7a0874; font-weight: bold;">&#123;</span> <span style="color: #a10;">&quot;x-otlp-api-key&quot;</span> = <span style="color: #a10;">&quot;<span style="color: #007800;">${OTLP_TOKEN}</span>&quot;</span> <span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#125;</span><span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>选择 gRPC 导出器</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>otel<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+exporter = <span style="color: #7a0874; font-weight: bold;">&#123;</span> otlp-grpc = <span style="color: #7a0874; font-weight: bold;">&#123;</span><br />
+&nbsp; endpoint = <span style="color: #a10;">&quot;https://otel.example.com:4317&quot;</span>,<br />
+&nbsp; headers = <span style="color: #7a0874; font-weight: bold;">&#123;</span> <span style="color: #a10;">&quot;x-otlp-meta&quot;</span> = <span style="color: #a10;">&quot;abc123&quot;</span> <span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#125;</span><span style="color: #7a0874; font-weight: bold;">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>导出事件类型</h3>
+<p>Codex 会发出结构化事件，包括但不限于：</p>
+
+<table class="reference">
+<tr><th>事件</th><th>含义</th></tr>
+<tr><td><span class="marked">codex.conversation_starts</span></td><td>模型、推理设置、沙箱/审批策略</td></tr>
+<tr><td><span class="marked">codex.api_request</span></td><td>API 请求尝试、状态、耗时、错误</td></tr>
+<tr><td><span class="marked">codex.sse_event</span></td><td>SSE 流事件、token 计数（在 response.completed 时）</td></tr>
+<tr><td><span class="marked">codex.websocket_request</span>、<span class="marked">codex.websocket_event</span></td><td>WebSocket 请求与消息</td></tr>
+<tr><td><span class="marked">codex.user_prompt</span></td><td>用户 prompt 长度；内容默认 redact</td></tr>
+<tr><td><span class="marked">codex.tool_decision</span></td><td>工具调用决策：批准/拒绝，来源是配置还是用户</td></tr>
+<tr><td><span class="marked">codex.tool_result</span></td><td>工具执行耗时、是否成功、输出片段</td></tr>
+</table>
+
+<p>当 <span class="marked">exporter = "none"</span> 时，Codex 仍会在内存中记录事件但不发送。<span class="marked">关闭时仍会按事件触发异步批量</span>，进程退出时 flush。</p>
+
+<h3>匿名指标（默认开启）</h3>
+<p>Codex 默认会周期性上报少量匿名使用与健康数据，用于检测异常。<span class="marked">不包含 PII</span>。</p>
+<p>如需彻底关闭：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>analytics<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+enabled = <span style="color: #c20cb9; font-weight: bold;">false</span><br />
+
+</div>
+</div>
+
+<h3>隐藏与显示推理事件</h3>
+<p>在 CI 日志里，推理输出常常"吵闹"，可以全局关闭：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+hide_agent_reasoning = <span style="color: #c20cb9; font-weight: bold;">true</span><br />
+
+</div>
+</div>
+
+<p>反之，需要查看模型原始推理内容时：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+show_raw_agent_reasoning = <span style="color: #c20cb9; font-weight: bold;">true</span><br />
+
+</div>
+</div>
+
+<blockquote><p>仅在确认你的工作流允许暴露原始推理时再开启。部分模型（如 <span class="marked">gpt-oss</span>）本身不输出原始推理，此时该设置无效。</p></blockquote>
+<hr>
+
+<h2>外部通知（notify）</h2>
+<p>当 Codex 完成一个回合时，可触发外部脚本，实现桌面通知、聊天 webhook、CI 状态更新等。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+notify = <span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #a10;">&quot;python3&quot;</span>, <span style="color: #a10;">&quot;/path/to/notify.py&quot;</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+
+</div>
+</div>
+
+<p>脚本接收一个 JSON 参数，常见字段：</p>
+
+<table class="reference">
+<tr><th>字段</th><th>含义</th></tr>
+<tr><td><span class="marked">type</span></td><td>目前仅 <span class="marked">agent-turn-complete</span></td></tr>
+<tr><td><span class="marked">thread-id</span></td><td>会话 ID</td></tr>
+<tr><td><span class="marked">turn-id</span></td><td>回合 ID</td></tr>
+<tr><td><span class="marked">cwd</span></td><td>工作目录</td></tr>
+<tr><td><span class="marked">input-messages</span></td><td>用户消息列表</td></tr>
+<tr><td><span class="marked">last-assistant-message</span></td><td>最后一条 assistant 消息</td></tr>
+</table>
+
+<p>一个调用 terminal-notifier 的简单脚本示例：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：/path/to/notify.py</span><br />
+<span style="color: #a50">#!/usr/bin/env python3</span><br />
+<span style="color: Green;font-weight:bold;">import</span> json<span style="color: Gray;">,</span> <span style="color: #05a;">subprocess</span><span style="color: Gray;">,</span> <span style="color: #05a;">sys</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> main<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">int</span>:<br />
+&nbsp; &nbsp; notification <span style="color: Gray;">=</span> json.<span style="color: #05a;">loads</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">sys</span>.<span style="color: #05a;">argv</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 只处理回合完成事件</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> notification.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;type&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">!=</span> <span style="color: #a11;">&quot;agent-turn-complete&quot;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0</span><br />
+&nbsp; &nbsp; title <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;Codex: {notification.get('last-assistant-message', 'Turn Complete!')}&quot;</span><br />
+&nbsp; &nbsp; message <span style="color: Gray;">=</span> <span style="color: #a11;">&quot; &quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>notification.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;input-messages&quot;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #05a;">subprocess</span>.<span style="color: #05a;">check_output</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;terminal-notifier&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;-title&quot;</span><span style="color: Gray;">,</span> title<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;-message&quot;</span><span style="color: Gray;">,</span> message<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;-group&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;codex-&quot;</span> + notification.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;thread-id&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;-activate&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;com.googlecode.iterm2&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #05a;">sys</span>.<span style="color: #05a;">exit</span><span style="color: Olive;">&#40;</span>main<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>notify 与 tui.notifications 的区别</h3>
+<table class="reference">
+<tr><th>机制</th><th>适合场景</th><th>关键配置</th></tr>
+<tr><td><span class="marked">notify</span></td><td>webhook、桌面通知、CI 钩子</td><td>外部程序</td></tr>
+<tr><td><span class="marked">tui.notifications</span></td><td>TUI 内置通知</td><td>支持按事件类型过滤</td></tr>
+<tr><td><span class="marked">tui.notification_method</span></td><td>终端通知方式</td><td>auto / osc9 / bel</td></tr>
+<tr><td><span class="marked">tui.notification_condition</span></td><td>触发条件</td><td>unfocused / always</td></tr>
+</table>
+
+<p><span class="marked">auto</span> 模式下 Codex 优先使用 OSC 9 终端转义序列，部分终端会把它当作桌面通知；不支持时回退到 BEL（<span class="marked">\x07</span>）。</p>
+<hr>
+
+<h2>反馈与历史记录</h2>
+
+<h3>关闭反馈收集</h3>
+<p>默认 Codex 在 TUI 中提供 <span class="marked">/feedback</span> 命令。如需关闭：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>feedback<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+enabled = <span style="color: #c20cb9; font-weight: bold;">false</span><br />
+
+</div>
+</div>
+
+<p>关闭后 <span class="marked">/feedback</span> 会显示已禁用消息，且 Codex 拒绝提交反馈。</p>
+
+<h3>历史记录（history.jsonl）</h3>
+<p>Codex 默认把本地会话 transcript 写到 <span class="marked">~/.codex/history.jsonl</span>。关闭方式：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #7a0874; font-weight: bold;">history</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+persistence = <span style="color: #a10;">&quot;none&quot;</span><br />
+
+</div>
+</div>
+
+<p>限制文件大小（超过时丢弃最旧条目并压缩）：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span><span style="color: #7a0874; font-weight: bold;">history</span><span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+max_bytes = <span style="color: #000000;">104857600</span> &nbsp;<span style="color: #666666; font-style: italic;"># 100 MiB</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>可点击引用（Clickable Citations）</h2>
+<p>当终端或编辑器支持时，Codex 可以把文件引用渲染为可点击链接。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 文件路径：~/.codex/config.toml</span><br />
+<span style="color: #666666; font-style: italic;"># 可选：vscode、cursor、windsurf、vscode-insiders、none</span><br />
+file_opener = <span style="color: #a10;">&quot;vscode&quot;</span><br />
+
+</div>
+</div>
+
+<p>设置后，引用 <span class="marked">/home/runoob/project/main.py:42</span> 会被改写为 <span class="marked">vscode://file/.../main.py:42</span>，在 VS Code 中点击即可跳转。</p>
+<hr>
+
+<h2>项目指令发现（AGENTS.md）</h2>
+<p>Codex 会读取 <span class="marked">AGENTS.md</span>（及相关文件），把项目规范自动带入会话的"第一回合"。</p>
+<p>两个核心旋钮：</p>
+
+<table class="reference">
+<tr><th>配置键</th><th>作用</th><th>典型值</th></tr>
+<tr><td><span class="marked">project_doc_max_bytes</span></td><td>每个 AGENTS.md 最多读取多少字节</td><td>默认约 32 KiB</td></tr>
+<tr><td><span class="marked">project_doc_fallback_filenames</span></td><td>AGENTS.md 缺失时的备用文件名</td><td>如 <span class="marked">CLAUDE.md</span></td></tr>
+</table>
+<hr>
+
+<h2>终端界面（TUI）选项</h2>
+<p>运行 <span class="marked">codex</span> 不带子命令会进入交互式 TUI。<span class="marked">[tui]</span> 表下的常见键：</p>
+
+<table class="reference">
+<tr><th>键</th><th>作用</th><th>可选值</th></tr>
+<tr><td><span class="marked">tui.notifications</span></td><td>启用/禁用 TUI 通知，可按事件类型过滤</td><td>布尔 / 事件类型数组</td></tr>
+<tr><td><span class="marked">tui.notification_method</span></td><td>终端通知方式</td><td>auto、osc9、bel</td></tr>
+<tr><td><span class="marked">tui.notification_condition</span></td><td>触发条件</td><td>unfocused、always</td></tr>
+<tr><td><span class="marked">tui.animations</span></td><td>ASCII 动画与 shimmer 效果</td><td>true / false</td></tr>
+<tr><td><span class="marked">tui.alternate_screen</span></td><td>是否使用备用屏幕（设为 never 保留滚动历史）</td><td>auto、always、never</td></tr>
+<tr><td><span class="marked">tui.show_tooltips</span></td><td>欢迎页是否显示新手提示</td><td>true / false</td></tr>
+</table>
+<hr>
+
+<h2>常用配置速查表</h2>
+<p>把这一节当作"忘了就翻"的速查清单：</p>
+
+<table class="reference">
+<tr><th>需求</th><th>配置位置 / 命令</th></tr>
+<tr><td>切换模型</td><td><span class="marked">--model gpt-5.4</span> 或 <span class="marked">model = "..."</span></td></tr>
+<tr><td>场景化配置</td><td><span class="marked">--profile &lt;name&gt;</span> + <span class="marked">~/.codex/&lt;name&gt;.config.toml</span></td></tr>
+<tr><td>临时改任意字段</td><td><span class="marked">--config key=value</span>（TOML 语法）</td></tr>
+<tr><td>改 OpenAI 端点</td><td><span class="marked">openai_base_url</span></td></tr>
+<tr><td>接代理/自建厂商</td><td><span class="marked">[model_providers.&lt;id&gt;]</span> + <span class="marked">model_provider</span></td></tr>
+<tr><td>本机 Ollama</td><td><span class="marked">--oss</span> + <span class="marked">oss_provider</span></td></tr>
+<tr><td>关闭沙箱（慎用）</td><td><span class="marked">sandbox_mode = "danger-full-access"</span></td></tr>
+<tr><td>关闭匿名指标</td><td><span class="marked">[analytics] enabled = false</span></td></tr>
+<tr><td>关闭历史记录</td><td><span class="marked">[history] persistence = "none"</span></td></tr>
+<tr><td>关闭反馈</td><td><span class="marked">[feedback] enabled = false</span></td></tr>
+<tr><td>桌面通知</td><td><span class="marked">notify = ["python3", "/path/to/notify.py"]</span></td></tr>
+</table>
+<hr>
+
+<h2>常见问题</h2>
+
+<h3>项目级配置里设置的 model_provider 没生效？</h3>
+<p>出于安全考虑，<span class="marked">model_provider</span>、<span class="marked">model_providers</span>、<span class="marked">profile</span>、<span class="marked">notify</span> 等敏感键<span class="marked">在项目级 .codex/config.toml 中会被忽略</span>，且启动时会打印警告。</p>
+<p>把这些键移到用户级 <span class="marked">~/.codex/config.toml</span> 中即可。</p>
+
+<h3>--config 写完没变化？</h3>
+<p>检查三点：值是否符合 TOML 语法（数组用 <span class="marked">[]</span>，字符串用 <span class="marked">""</span>，嵌套用点号）；shell 是否把空格当分隔符拆开了多个值；键名是否拼写正确。打开 <span class="marked">~/.codex/logs/</span> 下的最新日志能看到解析失败的原始字符串。</p>
+
+<h3>Profile 启动后还是默认模型？</h3>
+<p>最常见原因：Profile 文件还在用旧的 <span class="marked">[profiles.&lt;name&gt;]</span> 表，或者文件名后缀不是 <span class="marked">.config.toml</span>。从 0.134.0 开始只识别 <span class="marked">~/.codex/&lt;name&gt;.config.toml</span> 形式。</p>
+
+<h3>沙箱关闭后 git commit 还要审批？</h3>
+<p>关闭 <span class="marked">sandbox_mode</span> 不影响审批策略。<span class="marked">git commit</span> 等命令仍可能因为 <span class="marked">approval_policy = "on-request"</span> 而触发提示；如果想"全自动提交"，需要把审批策略同时设为 <span class="marked">never</span>。</p>
+
+<h3>自定义模型能选择 gpt-5 系列吗？</h3>
+<p>取决于 <span class="marked">base_url</span> 所指向的服务是否支持。Codex 本身对 <span class="marked">model</span> 字段不做强校验，关键是你的 provider 端能识别并响应。</p>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/codex/codex-computer-use.html" rel="prev"> Codex Computer Use（电脑操控）</a> </div>
+			<div class="next-design-link"><a href="/codex/codex-deepseek.html" rel="next"> Codex 接入 Deepseek 官方配置</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31480' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31480;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31480, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31480},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31480;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>区块链相关疑问解析 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./question-and-analysis.html" />
+<meta name="keywords" content="区块链相关疑问解析">
+<meta name="description" content="相关技术点  问：什么是区块链？  答：区块链（Blockchain）是指通过去中心化和去信任的方式集体维护一个可靠数据库的技术方案。通俗一点说，区块链技术就指一种全民参与记账的方式。所有的系统背后都有一个数据库，你可以把数据库看成是就是一个大账本。那么谁来记这个账本就变得很重要。目前就是谁的系统谁来记账，微信的账本就是腾讯在记，淘宝的账本就是阿里在记。但现在区块链系统中，系统中的每个人都可以有机会参与记账。在一定时间段内如果有任何数据..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<div class="container navigation">
+    <div class="row">
+        <div class="col nav">
+            
+
+                        <ul class="pc-nav" id="note-nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../w3cnote.html">笔记首页</a></li>
+                <li><a href="./android-tutorial-intro.html" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" title="ES6 教程">ES6 教程</a></li>
+                <li><a href="./ten-sorting-algorithm.html" title="排序算法">排序算法</a></li>
+                <li><a href="./hadoop-tutorial.html" title="Hadoop 教程">Hadoop</a></li>
+                <li><a href="./zookeeper-tutorial.html" title="Zookeeper 教程">Zookeeper</a></li>
+                <li><a href="./verilog-tutorial.html" title="Verilog 教程">Verilog</a></li>
+                <li><a href="../w3cnote_genre/code.html" title="编程技术">编程技术</a></li> 
+                <li><a href="../w3cnote_genre/coderlife.html" title="程序员人生">程序员人生</a></li>
+                
+                <!--<li><a href=".." class="runoob-pop">登录</a></li>
+                
+                
+                        <li>
+                <a style="font-weight:bold;" href="../linux/linux-tutorial.html" target="_blank" onclick="_hmt.push(['_trackEvent', 'aliyun', 'click', 'aliyun'])" title="kkb">云服务器</a>
+                </li>
+                <li><a href="http://gk.link/a/104mQ" target="_blank" style="font-weight: bold;"onclick="_hmt.push(['_trackEvent', '极客时间', 'click', 'jike'])" title="我的圈子">极客时间</a></li>
+            
+                
+                <li><a target="_blank" href="../shoppinglist.html" rel="nofollow">知识店铺</a></li> 
+        -->
+            </ul>
+                        
+              
+            <ul class="mobile-nav">
+                <li><a href="../w3cnote.html">首页</a></li>
+                <li><a href="../w3cnote_genre/android.html" target="_blank" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" target="_blank" title="ES6 教程">ES6</a></li>
+                <li><a href="../w3cnote_genre/joke.html" target="_blank" title="程序员笑话">逗乐</a></li>
+                
+                <a href="void(0).html" class="search-reveal">Search</a> 
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--  内容  -->
+<div class="container main">
+	<div class="row">
+
+		<div class="col middle-column big-middle-column">
+	 			<div class="article">
+			<div class="article-heading">
+				<h2>区块链相关疑问解析</h2>				<h3><em>分类</em> <a href="../w3cnote_genre/blockchain.html" title="区块链" >区块链</a> </h3>
+			</div>
+			<div class="article-body note-body">
+				<div class="article-intro">
+					<!-- ad start-->
+			            <!-- ad end-->
+					<h2>相关技术点</h3>
+<p><img decoding="async" src="../wp-content/uploads/2018/06/4a8b4432155e41285790d3b7e7bc1b5dd4ff1980.png"></p>
+<hr><h3>问：什么是区块链？</h3>
+<p>
+<strong>答：区块链（Blockchain）</strong>是指通过<strong><font color="#ff0000">去中心化和去信任</font></strong>的方式集体维护一个可靠数据库的技术方案。通俗一点说，区块链技术就指一种全民参与记账的方式。所有的系统背后都有一个数据库，你可以把数据库看成是就是一个大账本。那么谁来记这个账本就变得很重要。目前就是谁的系统谁来记账，微信的账本就是腾讯在记，淘宝的账本就是阿里在记。但现在区块链系统中，系统中的每个人都可以有机会参与记账。在一定时间段内如果有任何数据变化，系统中每个人都可以来进行记账，系统会评判这段时间内记账最快最好的人，把他记录的内容写到账本，并将这段时间内账本内容发给系统内所有的其他人进行备份。这样系统中的每个人都了一本完整的账本。这种方式，我们就称它为区块链技术。</p>
+<hr><h3>问：这样全民记账的区块链有什么好处？</h3>
+<p>
+<strong>答：</strong>可以发现，这是在牺牲一点效率的情况下，获得了<strong><font color="#ff0000">极大的安全性</font></strong>。首先没有一本中央大账本了，所以无法摧毁。每个节点都仅仅是系统的一部分，每个节点权利相等，都有着一模一样的账本。摧毁部分节点对系统一点都没有影响。其次，<strong><font color="#ff0000">无法作弊</font></strong>，因为除非你能控制系统内大多数人的电脑都进行修改，否则系统会参照多数人的意见来决定什么才是真实结果，结果会发现修改自己的账本完全没有意义（因为别人不承认）。其次，由于没有中心化的中介机构存在，让所有的东西都通过预先设定的程序自动运行，不仅能够大大降低成本，也能提高效率。而由于每个人都有相同的账本，能确保账本记录过程是公开透明的。
+</p>
+<hr><h3>问：区块链解决了什么问题吗？</h3>
+<p>
+<strong>答：</strong>区块链最重要的是解决了<strong><font color="#ff0000">中介信用</font></strong>问题。在过去，两个互不认识和信任的人要达成协作是难的，必须要依靠第三方。比如支付行为，在过去任何一种转账，必须要有银行或者支付宝这样的机构存在。但是通过区块链技术，比特币是人类第一次实现在没有任何中介机构参与的情况下，完成双方可以互信的转账行为。这是区块链的重大突破。
+</p>
+<hr><h3>问：区块链是比特币吗？或者比特币就是区块链吗？</h3>
+<p>
+<strong>答：</strong>区块链技术是比特币的底层技术，在早期并没有太多人注意到比特币的底层技术。但是当比特币在没有任何中心化机构运营和管理的情况下，在多年里非常稳定的运行，并且没有出现过任何问题。所以很多人注意到，该底层技术技术也许有很大的机制，而且不仅仅可以在比特币中使用，也许可以在许多领域都能够应用这种技术。于是把比特币技术抽象提取出来，称之为区块链技术，或者分布式账本技术。所以从某个角度来看，比特币可以看成是区块链第一个应用，而区块链更类似于TCP/IP这样的底层技术，以后会扩展到越来越多的行业中。
+</p>
+
+<hr><h3>问：区块链技术主要可以用在哪些行业？</h3>
+<p>
+<strong>答：</strong>区块链主要的优势是无需中介参与、过程高效透明且成本很低、数据高度安全。所以如果在这三个方面有任意一个需求的行业都有机会使用区块链技术。
+</p>
+<hr><h3>问：金融领域为什么要使用区块链技术？有什么实质性的好处？</h3>
+<p><strong>答：</strong>区块链技术在金融领域中主要的优势去中介化和极大的降低成本。</p>
+<p>首先金融行业目前由于防止单点故障和系统性风险，需要进行层层审计来控制金融风险，但由此也造成高昂的内部成本。并且由于不断增加的监管法规出现，特别是2008年金融危机导致对于金融管控门槛不断升高，而反恐战争导致反洗钱和反恐怖主义融资的范围也让监管的广度和深度逐渐扩大，导致整个金融系统的监管成本急剧增加。在这种情况下，区块链技术能够通过防篡改和高透明的方式让真个金融系统极大的降低成本。根据西班牙最大银行桑坦德发布的一份报告显示，2020年左右如果全世界的银行内部都使用区块链技术的话，大概每年能省下200亿美元的成本。这样的数据足以说明"区块链"给传统金融领域带来的巨大变革和突破。</p>
+<p>此外由于历史原因，导致传统金融机构在结算和清算时都依靠中央结算所来完成，而由此造成的问题就是效率低下。传统的跨国结算就是因为要通过类似于SWIFT这样的机构，所以跨国电汇往往是按天来计算的。但是比特币在使用区块链技术时，在完全没有中心化运营机构的情况下，完美的运行了七年，不仅能够实现实时结算和清算，而且没有出现过任何一笔账目错误。所以，如果所有的金融系统能够实现去中心化的实时结算和清算，不仅仅将极大的提高全球金融效率，并且由此能够改变全球金融的格局。</p>
+
+<hr><h3>问：什么是比特币说的<font color="#ff0000">"挖矿"</font>？</h3>
+
+<p>
+<strong>答：</strong>比特币中的"挖矿"实际上就是记账的过程，比特币的运算采用了一种称为"工作量证明（Proof of Work，PoW）"的机制，系统为了找出谁有更强大的计算能力，每次会出一道数学题，只有最快解出这道题目的计算机才能进行记账。而抢到记账权的计算机会获得25个比特币的奖励。通常把这个行为称为"挖矿"，把获得的比特币视为挖矿成功获得的奖励。
+</p>
+<hr><h3>问：所有的区块链都需要挖矿吗？</h3>
+<p>
+<strong>答：</strong>并非所有的区块链项目都会采用类似于比特币这样的"工作量证明"方式，这更多出现在早期的区块链项目中。如果采取其他的证明机制，如"权益证明（Proof of Stake，PoS）"、"股份授权证明机制（DPoS，Delegate Proof of Stake）"都是不需要采取这样的挖矿方式。
+</p>
+
+<hr><h3>问：区块链和大数据什么关系？区块链会取代大数据？</h3>
+<p>
+<strong>答：</strong>区块链和大数据关系并不是很大。大数据主要的是对于海量数据进行管理，而区块链的核心是在没有中心化中介计入的情况下实现数据的高安全性和高可靠性。所以区块链和大数据并不互相冲突，也不会取代，完全是面对不同场景情况下对于数据的不同解决方案。
+</p>
+<hr><h3>问：区块链和云计算云存储有什么关系？区块链是云计算或云存储吗？</h3>
+<p>
+<strong>答：</strong>云计算通常定义为通过互联网来提供动态易扩展且经常是虚拟化的资源，但是提供云计算平台的往往是一个中心化机构。而区块链组成的网络一般是没有特定的机构，所以区块链更接近分布式计算系统的定义，属于分布式计算的一种。不过，区块链是能够实现云存储的，不同于目前中心化提供云存储空间，区块链有一些提供去中心化的云存储方案。这样的项目包括Storj，Sia，Maidsafe。
+</p>
+<hr><h3>问：区块链是软件吗？是用什么程序写的？</h3>
+<p>
+<strong>答：</strong>区块链不是一种特定的软件，就像"数据库"这个三个字表现的意思一样，它是一种特定技术的设计思想。可以用绝大多数语言来实现它，而且实现的方式也有许多种。而且区块链技术目前还在快速发展中，相对而言，目前区块链技术设计思想还是比较简单的，也许在未来会变得愈加复杂。
+</p>
+<hr><h3>问：什么是公有链？什么是私有链？什么是联盟链？</h3>
+<p><strong>答：公有链</strong>是任何节点都是向任何人开放的，每个人都可以参与到这个区块链中参与计算，而且任何人都可以下载获得完整区块链数据（全部账本）。但是有些区块链的应用场景下，并不希望这个系统任何人都可以参与，任何人都可以查看所有数据，只有被许可的节点才可以参与并且查看所有数据。那么这种区块链结构我们称为<strong>私有链</strong>。</p>
+<p>联盟链是指参与每个节点的权限都完全对等，大家在不需要完全互信的情况下就可以实现数据的可信交换，R3组成的银行区块链联盟要构建的就是典型的<strong>联盟链</strong>。</p>
+<p>但是随着区块链技术的快速发展，不排除以后公有链和私有链的界限会变得比较模糊。因为每个节点的可以有较为复杂的读写权限，也许有部分权限的节点会向所有人开发，而部分记账或者核心权限的节点只能向许可的节点开放，那就会不再是纯粹的公有链或者私有链。</p>
+
+<hr><h3>问：目前区块链技术发展的主要问题？</h3>
+<p><strong>答：</strong>目前区块链技术还处于一个非常早期的阶段，不仅尚未形成统一的技术标准，而且各种技术方案还在快速发展中。但是过去被认为基于区块链技术的系统会非常耗费资源（类似于比特币），或者区块链技术的系统处理数据有限制之类的问题已经在技术上获得了突破。但是，对于区块链技术的可扩展性，还没有经过大规模的实践考验，而现在主要还停留在原型设计阶段。</p>
+<p>如果不能定量分析，使用区块链技术能够为我们带来的实际好处，包括能够节省的资金和创造的价值，那么金融行业短期内还会保持相对谨慎的态度。毕竟，目前全球金融的基础设施投入已经超过数万亿，要建立一套全新的金融架构和底层操作体系是需要有实际数据相支撑的。在现有技术还没有被部署并且获得使用案例的情况下，能节省下的总金额还是很难确定的。这到目前为止，还是一个巨大的疑问存在，就是到底需要多少资金才能建立一个足够强大的区块链来平台处理，资本市场生态系统每天需要面对的万亿数量级的美元。</p>
+<p>此外区块链行业极其缺乏人才，<strong><font color="#3399cc">缺少大量既了解区块链技术，又了解金融的多方面人才，市场正在拼命寻找可以连接两个世界的人才，需要能够在现实世界中，将区块链技术能够在资本市场中实现，并且实现更好的功能。而需要建立基于区块链技术的全新系统，必然是需要这样的跨界人才。</font></strong></p>
+
+<hr><h3>问：什么是智能合约？</h3>
+<p>
+<strong>答：智能合约</strong>是一种用计算机语言取代法律语言去记录条款的合约。智能合约可以由一个计算系统自动执行。如果区块链是一个数据库，智能合约就是能够使区块链技术应用到现实当中的应用层。传统意义上的合同一般与执行合同内容的计算机代码没有直接联系。纸质合同在大多数情况下是被存档的，而软件会执行用计算机代码形式编写的合同条款。智能合约的潜在好处包括降低签订合约、执行和监管方面的成本；因此，对很多低价值交易相关的合约来说，这是极大降低人力成本。</p>
+<hr><h3>问：智能合约怎么用？</h3>
+<p>
+<strong>答：</strong>央行如果能够通过区块链来发行法币，那么也可以通过智能合约技术，将代码嵌入到法币发行的行为中，则这部分法币可以被称为<strong>"可编程货币"</strong>。比如，如果央行指定某一部分资金是发放到农业相关的账户，那么则可以对这部分资金写入相应程序，指定该部分资金只能进入到农业相关的账户中，那么这部分资金在任何情况下也不可能会被挪用到其他的账户中。如果大部分货币都成为"可编程货币"，那么我们则可以想象到，他们组成的金融环境就变成了<strong>"可编程金融"</strong>。
+</p>
+<hr><h3>问：区块链和普通人有什么关系？</h3>
+<p>
+<strong>答：</strong>基本上没什么关系，除非是准备从事这方面的创业。就和TCP/IP协议和普通人之间的关系，普通人完全不需要知道什么是互联网底层的TCP/IP协议，只要享受互联网提供的服务就行。
+</p>
+
+<hr><h3>问：区块链项目是否一定需要有某种币出现？</h3>
+<p>
+<strong>答：</strong>不是。比特币本身是作为一种支付系统，所以它需要有一个价值度量的工具，所以必须要有bitcoin出现。此外，为了奖励有更多人愿意贡献自己的计算机来为系统提供计算，所以需要有bitcoin来进行奖励。而在一些私有链的系统，可以设计专门的资产进行交易，而每个节点都是必须参与计算，这是他们的责任也是他们的权利，所以不用考虑通过奖励的方式来鼓励他们参与，所以在这样的系统里面就可能不再需要设计某种币的存在。
+</p>
+<hr><h3>问：比特币现在合法了吗？</h3>
+<p>
+<strong>答：</strong>比特币在主要的世界大国，包括中国在内一直都是完全合法的。由于某些不良媒体的误导，使很多人以为中国曾经宣布过比特币非法。事实上，根据2013年12月5日，中国人民银行等五部委发布的防范比特币风险的通知中明确规定，比特币是一种特定虚拟商品，普通民众在自担风险的前提下拥有参与的自由。而各类金融机构和支付机构不得开展比特币相关的金融服务，或者将比特币作为投资标的。比特币在德国作为货币单位，在美国定义为大宗商品。欧盟法院认为比特币为一种支付手段，无需征收增值税。</p>
+<hr><h3>问：XX币可以投资吗？是区块链项目吗？是传销吗？</h3>
+<p>
+<strong>答：</strong>目前包括比特币在内的所有数字货币都具有很高的风险，区块链技术本身在刚刚起步阶段，所有的区块链项目也都具有非常高的风险。不建议任何普通人投资任何数字货币和区块链相关的项目。并且数字货币和区块链具有一定的技术门槛，普通人无法区分哪些是真实的项目，哪些是传销项目。所以普通人建议不要投资任何这类的项目。对于任何你无法分辨是否是传销的项目，请直接视为传销项目。
+</p>
+
+<hr><h3>问：如何投资区块链？</h3>
+<p>
+<strong>答：</strong>大多数区块链都处于起步阶段，而主要都是在海外，国内好的区块链项目非常非常少，所以不建议任何非专业人士投资区块链项目。如果对区块链技术很有兴趣，自己有技术或者金融相关的背景，建议可以考虑在这方面进行创业。
+</p>
+<hr><h3>问：区块链/比特币到底是谁发明的？中本聪是不是日本人？是不是美国政府的阴谋？</h3>
+<p>
+<strong>答：</strong>比特币是一个自称为"中本聪"的人或者团队创造的，并且在比特币项目初期就已经完全退出了这个项目。"中本聪"是日本人的可能性非常小，因为他过去的电子邮件中可以推测出，他应该是一个以英语为母语的人。此外比特币创造者对于目前比特币的项目已经完全没有影响力，所以不太可能是某个阴谋的产物。无论"中本聪"在之后是否会出现，或者在肉体上被消灭都无法影响对比特币产生太多的影响。</p>
+<p>
+<strong>问：比特币和Q币到底有什么区别？</strong>
+</p>
+<p>
+<strong>答：</strong>Q币是一种中心化的电子货币，包括总量，发行方式都是由腾讯公司控制的。而比特币的总量，发行方式都是由程序和加密算法预先设定后，在全世界的多个节点上运行，没有任何人和机构可以修改，不受任何单一人或者机构来控制。一般称Q币为电子货币，或者企业代币。称比特币为数字货币或者加密数字货币。
+</p>
+
+<hr><h3>问：比特币总量是有上限的吗？是怎么分配的？</h3>
+<p>
+<strong>答：</strong>如同前面所说，矿工参与争夺记账权是有机会获得奖励的。在开始的时候是每10分钟系统会奖励记账最快最好的人50个比特币，然后这50个每四年减半，差不多在<strong><font color="#ff0000">2140年</font></strong>的时候就不再有新的比特币出现，将会达到2100万个的上限。在这之后，将会使用交易手续费来奖励矿工。 
+</p>
+
+
+
+<blockquote><p>原文地址：https://yq.aliyun.com/articles/60134</p></blockquote>
+
+				</div>
+			</div>
+			<div class="previous-next-links">
+			<div class="previous-design-link">← <a href="./carton-blockchain-intro.html" rel="prev"> 漫画解析：谁叫的区块链，来门口取一下！</a> </div>
+			<div class="next-design-link"></div>
+			</div>
+						<style>
+@media screen and (max-width: 768px) {
+	#w3cnote-ad728 {
+		display: none;
+	}
+}
+p.note-author {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<script>
+var aid = 20063;
+</script>
+	</div>
+		
+	</div>
+	<div class="listcol last right-column">
+
+
+
+
+<!--
+	<div class="tab tab-light-blue"> 订阅</div>
+	<div class="sidebar-box">
+		<div class="socialicons">
+			<a href="/feed.html" class="rss">RSS 订阅</a>
+		
+			<form action="//list.qq.com/cgi-bin/qf_compose_send" method="post">
+			<input type="hidden" value="qf_booked_feedback" name="t">
+			<input type="hidden" value="4b67b6b6c1f5e792559940cab4aebb8f1126fba880bff1a8" name="id">
+			<input class="placeholder" id="feed_email" name="to" value="输入邮箱 订阅笔记" autocomplete="off">
+			<input type="submit" value="订阅" class="btn btn-primary">
+			</form>
+		
+		</div>
+ 
+	</div>
+-->	
+
+
+
+<!--
+	<div class="sidebar-box cate-list">
+	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">笔记列表</a>
+		</div>
+
+ 
+
+</div>
+-->
+<div class="sidebar-box cate-list" style="display:none;">
+	<div class="sidebar-box recommend-here list-link">
+	<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">热门文章</a>
+	</div>
+	<div class="membership"> 
+		<ul class="membership">
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/ZaP6YNgKTCHYy3r2WPBBaw" title="2024 年 04 月 JavaScript 框架排行榜" >2024 年 04 月 JavaScript 框架排行榜</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/JBR2twC0t6krjjuxqvhsEQ" title="免费、开源、好用的 SQL 客户端合集" >免费、开源、好用的 SQL 客户端合集</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/TwV3YQjA1glyaW7TiHvhlA" title="优雅的代码规范，提升代码质量" >优雅的代码规范，提升代码质量</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/CnUJ-2OHPbBKlnVpjDzavA" title="命令行中的趣味世界，牛也能说话，有趣又好玩" >命令行中的趣味世界，牛也能说话，有趣又好玩</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/7NKl-mD7N8CeSNQlbKDEWA" title="2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？" >2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/yWlSVDKobtDhThnhirVRpw" title="免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端" >免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端</a></li>
+					</ul>
+	</div>
+</div>
+
+	 <div class="sidebar-box cate-list">
+		 		
+		
+	 	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">教程列表</a>
+		</div>
+		
+		<div class="cate-items"> 
+				<a href="../ado.html">ADO 教程</a>
+	<a href="../ai-agent.html">AI Agent 教程</a>
+	<a href="../ai.html">AI 入门教程</a>
+	<a href="../ai-math.html">AI 数学基础</a>
+	<a href="../ajax.html">Ajax 教程</a>
+	<a href="../android.html">Android 教程</a>
+	<a href="../angularjs2.html">Angular2 教程</a>
+	<a href="../angularjs.html">AngularJS 教程</a>
+	<a href="../appml.html">AppML 教程</a>
+	<a href="../asp.html">ASP 教程</a>
+	<a href="../aspnet.html">ASP.NET 教程</a>
+	<a href="../bootstrap.html">Bootstrap 教程</a>
+	<a href="../bootstrap4.html">Bootstrap4 教程</a>
+	<a href="../bootstrap5.html">Bootstrap5 教程</a>
+	<a href="../cprogramming.html">C 教程</a>
+	<a href="../c-dsa.html">C 语言数据结构与算法</a>
+	<a href="../csharp.html">C# 教程</a>
+	<a href="../cplusplus.html">C++ 教程</a>
+	<a href="../chartjs.html">Chart.js 教程</a>
+	<a href="../claude-code.html">Claude Code 教程</a>
+	<a href="../cmake.html">CMake 教程</a>
+	<a href="../codex.html">Codex 教程</a>
+	<a href="../cssref.html">CSS 参考手册</a>
+	<a href="../css.html">CSS 教程</a>
+	<a href="../css3.html">CSS3 教程</a>
+	<a href="../cursor.html">Cursor 教程</a>
+	<a href="../dart.html">Dart 教程</a>
+	<a href="../dash.html">Dash 教程</a>
+	<a href="../deepseek-harness.html">DeepSeek Harness</a>
+	<a href="../django.html">Django 教程</a>
+	<a href="../docker.html">Docker 教程</a>
+	<a href="../dtd.html">DTD 教程</a>
+	<a href="../echarts.html">ECharts 教程</a>
+	<a href="../eclipse.html">Eclipse 教程</a>
+	<a href="../electron.html">Electron 教程</a>
+	<a href="../fastapi.html">FastAPI 教程</a>
+	<a href="../firebug.html">Firebug 教程</a>
+	<a href="../flask.html">Flask 教程</a>
+	<a href="../flutter.html">Flutter 教程</a>
+	<a href="../font-awesome.html">Font Awesome 图标</a>
+	<a href="../foundation.html">Foundation 教程</a>
+	<a href="../git.html">Git 教程</a>
+	<a href="../go.html">Go 语言教程</a>
+	<a href="../googleapi.html">Google 地图 API 教程</a>
+	<a href="../hermes-agent.html">Hermes Agent</a>
+	<a href="../highcharts.html">Highcharts 教程</a>
+	<a href="../htmldom.html">HTML DOM 教程</a>
+	<a href="../tags.html">HTML 参考手册</a>
+	<a href="../charsets.html">HTML 字符集</a>
+	<a href="../html.html">HTML 教程</a>
+	<a href="../http.html">HTTP 教程</a>
+	<a href="../ionic.html">ionic 教程</a>
+	<a href="../ios.html">iOS 教程</a>
+	<a href="../java.html">Java 教程</a>
+	<a href="../jsref.html">JavaScript 参考手册</a>
+	<a href="../js.html">Javascript 教程</a>
+	<a href="../jeasyui.html">jQuery EasyUI 教程</a>
+	<a href="../jquerymobile.html">jQuery Mobile 教程</a>
+	<a href="../jqueryui.html">jQuery UI 教程</a>
+	<a href="../jquery.html">jQuery 教程</a>
+	<a href="../json.html">JSON 教程</a>
+	<a href="../jsp.html">JSP 教程</a>
+	<a href="../julia.html">Julia 教程</a>
+	<a href="../jupyter-notebook.html">Jupyter Notebook 教程</a>
+	<a href="../kotlin.html">Kotlin 教程</a>
+	<a href="../langchain.html">LangChain 教程</a>
+	<a href="../latex.html">LaTeX 教程</a>
+	<a href="../linux.html">Linux 教程</a>
+	<a href="../lua.html">Lua 教程</a>
+	<a href="../markdown.html">Markdown 教程</a>
+	<a href="../matplotlib.html">Matplotlib 教程</a>
+	<a href="../maven.html">Maven 教程</a>
+	<a href="../memcached.html">Memcached 教程</a>
+	<a href="../mongodb.html">MongoDB 教程</a>
+	<a href="../mysql.html">MySQL 教程</a>
+	<a href="../nextjs.html">Next.js 教程</a>
+	<a href="../nlp.html">NLP 教程</a>
+	<a href="../nodejs.html">Node.js 教程</a>
+	<a href="../numpy.html">NumPy 教程</a>
+	<a href="../obsidian.html">Obsidian 教程</a>
+	<a href="../ollama.html">Ollama 教程</a>
+	<a href="../opencode.html">OpenCode 教程</a>
+	<a href="../opencv.html">OpenCV 教程</a>
+	<a href="../pandas.html">Pandas 教程</a>
+	<a href="../perl.html">Perl 教程</a>
+	<a href="../php.html">PHP 教程</a>
+	<a href="../pi-agent.html">Pi Agent</a>
+	<a href="../pillow.html">Pillow 教程</a>
+	<a href="../playwright.html">Playwright 教程</a>
+	<a href="../postgresql.html">PostgreSQL 教程</a>
+	<a href="../powershell.html">PowerShell</a>
+	<a href="../pycharm.html">Pycharm 教程</a>
+	<a href="../python3.html">Python 3 教程</a>
+	<a href="../python.html">Python 基础教程</a>
+	<a href="../python-design-pattern.html">Python 设计模式</a>
+	<a href="/python-qt.html">Python 量化交易</a>
+	<a href="../pytorch.html">PyTorch 教程</a>
+	<a href="../r.html">R 教程</a>
+	<a href="../rdf.html">RDF 教程</a>
+	<a href="../react.html">React 教程</a>
+	<a href="../redis.html">Redis 教程</a>
+	<a href="/restfulapi.html">RESTful API</a>
+	<a href="../rss.html">RSS 教程</a>
+	<a href="../ruby.html">Ruby 教程</a>
+	<a href="../rust.html">Rust 教程</a>
+	<a href="../sass.html">Sass 教程</a>
+	<a href="../scala.html">Scala 教程</a>
+	<a href="../scipy.html">SciPy 教程</a>
+	<a href="../selenium.html">Selenium 教程</a>
+	<a href="../servlet.html">Servlet 教程</a>
+	<a href="../skills.html">Skills 教程</a>
+	<a href="../sklearn.html">Sklearn 教程</a>
+	<a href="../soap.html">SOAP 教程</a>
+	<a href="../sql.html">SQL 教程</a>
+	<a href="../sqlite.html">SQLite 教程</a>
+	<a href="../svg.html">SVG 教程</a>
+	<a href="../svn.html">SVN 教程</a>
+	<a href="../swagger.html">Swagger 教程</a>
+	<a href="../swift.html">Swift 教程</a>
+	<a href="../tailwindcss.html">Tailwind CSS 教程</a>
+	<a href="../tcpip.html">TCP/IP 教程</a>
+	<a href="../tensorflow.html">TensorFlow 教程</a>
+	<a href="../typescript.html">TypeScript 教程</a>
+	<a href="../uniapp.html">uni-app 教程</a>
+	<a href="../vbscript.html">VBScript 教程</a>
+	<a href="../vibe-coding.html">Vibe Coding 教程</a>
+	<a href="../vscode.html">VSCode 教程</a>
+	<a href="../vue2.html">Vue.js 教程</a>
+	<a href="../vue3.html">Vue3 教程</a>
+	<a href="../w3c.html">W3C 教程</a>
+	<a href="../webservices.html">Web Service 教程</a>
+	<a href="../wsdl.html">WSDL 教程</a>
+	<a href="../xlink.html">XLink 教程</a>
+	<a href="../dom.html">XML DOM 教程</a>
+	<a href="../schema.html">XML Schema 教程</a>
+	<a href="../xml.html">XML 教程</a>
+	<a href="../xpath.html">XPath 教程</a>
+	<a href="../xquery.html">XQuery 教程</a>
+	<a href="../xslfo.html">XSLFO 教程</a>
+	<a href="../xsl.html">XSLT 教程</a>
+	<a href="../zig.html">Zig 教程</a>
+	<a href="../data-structures.html">数据结构</a>
+	<a href="../ml.html">机器学习</a>
+	<a href="../regexp.html">正则表达式</a>
+	<a href="../assembly.html">汇编语言</a>
+	<a href="../quiz.html">测验</a>
+	<a href="../browsers.html">浏览器</a>
+	<a href="../quality.html">网站品质</a>
+	<a href="/web.html">网站建设指南</a>
+	<a href="../hosting.html">网站服务器教程</a>
+	<a href="../np.html">网络协议</a>
+	<a href="../computer-organization.html">计算机组成原理</a>
+	<a href="../design-pattern.html">设计模式</a>
+			
+		</div> 
+		 	 </div>
+</div>
+	</div>
+</div>
+
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="../ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="../for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

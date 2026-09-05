@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pi Agent 命令与快捷键注册 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/pi-agent/pi-agent-commands.html" />
+<meta name="keywords" content="Pi Agent 命令与快捷键注册">
+<meta name="description" content="Pi Agent 命令与快捷键注册 通过扩展注册自定义命令、键盘快捷键和 CLI 标志，让 Pi Agent 更好地适应你的工作流。   注册自定义命令 使用 pi.registerCommand() 注册用户可通过 / 调用的命令。 下面的扩展同时演示了基础命令和带参数自动补全的命令：   实例  [mycode4 type=&#039;js&#039;] // 文件路径：~/.pi/agent/extensions/stats-co..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>Pi Agent</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="Pi Agent 教程"  href="/pi-agent/pi-agent-tutorial.html" >
+			Pi Agent 教程			</a>
+						<a target="_top" data-p="par" title="Pi Agent 简介"  href="/pi-agent/pi-agent-intro.html" >
+			Pi Agent 简介			</a>
+						<a target="_top" data-p="par" title="Pi Agent 核心概念"  href="/pi-agent/pi-agent-concepts.html" >
+			Pi Agent 核心概念			</a>
+						<a target="_top" data-p="par" title="Pi Agent 安装"  href="/pi-agent/pi-agent-install.html" >
+			Pi Agent 安装			</a>
+						<a target="_top" data-p="par" title="Pi Agent 认证与模型配置"  href="/pi-agent/pi-agent-auth.html" >
+			Pi Agent 认证与模型配置			</a>
+			<a target="_top" data-p="par" title="Pi Agent DeepSeek" href="/pi-agent/pi-agent-deepseek.html">Pi Agent DeepSeek</a>			<a target="_top" data-p="par" title="PI Agent 第一次对话"  href="/pi-agent/pi-agent-first-chat.html" >
+			PI Agent 第一次对话			</a>
+						<a target="_top" data-p="par" title="Pi Agent 交互模式"  href="/pi-agent/pi-agent-interactive.html" >
+			Pi Agent 交互模式			</a>
+						<a target="_top" data-p="par" title="Pi Agent 非交互模式"  href="/pi-agent/pi-agent-non-interactive.html" >
+			Pi Agent 非交互模式			</a>
+						<a target="_top" data-p="par" title="PI Agent 上下文管理"  href="/pi-agent/pi-agent-context.html" >
+			PI Agent 上下文管理			</a>
+						<a target="_top" data-p="par" title="Pi Agent 会话管理"  href="/pi-agent/pi-agent-sessions.html" >
+			Pi Agent 会话管理			</a>
+						<a target="_top" data-p="par" title="Pi Agent 键盘快捷键定制"  href="/pi-agent/pi-agent-keybindings.html" >
+			Pi Agent 键盘快捷键定制			</a>
+						<a target="_top" data-p="par" title="Pi Agent 主题定制"  href="/pi-agent/pi-agent-themes.html" >
+			Pi Agent 主题定制			</a>
+						<a target="_top" data-p="par" title="Pi Agent 提示词模板"  href="/pi-agent/pi-agent-prompt-templates.html" >
+			Pi Agent 提示词模板			</a>
+						<a target="_top" data-p="par" title="Pi Agent Skills 技能系统"  href="/pi-agent/pi-agent-skills.html" >
+			Pi Agent Skills 技能系统			</a>
+						<a target="_top" data-p="par" title="Pi Agent 配置详解"  href="/pi-agent/pi-agent-settings.html" >
+			Pi Agent 配置详解			</a>
+						<a target="_top" data-p="par" title="Pi Agent 安全与项目信任"  href="/pi-agent/pi-agent-security.html" >
+			Pi Agent 安全与项目信任			</a>
+						<a target="_top" data-p="par" title="Pi Agent 扩展入门"  href="/pi-agent/pi-agent-extensions-intro.html" >
+			Pi Agent 扩展入门			</a>
+						<a target="_top" data-p="par" title="Pi Agent 自定义工具开发"  href="/pi-agent/pi-agent-custom-tools.html" >
+			Pi Agent 自定义工具开发			</a>
+						<a target="_top" data-p="par" title="Pi Agent 事件系统"  href="/pi-agent/pi-agent-events.html" >
+			Pi Agent 事件系统			</a>
+						<a target="_top" data-p="par" title="Pi Agent 命令与快捷键注册"  href="/pi-agent/pi-agent-commands.html" >
+			Pi Agent 命令与快捷键注册			</a>
+						<a target="_top" data-p="par" title="Pi Agent 包管理"  href="/pi-agent/pi-agent-packages.html" >
+			Pi Agent 包管理			</a>
+						<a target="_top" data-p="par" title="Pi Agent 多平台部署"  href="/pi-agent/pi-agent-platforms.html" >
+			Pi Agent 多平台部署			</a>
+						<a target="_top" data-p="par" title="Pi Agent 与 llama.cpp 本地模型"  href="/pi-agent/pi-agent-llamacpp.html" >
+			Pi Agent 与 llama.cpp 本地模型			</a>
+			<h2 class="left"><span class="left_h2">参考收藏</span></h2>			<a target="_top" data-p="par" title="Pi Agent CLI 参考手册"  href="/pi-agent/pi-agent-appendix-cli.html" >
+			Pi Agent CLI 参考手册			</a>
+						<a target="_top" data-p="par" title="Pi Agent 配置参考手册"  href="/pi-agent/pi-agent-appendix-settings.html" >
+			Pi Agent 配置参考手册			</a>
+						<a target="_top" data-p="par" title="Pi Agent 支持的 AI 提供商"  href="/pi-agent/pi-agent-appendix-providers.html" >
+			Pi Agent 支持的 AI 提供商			</a>
+						<a target="_top" data-p="par" title="Pi Agent 见问题排查"  href="/pi-agent/pi-agent-appendix-troubleshooting.html" >
+			Pi Agent 见问题排查			</a>
+						<a target="_top" data-p="par" title="Pi Agent 斜杆命令手册"  href="/pi-agent/pi-agent-appendix-slash.html" >
+			Pi Agent 斜杆命令手册			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pi-agent/pi-agent-events.html" rel="prev"> Pi Agent 事件系统</a> </div>
+			<div class="next-design-link"><a href="/pi-agent/pi-agent-packages.html" rel="next"> Pi Agent 包管理</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Pi Agent 命令与快捷键注册</h1>
+<p>通过扩展注册自定义命令、键盘快捷键和 CLI 标志，让 Pi Agent 更好地适应你的工作流。</p>
+<hr>
+
+<h2>注册自定义命令</h2>
+<p>使用 <span class="marked">pi.registerCommand()</span> 注册用户可通过 / 调用的命令。</p>
+<p>下面的扩展同时演示了基础命令和带参数自动补全的命令：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/stats-command.ts</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 基础命令</span><br />
+pi.<span style="color: #660066;">registerCommand</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;stats&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; description<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;显示当前会话的统计信息&quot;</span><span style="color: #339933;">,</span> <span style="color: #006600; font-style: italic;">// 必填，显示在 / 自动补全列表中</span><br />
+&nbsp; handler<span style="color: #339933;">:</span> async <span style="color: #009900;">&#40;</span>args<span style="color: #339933;">,</span> ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> count <span style="color: #339933;">=</span> ctx.<span style="color: #660066;">sessionManager</span>.<span style="color: #660066;">getEntries</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #660066;">length</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span>`共 $<span style="color: #009900;">&#123;</span>count<span style="color: #009900;">&#125;</span> 条消息`<span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;info&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 带参数自动补全的命令</span><br />
+pi.<span style="color: #660066;">registerCommand</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;deploy&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; description<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;部署到指定环境&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; <span style="color: #006600; font-style: italic;">// 定义参数自动补全，prefix 是用户已输入的参数前缀</span><br />
+&nbsp; getArgumentCompletions<span style="color: #339933;">:</span> <span style="color: #009900;">&#40;</span>prefix<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> envs <span style="color: #339933;">=</span> <span style="color: #009900;">&#91;</span><span style="color: #3366CC;">&quot;dev&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;staging&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;prod&quot;</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> items <span style="color: #339933;">=</span> envs<br />
+&nbsp; &nbsp; &nbsp; .<span style="color: #660066;">filter</span><span style="color: #009900;">&#40;</span>e <span style="color: #339933;">=&gt;</span> e.<span style="color: #660066;">startsWith</span><span style="color: #009900;">&#40;</span>prefix<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; .<span style="color: #660066;">map</span><span style="color: #009900;">&#40;</span>e <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#40;</span><span style="color: #009900;">&#123;</span> value<span style="color: #339933;">:</span> e<span style="color: #339933;">,</span> label<span style="color: #339933;">:</span> e <span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">return</span> items.<span style="color: #660066;">length</span> <span style="color: #339933;">&gt;</span> <span style="color: #CC0000;">0</span> <span style="color: #339933;">?</span> items <span style="color: #339933;">:</span> <span style="color: #003366; font-weight: bold;">null</span><span style="color: #339933;">;</span> <span style="color: #006600; font-style: italic;">// 无匹配时返回 null</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span><br />
+&nbsp; handler<span style="color: #339933;">:</span> async <span style="color: #009900;">&#40;</span>args<span style="color: #339933;">,</span> ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span>args<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;用法: /deploy &lt;环境名&gt;&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;warning&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">return</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#125;</span><br />
+&nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span>`正在部署到 $<span style="color: #009900;">&#123;</span>args<span style="color: #009900;">&#125;</span> 环境...`<span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;info&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<p>保存后执行 /reload 加载扩展，在编辑区输入 /stats 即可看到效果：</p>
+
+<pre>
+/stats
+共 42 条消息
+</pre>
+
+<blockquote><p>如果多个扩展注册了同名的命令，Pi Agent 会保留所有注册并按加载顺序添加数字后缀，例如 /review:1 和 /review:2。</p>
+<p>这避免了扩展之间的命名冲突。</p></blockquote>
+<hr>
+
+<h2>扩展主动发消息</h2>
+<p>除了被动响应命令和事件，扩展还可以主动驱动对话。</p>
+<p><span class="marked">pi.sendMessage(message, deliverAs?)</span> 用于注入自定义消息，<span class="marked">pi.sendUserMessage(text, deliverAs?)</span> 则模拟一条用户输入。</p>
+<p>deliverAs 有三个取值：steer 是默认值，把消息插入当前轮；followUp 在本轮结束后追加；nextTurn 开启新一轮（仅 sendMessage 支持）。</p>
+<p>sendUserMessage 总是会触发一轮回复，因为它对 AI 来说就是一次真实的用户发言。</p>
+<p>流式输出期间调用这两个方法时，必须显式给出 deliverAs，否则会直接抛错。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/follow-up.ts</span><br />
+<span style="color: #006600; font-style: italic;">// 以下片段位于扩展工厂函数体内</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 模拟用户补充要求：等当前所有工具执行完再追加</span><br />
+pi.<span style="color: #660066;">sendUserMessage</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;部署完成后请顺手检查生产环境日志&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; deliverAs<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;followUp&quot;</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 只往上下文里塞参考信息，不模拟用户发言</span><br />
+pi.<span style="color: #660066;">sendMessage</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#123;</span><br />
+&nbsp; customType<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;deploy-context&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; content<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;当前部署目标是 production&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; display<span style="color: #339933;">:</span> <span style="color: #003366; font-weight: bold;">true</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; deliverAs<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;steer&quot;</span><span style="color: #339933;">,</span> <span style="color: #006600; font-style: italic;">// 默认值，插入当前轮</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<p>sendMessage 还支持 triggerTurn: true，在 agent 空闲时立即触发一次 LLM 响应。</p>
+<p>两者的选择标准很简单：想让 AI 真正接话就用 sendUserMessage，只想提供参考信息就用 sendMessage。</p>
+<hr>
+
+<h2>命令上下文（ExtensionCommandContext）</h2>
+<p>命令的 handler 接收的是 <span class="marked">ExtensionCommandContext</span>，它继承自 ExtensionContext。</p>
+<p>在普通上下文的基础上，它额外提供以下方法：</p>
+
+<table class="reference">
+<tr><th>方法</th><th>说明</th></tr>
+<tr><td>ctx.getSystemPromptOptions()</td><td>读取构建系统提示词的基础输入（contextFiles、skills 等），仅命令上下文可用</td></tr>
+<tr><td>ctx.waitForIdle()</td><td>等待 AI 完全空闲（包括重试、压缩、跟进消息全部完成）</td></tr>
+<tr><td>ctx.newSession(options)</td><td>创建新会话，可指定父会话和初始化逻辑</td></tr>
+<tr><td>ctx.fork(entryId, options)</td><td>从指定条目分叉出新会话</td></tr>
+<tr><td>ctx.navigateTree(targetId, options)</td><td>导航到会话树中的指定位置</td></tr>
+<tr><td>ctx.switchSession(sessionPath, options)</td><td>切换到另一个会话文件</td></tr>
+<tr><td>ctx.reload()</td><td>执行与 /reload 相同的热重载流程</td></tr>
+</table>
+
+<p>下面的命令把当前项目的所有会话列成选择列表，选中后直接切换过去：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/switch-session.ts</span><br />
+<span style="color: #FF0000;">import</span> <span style="color: #009900;">&#123;</span> SessionManager <span style="color: #009900;">&#125;</span> from <span style="color: #3366CC;">&quot;@earendil-works/pi-coding-agent&quot;</span><span style="color: #339933;">;</span><br />
+<br />
+pi.<span style="color: #660066;">registerCommand</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;switch&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; description<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;切换到另一个会话&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; handler<span style="color: #339933;">:</span> async <span style="color: #009900;">&#40;</span>args<span style="color: #339933;">,</span> ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #006600; font-style: italic;">// 列出当前项目的所有会话</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> sessions <span style="color: #339933;">=</span> await SessionManager.<span style="color: #660066;">list</span><span style="color: #009900;">&#40;</span>ctx.<span style="color: #660066;">cwd</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span>sessions.<span style="color: #660066;">length</span> <span style="color: #339933;">===</span> <span style="color: #CC0000;">0</span><span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;没有可用的会话&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;warning&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">return</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #006600; font-style: italic;">// 弹出选择列表</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> choice <span style="color: #339933;">=</span> await ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">select</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #3366CC;">&quot;选择要切换的会话：&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; &nbsp; &nbsp; sessions.<span style="color: #660066;">map</span><span style="color: #009900;">&#40;</span>s <span style="color: #339933;">=&gt;</span> s.<span style="color: #660066;">file</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span>choice<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #006600; font-style: italic;">// 切换到选中的会话</span><br />
+&nbsp; &nbsp; &nbsp; await ctx.<span style="color: #660066;">switchSession</span><span style="color: #009900;">&#40;</span>choice<span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; withSession<span style="color: #339933;">:</span> async <span style="color: #009900;">&#40;</span>ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;已切换会话&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;info&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#125;</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<pre>
+/switch
+┌ 选择要切换的会话：
+│ &gt; ~/.pi/agent/sessions/my-project/abc123.jsonl
+│   ~/.pi/agent/sessions/my-project/def456.jsonl
+└
+已切换会话
+</pre>
+
+<blockquote><p><span class="marked">会话替换的注意事项</span>：withSession 回调中的 ctx 是一个全新的上下文。</p>
+<p>不要使用旧的 pi 对象或命令回调中捕获的 ctx，它们在会话替换后会变成无效状态。</p></blockquote>
+<hr>
+
+<h2>注册快捷键</h2>
+<p>使用 <span class="marked">pi.registerShortcut()</span> 注册自定义键盘快捷键。</p>
+<p>下面把「切换 Plan 模式」绑到一个尚无内置占用的组合键上：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/plan-shortcut.ts</span><br />
+<br />
+pi.<span style="color: #660066;">registerShortcut</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;ctrl+shift+g&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; description<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;切换 Plan 模式&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; handler<span style="color: #339933;">:</span> async <span style="color: #009900;">&#40;</span>ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;已切换 Plan 模式！&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;info&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<p>启动后按下组合键即可触发：</p>
+
+<pre>
+已切换 Plan 模式！
+</pre>
+
+<blockquote><p>选择组合键前先核对默认快捷键表，避免覆盖内置绑定。</p>
+<p>例如 ctrl+shift+p 已被「向后切换模型」占用，再注册同名组合键会导致两个行为互相抢键。</p></blockquote>
+
+<p>快捷键格式为 <span class="marked">修饰键+按键</span>，例如 ctrl+shift+g、alt+x 等。</p>
+<hr>
+
+<h2>注册 CLI 标志</h2>
+<p>使用 <span class="marked">pi.registerFlag()</span> 为 pi 命令添加自定义 CLI 参数。</p>
+<p>下面的例子注册一个 --plan 布尔标志，用于让 AI 先出计划再动手：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/plan-flag.ts</span><br />
+<br />
+pi.<span style="color: #660066;">registerFlag</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;plan&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; description<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;以 Plan 模式启动&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; type<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;boolean&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; <span style="color: #000066; font-weight: bold;">default</span><span style="color: #339933;">:</span> <span style="color: #003366; font-weight: bold;">false</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 在扩展代码中检查标志值</span><br />
+<span style="color: #006600; font-style: italic;">// 注意：pi.getFlag() 要等到命令行参数解析完成后才有值，</span><br />
+<span style="color: #006600; font-style: italic;">// 因此建议把判断放进事件回调里，而不是写在扩展模块顶层。</span><br />
+<span style="color: #006600; font-style: italic;">// 模块顶层求值发生在扩展加载阶段，此时读到的永远是默认值 false。</span><br />
+pi.<span style="color: #660066;">on</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;before_agent_start&quot;</span><span style="color: #339933;">,</span> async <span style="color: #009900;">&#40;</span>event<span style="color: #339933;">,</span> ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; <span style="color: #000066; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span>pi.<span style="color: #660066;">getFlag</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;plan&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #000066; font-weight: bold;">return</span><span style="color: #339933;">;</span> <span style="color: #006600; font-style: italic;">// 未启用 --plan 则不做任何修改</span><br />
+&nbsp; <span style="color: #000066; font-weight: bold;">return</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; systemPrompt<span style="color: #339933;">:</span> event.<span style="color: #660066;">systemPrompt</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #339933;">+</span> <span style="color: #3366CC;">&quot;<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>Plan Mode：先提出计划，经用户确认后再执行。&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">;</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<p>使用方式：</p>
+
+<pre>
+$ pi --plan "帮我实现用户认证功能"
+</pre>
+
+<hr>
+
+<h2>扩展间通信</h2>
+<p>使用 <span class="marked">pi.events</span> 在扩展之间共享事件。</p>
+<p>发送方不需要知道谁在监听，监听方也不需要知道事件从哪里来：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/deploy-events.ts</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 扩展 A：发送事件</span><br />
+pi.<span style="color: #660066;">events</span>.<span style="color: #660066;">emit</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;deploy:completed&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; env<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;production&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; timestamp<span style="color: #339933;">:</span> <span style="">Date</span>.<span style="color: #660066;">now</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 扩展 B：监听事件（通常写在另一个扩展文件里）</span><br />
+pi.<span style="color: #660066;">events</span>.<span style="color: #660066;">on</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;deploy:completed&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#40;</span>data<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; console.<span style="color: #660066;">log</span><span style="color: #009900;">&#40;</span>`部署完成：$<span style="color: #009900;">&#123;</span>data.<span style="color: #660066;">env</span><span style="color: #009900;">&#125;</span>`<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>获取已注册的命令</h2>
+<p>使用 <span class="marked">pi.getCommands()</span> 获取当前会话中所有可用的命令。</p>
+<p>下面的例子注册一个 /my-commands 命令，用来列出所有由扩展注册的命令：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/list-commands.ts</span><br />
+<br />
+pi.<span style="color: #660066;">registerCommand</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;my-commands&quot;</span><span style="color: #339933;">,</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; description<span style="color: #339933;">:</span> <span style="color: #3366CC;">&quot;列出扩展注册的所有命令&quot;</span><span style="color: #339933;">,</span><br />
+&nbsp; handler<span style="color: #339933;">:</span> async <span style="color: #009900;">&#40;</span>args<span style="color: #339933;">,</span> ctx<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> commands <span style="color: #339933;">=</span> pi.<span style="color: #660066;">getCommands</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #006600; font-style: italic;">// 按来源分类</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> extCommands <span style="color: #339933;">=</span> commands.<span style="color: #660066;">filter</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; c <span style="color: #339933;">=&gt;</span> c.<span style="color: #660066;">source</span> <span style="color: #339933;">===</span> <span style="color: #3366CC;">&quot;extension&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> templates <span style="color: #339933;">=</span> commands.<span style="color: #660066;">filter</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; c <span style="color: #339933;">=&gt;</span> c.<span style="color: #660066;">source</span> <span style="color: #339933;">===</span> <span style="color: #3366CC;">&quot;prompt&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; <span style="color: #000066; font-weight: bold;">const</span> skills <span style="color: #339933;">=</span> commands.<span style="color: #660066;">filter</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; c <span style="color: #339933;">=&gt;</span> c.<span style="color: #660066;">source</span> <span style="color: #339933;">===</span> <span style="color: #3366CC;">&quot;skill&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #006600; font-style: italic;">// 把结果展示出来，避免只计算不输出</span><br />
+&nbsp; &nbsp; ctx.<span style="color: #660066;">ui</span>.<span style="color: #660066;">notify</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; `扩展命令 $<span style="color: #009900;">&#123;</span>extCommands.<span style="color: #660066;">length</span><span style="color: #009900;">&#125;</span> 个：`<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #339933;">+</span> extCommands.<span style="color: #660066;">map</span><span style="color: #009900;">&#40;</span>c <span style="color: #339933;">=&gt;</span> <span style="color: #3366CC;">&quot;/&quot;</span> <span style="color: #339933;">+</span> c.<span style="color: #660066;">name</span><span style="color: #009900;">&#41;</span>.<span style="color: #660066;">join</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;、&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span><br />
+&nbsp; &nbsp; &nbsp; <span style="color: #3366CC;">&quot;info&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; &nbsp; console.<span style="color: #660066;">table</span><span style="color: #009900;">&#40;</span>commands<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+&nbsp; <span style="color: #009900;">&#125;</span><span style="color: #339933;">,</span><br />
+<span style="color: #009900;">&#125;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<pre>
+/my-commands
+扩展命令 2 个：/stats、/deploy
+</pre>
+
+<p>每个命令条目包含以下字段：</p>
+
+<table class="reference">
+<tr><th>字段</th><th>类型</th><th>说明</th></tr>
+<tr><td>name</td><td>string</td><td>命令名，在编辑区以 /name 的形式调用</td></tr>
+<tr><td>description</td><td>string</td><td>命令描述，显示在自动补全列表中</td></tr>
+<tr><td>source</td><td>string</td><td>来源类型：extension、prompt、skill 等</td></tr>
+<tr><td>sourceInfo</td><td>object</td><td>详细的来源元数据，例如注册它的扩展路径</td></tr>
+</table>
+<hr>
+
+<h2>动态工具管理</h2>
+<p>运行时管理工具的启用和禁用。</p>
+<p>典型用途是临时关掉写操作工具，让 AI 在一次任务里只能读不能改：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 文件路径：~/.pi/agent/extensions/manage-tools.ts</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 获取当前启用的工具列表</span><br />
+<span style="color: #000066; font-weight: bold;">const</span> active <span style="color: #339933;">=</span> pi.<span style="color: #660066;">getActiveTools</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<span style="color: #006600; font-style: italic;">// 例如：[&quot;read&quot;, &quot;bash&quot;, &quot;edit&quot;, &quot;write&quot;]</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 获取所有已注册工具的元数据</span><br />
+<span style="color: #000066; font-weight: bold;">const</span> all <span style="color: #339933;">=</span> pi.<span style="color: #660066;">getAllTools</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 筛选内置工具</span><br />
+<span style="color: #000066; font-weight: bold;">const</span> builtinTools <span style="color: #339933;">=</span> all.<span style="color: #660066;">filter</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; t <span style="color: #339933;">=&gt;</span> t.<span style="color: #660066;">sourceInfo</span>.<span style="color: #660066;">source</span> <span style="color: #339933;">===</span> <span style="color: #3366CC;">&quot;builtin&quot;</span><br />
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 筛选扩展注册的工具</span><br />
+<span style="color: #000066; font-weight: bold;">const</span> extTools <span style="color: #339933;">=</span> all.<span style="color: #660066;">filter</span><span style="color: #009900;">&#40;</span><br />
+&nbsp; t <span style="color: #339933;">=&gt;</span> t.<span style="color: #660066;">sourceInfo</span>.<span style="color: #660066;">source</span> <span style="color: #339933;">!==</span> <span style="color: #3366CC;">&quot;builtin&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #339933;">&amp;&amp;</span> t.<span style="color: #660066;">sourceInfo</span>.<span style="color: #660066;">source</span> <span style="color: #339933;">!==</span> <span style="color: #3366CC;">&quot;sdk&quot;</span><br />
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 动态启用自定义工具（保留现有工具）</span><br />
+pi.<span style="color: #660066;">setActiveTools</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#91;</span>...<span style="color: #000066; font-weight: bold;">new</span> Set<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#91;</span>...<span style="color: #660066;">active</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;my_tool&quot;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+<br />
+<span style="color: #006600; font-style: italic;">// 切换到只读模式：只保留读取类工具，</span><br />
+<span style="color: #006600; font-style: italic;">// 不包含 bash / edit / write，AI 在此状态下无法执行命令或改动文件</span><br />
+pi.<span style="color: #660066;">setActiveTools</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#91;</span><span style="color: #3366CC;">&quot;read&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;grep&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;find&quot;</span><span style="color: #339933;">,</span> <span style="color: #3366CC;">&quot;ls&quot;</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>这里的 setActiveTools 与命令行的 <span class="marked">--tools</span> / <span class="marked">--exclude-tools</span> 参数作用于同一个工具集合。</p>
+<p>CLI 参数决定启动时的初始集合，setActiveTools 在运行时动态调整，两者可以配合使用。</p></blockquote>
+
+<p>传入 setActiveTools 的变更必须是增量的（additive），在同一次调用中移除当前已激活的工具会失去延迟加载优化。</p>
+<p>另外，激活带 promptSnippet 或 promptGuidelines 的工具会重建系统提示词，即使模型支持延迟加载，也可能使缓存的提示词前缀失效。</p>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pi-agent/pi-agent-events.html" rel="prev"> Pi Agent 事件系统</a> </div>
+			<div class="next-design-link"><a href="/pi-agent/pi-agent-packages.html" rel="next"> Pi Agent 包管理</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31857' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31857;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31857, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31857},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31857;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

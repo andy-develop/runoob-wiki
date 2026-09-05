@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch TorchScript/ONNX 导出 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/pytorch/pytorch-torchscript-onnx-export.html" />
+<meta name="keywords" content="PyTorch TorchScript/ONNX 导出">
+<meta name="description" content="PyTorch TorchScript / ONNX 导出  模型训练完成后，需要将模型部署到生产环境。PyTorch 提供了多种模型导出方式，其中 TorchScript 和 ONNX 是最常用的两种格式。本节详细介绍这两种导出方式的原理、使用方法和最佳实践。  模型导出是将 PyTorch 模型转换为可以在不同平台、不同框架上运行的格式的过程。这对于模型部署、移动端推理、跨框架迁移等场景至关重要。    1. TorchScript..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>PyTorch 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="PyTorch 教程"  href="/pytorch/pytorch-tutorial.html" >
+			PyTorch 教程			</a>
+						<a target="_top" data-p="par" title="PyTorch 简介"  href="/pytorch/pytorch-intro.html" >
+			PyTorch 简介			</a>
+						<a target="_top" data-p="par" title="PyTorch 安装"  href="/pytorch/pytorch-install.html" >
+			PyTorch 安装			</a>
+						<a target="_top" data-p="par" title="PyTorch 基础"  href="/pytorch/pytorch-basic.html" >
+			PyTorch 基础			</a>
+			<a target="_top"  title="PyTorch 张量" href="/pytorch/pytorch-tensor.html">PyTorch 张量</a>			<a target="_top" data-p="par" title="PyTorch 神经网络基础"  href="/pytorch/pytorch-neural-network.html" >
+			PyTorch 神经网络基础			</a>
+			<a target="_top"  title="PyTorch 第一个神经网络" href="/pytorch/pytorch-first-neural-network.html">PyTorch 第一个神经网络</a>			<a target="_top" data-p="par" title="PyTorch 数据处理与加载"  href="/pytorch/pytorch-dataset-dataloader.html" >
+			PyTorch 数据处理与加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 线性回归"  href="/pytorch/pytorch-linear-regression.html" >
+			PyTorch 线性回归			</a>
+						<a target="_top" data-p="par" title="PyTorch 卷积神经网络"  href="/pytorch/pytorch-cnn.html" >
+			PyTorch 卷积神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 循环神经网络"  href="/pytorch/pytorch-recurrent-neural-network.html" >
+			PyTorch 循环神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据集"  href="/pytorch/pytorch-datasets.html" >
+			PyTorch 数据集			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据转换"  href="/pytorch/pytorch-transforms.html" >
+			PyTorch 数据转换			</a>
+						<a target="_top" data-p="par" title="Pytorch torch 参考手册"  href="/pytorch/pytorch-torch-ref.html" >
+			Pytorch torch			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.nn 参考手册"  href="/pytorch/pytorch-torch-nn-ref.html" >
+			PyTorch torch.nn			</a>
+						<a target="_top" data-p="par" title="Transformer 模型"  href="/pytorch/transformer-model.html" >
+			Transformer 模型			</a>
+						<a target="_top" data-p="par" title="PyTorch 构建 Transformer 模型"  href="/pytorch/pytorch-transformer-model.html" >
+			PyTorch Transformer			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.optim 优化器模块"  href="/pytorch/pytorch-torch-optim.html" >
+			PyTorch torch.optim			</a>
+						<a target="_top" data-p="par" title="PyTorch torchvision 计算机视觉模块"  href="/pytorch/pytorch-torchvision.html" >
+			PyTorch torchvision			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型部署"  href="/pytorch/pytorch-model-deployment.html" >
+			PyTorch 模型部署			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型保存和加载"  href="/pytorch/pytorch-model-save.html" >
+			PyTorch 模型保存和加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 图像分类项目"  href="/pytorch/pytorch-image-classification.html" >
+			PyTorch 图像分类			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 文本情感分析项目"  href="/pytorch/pytorch-text-classification.html" >
+			PyTorc 文本情感分析			</a>
+						<a target="_top" data-p="par" title="PyTorch Autograd 自动微分"  href="/pytorch/pytorch-autograd.html" >
+			PyTorch Autograd			</a>
+						<a target="_top" data-p="par" title="PyTorch GPU / CUDA 加速"  href="/pytorch/pytorch-gpu-cuda.html" >
+			PyTorch GPU / CUDA 加速			</a>
+						<a target="_top" data-p="par" title="PyTorch 损失函数"  href="/pytorch/pytorch-loss-function.html" >
+			PyTorch 损失函数			</a>
+						<a target="_top" data-p="par" title="PyTorch 学习率调度器"  href="/pytorch/pytorch-lr-scheduler.html" >
+			PyTorch 学习率调度器			</a>
+						<a target="_top" data-p="par" title="PyTorch 迁移学习"  href="/pytorch/pytorch-transfer-learning.html" >
+			PyTorch 迁移学习			</a>
+						<a target="_top" data-p="par" title="PyTorch 批归一化与 Dropout"  href="/pytorch/pytorch-batchnorm-dropout.html" >
+			PyTorch 批归一化			</a>
+						<a target="_top" data-p="par" title="PyTorch LSTM / GRU"  href="/pytorch/pytorch-lstm-gru.html" >
+			PyTorch LSTM / GRU			</a>
+						<a target="_top" data-p="par" title="PyTorch 词嵌入 (Embedding)"  href="/pytorch/pytorch-embedding.html" >
+			PyTorch 词嵌入			</a>
+						<a target="_top" data-p="par" title="PyTorch 生成对抗网络 (GAN)"  href="/pytorch/pytorch-gan.html" >
+			PyTorch 生成对抗网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 自编码器 (Autoencoder)"  href="/pytorch/pytorch-autoencoder.html" >
+			PyTorch 自编码器			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型评估与调试"  href="/pytorch/pytorch-evaluation-debugging.html" >
+			PyTorch 模型评估与调试			</a>
+						<a target="_top" data-p="par" title="PyTorch torchtext"  href="/pytorch/pytorch-torchtext.html" >
+			PyTorch torchtext			</a>
+						<a target="_top" data-p="par" title="PyTorch 混合精度训练 (AMP)"  href="/pytorch/pytorch-amp.html" >
+			PyTorch 混合精度训练			</a>
+						<a target="_top" data-p="par" title="PyTorch TorchScript/ONNX 导出"  href="/pytorch/pytorch-torchscript-onnx-export.html" >
+			PyTorch TorchScript/ONNX 导出			</a>
+						<a target="_top" data-p="par" title="PyTorch 分布式训练"  href="/pytorch/pytorch-distributed.html" >
+			PyTorch 分布式训练			</a>
+						<a target="_top" data-p="par" title="PyTorch 注意力机制"  href="/pytorch/pytorch-attention.html" >
+			PyTorch 注意力机制			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-amp.html" rel="prev"> PyTorch 混合精度训练 (AMP)</a> </div>
+			<div class="next-design-link"><a href="/pytorch/pytorch-distributed.html" rel="next"> PyTorch 分布式训练</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			
+<h1>PyTorch TorchScript / ONNX 导出</h1>
+
+<p>模型训练完成后，需要将模型部署到生产环境。PyTorch 提供了多种模型导出方式，其中 <span class="marked">TorchScript</span> 和 <span class="marked">ONNX</span> 是最常用的两种格式。</p><p>本节详细介绍这两种导出方式的原理、使用方法和最佳实践。</p>
+
+<blockquote><p>模型导出是将 PyTorch 模型转换为可以在不同平台、不同框架上运行的格式的过程。这对于模型部署、移动端推理、跨框架迁移等场景至关重要。</p></blockquote>
+
+<hr>
+
+<h2>1. TorchScript 基础</h2>
+
+<h3>1.1 什么是 TorchScript</h3>
+
+<p>TorchScript 是 PyTorch 的序列化格式，它可以将 Python 代码转换为可以独立运行的 C++ 虚拟机代码。TorchScript 程序可以在没有 Python 解释器的环境中运行。</p>
+
+<p>TorchScript 的主要特点：</p>
+
+<ul>
+<li>将动态图转换为静态图</li>
+<li>支持 Python 子集的语法</li>
+<li>可以在 C++ 环境中运行</li>
+<li>保留模型的结构和参数</li>
+</ul>
+
+<h3>1.2 两种转换方式</h3>
+
+<p>TorchScript 提供两种将模型转换为 TorchScript 的方式：</p>
+
+<ul>
+<li><span class="marked">TorchScript 追踪（Tracing）</span>：通过执行模型记录操作，生成静态计算图</li>
+<li><span class="marked">TorchScript 脚本（Scripting）</span>：直接分析 Python 代码，编译为 TorchScript</li>
+</ul>
+
+<hr>
+
+<h2>2. TorchScript 追踪 (Tracing)</h2>
+
+<h3>2.1 基本追踪方法</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: #a50"># ── 定义模型 ──────────────────────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">class</span> SimpleNet<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">conv1</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> kernel_size<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">conv2</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> kernel_size<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">pool</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">MaxPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">fc</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span> * <span style="color: Maroon;">8</span> * <span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">pool</span><span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">relu</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">conv1</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">pool</span><span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">relu</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">conv2</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> x.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>x.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">fc</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x<br />
+<br />
+<br />
+<span style="color: #a50"># 创建模型实例</span><br />
+model <span style="color: Gray;">=</span> SimpleNet<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 示例输入</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── 方式一：torch.jit.trace 追踪 ───────────────────</span><br />
+<span style="color: #a50"># 通过运行模型并记录操作来创建 TorchScript</span><br />
+traced_model <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">trace</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_input<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;追踪后的模型:&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>traced_model<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 保存模型</span><br />
+traced_model.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;simple_net_traced.pt&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 加载模型</span><br />
+loaded_model <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;simple_net_traced.pt&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 使用加载的模型进行推理</span><br />
+output <span style="color: Gray;">=</span> loaded_model<span style="color: Olive;">&#40;</span>example_input<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>2.2 追踪的限制</h3>
+
+<p>追踪方法有一些限制：</p>
+
+<ul>
+<li>只记录实际执行的操作</li>
+<li>控制流（如 if、for）会被固定</li>
+<li>动态大小的输入可能有问题</li>
+</ul>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 追踪的限制示例</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> DynamicModel<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 控制流在追踪时被固定</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> x.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x * <span style="color: Maroon;">2</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x / <span style="color: Maroon;">2</span><br />
+<br />
+<br />
+model <span style="color: Gray;">=</span> DynamicModel<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 追踪时，if 分支会被固定为追踪时的路径</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">tensor</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1.0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+traced <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">trace</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_input<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 即使输入不同，也会执行相同的分支</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>traced<span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">tensor</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1.0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 2</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>traced<span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">tensor</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1.0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> <span style="color: #a50"># 仍然是 2，不是 -0.5</span><br />
+
+</div>
+</div>
+
+<blockquote><p>对于包含控制流的模型，应该使用 TorchScript 脚本（Scripting）而不是追踪。</p></blockquote>
+
+<hr>
+
+<h2>3. TorchScript 脚本 (Scripting)</h2>
+
+<h3>3.1 基本使用方法</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<br />
+<span style="color: #a50"># ── 使用 @torch.jit.script 装饰器 ───────────────</span><br />
+<span style="color: Gray;">@</span>torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">script</span><br />
+<span style="color: Green;font-weight:bold;">def</span> scripted_function<span style="color: Olive;">&#40;</span>x: torch.<span style="color: #05a;">Tensor</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> torch.<span style="color: #05a;">Tensor</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用脚本方式转换函数&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> x.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x * <span style="color: Maroon;">2</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x / <span style="color: Maroon;">2</span><br />
+<br />
+<br />
+<span style="color: #a50"># 测试脚本化的函数</span><br />
+input1 <span style="color: Gray;">=</span> torch.<span style="color: #05a;">tensor</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1.0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2.0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+input2 <span style="color: Gray;">=</span> torch.<span style="color: #05a;">tensor</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1.0</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">2.0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>scripted_function<span style="color: Olive;">&#40;</span>input1<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># [2., 4.]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>scripted_function<span style="color: Olive;">&#40;</span>input2<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># [-0.5, -1.]</span><br />
+<br />
+<br />
+<span style="color: #a50"># ── 脚本化模型 ───────────────────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">class</span> ScriptableModel<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">fc</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Gray;">@</span>torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">export</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: torch.<span style="color: #05a;">Tensor</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> torch.<span style="color: #05a;">Tensor</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> torch.<span style="color: #05a;">relu</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">fc</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Gray;">@</span>torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">export</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> predict<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: torch.<span style="color: #05a;">Tensor</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> torch.<span style="color: #05a;">Tensor</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;额外的导出方法&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; out <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">forward</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> torch.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>out<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+model <span style="color: Gray;">=</span> ScriptableModel<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 脚本化模型</span><br />
+scripted_model <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">script</span><span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>scripted_model<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 保存</span><br />
+scripted_model.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;scripted_model.pt&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>3.2 复杂模型的脚本化</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 更复杂的脚本化示例：带条件的模型</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> ConditionModel<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> num_classes: <span style="color: Teal;">int</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">num_classes</span> <span style="color: Gray;">=</span> num_classes<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">features</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">MaxPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AdaptiveAvgPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Flatten</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: torch.<span style="color: #05a;">Tensor</span><span style="color: Gray;">,</span> use_softmax: <span style="color: Teal;">bool</span> <span style="color: Gray;">=</span> <span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> torch.<span style="color: #05a;">Tensor</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 支持动态条件的模型<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; features <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">features</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; logits <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span><span style="color: Olive;">&#40;</span>features<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> use_softmax:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> torch.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> logits<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> get_prediction<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: torch.<span style="color: #05a;">Tensor</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> torch.<span style="color: #05a;">Tensor</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;辅助方法&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; logits <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">forward</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> use_softmax<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> torch.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 脚本化</span><br />
+model <span style="color: Gray;">=</span> ConditionModel<span style="color: Olive;">&#40;</span>num_classes<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+scripted_model <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">script</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_inputs<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+test_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+output1 <span style="color: Gray;">=</span> scripted_model<span style="color: Olive;">&#40;</span>test_input<span style="color: Gray;">,</span> use_softmax<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+output2 <span style="color: Gray;">=</span> scripted_model<span style="color: Olive;">&#40;</span>test_input<span style="color: Gray;">,</span> use_softmax<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Logits 输出形状: {output1.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Softmax 输出形状: {output2.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>4. ONNX 导出</h2>
+
+<h3>4.1 ONNX 基础</h3>
+
+<p><span class="marked">ONNX（Open Neural Network eXchange）</span> 是一个开放的神经网络交换格式，支持在不同的深度学习框架之间转换模型。</p>
+
+<p>ONNX 的优势：</p>
+
+<ul>
+<li>跨框架：PyTorch、TensorFlow、Caffe2 等都支持</li>
+<li>跨平台：支持 CPU、GPU、移动端等多种平台</li>
+<li>硬件优化：可利用 ONNX Runtime 进行高效推理</li>
+<li>工具丰富：有大量的优化工具和部署方案</li>
+</ul>
+
+<h3>4.2 基本 ONNX 导出</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torchvision<br />
+<br />
+<span style="color: #a50"># ── 定义模型 ──────────────────────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">class</span> ImageClassifier<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">features</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">MaxPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AdaptiveAvgPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Flatten</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">features</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x<br />
+<br />
+<br />
+model <span style="color: Gray;">=</span> ImageClassifier<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 示例输入</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── 导出为 ONNX ──────────────────────────────────</span><br />
+output_path <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;image_classifier.onnx&quot;</span><br />
+<br />
+torch.<span style="color: #05a;">onnx</span>.<span style="color: #05a;">export</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; example_input<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; output_path<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; export_params<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 导出模型参数</span><br />
+&nbsp; &nbsp; opset_version<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># ONNX 版本</span><br />
+&nbsp; &nbsp; do_constant_folding<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: #a50"># 常量折叠优化</span><br />
+&nbsp; &nbsp; input_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'input'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a50"># 输入张量名称</span><br />
+&nbsp; &nbsp; output_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'output'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 输出张量名称</span><br />
+&nbsp; &nbsp; dynamic_axes<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'input'</span>: <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">'batch_size'</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 动态批次维度</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'output'</span>: <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">'batch_size'</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;模型已导出到: {output_path}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 验证导出的模型</span><br />
+<span style="color: Green;font-weight:bold;">import</span> onnx<br />
+onnx_model <span style="color: Gray;">=</span> onnx.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span>output_path<span style="color: Olive;">&#41;</span><br />
+onnx.<span style="color: #05a;">checker</span>.<span style="color: #05a;">check_model</span><span style="color: Olive;">&#40;</span>onnx_model<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ONNX 模型验证通过！&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>4.3 导出复杂模型</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 导出完整的 ResNet 模型</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> torchvision.<span style="color: #05a;">models</span> <span style="color: Green;font-weight:bold;">as</span> models<br />
+<br />
+<span style="color: #a50"># 加载预训练模型</span><br />
+model <span style="color: Gray;">=</span> models.<span style="color: #05a;">resnet18</span><span style="color: Olive;">&#40;</span>pretrained<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 示例输入（ResNet 标准的 224x224）</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">224</span><span style="color: Gray;">,</span> <span style="color: Maroon;">224</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 导出</span><br />
+torch.<span style="color: #05a;">onnx</span>.<span style="color: #05a;">export</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; example_input<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;resnet18.onnx&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; export_params<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; opset_version<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; input_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'input'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; output_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'output'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; dynamic_axes<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'input'</span>: <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">'batch_size'</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span>: <span style="color: #a11;">'height'</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span>: <span style="color: #a11;">'width'</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'output'</span>: <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">'batch_size'</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ResNet18 已导出&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 导出时处理特殊的层</span><br />
+<span style="color: #a50"># 对于需要特殊处理的层，使用 workaround</span><br />
+<span style="color: Green;font-weight:bold;">class</span> ModelWithSpecialOps<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">conv</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 使用 F.interpolate 而不是 nn.functional 的别名</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">conv</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">functional</span>.<span style="color: #05a;">interpolate</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> scale_factor<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> mode<span style="color: Gray;">=</span><span style="color: #a11;">'bilinear'</span><span style="color: Gray;">,</span> align_corners<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x<br />
+<br />
+<br />
+model <span style="color: Gray;">=</span> ModelWithSpecialOps<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+torch.<span style="color: #05a;">onnx</span>.<span style="color: #05a;">export</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;special_ops.onnx&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; input_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'input'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; output_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'output'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; opset_version<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>5. 导出的验证与优化</h2>
+
+<h3>5.1 验证导出模型</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<span style="color: Green;font-weight:bold;">import</span> onnx<br />
+<span style="color: Green;font-weight:bold;">import</span> onnxruntime <span style="color: Green;font-weight:bold;">as</span> ort<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> verify_onnx_model<span style="color: Olive;">&#40;</span>onnx_path<span style="color: Gray;">,</span> pytorch_model<span style="color: Gray;">,</span> test_input<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 验证 ONNX 模型与 PyTorch 模型的输出一致性<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 1. 检查 ONNX 模型</span><br />
+&nbsp; &nbsp; onnx_model <span style="color: Gray;">=</span> onnx.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span>onnx_path<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; onnx.<span style="color: #05a;">checker</span>.<span style="color: #05a;">check_model</span><span style="color: Olive;">&#40;</span>onnx_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;✓ ONNX 模型结构验证通过&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 2. PyTorch 推理</span><br />
+&nbsp; &nbsp; pytorch_model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; pytorch_output <span style="color: Gray;">=</span> pytorch_model<span style="color: Olive;">&#40;</span>test_input<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 3. ONNX Runtime 推理</span><br />
+&nbsp; &nbsp; ort_session <span style="color: Gray;">=</span> ort.<span style="color: #05a;">InferenceSession</span><span style="color: Olive;">&#40;</span>onnx_path<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; ort_output <span style="color: Gray;">=</span> ort_session.<span style="color: #05a;">run</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">None</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">'input'</span>: test_input.<span style="color: #05a;">numpy</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 4. 对比输出</span><br />
+&nbsp; &nbsp; diff <span style="color: Gray;">=</span> np.<span style="color: Teal;">abs</span><span style="color: Olive;">&#40;</span>pytorch_output.<span style="color: #05a;">numpy</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> - ort_output<span style="color: Olive;">&#41;</span>.<span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;✓ 最大输出差异: {diff:.6f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> diff <span style="color: Gray;">&lt;</span> <span style="color: Maroon;">1e-5</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;✓ 输出验证通过&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">True</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;&amp;#x26a0; 输出差异较大&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">False</span><br />
+<br />
+<br />
+<span style="color: #a50"># 使用示例</span><br />
+model <span style="color: Gray;">=</span> ImageClassifier<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 先导出</span><br />
+torch.<span style="color: #05a;">onnx</span>.<span style="color: #05a;">export</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;test_model.onnx&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; input_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'input'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; output_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'output'</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 验证</span><br />
+test_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+verify_onnx_model<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;test_model.onnx&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">,</span> test_input<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>5.2 ONNX Runtime 优化</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> onnxruntime <span style="color: Green;font-weight:bold;">as</span> ort<br />
+<span style="color: Green;font-weight:bold;">from</span> onnxruntime <span style="color: Green;font-weight:bold;">import</span> GraphOptimizationLevel<br />
+<br />
+<span style="color: #a50"># 创建推理会话并配置优化</span><br />
+<span style="color: Green;font-weight:bold;">def</span> create_optimized_session<span style="color: Olive;">&#40;</span>onnx_path<span style="color: Gray;">,</span> providers<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> providers <span style="color: Green;font-weight:bold;">is</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; providers <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">'CUDAExecutionProvider'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'CPUExecutionProvider'</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 配置会话选项</span><br />
+&nbsp; &nbsp; sess_options <span style="color: Gray;">=</span> ort.<span style="color: #05a;">SessionOptions</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 开启图优化</span><br />
+&nbsp; &nbsp; sess_options.<span style="color: #05a;">graph_optimization_level</span> <span style="color: Gray;">=</span> GraphOptimizationLevel.<span style="color: #05a;">ORT_ENABLE_ALL</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 启用其他优化</span><br />
+&nbsp; &nbsp; sess_options.<span style="color: #05a;">intra_op_num_threads</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">4</span><br />
+&nbsp; &nbsp; sess_options.<span style="color: #05a;">inter_op_num_threads</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">4</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 创建会话</span><br />
+&nbsp; &nbsp; session <span style="color: Gray;">=</span> ort.<span style="color: #05a;">InferenceSession</span><span style="color: Olive;">&#40;</span>onnx_path<span style="color: Gray;">,</span> sess_options<span style="color: Gray;">,</span> providers<span style="color: Gray;">=</span>providers<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> session<br />
+<br />
+<br />
+<span style="color: #a50"># 使用优化的会话进行推理</span><br />
+session <span style="color: Gray;">=</span> create_optimized_session<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;resnet18.onnx&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 获取输入输出名称</span><br />
+input_name <span style="color: Gray;">=</span> session.<span style="color: #05a;">get_inputs</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">name</span><br />
+output_name <span style="color: Gray;">=</span> session.<span style="color: #05a;">get_outputs</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">name</span><br />
+<br />
+<span style="color: #a50"># 推理</span><br />
+input_data <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">224</span><span style="color: Gray;">,</span> <span style="color: Maroon;">224</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">astype</span><span style="color: Olive;">&#40;</span>np.<span style="color: #05a;">float32</span><span style="color: Olive;">&#41;</span><br />
+output <span style="color: Gray;">=</span> session.<span style="color: #05a;">run</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>output_name<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#123;</span>input_name: input_data<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;推理输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>5.3 模型量化</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ONNX 模型量化</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> onnx<br />
+<span style="color: Green;font-weight:bold;">from</span> onnxruntime.<span style="color: #05a;">quantization</span> <span style="color: Green;font-weight:bold;">import</span> quantize_dynamic<span style="color: Gray;">,</span> QuantType<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> quantize_onnx_model<span style="color: Olive;">&#40;</span>input_path<span style="color: Gray;">,</span> output_path<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 动态量化 ONNX 模型<br />
+&nbsp; &nbsp; 减少模型大小并加速推理<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 动态量化（不需要校准数据）</span><br />
+&nbsp; &nbsp; quantize_dynamic<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; input_path<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output_path<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 指定需要量化的权重类型</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; weight_type<span style="color: Gray;">=</span>QuantType.<span style="color: #05a;">QInt8</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 获取文件大小对比</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+&nbsp; &nbsp; original_size <span style="color: Gray;">=</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">getsize</span><span style="color: Olive;">&#40;</span>input_path<span style="color: Olive;">&#41;</span> / <span style="color: Maroon;">1024</span> / <span style="color: Maroon;">1024</span><br />
+&nbsp; &nbsp; quantized_size <span style="color: Gray;">=</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">getsize</span><span style="color: Olive;">&#40;</span>output_path<span style="color: Olive;">&#41;</span> / <span style="color: Maroon;">1024</span> / <span style="color: Maroon;">1024</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;原始模型: {original_size:.2f} MB&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;量化模型: {quantized_size:.2f} MB&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;压缩比: {original_size/quantized_size:.2f}x&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 使用</span><br />
+quantize_onnx_model<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;resnet18.onnx&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;resnet18_quantized.onnx&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>6. 移动端部署</h2>
+
+<h3>6.1 导出到移动端格式</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 方式一：TorchScript 移动端部署</span><br />
+<span style="color: #a50"># 1. 追踪模型</span><br />
+model <span style="color: Gray;">=</span> ImageClassifier<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+<br />
+traced_model <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">trace</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_input<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 2. 优化模型（移动端优化）</span><br />
+optimized_model <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">optimize_for_inference</span><span style="color: Olive;">&#40;</span>traced_model<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 3. 保存移动端模型</span><br />
+optimized_model.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;mobile_model.pt&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 方式二：使用 torchmobile（如果可用）</span><br />
+<span style="color: #a50"># torchmobile 用于更轻量的移动端部署</span><br />
+<span style="color: #a50"># 请参考官方文档进行交叉编译</span><br />
+<br />
+<span style="color: #a50"># 方式三：导出为 ONNX 并使用移动端运行时</span><br />
+<span style="color: #a50"># iOS: 使用 Core ML Tools</span><br />
+<span style="color: #a50"># Android: 使用 ONNX Runtime Mobile</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;移动端模型已准备&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>6.2 Core ML 导出（iOS）</h3>
+
+<p>对于 iOS 平台，可以使用 Core ML Tools 将模型转换为 Core ML 格式。需要先转换为 ONNX 格式，再通过 Core ML Tools 转换。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 需要安装 coremltools</span><br />
+<span style="color: #a50"># pip install coremltools</span><br />
+<br />
+<span style="color: #a50"># Core ML 导出步骤</span><br />
+<span style="color: #a50"># 注意：这只在 macOS 上可用</span><br />
+<br />
+<span style="color: #a50"># 步骤 1: 先将 PyTorch 模型导出为 ONNX</span><br />
+<span style="color: #a50"># from pytorch_example import your_model</span><br />
+<span style="color: #a50"># model = your_model()</span><br />
+<span style="color: #a50"># model.eval()</span><br />
+<span style="color: #a50"># example_input = torch.randn(1, 3, 224, 224)</span><br />
+<span style="color: #a50"># torch.onnx.export(</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; model,</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; example_input,</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; &quot;model.onnx&quot;,</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; input_names=['input'],</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; output_names=['output']</span><br />
+<span style="color: #a50"># )</span><br />
+<br />
+<span style="color: #a50"># 步骤 2: 使用 Core ML Tools 转换为 Core ML 格式</span><br />
+<span style="color: #a50"># from coremltools.converters import onnx as onnx_coreml</span><br />
+<span style="color: #a50"># coreml_model = onnx_coreml.convert(</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; model=&quot;model.onnx&quot;,</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; minimum_deployment_target='13',</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; image_input_names=['input']</span><br />
+<span style="color: #a50"># )</span><br />
+<span style="color: #a50"># coreml_model.save(&quot;model.mlmodel&quot;)</span><br />
+<br />
+<span style="color: #a50"># 使用示例</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;iOS 部署需要 macOS 环境&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;详细步骤：1. pip install coremltools &nbsp;2. 导出 ONNX &nbsp;3. 使用 coremltools 转换&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>7. 最佳实践与常见问题</h2>
+
+<h3>7.1 导出问题排查</h3>
+
+<table class="reference">
+<tr>
+<th>问题</th>
+<th>原因</th>
+<th>解决方案</th>
+</tr>
+<tr>
+<td>导出失败</td>
+<td>不支持的操作</td>
+<td>使用 opset_version 更高的版本，或替换操作</td>
+</tr>
+<tr>
+<td>输出不一致</td>
+<td>动态控制流</td>
+<td>使用脚本化而非追踪，或固定输入尺寸</td>
+</tr>
+<tr>
+<td>ONNX Runtime 错误</td>
+<td>算子不支持</td>
+<td>检查 ONNX 支持的操作列表</td>
+</tr>
+</table>
+
+<h3>7.2 导出格式对比</h3>
+
+<table class="reference">
+<tr>
+<th>格式</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+<tr>
+<td>TorchScript (.pt)</td>
+<td>PyTorch 原生支持</td>
+<td>跨框架支持差</td>
+<td>桌面/服务器部署</td>
+</tr>
+<tr>
+<td>ONNX (.onnx)</td>
+<td>跨框架、跨平台</td>
+<td>有些操作不支持</td>
+<td>通用部署</td>
+</tr>
+</table>
+
+<h3>7.3 导出检查清单</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 导出前检查清单</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> export_checklist<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_input<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;导出前的检查&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 1. 确保模型在推理模式下</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;模型模式: {'eval' if not model.training else 'train'}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 2. 检查输入尺寸</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;示例输入形状: {example_input.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 3. 验证前向传播</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>example_input<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 4. 检查是否有不可序列化的操作</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 例如：lambda 函数</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> name<span style="color: Gray;">,</span> module <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">named_modules</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">hasattr</span><span style="color: Olive;">&#40;</span>module<span style="color: Gray;">,</span> <span style="color: #a11;">'__call__'</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">pass</span> &nbsp;<span style="color: #a50"># 检查自定义模块</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;✓ 导出检查完成&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 使用示例</span><br />
+model <span style="color: Gray;">=</span> ImageClassifier<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+export_checklist<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_input<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>7.4 完整导出流程</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 完整的模型导出流程示例</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> ProductionModel<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;生产级模型&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">backbone</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">7</span><span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">MaxPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># ... 更多层</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">head</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">512</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> return_features<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; features <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">backbone</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; features <span style="color: Gray;">=</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">functional</span>.<span style="color: #05a;">adaptive_avg_pool2d</span><span style="color: Olive;">&#40;</span>features<span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">flatten</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> return_features:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> features<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">head</span><span style="color: Olive;">&#40;</span>features<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 完整导出流程</span><br />
+model <span style="color: Gray;">=</span> ProductionModel<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;weights.pth&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 加载权重</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 准备示例输入</span><br />
+example_input <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">224</span><span style="color: Gray;">,</span> <span style="color: Maroon;">224</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 1. 追踪 TorchScript</span><br />
+traced <span style="color: Gray;">=</span> torch.<span style="color: #05a;">jit</span>.<span style="color: #05a;">trace</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> example_input<span style="color: Olive;">&#41;</span><br />
+traced.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;model_traced.pt&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 2. 导出 ONNX</span><br />
+torch.<span style="color: #05a;">onnx</span>.<span style="color: #05a;">export</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; traced<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; example_input<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;model.onnx&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; input_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'input'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; output_names<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'output'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; dynamic_axes<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">'input'</span>: <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">'batch'</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'output'</span>: <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">'batch'</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; opset_version<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 3. 优化 ONNX</span><br />
+<span style="color: #a50"># 使用 onnx-simplifier 去除冗余操作</span><br />
+<span style="color: #a50"># onnxsim model.onnx model_simplified.onnx</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;所有格式导出完成！&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-amp.html" rel="prev"> PyTorch 混合精度训练 (AMP)</a> </div>
+			<div class="next-design-link"><a href="/pytorch/pytorch-distributed.html" rel="next"> PyTorch 分布式训练</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30669' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30669;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30669, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30669},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30669;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

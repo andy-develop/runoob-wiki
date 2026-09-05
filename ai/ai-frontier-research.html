@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前沿研究动态 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-frontier-research.html" />
+<meta name="keywords" content="前沿研究动态">
+<meta name="description" content="前沿研究动态    AI 领域的进展速度常常让人惊叹，今天在学术论文中看到的新想法，可能半年后就变成了大家都在用的产品功能。  Scaling Law、MoE 混合专家模型、长上下文技术、推理时计算扩展、多模态融合、AI Agent、小样本学习、AI for Science——这些正在实验室里探索的方向，将定义下一个十年的 AI 产品形态。  本模块不追求讲透每一个技术细节，而是帮你建立一幅前沿研究的全景图：知道有哪些重要方向、每个方向..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-nlp-advanced.html" rel="prev"> NLP 进阶技术</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-system-architecture.html" rel="next"> AI 系统架构</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>前沿研究动态</h1>
+
+
+
+<p>AI 领域的进展速度常常让人惊叹，今天在学术论文中看到的新想法，可能半年后就变成了大家都在用的产品功能。</p>
+
+<p>Scaling Law、MoE 混合专家模型、长上下文技术、推理时计算扩展、多模态融合、AI Agent、小样本学习、AI for Science——这些正在实验室里探索的方向，将定义下一个十年的 AI 产品形态。</p>
+
+<p>本模块不追求讲透每一个技术细节，而是帮你建立一幅前沿研究的全景图：知道有哪些重要方向、每个方向在解决什么问题、目前进展到哪一步、未来可能走向何方。</p>
+
+<blockquote>
+<p>理解前沿研究的价值不在于跟风，而在于<span class="marked">看到技术演进的脉络，在变化中找到不变的规律</span>。</p>
+</blockquote>
+
+<hr>
+
+<h2>Scaling Law（规模定律）</h2>
+
+<p>Scaling Law 是过去几年大模型成功的核心指导原则——更大的模型、更多的数据、更强的算力，带来更好的性能。</p>
+
+<h3>什么是 Scaling Law</h3>
+
+<p>简单说：<span class="marked">在一定范围内，模型性能随着计算量、数据量、参数量的增加而可预测地提升</span>。</p>
+
+<p>这就像种庄稼：在合理区间内，施肥越多、浇水越足、土地越肥沃，收成就越好。</p>
+
+<p>Scaling Law 最早由 OpenAI 在 2020 年的论文《Scaling Laws for Neural Language Models》中系统阐述。</p>
+
+<p>他们发现，当你把模型参数量、数据量、计算量都扩大 N 倍时，模型的损失值会以 log(N) 的方式下降——也就是说，虽然边际收益递减，但只要持续投入，性能就会持续提升。</p>
+
+<h3>Chinchilla 最优训练法则</h3>
+
+<p>2022 年，DeepMind 的论文《Training Compute-Optimal Large Language Models》（即 Chinchilla 论文）带来了重要修正。</p>
+
+<p>此前的主流做法是：尽量把模型做大，然后用相对较少的数据训练。</p>
+
+<p>Chinchilla 论文指出：<span class="marked">之前的模型都太大了，数据太少了</span>。</p>
+
+<p>他们提出，给定一定的计算预算，应该让模型参数量和训练数据量按一定比例同步扩大。</p>
+
+<p>具体来说：计算量翻倍时，模型参数量应该扩大约 1.4 倍，训练数据量也应该扩大约 1.4 倍。</p>
+
+<table class="reference">
+<tr><th>模型</th><th>参数量</th><th>训练数据量</th><th>发布时间</th><th>特点</th></tr>
+<tr><td>GPT-3</td><td>175B</td><td>300B tokens</td><td>2020</td><td>模型大，数据相对少</td></tr>
+<tr><td>Chinchilla</td><td>70B</td><td>1.4T tokens</td><td>2022</td><td>模型小一点，数据多很多</td></tr>
+<tr><td>LLaMA 2</td><td>70B</td><td>2T tokens</td><td>2023</td><td>延续 Chinchilla 思路</td></tr>
+</table>
+
+<p>Chinchilla 的影响是深远的：此后的主流模型，从 LLaMA 到 GPT-4，都更注重数据量的配比，不再一味追求超大参数量。</p>
+
+<h3>Scaling Law 的局限与争议</h3>
+
+<p>Scaling Law 不是万能的。它的局限性体现在几个方面：</p>
+
+<p>首先是<span class="tag1">边际收益递减</span>——要让性能提升一倍，可能需要十倍甚至百倍的计算投入。</p>
+
+<p>其次是<span class="tag1">能力涌现的不可预测性</span>——有些能力（比如复杂推理）在模型小的时候完全不出现，到一定规模后突然涌现，但下一个能力何时涌现、涌现什么，没人能准确预测。</p>
+
+<p>第三是<span class="tag1">数据瓶颈</span>——高质量的文本数据总量是有限的，按当前的消耗速度，可能很快就会遇到数据天花板。</p>
+
+<blockquote>
+<p>Scaling Law 的核心启示：<span class="marked">规模不是万能的，但没有规模是万万不能的</span>。今天的模型依然受益于更大的规模，但研究者也在探索"不只是堆规模"的新路。</p>
+</blockquote>
+
+<hr>
+
+<h2>混合专家模型（MoE）</h2>
+
+<p>混合专家模型（Mixture of Experts，MoE）是让模型变大但不显著增加推理成本的一种架构设计。</p>
+
+<h3>稠密模型 vs 稀疏模型</h3>
+
+<p>传统的大模型是"稠密"的——每个 token 输入时，模型的所有参数都会被使用。</p>
+
+<p>MoE 是"稀疏"的——每个 token 只使用模型中的一小部分参数（也就是几个"专家"），其他参数处于休眠状态。</p>
+
+<p>这就像医院看病：</p>
+
+<p>稠密模型：你去看病，医院所有科室的医生都来给你会诊——虽然全面，但成本太高。</p>
+
+<p>MoE 模型：你去看病，导诊台把你分到相关的几个科室（比如内科+心内科），只有这几个科室的医生给你诊断——既保证了专业性，又控制了成本。</p>
+
+<table class="reference">
+<tr><th>特性</th><th>稠密模型</th><th>MoE 稀疏模型</th></tr>
+<tr><td>参数总量</td><td>通常较小</td><td>可以非常大</td></tr>
+<tr><td>每 token 使用参数</td><td>全部参数</td><td>一小部分专家</td></tr>
+<tr><td>推理成本</td><td>与参数量成正比</td><td>相对可控</td></tr>
+<tr><td>训练难度</td><td>相对简单</td><td>需要解决负载均衡等问题</td></tr>
+<tr><td>代表模型</td><td>GPT-3、LLaMA</td><td>Switch Transformer、Mixtral、GPT-4</td></tr>
+</table>
+
+<h3>门控机制（Gating）</h3>
+
+<p>MoE 的核心是<span class="marked">门控网络</span>——它决定每个 token 应该发给哪些专家处理。</p>
+
+<p>门控网络的输入是当前 token 的特征，输出是每个专家的权重。</p>
+
+<p>通常做法是：选择权重最高的 Top-K 个专家（比如 K=2 或 K=8），只把 token 发给这几个专家，然后把它们的输出按权重加权求和。</p>
+
+<p>门控网络本身是可学习的——它会在训练过程中慢慢学会"什么类型的内容适合分给什么专家"。</p>
+
+<h3>专家路由算法</h3>
+
+<p>MoE 有一个独特的挑战：<span class="marked">负载均衡</span>。</p>
+
+<p>如果门控网络总是把大多数 token 分给少数几个专家，那其他专家就得不到充分训练，模型容量就浪费了。</p>
+
+<p>研究者提出了多种路由算法来解决这个问题：</p>
+
+<p>一种是在门控网络的损失函数里加上"负载均衡损失"，鼓励每个专家被均匀使用。</p>
+
+<p>另一种是采用更复杂的路由策略，比如"容量限制"——每个专家有最大处理量，满了就分给下一个最合适的专家。</p>
+
+<h3>代表模型：Mixtral</h3>
+
+<p>2023 年底，Mistral AI 发布的 Mixtral 8x7B 让 MoE 真正走向主流。</p>
+
+<p>Mixtral 有 8 个 7B 参数的专家，每个 token 选择 Top-2 个专家，所以每 token 实际使用约 14B 参数，但总参数量有 47B。</p>
+
+<p>结果是：Mixtral 的推理速度和成本与 14B 稠密模型相当，但性能接近 70B 模型。</p>
+
+<p>这种"花小钱办大事"的特性，让 MoE 成为业界关注的焦点。</p>
+
+<h3>训练与推理挑战</h3>
+
+<p>MoE 虽然诱人，但也有额外的复杂性：</p>
+
+<p>训练方面：需要处理专家负载均衡、通信开销（在多机分布式训练时）、专家dropout等问题。</p>
+
+<p>推理方面：虽然每 token 只激活少数专家，但整个模型还是要加载到显存里——这对显存容量提出了更高要求。</p>
+
+<p>不过研究者正在用模型并行、动态专家卸载等技术来缓解这些问题。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 简单的 MoE 门控机制概念演示</span><br />
+<span style="color: #a50"># 展示如何根据输入选择合适的专家</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">random</span><br />
+<span style="color: Green;font-weight:bold;">from</span> typing <span style="color: Green;font-weight:bold;">import</span> List<span style="color: Gray;">,</span> Tuple<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> Expert:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;一个简单的专家模型（概念演示）&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> expert_id: <span style="color: Teal;">int</span><span style="color: Gray;">,</span> specialty: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">expert_id</span> <span style="color: Gray;">=</span> expert_id<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">specialty</span> <span style="color: Gray;">=</span> specialty &nbsp;<span style="color: #a50"># 专长领域（如&quot;数学&quot;、&quot;代码&quot;、&quot;文学&quot;）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 模拟专家的参数（实际中这是神经网络权重）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">weights</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #05a;">random</span>.<span style="color: #05a;">random</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: List<span style="color: Olive;">&#91;</span><span style="color: Teal;">float</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">float</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;专家处理输入并产生输出&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 简单的加权求和模拟（实际中是神经网络计算）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span> * <span style="color: Teal;">self</span>.<span style="color: #05a;">weights</span><span style="color: Olive;">&#91;</span>i % <span style="color: Maroon;">10</span><span style="color: Olive;">&#93;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> MoEGate:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;MoE 门控网络：决定每个输入分给哪些专家&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> num_experts: <span style="color: Teal;">int</span><span style="color: Gray;">,</span> top_k: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">num_experts</span> <span style="color: Gray;">=</span> num_experts<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">top_k</span> <span style="color: Gray;">=</span> top_k<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 门控网络自身的参数</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">gate_weights</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#91;</span><span style="color: #05a;">random</span>.<span style="color: #05a;">random</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>num_experts<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> compute_scores<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: List<span style="color: Olive;">&#91;</span><span style="color: Teal;">float</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> List<span style="color: Olive;">&#91;</span><span style="color: Teal;">float</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算每个专家对当前输入的得分&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> expert_weights <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">gate_weights</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; score <span style="color: Gray;">=</span> <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span> * expert_weights<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scores.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>score<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> scores<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> select_experts<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: List<span style="color: Olive;">&#91;</span><span style="color: Teal;">float</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> List<span style="color: Olive;">&#91;</span>Tuple<span style="color: Olive;">&#91;</span><span style="color: Teal;">int</span><span style="color: Gray;">,</span> <span style="color: Teal;">float</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;选择 Top-K 个专家，返回 (专家索引, 权重) 列表&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">compute_scores</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 按得分从高到低排序</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scored_experts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#40;</span>i<span style="color: Gray;">,</span> score<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span>scores<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scored_experts.<span style="color: #05a;">sort</span><span style="color: Olive;">&#40;</span>key<span style="color: Gray;">=</span><span style="color: Green;font-weight:bold;">lambda</span> x: x<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> reverse<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 选择 Top-K</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; top_experts <span style="color: Gray;">=</span> scored_experts<span style="color: Olive;">&#91;</span>:<span style="color: Teal;">self</span>.<span style="color: #05a;">top_k</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 对 Top-K 的权重做 softmax 归一化（简化版）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; total <span style="color: Gray;">=</span> <span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.0001</span><span style="color: Gray;">,</span> <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span>score <span style="color: Green;font-weight:bold;">for</span> _<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> top_experts<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#40;</span>idx<span style="color: Gray;">,</span> score / total<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> idx<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> top_experts<span style="color: Olive;">&#93;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> SimpleMoE:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;一个简化的混合专家模型&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> num_experts: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">8</span><span style="color: Gray;">,</span> top_k: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 创建多个专家</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; specialties <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;数学&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;代码&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;文学&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;历史&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;科学&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;艺术&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;体育&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;哲学&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">experts</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>Expert<span style="color: Olive;">&#40;</span>i<span style="color: Gray;">,</span> specialties<span style="color: Olive;">&#91;</span>i % <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>specialties<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>num_experts<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 创建门控网络</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">gate</span> <span style="color: Gray;">=</span> MoEGate<span style="color: Olive;">&#40;</span>num_experts<span style="color: Gray;">,</span> top_k<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: List<span style="color: Olive;">&#91;</span><span style="color: Teal;">float</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">float</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;MoE 前向传播&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 1. 门控网络选择专家</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; selected_experts <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">gate</span>.<span style="color: #05a;">select_experts</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入特征: {[f'{v:.2f}' for v in x[:5]]}...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;选择的专家:&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> idx<span style="color: Gray;">,</span> weight <span style="color: Green;font-weight:bold;">in</span> selected_experts:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;- 专家 {idx} ({self.experts[idx].specialty}), 权重: {weight:.3f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 2. 被选中的专家处理输入</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; expert_outputs <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> idx<span style="color: Gray;">,</span> weight <span style="color: Green;font-weight:bold;">in</span> selected_experts:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">experts</span><span style="color: Olive;">&#91;</span>idx<span style="color: Olive;">&#93;</span>.<span style="color: #05a;">forward</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; expert_outputs.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#40;</span>output<span style="color: Gray;">,</span> weight<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 3. 加权合并专家输出</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; final_output <span style="color: Gray;">=</span> <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span>output * weight <span style="color: Green;font-weight:bold;">for</span> output<span style="color: Gray;">,</span> weight <span style="color: Green;font-weight:bold;">in</span> expert_outputs<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> final_output<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 演示 MoE 的工作流程</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 创建一个 8 专家、选 Top-2 的 MoE 模型</span><br />
+moe <span style="color: Gray;">=</span> SimpleMoE<span style="color: Olive;">&#40;</span>num_experts<span style="color: Gray;">=</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> top_k<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 模拟几个不同类型的输入（用随机向量表示）</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB MoE 概念演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 输入 1：模拟&quot;数学&quot;类输入</span><br />
+input1 <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">0.9</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Olive;">&#93;</span><br />
+output1 <span style="color: Gray;">=</span> moe.<span style="color: #05a;">forward</span><span style="color: Olive;">&#40;</span>input1<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;MoE 输出: {output1:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 输入 2：模拟&quot;代码&quot;类输入</span><br />
+input2 <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.9</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Olive;">&#93;</span><br />
+output2 <span style="color: Gray;">=</span> moe.<span style="color: #05a;">forward</span><span style="color: Olive;">&#40;</span>input2<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;MoE 输出: {output2:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 输入 3：模拟&quot;文学&quot;类输入</span><br />
+input3 <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.9</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Olive;">&#93;</span><br />
+output3 <span style="color: Gray;">=</span> moe.<span style="color: #05a;">forward</span><span style="color: Olive;">&#40;</span>input3<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;MoE 输出: {output3:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;提示：实际 MoE 中，门控网络会通过学习逐渐&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot; &nbsp; &nbsp; &nbsp;学会什么类型的输入适合分给什么专家。&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote>
+<p>MoE 的核心洞察：<span class="marked">不是所有参数都需要同时工作</span>。让每个专家专注于自己擅长的，用门控网络做调度，既能扩大总容量，又能控制推理成本。</p>
+</blockquote>
+
+<hr>
+
+<h2>长上下文技术</h2>
+
+<p>早期 GPT-3 的上下文窗口只有 2K tokens（约 1500 个汉字），今天的主流模型已经达到 8K、32K、128K 甚至 1M tokens。</p>
+
+<p>长上下文不是简单地"把窗口拉长"——它需要解决一系列技术挑战。</p>
+
+<h3>长上下文的核心挑战</h3>
+
+<p>最直接的问题是<span class="tag1">计算复杂度</span>。</p>
+
+<p>Transformer 的自注意力机制复杂度是 O(n²)——上下文长度翻倍，计算量翻四倍。</p>
+
+<p>把窗口从 2K 拉到 128K，计算量增加 4096 倍——这在计算上是不可行的。</p>
+
+<p>第二个挑战是<span class="tag1">位置编码</span>。</p>
+
+<p>原始 Transformer 使用的正弦位置编码或可学习位置编码，在超出训练长度时外推能力很差——就像一个人只在 100 米跑道上训练过，突然让他跑 1000 米，会很不适应。</p>
+
+<p>第三个挑战是<span class="tag1">记忆效果</span>。</p>
+
+<p>即使技术上能处理长文本，模型也可能"看过就忘"——中间的内容很难被有效利用。</p>
+
+<h3>RoPE 外推方法（YaRN / LongRoPE）</h3>
+
+<p>旋转位置编码（Rotary Position Embedding，RoPE）是目前最流行的位置编码方案之一。</p>
+
+<p>RoPE 的核心思想是：<span class="marked">把位置信息编码为旋转角度</span>。</p>
+
+<p>这样做的好处是：相对位置关系被自然地编码了——两个 token 相隔 k 个位置，它们的旋转角度就差 k 个单位。</p>
+
+<p>但原始 RoPE 在超出训练长度时，外推效果依然会下降。</p>
+
+<p>研究者提出了改进方案：</p>
+
+<p><span class="tag1">YaRN</span>（Yet Another RoPE Scaling）——通过精细调整 RoPE 的缩放因子，让模型在超出训练长度时也能保持较好的性能。</p>
+
+<p><span class="tag1">LongRoPE</span>——Meta 提出的方法，通过渐进式扩展和微调，让 LLaMA 2 模型的上下文窗口从 4K 扩展到 128K 甚至 256K。</p>
+
+<p>这些技术的共同思路是：<span class="marked">不重新训练整个模型，只调整位置编码的部分参数</span>，就能实现上下文窗口的大幅扩展。</p>
+
+<h3>稀疏注意力（Sliding Window / Longformer）</h3>
+
+<p>解决 O(n²) 复杂度的另一个思路是：<span class="marked">不让每个 token 关注所有其他 token</span>。</p>
+
+<p><span class="tag1">滑动窗口注意力（Sliding Window Attention）</span>——每个 token 只关注它前后固定窗口内的 token（比如前后 4096 个）。</p>
+
+<p>这就像读小说时，你只记得最近几页的内容，不会每读一个字都回想整本书。</p>
+
+<p><span class="tag1">Longformer</span>——结合滑动窗口和全局注意力，部分特殊 token（如 <[BOS_never_used_51bce0c785ca2f68081bfa7d91973934]>
+、摘要标记）可以关注所有 token，其他 token 只关注局部。</p>
+
+<p>这样既能处理长文本，又能保证全局信息不丢失。</p>
+
+<h3>状态空间模型：Mamba</h3>
+
+<p>2023年底，Mamba 的出现带来了一个全新的思路。</p>
+
+<p>Mamba 属于<span class="tag1">状态空间模型（State Space Model，SSM）</span>的范畴，它的复杂度是 O(n)——上下文长度翻倍，计算量也只翻倍。</p>
+
+<p>Mamba 的核心创新是<span class="marked">选择性状态空间</span>——让模型根据输入内容动态决定哪些信息需要记住、哪些可以忽略。</p>
+
+<p>这就像做笔记：你不是把每一个字都记下来，而是选择性地记录重点。</p>
+
+<p>Mamba 的优势在于：</p>
+
+<p>1. 理论上可以处理无限长的上下文</p>
+
+<p>2. 推理速度快，显存占用低</p>
+
+<p>3. 在长序列任务上表现优异</p>
+
+<p>不过 Mamba 也有局限：目前在短文本任务上还略逊于成熟的 Transformer，生态也相对不完善。</p>
+
+<table class="reference">
+<tr><th>技术方案</th><th>复杂度</th><th>代表模型</th><th>适用场景</th></tr>
+<tr><td>全注意力 Transformer</td><td>O(n²)</td><td>GPT-3、LLaMA</td><td>短到中等长度文本</td></tr>
+<tr><td>RoPE 外推</td><td>O(n²)</td><td>Claude、GPT-4</td><td>中等长度文本</td></tr>
+<tr><td>稀疏注意力</td><td>O(n) 或 O(n log n)</td><td>Longformer、Mistral</td><td>文档级长文本</td></tr>
+<tr><td>状态空间模型</td><td>O(n)</td><td>Mamba、Hyena</td><td>超长序列（代码、基因组等）</td></tr>
+</table>
+
+<blockquote>
+<p>长上下文技术的演进方向：<span class="marked">在性能、速度、显存三者之间找到最佳平衡</span>。不同场景可能需要不同的技术方案。</p>
+</blockquote>
+
+<hr>
+
+<h2>推理时计算扩展</h2>
+
+<p>传统大模型的训练和推理是分离的——训练时花大量计算，推理时用固定的前向计算。</p>
+
+<p>推理时计算扩展的思路是：<span class="marked">让模型在推理时也能"思考"更多步</span>，用额外的计算换取更好的结果。</p>
+
+<h3>o1 / DeepSeek-R1 的思路</h3>
+
+<p>2024 年，OpenAI 的 o1 和 DeepSeek 的 DeepSeek-R1 代表了这个方向的重要突破。</p>
+
+<p>这些模型的核心是：<span class="marked">让模型先进行"推理思维链"，再给出最终答案</span>。</p>
+
+<p>具体来说：</p>
+
+<p>1. 模型收到问题后，不是直接回答，而是先生成一系列"思考过程"（对用户可见或隐藏）</p>
+
+<p>2. 在思考过程中，模型可以尝试不同思路、纠正自己的错误、分解复杂问题</p>
+
+<p>3. 思考充分后，再给出最终答案</p>
+
+<p>这就像做数学题：你不会直接写答案，而是先在草稿纸上一步步推导，确认正确后再整理答案。</p>
+
+<h3>慢思考 vs 快思考</h3>
+
+<p>这个方向呼应了心理学家卡尼曼的"双系统理论"：</p>
+
+<p><span class="tag1">系统 1（快思考）</span>——直觉、快速、不费脑力。对应传统模型的一次前向传播。</p>
+
+<p><span class="tag1">系统 2（慢思考）</span>——分析、慢速、需要努力。对应推理时的多步思考。</p>
+
+<p>之前的大模型主要是"系统 1"，而 o1 这类模型开始引入"系统 2"的能力。</p>
+
+<p>需要注意的是：<span class="marked">慢思考需要更多时间和成本</span>——一个思考 10 秒的请求，成本可能是即时回答的 10 倍。</p>
+
+<h3>Best-of-N 采样</h3>
+
+<p>另一种更简单的推理时扩展是 Best-of-N（也叫 Self-Consistency）。</p>
+
+<p>做法很直接：</p>
+
+<p>1. 让模型对同一个问题生成 N 个不同的答案</p>
+
+<p>2. 用某种方法选择最好的那个（比如多数投票、模型自我评估、外部验证）</p>
+
+<p>这就像考试时做选择题：你不会只猜一次，而是尝试多种解法，然后选最一致的答案。</p>
+
+<p>Best-of-N 的好处是简单、通用、几乎不需要额外训练——但缺点是成本高（要生成 N 次）。</p>
+
+<h3>Monte Carlo Tree Search in LLM</h3>
+
+<p>还有一个活跃的方向是把强化学习中的<span class="tag1">蒙特卡洛树搜索（MCTS）</span>引入大模型。</p>
+
+<p>AlphaGo 就是用 MCTS 实现超人表现的。</p>
+
+<p>MCTS 的思路是：</p>
+
+<p>1. 把问题看作一个"搜索树"——每个节点是一个思考状态，每条边是一个思考步骤</p>
+
+<p>2. 通过多次模拟，探索不同的思考路径</p>
+
+<p>3. 根据探索结果，选择最有希望的路径</p>
+
+<p>把 MCTS 和 LLM 结合，是一个很有潜力的方向——既能利用 LLM 的丰富知识，又能发挥 MCTS 的规划能力。</p>
+
+<table class="reference">
+<tr><th>方法</th><th>核心思想</th><th>优点</th><th>缺点</th></tr>
+<tr><td>思维链（CoT）</td><td>让模型一步步思考</td><td>简单有效</td><td>增加 token 消耗</td></tr>
+<tr><td>o1 / R1 风格</td><td>深度思考链 + 强化学习</td><td>推理能力强</td><td>训练复杂</td></tr>
+<tr><td>Best-of-N</td><td>多选一</td><td>简单通用</td><td>成本高</td></tr>
+<tr><td>MCTS + LLM</td><td>搜索最优思考路径</td><td>规划能力强</td><td>实现复杂</td></tr>
+</table>
+
+<blockquote>
+<p>推理时计算扩展的核心权衡：<span class="marked">你愿意花多少时间和成本，来换取更好的答案？</span>不同场景（闲聊 vs 数学证明）可能需要不同的设置。</p>
+</blockquote>
+
+<hr>
+
+<h2>多模态大模型最新进展</h2>
+
+<p>从 GPT-4V 到 Gemini 再到 GPT-4o，多模态能力正在快速演进——现在的模型不仅能读文本，还能看图像、理解视频、听音频、甚至生成多媒体内容。</p>
+
+<h3>GPT-4o / Gemini 1.5 Pro</h3>
+
+<p>2024 年的新一代多模态模型有几个显著特点：</p>
+
+<p><span class="tag1">更流畅的交互</span>——GPT-4o 支持语音对话，能实时理解图像和视频，交互体验更接近真人。</p>
+
+<p><span class="tag1">更强的视频理解</span>——Gemini 1.5 Pro 可以处理长达 1 小时的视频，能精准回答关于视频内容的问题。</p>
+
+<p><span class="tag1">原生多模态生成</span>——模型不再是"先看后答"，而是能同时处理和生成多种模态的内容。</p>
+
+<p>这些模型的能力常常让人惊叹：给一张手绘草图，它能帮你写代码实现；给一道物理题的照片，它能一步步讲解；给一段视频，它能分析人物情绪和情节发展。</p>
+
+<h3>原生多模态训练</h3>
+
+<p>早期的多模态模型通常是"拼接"的——预训练一个语言模型，再训练一个视觉编码器，最后把它们拼在一起。</p>
+
+<p>新一代模型正在走向<span class="marked">原生多模态训练</span>——从训练一开始就同时处理文本、图像、音频等多种模态。</p>
+
+<p>这带来几个好处：</p>
+
+<p>1. 更紧密的跨模态关联——模型能真正理解"这个词对应图像中的这个区域"</p>
+
+<p>2. 更自然的多轮交互——可以交替展示文本和图像，形成连贯对话</p>
+
+<p>3. 涌现的新能力——比如"看图说故事"、"听声辨物"等</p>
+
+<h3>视频理解的突破</h3>
+
+<p>视频理解是最近一年进展很快的方向。</p>
+
+<p>早期方法是把视频拆成独立的帧，每一帧单独编码——这会丢失时间连续性。</p>
+
+<p>新的思路包括：</p>
+
+<p><span class="tag1">时序注意力</span>——让模型不仅关注空间上的内容，还能追踪时间上的变化。</p>
+
+<p><span class="tag1">均匀采样</span>——在长视频中均匀采样关键帧，既覆盖全局又控制计算量。</p>
+
+<p><span class="tag1">视频 Tokenization</span>——把视频当作一种"语言"，用类似文本的方式处理。</p>
+
+<p>现在的模型已经能：理解复杂的视频教程、分析体育比赛的关键时刻、甚至从视频中学习操作技能。</p>
+
+<table class="reference">
+<tr><th>模型</th><th>能力重点</th><th>发布时间</th></tr>
+<tr><td>GPT-4V</td><td>图像理解</td><td>2023</td></tr>
+<tr><td>Gemini 1.0</td><td>多模态原生</td><td>2023</td></tr>
+<tr><td>Claude 3</td><td>视觉推理</td><td>2024</td></tr>
+<tr><td>Gemini 1.5 Pro</td><td>长视频理解</td><td>2024</td></tr>
+<tr><td>GPT-4o</td><td>实时多模态交互</td><td>2024</td></tr>
+</table>
+
+<blockquote>
+<p>多模态的未来方向：<span class="marked">从"能看能听"走向"真正理解"</span>。下一阶段的挑战是物理推理、因果理解、以及多模态下的抽象思维。</p>
+</blockquote>
+
+<hr>
+
+<h2>AI Agent 研究前沿</h2>
+
+<p>AI Agent（智能体）的目标是让 AI 能像人一样"做事"——有目标、会规划、能执行、懂反思。</p>
+
+<h3>世界模型（World Model）</h3>
+
+<p>世界模型是 Agent 的核心组件——它是 Agent 对世界的"心理模型"。</p>
+
+<p>简单说，世界模型让 Agent 能回答：</p>
+
+<p>"如果我这样做，接下来会发生什么？"</p>
+
+<p>这就像下棋：你不会直接落子，而是先在脑海中推演几步，预判对手的反应。</p>
+
+<p>世界模型的研究方向包括：</p>
+
+<p><span class="tag1">预训练世界模型</span>——在大量交互数据上预训练，让 Agent 具备常识物理知识。</p>
+
+<p><span class="tag1">想象规划</span>——让 Agent 在"想象"中尝试多种方案，选择最好的那个。</p>
+
+<p><span class="tag1">因果理解</span>——让 Agent 不仅知道"发生了什么"，还理解"为什么发生"。</p>
+
+<h3>具身智能（Embodied AI）</h3>
+
+<p>具身智能关注的是：<span class="marked">在物理世界或虚拟世界中拥有"身体"的 AI</span>。</p>
+
+<p>比如：</p>
+
+<p>——机器人在真实世界中抓取物体、导航</p>
+
+<p>——AI 在 Minecraft 中搭建复杂建筑</p>
+
+<p>——数字人在虚拟环境中与环境互动</p>
+
+<p>具身智能的挑战在于：物理世界是连续的、不可预测的、有噪音的——这和文本的离散世界很不一样。</p>
+
+<p>但也正是这种"真实感"，让具身智能成为学习常识的重要途径。</p>
+
+<h3>代码执行能力的重要性</h3>
+
+<p>现代 Agent 的一个关键能力是：<span class="marked">会写代码、会执行代码</span>。</p>
+
+<p>代码是 Agent 的"万能工具"：</p>
+
+<p>——需要计算时，写一段 Python 代码</p>
+
+<p>——需要数据分析时，写 SQL 或 Pandas</p>
+
+<p>——需要自动化任务时，写脚本调用各种 API</p>
+
+<p>——需要复杂推理时，写代码实现算法</p>
+
+<p>代码执行能力本质上是一种"扩展性"——它让 Agent 能根据需要创造新工具，而不局限于预设的能力。</p>
+
+<p>这也是为什么 Claude、GPT-4 等模型都花很大力气强化代码能力。</p>
+
+<blockquote>
+<p>AI Agent 的核心挑战：<span class="marked">如何把大模型的"知识"转化为现实世界中的"行动"</span>。这需要规划能力、工具使用能力、以及从试错中学习的能力。</p>
+</blockquote>
+
+<hr>
+
+<h2>小样本与零样本学习</h2>
+
+<p>传统机器学习需要大量标注数据才能学好一个任务。</p>
+
+<p>大模型带来的范式转变是：<span class="marked">给几个例子，甚至只给指令，模型就能学会新任务</span>。</p>
+
+<h3>In-Context Learning 的原理</h3>
+
+<p>In-Context Learning（上下文学习）是大模型最神奇的能力之一。</p>
+
+<p>简单说：你不需要修改模型参数，只要在输入里给几个例子，模型就能学会新任务。</p>
+
+<p>比如：</p>
+
+<p>输入：</p>
+
+<p>苹果 → 水果</p>
+
+<p>胡萝卜 → 蔬菜</p>
+
+<p>香蕉 → ?</p>
+
+<p>模型能自动理解规律，输出"水果"。</p>
+
+<p>但 In-Context Learning 到底是怎么工作的？</p>
+
+<p>研究者提出了几种解释：</p>
+
+<p><span class="tag1">隐式梯度下降</span>——上下文例子相当于在做某种"梯度更新"，但只在推理时生效。</p>
+
+<p><span class="tag1">任务检索</span>——模型从训练数据中检索类似的任务，然后复用那个任务的解法。</p>
+
+<p><span class="tag1">贝叶斯推理</span>——模型根据例子，在可能的假设空间中做贝叶斯更新。</p>
+
+<p>目前还没有完全一致的答案，但有一点是确定的：<span class="marked">模型在预训练中学到了"如何学习"</span>。</p>
+
+<h3>Instruction Tuning 的影响</h3>
+
+<p>Instruction Tuning（指令微调）是让模型更好地遵循人类指令的关键技术。</p>
+
+<p>做法很简单：收集大量"指令-任务"对，用它们微调模型。</p>
+
+<p>比如：</p>
+
+<p>指令：把下面的句子翻译成法语</p>
+
+<p>输入：Hello, how are you?</p>
+
+<p>输出：Bonjour, comment ça va?</p>
+
+<p>经过 Instruction Tuning 后，模型会更"听话"——更可能按照指令的要求去做，而不是随便生成。</p>
+
+<p>更重要的是，Instruction Tuning 带来了<span class="marked">泛化能力</span>——模型在见过的任务上表现好，在完全没见过的新任务上也能表现不错。</p>
+
+<p>这就像一个好学生：他不是死记硬背，而是学会了"如何理解和执行指令"。</p>
+
+<table class="reference">
+<tr><th>学习范式</th><th>需要的数据</th><th>代表方法</th><th>适用场景</th></tr>
+<tr><td>传统监督学习</td><td>大量标注数据</td><td>微调全模型</td><td>高价值任务，数据充足</td></tr>
+<tr><td>小样本学习（Few-shot）</td><td>几个例子</td><td>In-Context Learning</td><td>新任务快速试做</td></tr>
+<tr><td>零样本学习（Zero-shot）</td><td>只有指令</td><td>Instruction Tuning</td><td>简单、低风险任务</td></tr>
+<tr><td>思维链（CoT）</td><td>带推理步骤的例子</td><td>Step-by-step 提示</td><td>复杂推理任务</td></tr>
+</table>
+
+<blockquote>
+<p>小样本学习的核心价值：<span class="marked">降低应用 AI 的门槛</span>。现在，你不需要是机器学习专家，不需要收集大量数据——只要会写提示，就能让 AI 帮你做事。</p>
+</blockquote>
+
+<hr>
+
+<h2>AI 与科学发现</h2>
+
+<p>AI 不仅在改变我们的生活，也在改变科学研究本身——从蛋白质结构到数学定理，从药物发现到材料设计，AI 正在成为科学家的强大助手。</p>
+
+<h3>AlphaFold 的意义</h3>
+
+<p>2020 年，AlphaFold 是一个里程碑：它解决了困扰生物学界 50 年的"蛋白质折叠问题"。</p>
+
+<p>简单说，蛋白质是一串氨基酸，但它会折叠成复杂的 3D 结构——而这个结构决定了它的功能。</p>
+
+<p>之前，解析一个蛋白质结构可能需要几年时间和大量实验经费。</p>
+
+<p>现在，AlphaFold 能在几分钟内预测出准确的 3D 结构。</p>
+
+<p>AlphaFold 的影响是深远的：</p>
+
+<p>——帮助理解疾病机制</p>
+
+<p>——加速药物开发</p>
+
+<p>——设计全新的蛋白质</p>
+
+<p>更重要的是，AlphaFold 证明了：<span class="marked">AI 可以在人类知识的边界上做出实质性贡献</span>。</p>
+
+<h3>AI for Mathematics</h3>
+
+<p>数学研究被认为是人类智慧的巅峰——但 AI 也开始在这个领域崭露头角。</p>
+
+<p>最近的进展包括：</p>
+
+<p><span class="tag1">定理证明助手</span>——Lean、Isabelle 等证明助手与大模型结合，能帮助数学家形式化证明。</p>
+
+<p><span class="tag1">猜想发现</span>——AI 能从数学对象中发现模式，提出新的猜想。</p>
+
+<p><span class="tag1">符号推理</span>——AI 能进行符号运算、化简、推导。</p>
+
+<p>比如，DeepMind 的 AlphaTensor 发现了更高效的矩阵乘法算法；Meta 的 AI 帮助数学家在拓扑学领域做出了新发现。</p>
+
+<p>现在的 AI 还不能独立进行数学研究，但它已经能成为数学家的"协作伙伴"。</p>
+
+<h3>Drug Discovery</h3>
+
+<p>药物开发是一个漫长而昂贵的过程——平均需要 10 年时间和 10 亿美元。</p>
+
+<p>AI 正在改变这个局面：</p>
+
+<p><span class="tag1">靶点发现</span>——AI 分析生物数据，找到疾病相关的蛋白质靶点。</p>
+
+<p><span class="tag1">分子生成</span>——AI 生成全新的候选分子，预测它们的性质。</p>
+
+<p><span class="tag1">ADMET 预测</span>——AI 预测药物的吸收、代谢、毒性等。</p>
+
+<p><span class="tag1">合成路线设计</span>——AI 设计有机合成的最优路线。</p>
+
+<p>多家 AI 药物公司已经进入临床试验阶段——虽然还没有 AI 发现的药物上市，但这个方向的潜力巨大。</p>
+
+<table class="reference">
+<tr><th>科学领域</th><th>AI 的应用</th><th>代表成果</th></tr>
+<tr><td>结构生物学</td><td>蛋白质结构预测</td><td>AlphaFold、RoseTTAFold</td></tr>
+<tr><td>数学</td><td>定理证明、猜想发现</td><td>AlphaTensor、Lean AI</td></tr>
+<tr><td>化学</td><td>分子生成、反应预测</td><td>AlphaFold for ligands</td></tr>
+<tr><td>药物开发</td><td>靶点发现、候选物设计</td><td>多家公司进入临床</td></tr>
+<tr><td>材料科学</td><td>新材料设计</td><td>电池材料、催化剂</td></tr>
+</table>
+
+<blockquote>
+<p>AI 赋能科学发现的核心洞察：<span class="marked">科学研究本质上是"在巨大的可能性空间中搜索"</span>——而 AI 擅长的正是在海量数据和高维空间中找到模式。</p>
+</blockquote>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-nlp-advanced.html" rel="prev"> NLP 进阶技术</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-system-architecture.html" rel="next"> AI 系统架构</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31525' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31525;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31525, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31525},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31525;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

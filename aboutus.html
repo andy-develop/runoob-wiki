@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于我们 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="./static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="./static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="./wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="./static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="./static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./aboutus.html" />
+<meta name="keywords" content="关于我们">
+<meta name="description" content=".article-body { padding:0}     .article-heading {       max-width: 1180px;       margin: 0 auto 28px;       padding: 42px 28px 0;       color: #141413;     }      .article-heading h2 {       display: inline-flex;       a..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="./index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="./index.html">首页</a></li>
+        <li><a href="./html/html-tutorial.html">HTML</a></li>
+        <li><a href="./js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="./css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="./react/react-tutorial.html">React</a></li>
+        <li><a href="./python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="./java/java-tutorial.html">Java</a></li>
+        <li><a href="./cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="./cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="./csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="./go/go-tutorial.html">Go</a></li>
+        <li><a href="./sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="./linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="./vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="./git/git-tutorial.html">Git</a></li>
+        <li><a href="./browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="./index.html">首页</a></li>
+        <li><a href="./html/html-tutorial.html">HTML</a></li>
+        <li><a href="./css/css-tutorial.html">CSS</a></li>
+        <li><a href="./js/js-tutorial.html">JS</a></li>
+        <li><a href="./browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="./vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="./bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="./ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	<div class="big-middle-column">
+			
+		<div class="article">
+
+			<div class="article-heading">
+					<h2>关于我们</h2>
+				</div>
+			<div class="article-body">
+
+													
+					<div id="runoob-about">
+  <style>
+.article-body { padding:0}
+    .article-heading {
+      max-width: 1180px;
+      margin: 0 auto 28px;
+      padding: 42px 28px 0;
+      color: #141413;
+    }
+
+    .article-heading h2 {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0;
+      padding: 0 0 18px;
+      position: relative;
+      font-family: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+      font-size: clamp(24px, 5vw, 48px);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -.035em;
+      color: #141413;
+    }
+
+    .article-heading h2::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #96b97d;
+      box-shadow: 0 0 0 8px rgba(150, 185, 125, .12);
+      flex: 0 0 auto;
+    }
+
+    .article-heading h2::after {
+      content: "";
+      position: absolute;
+      left: 30px;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #96b97d, rgba(150, 185, 125, 0));
+    }
+
+    @media (max-width: 640px) {
+      .article-heading {
+        margin-bottom: 18px;
+        padding: 30px 18px 0;
+      }
+
+      .article-heading h2 {
+        font-size: 36px;
+      }
+    }
+
+    #runoob-about {
+      --ra-canvas: #f5f4ed;
+      --ra-soft: #faf9f5;
+      --ra-card: #faf9f5;
+      --ra-card-strong: #e8e6dc;
+      --ra-ink: #141413;
+      --ra-body: #5e5d59;
+      --ra-muted: #87867f;
+      --ra-line: #e8e6dc;
+      --ra-line-soft: #f0eee6;
+      --ra-coral: #96b97d;
+      --ra-coral-dark: #7fa467;
+      --ra-coral-light: rgba(150, 185, 125, 0.12);
+      --ra-coral-subtle: rgba(150, 185, 125, 0.06);
+      --ra-teal: #5e5d59;
+      --ra-amber: #96b97d;
+      --ra-dark: #30302e;
+      --ra-dark-2: #3d3d3a;
+      --ra-dark-3: #252523;
+      --ra-on-dark: #faf9f5;
+      --ra-on-dark-soft: #b0aea5;
+      --ra-serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+      --ra-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --ra-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-family: var(--ra-sans);
+      color: var(--ra-ink);
+      background: var(--ra-canvas);
+      line-height: 1.65;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #runoob-about *,
+    #runoob-about *::before,
+    #runoob-about *::after {
+      box-sizing: border-box;
+    }
+
+    #runoob-about :where(main, section, article, footer, div, span, h1, h2, h3, p, a, blockquote, strong, b) {
+      margin-top: 0;
+      box-shadow: none;
+      text-shadow: none;
+    }
+
+    #runoob-about :where(h1, h2, h3, p, blockquote) {
+      margin-bottom: 0;
+    }
+
+    #runoob-about :where(h1, h2, h3, p, a, span, div, article, section, footer, blockquote, strong, b) {
+      font-family: inherit;
+    }
+
+    #runoob-about a,
+    #runoob-about a:visited,
+    #runoob-about a:hover,
+    #runoob-about a:focus {
+      color: inherit;
+      text-decoration: none;
+      font-weight: inherit;
+    }
+
+    #runoob-about .ra-wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    #runoob-about .ra-section { padding: 64px 0; position: relative; }
+    #runoob-about .ra-section + .ra-section { border-top: 1px solid var(--ra-line); }
+
+    #runoob-about .ra-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 28px;
+      padding: 4px 12px;
+      border: 1px solid var(--ra-line);
+      border-radius: 999px;
+      background: var(--ra-card);
+      color: var(--ra-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 4px 0;
+    }
+
+    #runoob-about .ra-mark {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 6px;
+      background: var(--ra-coral-light);
+      color: var(--ra-coral-dark);
+      font-size: 12px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    #runoob-about .ra-title {
+      margin: 14px 0 14px;
+      font-family: var(--ra-serif);
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 500;
+      line-height: .95;
+      letter-spacing: -.05em;
+    }
+
+    #runoob-about .ra-heading {
+      margin: 14px 0 14px;
+      max-width: 820px;
+      font-family: var(--ra-serif);
+      font-size: clamp(32px, 4.4vw, 52px);
+      font-weight: 500;
+      line-height: 1.04;
+      letter-spacing: -.035em;
+    }
+
+    #runoob-about .ra-lead {
+      max-width: 700px;
+      margin: 0;
+      color: var(--ra-body);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    #runoob-about .ra-muted { color: var(--ra-muted); }
+    #runoob-about .ra-coral { color: var(--ra-coral); }
+
+    #runoob-about .ra-hero {
+      min-height: 640px;
+      padding: 72px 0 68px;
+      position: relative;
+      border-bottom: 1px solid var(--ra-line);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(150, 185, 125, .22), transparent 38%),
+        radial-gradient(circle at 92% 60%, rgba(150, 185, 125, .18), transparent 34%),
+        radial-gradient(circle at 100% 100%, rgba(124, 156, 104, .10), transparent 28%),
+        var(--ra-canvas);
+    }
+
+    #runoob-about .ra-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(340px, .98fr);
+      gap: 52px;
+      align-items: center;
+    }
+
+    #runoob-about .ra-hero-copy { padding-top: 6px; }
+
+    #runoob-about .ra-accent-bar {
+      width: 48px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--ra-coral-dark) 0%, var(--ra-coral) 60%, transparent 100%);
+      margin-bottom: 24px;
+    }
+
+    #runoob-about .ra-hero-lead {
+      max-width: 620px;
+      margin: 0 0 18px;
+      color: var(--ra-body);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.75;
+    }
+
+    #runoob-about .ra-hero-desc {
+      max-width: 600px;
+      margin: 0;
+      color: var(--ra-muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    #runoob-about .ra-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    #runoob-about .ra-hero-actions .ra-btn {
+      min-height: 48px;
+      padding: 14px 26px;
+      font-size: 15px;
+      border-radius: 10px;
+    }
+
+    #runoob-about .ra-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 12px 20px;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+      cursor: pointer;
+    }
+
+    #runoob-about .ra-btn:focus-visible {
+      outline: 3px solid rgba(150, 185, 125, .28);
+      outline-offset: 3px;
+    }
+
+    #runoob-about .ra-btn-primary { background: var(--ra-coral); color: #fff; }
+    #runoob-about .ra-btn-primary:hover { background: var(--ra-coral-dark); }
+    #runoob-about .ra-btn-secondary { background: var(--ra-canvas); color: var(--ra-ink); border-color: var(--ra-line); }
+    #runoob-about .ra-btn-secondary:hover { border-color: var(--ra-coral); color: var(--ra-coral-dark); }
+
+    #runoob-about .ra-product-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      background: var(--ra-dark);
+      color: var(--ra-on-dark);
+      padding: 22px;
+    }
+
+    #runoob-about .ra-product-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(250, 249, 245, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(250, 249, 245, .045) 1px, transparent 1px);
+      background-size: 34px 34px;
+      opacity: .75;
+      pointer-events: none;
+    }
+
+    #runoob-about .ra-window,
+    #runoob-about .ra-terminal,
+    #runoob-about .ra-dark-panel { position: relative; z-index: 1; }
+
+    #runoob-about .ra-window {
+      overflow: hidden;
+      border-radius: 13px;
+      border: 1px solid rgba(150, 185, 125, .18);
+      background: var(--ra-dark-3);
+    }
+
+    #runoob-about .ra-window-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 13px 15px;
+      border-bottom: 1px solid rgba(150, 185, 125, .12);
+      color: var(--ra-on-dark-soft);
+      font-family: var(--ra-mono);
+      font-size: 12px;
+    }
+
+    #runoob-about .ra-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ra-coral); }
+    #runoob-about .ra-dot:nth-child(2) { background: var(--ra-amber); }
+    #runoob-about .ra-dot:nth-child(3) { background: var(--ra-teal); margin-right: 8px; }
+
+    #runoob-about .ra-code {
+      margin: 0;
+      padding: 18px;
+      overflow-x: auto;
+      color: var(--ra-on-dark);
+      font-family: var(--ra-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      white-space: pre;
+    }
+
+    #runoob-about .ra-code .ra-dim { color: var(--ra-on-dark-soft); }
+    #runoob-about .ra-code .ra-key { color: #e8a55a; }
+    #runoob-about .ra-code .ra-val { color: #8fd9c9; }
+    #runoob-about .ra-code .ra-cmd { color: #d99a80; }
+
+    #runoob-about .ra-metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    #runoob-about .ra-metric {
+      border-radius: 12px;
+      background: var(--ra-dark-2);
+      padding: 16px;
+      color: var(--ra-on-dark-soft);
+      font-size: 13px;
+    }
+
+    #runoob-about .ra-metric strong {
+      display: block;
+      color: var(--ra-on-dark);
+      font-family: var(--ra-serif);
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -.03em;
+    }
+
+    #runoob-about .ra-intro-grid,
+    #runoob-about .ra-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    #runoob-about .ra-card {
+      min-height: 100%;
+      border-radius: 14px;
+      background: var(--ra-card);
+      padding: 22px;
+    }
+
+    #runoob-about .ra-card-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    #runoob-about .ra-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--ra-coral-light);
+      color: var(--ra-coral-dark);
+      font-size: 15px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    #runoob-about .ra-btn .fa,
+    #runoob-about .ra-stack-item .fa,
+    #runoob-about .ra-tool .fa {
+      flex: 0 0 auto;
+      line-height: 1;
+    }
+
+    #runoob-about .ra-card-num,
+    #runoob-about .ra-card-kicker {
+      color: var(--ra-coral);
+      font-family: var(--ra-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    #runoob-about .ra-card h3 {
+      margin: 10px 0 7px;
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--ra-ink);
+    }
+
+    #runoob-about .ra-card p {
+      margin: 0;
+      color: var(--ra-body);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    #runoob-about .ra-band {
+      background: var(--ra-soft);
+    }
+
+    #runoob-about .ra-split {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(340px, 1.08fr);
+      gap: 32px;
+      align-items: start;
+    }
+
+    #runoob-about .ra-language-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    #runoob-about .ra-language {
+      border: 1px solid var(--ra-line);
+      border-radius: 12px;
+      background: var(--ra-canvas);
+      padding: 14px;
+      min-height: 94px;
+    }
+
+    #runoob-about .ra-language b {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ra-ink);
+      font-family: var(--ra-mono);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    #runoob-about .ra-language .fa {
+      width: 16px;
+      color: var(--ra-coral-dark);
+      text-align: center;
+    }
+
+    #runoob-about .ra-language span {
+      color: var(--ra-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    #runoob-about .ra-stack-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    #runoob-about .ra-stack-item {
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--ra-line);
+      border-radius: 12px;
+      background: var(--ra-canvas);
+      padding: 10px 12px;
+    }
+
+    #runoob-about .ra-stack-item b {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 7px;
+      border-radius: 8px;
+      background: var(--ra-coral-light);
+      padding: 6px 9px;
+      color: var(--ra-coral-dark);
+      font-family: var(--ra-mono);
+      font-size: 13px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    #runoob-about .ra-stack-item b .fa {
+      width: 15px;
+      text-align: center;
+    }
+
+    #runoob-about .ra-stack-item span { color: var(--ra-body); font-size: 13px; line-height: 1.55; }
+
+    #runoob-about .ra-ai-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    #runoob-about .ra-ai-main {
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 360px;
+      background: var(--ra-dark);
+      color: var(--ra-on-dark);
+    }
+
+    #runoob-about .ra-ai-main h3,
+    #runoob-about .ra-ai-main p { color: inherit; }
+    #runoob-about .ra-ai-main p { color: var(--ra-on-dark-soft); }
+
+    #runoob-about .ra-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    #runoob-about .ra-chip {
+      border-radius: 999px;
+      background: rgba(150, 185, 125, .12);
+      border: 1px solid rgba(150, 185, 125, .28);
+      color: var(--ra-on-dark);
+      padding: 5px 11px;
+      font-family: var(--ra-mono);
+      font-size: 12px;
+    }
+
+    #runoob-about .ra-big-stat {
+      margin-top: 24px;
+      font-family: var(--ra-serif);
+      font-size: 58px;
+      font-weight: 500;
+      line-height: .9;
+      letter-spacing: -.045em;
+      color: var(--ra-coral);
+    }
+
+    #runoob-about .ra-timeline {
+      display: grid;
+      gap: 0;
+      margin-top: 24px;
+    }
+
+    #runoob-about .ra-step {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 14px;
+      position: relative;
+      padding-bottom: 20px;
+    }
+
+    #runoob-about .ra-step:last-child { padding-bottom: 0; }
+
+    #runoob-about .ra-step::before {
+      content: "";
+      position: absolute;
+      left: 23px;
+      top: 50px;
+      bottom: 0;
+      width: 1px;
+      background: var(--ra-line);
+    }
+
+    #runoob-about .ra-step:last-child::before { display: none; }
+
+    #runoob-about .ra-step-index {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--ra-coral);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-family: var(--ra-mono);
+      font-weight: 800;
+    }
+
+    #runoob-about .ra-step h3 { margin: 0 0 7px; font-size: 20px; line-height: 1.35; }
+    #runoob-about .ra-step h3 .fa { width: 22px; margin-right: 8px; color: var(--ra-coral-dark); text-align: center; }
+    #runoob-about .ra-step p { margin: 0; color: var(--ra-body); font-size: 15px; }
+
+    #runoob-about .ra-tool-card {
+      border-radius: 16px;
+      background: var(--ra-card);
+      padding: 22px;
+    }
+
+    #runoob-about .ra-tool-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    #runoob-about .ra-tool {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 10px;
+      background: var(--ra-canvas);
+      padding: 12px 14px;
+      color: var(--ra-body);
+      font-family: var(--ra-mono);
+      font-size: 13px;
+    }
+
+    #runoob-about .ra-tool .fa {
+      width: 18px;
+      color: var(--ra-coral-dark);
+      text-align: center;
+    }
+
+    #runoob-about .ra-feature-card {
+      background: var(--ra-canvas);
+      border: 1px solid var(--ra-line);
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    #runoob-about .ra-feature-value {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--ra-coral);
+      font-family: var(--ra-serif);
+      font-size: 44px;
+      font-weight: 500;
+      line-height: .95;
+      letter-spacing: -.035em;
+    }
+
+    #runoob-about .ra-feature-value .fa {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--ra-coral-light);
+      color: var(--ra-coral-dark);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    #runoob-about .ra-feature-card h3 { margin: 0 0 9px; font-size: 19px; }
+    #runoob-about .ra-feature-card p { margin: 0; color: var(--ra-body); font-size: 15px; }
+
+    #runoob-about .ra-cta {
+      padding: 58px 0;
+      background: var(--ra-coral);
+      color: #fff;
+    }
+
+    #runoob-about .ra-cta-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 22px;
+      align-items: end;
+    }
+
+    #runoob-about .ra-cta .ra-eyebrow { background: rgba(255,255,255,.16); color: #fff; }
+    #runoob-about .ra-cta h2 {
+      margin: 14px 0 12px;
+      font-family: var(--ra-serif);
+      font-size: clamp(34px, 5vw, 56px);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    #runoob-about .ra-cta p { max-width: 680px; margin: 0; color: rgba(255,255,255,.86); font-size: 16px; line-height: 1.7; }
+    #runoob-about .ra-cta .ra-btn { background: #fff; color: var(--ra-coral-dark); border-color: rgba(255,255,255,.45); }
+    #runoob-about .ra-cta .ra-btn:hover { background: var(--ra-canvas); }
+
+    #runoob-about .ra-footer {
+      padding: 34px 0;
+      background: var(--ra-soft);
+      color: var(--ra-body);
+      border-top: 1px solid var(--ra-line);
+    }
+
+    #runoob-about .ra-footer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    #runoob-about .ra-footer-brand,
+    #runoob-about .ra-footer-note {
+      border: 1px solid var(--ra-line);
+      border-radius: 14px;
+      background: var(--ra-canvas);
+      padding: 20px;
+    }
+
+    #runoob-about .ra-footer strong {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ra-ink);
+      font-family: var(--ra-serif);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -.02em;
+      margin-bottom: 10px;
+    }
+
+    #runoob-about .ra-footer strong .fa {
+      color: var(--ra-coral-dark);
+      font-size: 20px;
+    }
+
+    #runoob-about .ra-footer-note {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      color: var(--ra-ink);
+      font-family: var(--ra-serif);
+      font-size: 19px;
+      line-height: 1.55;
+      letter-spacing: -.015em;
+    }
+
+    #runoob-about .ra-footer-note .fa {
+      margin-top: 6px;
+      color: var(--ra-coral-dark);
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    #runoob-about .ra-footer-lines {
+      display: grid;
+      gap: 6px;
+    }
+
+    #runoob-about .ra-footer-lines p {
+      margin: 0;
+      color: var(--ra-ink);
+      font: inherit;
+    }
+
+    @media (max-width: 980px) {
+      #runoob-about .ra-section { padding: 52px 0; }
+      #runoob-about .ra-hero-grid,
+      #runoob-about .ra-split,
+      #runoob-about .ra-cta-card,
+      #runoob-about .ra-footer-grid { grid-template-columns: 1fr; }
+      #runoob-about .ra-intro-grid,
+      #runoob-about .ra-feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #runoob-about .ra-language-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      #runoob-about .ra-ai-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #runoob-about .ra-ai-main { grid-column: 1 / -1; min-height: 360px; }
+    }
+
+    @media (max-width: 640px) {
+      #runoob-about { border-radius: 0; overflow: visible; }
+      #runoob-about .ra-wrap { padding: 0 18px; }
+      #runoob-about .ra-hero { min-height: auto; padding: 48px 0; }
+      #runoob-about .ra-hero-grid { gap: 32px; }
+      #runoob-about .ra-section { padding: 44px 0; }
+      #runoob-about .ra-split { gap: 24px; }
+      #runoob-about .ra-tool-card + .ra-tool-card,
+      #runoob-about .ra-product-card { margin-top: 0 !important; }
+      #runoob-about .ra-step { padding-bottom: 16px; }
+      #runoob-about .ra-tool-card { border-radius: 14px; }
+      #runoob-about .ra-timeline { margin-top: 18px; }
+      #runoob-about .ra-title { font-size: clamp(38px, 12vw, 56px); }
+      #runoob-about .ra-hero-lead { font-size: 16px; }
+      #runoob-about .ra-lead,
+      #runoob-about .ra-cta p { font-size: 16px; }
+      #runoob-about .ra-intro-grid,
+      #runoob-about .ra-feature-grid,
+      #runoob-about .ra-language-grid,
+      #runoob-about .ra-ai-grid,
+      #runoob-about .ra-metric-row { grid-template-columns: 1fr; }
+      #runoob-about .ra-card,
+      #runoob-about .ra-feature-card,
+      #runoob-about .ra-tool-card { padding: 22px; }
+      #runoob-about .ra-product-card { padding: 14px; }
+      #runoob-about .ra-stack-item { grid-template-columns: 1fr; align-items: start; }
+      #runoob-about .ra-hero-actions { flex-direction: column; align-items: stretch; }
+      #runoob-about .ra-btn { width: 100%; }
+      #runoob-about .ra-code { font-size: 12px; padding: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #runoob-about *,
+      #runoob-about *::before,
+      #runoob-about *::after { transition: none !important; scroll-behavior: auto !important; animation: none !important; }
+    }
+
+    /* ── Scroll reveal ────────────────────────────────────────── */
+    #runoob-about [data-reveal] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s cubic-bezier(.16, 1, .3, 1),
+                  transform .6s cubic-bezier(.16, 1, .3, 1);
+    }
+    #runoob-about [data-reveal].ra-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Card hover lift ──────────────────────────────────────── */
+    #runoob-about .ra-card,
+    #runoob-about .ra-feature-card {
+      transition: transform .22s ease, box-shadow .22s ease;
+      will-change: transform;
+    }
+    #runoob-about .ra-card:hover,
+    #runoob-about .ra-feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .07);
+    }
+    #runoob-about .ra-language {
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      cursor: default;
+    }
+    #runoob-about .ra-language:hover {
+      transform: translateY(-3px);
+      border-color: rgba(150, 185, 125, .55);
+      box-shadow: 0 8px 24px rgba(150, 185, 125, .13);
+    }
+
+    /* ── Stack / tool hover ───────────────────────────────────── */
+    #runoob-about .ra-stack-item {
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    #runoob-about .ra-stack-item:hover {
+      border-color: var(--ra-coral);
+      background: var(--ra-coral-subtle);
+      transform: translateX(4px);
+    }
+    #runoob-about .ra-tool {
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+    #runoob-about .ra-tool:hover {
+      background: var(--ra-coral-subtle);
+      color: var(--ra-coral-dark);
+      transform: translateX(3px);
+    }
+
+    /* ── Button press ─────────────────────────────────────────── */
+    #runoob-about .ra-btn {
+      transition: background-color .2s ease, color .2s ease,
+                  border-color .2s ease, transform .12s ease;
+    }
+    #runoob-about .ra-btn:active { transform: scale(.96); }
+
+    /* ── Timeline step hover ──────────────────────────────────── */
+    #runoob-about .ra-step {
+      transition: transform .22s ease;
+    }
+    #runoob-about .ra-step:hover { transform: translateX(5px); }
+
+    /* ── Chip hover ───────────────────────────────────────────── */
+    #runoob-about .ra-chip {
+      transition: background .18s ease, border-color .18s ease, transform .15s ease;
+      cursor: default;
+    }
+    #runoob-about .ra-chip:hover {
+      background: rgba(150, 185, 125, .22);
+      border-color: rgba(150, 185, 125, .5);
+      transform: scale(1.06);
+    }
+
+    /* ── Typewriter terminal lines ────────────────────────────── */
+    @keyframes ra-line-in {
+      from { opacity: 0; transform: translateX(-4px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .ra-code-line {
+      display: block;
+      opacity: 0;
+    }
+    .ra-code-line.ra-typed {
+      animation: ra-line-in .28s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+    @keyframes ra-cursor-blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    .ra-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: var(--ra-coral);
+      border-radius: 1px;
+      vertical-align: middle;
+      margin-left: 3px;
+      animation: ra-cursor-blink .8s step-end infinite;
+    }
+
+    /* ── Counter animation ────────────────────────────────────── */
+    #runoob-about [data-count] {
+      display: inline-block;
+      transition: color .2s;
+    }
+
+    /* ── Hero entrance ────────────────────────────────────────── */
+    @keyframes ra-hero-in {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .ra-hero-copy > * {
+      animation: ra-hero-in .65s cubic-bezier(.16, 1, .3, 1) backwards;
+    }
+    .ra-hero-copy .ra-eyebrow      { animation-delay: .05s; }
+    .ra-hero-copy .ra-accent-bar   { animation-delay: .12s; }
+    .ra-hero-copy .ra-title        { animation-delay: .18s; }
+    .ra-hero-copy .ra-hero-lead    { animation-delay: .26s; }
+    .ra-hero-copy .ra-hero-desc    { animation-delay: .33s; }
+    .ra-hero-copy .ra-hero-actions { animation-delay: .40s; }
+
+    @keyframes ra-card-in {
+      from { opacity: 0; transform: translateY(12px) scale(.98); }
+      to   { opacity: 1; transform: none; }
+    }
+    .ra-hero .ra-product-card {
+      animation: ra-card-in .7s cubic-bezier(.16, 1, .3, 1) .3s backwards;
+    }
+
+    /* ── Mobile touch improvements ────────────────────────────── */
+    @media (max-width: 640px) {
+      #runoob-about .ra-card:hover,
+      #runoob-about .ra-feature-card:hover,
+      #runoob-about .ra-language:hover { transform: none; box-shadow: none; }
+      #runoob-about .ra-stack-item:hover,
+      #runoob-about .ra-tool:hover,
+      #runoob-about .ra-step:hover { transform: none; }
+      #runoob-about .ra-card:active,
+      #runoob-about .ra-feature-card:active { background: var(--ra-card-strong); }
+      #runoob-about .ra-language:active { border-color: var(--ra-coral); }
+      #runoob-about .ra-stack-item { gap: 8px; }
+      #runoob-about .ra-stack-item b { white-space: normal; }
+    }
+  </style>
+
+  <main>
+    <section class="ra-hero">
+      <div class="ra-wrap ra-hero-grid">
+        <div class="ra-hero-copy">
+          <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>内容概览</div>
+          <div class="ra-accent-bar"></div>
+          <h1 class="ra-title">RUNOOB<br><span class="ra-coral">菜鸟教程</span></h1>
+          <p class="ra-hero-lead">学的不仅是技术，更是梦想。</p>
+          <p class="ra-hero-lead">让每一个热爱学习的人，都拥有改变世界的起点。</p>
+          <p class="ra-hero-desc">RUNOOB 是面向中文用户的在线编程学习与技术参考平台，从第一行代码到 AI Agent，把复杂知识整理成可直接上手的学习路径。</p>
+          <div class="ra-hero-actions">
+            <a class="ra-btn ra-btn-primary" href="./index.html" target="_blank" rel="noopener"><i class="fa fa-play" aria-hidden="true"></i>开始学习</a>
+            <a class="ra-btn ra-btn-secondary" href="./ai-agent/ai-agent-tutorial.html" target="_blank" rel="noopener"><i class="fa fa-android" aria-hidden="true"></i>了解 AI Agent</a>
+          </div>
+        </div>
+
+        <div class="ra-product-card" aria-label="RUNOOB 学习终端示意">
+          <div class="ra-window">
+            <div class="ra-window-top"><span class="ra-dot"></span><span class="ra-dot"></span><span class="ra-dot"></span>runoob ~ learning</div>
+            <div class="ra-code"><span class="ra-dim">$</span> <span class="ra-cmd">welcome</span> --to RUNOOB
+<span class="ra-val">→ 中文编程学习与参考平台</span>
+<span class="ra-dim">$</span> <span class="ra-cmd">load</span> --courses
+<span class="ra-val">→ Python · JavaScript · SQL · AI</span>
+<span class="ra-dim">$</span> <span class="ra-cmd">start</span> --free
+<span class="ra-val">→ tutorials / examples / quizzes</span></div>
+          </div>
+          <div class="ra-metric-row">
+            <div class="ra-metric"><strong data-count="50" data-suffix="+">50+</strong>技术方向</div>
+            <div class="ra-metric"><strong data-count="100" data-suffix="%">100%</strong>免费开放</div>
+            <div class="ra-metric"><strong>∞</strong>在线实例</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-section">
+      <div class="ra-wrap">
+        <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>01 · 平台简介</div>
+        <h2 class="ra-heading">什么是 <span class="ra-coral">RUNOOB</span>？</h2>
+        <p class="ra-lead">RUNOOB（Runoob = Running Noob，意为"奔跑的菜鸟"）提供免费教程、在线实例、测验与常用手册，覆盖从入门到进阶的学习路径。</p>
+
+        <div class="ra-intro-grid">
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-graduation-cap" aria-hidden="true"></i></div><div class="ra-card-num">01</div></div><h3>零门槛入门</h3><p>无需任何编程基础，从 Hello World 到实用示例，循序渐进，适合按需学习。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></div><div class="ra-card-num">02</div></div><h3>在线实例驱动</h3><p>每个知识点配有可运行的在线示例，边看边改边学，帮助提升理解效率。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-refresh" aria-hidden="true"></i></div><div class="ra-card-num">03</div></div><h3>实时同步更新</h3><p>持续整理常用技术内容，从 Python、Vue 3，到 AI Agent、Vibe Coding 均有覆盖。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-globe" aria-hidden="true"></i></div><div class="ra-card-num">04</div></div><h3>全栈学习路径</h3><p>涵盖前端、后端、数据库、移动端、AI / 数据科学等完整工程师知识体系。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-check-square-o" aria-hidden="true"></i></div><div class="ra-card-num">05</div></div><h3>测验与考试</h3><p>配套 HTML、Python、SQL 等在线测验，随时检测学习成果，即学即测。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-book" aria-hidden="true"></i></div><div class="ra-card-num">06</div></div><h3>参考手册</h3><p>提供 HTML、CSS、JavaScript 等常用参考手册，开发查阅一站到位。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-section ra-band">
+      <div class="ra-wrap ra-split">
+        <div>
+          <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>02 · 编程语言</div>
+          <h2 class="ra-heading">覆盖主流编程语言全栈</h2>
+          <p class="ra-lead">从系统级语言到脚本语言，从移动端到数据科学，每种语言均提供系统化教程与实践案例。</p>
+        </div>
+        <div class="ra-language-grid">
+          <div class="ra-language"><b><i class="fa fa-code" aria-hidden="true"></i> Python</b><span>数据科学 · AI 常用</span></div>
+          <div class="ra-language"><b><i class="fa fa-coffee" aria-hidden="true"></i> Java</b><span>企业后端 · Android</span></div>
+          <div class="ra-language"><b><i class="fa fa-jsfiddle" aria-hidden="true"></i> JavaScript</b><span>Web 前后端均可使用</span></div>
+          <div class="ra-language"><b><i class="fa fa-bolt" aria-hidden="true"></i> Go</b><span>高性能微服务</span></div>
+          <div class="ra-language"><b><i class="fa fa-cogs" aria-hidden="true"></i> C / C++</b><span>系统 · 嵌入式 · 性能</span></div>
+          <div class="ra-language"><b><i class="fa fa-server" aria-hidden="true"></i> PHP</b><span>Web 后端经典语言</span></div>
+          <div class="ra-language"><b><i class="fa fa-code-fork" aria-hidden="true"></i> TypeScript</b><span>JS 的类型超集</span></div>
+          <div class="ra-language"><b><i class="fa fa-apple" aria-hidden="true"></i> Swift</b><span>iOS / macOS 开发</span></div>
+          <div class="ra-language"><b><i class="fa fa-diamond" aria-hidden="true"></i> Ruby</b><span>优雅的脚本语言</span></div>
+          <div class="ra-language"><b><i class="fa fa-mobile" aria-hidden="true"></i> Kotlin</b><span>Android 官方语言</span></div>
+          <div class="ra-language"><b><i class="fa fa-html5" aria-hidden="true"></i> CSS / HTML</b><span>Web 界面标准</span></div>
+          <div class="ra-language"><b><i class="fa fa-database" aria-hidden="true"></i> SQL / MySQL</b><span>数据库查询标准</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-section">
+      <div class="ra-wrap ra-split">
+        <div>
+          <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>03 · 前端开发</div>
+          <h2 class="ra-heading">从 HTML 到现代框架</h2>
+          <p class="ra-lead">RUNOOB 提供系统化前端学习路径，每个框架配有在线编辑器与可运行实例。</p>
+          <div class="ra-stack-list">
+            <div class="ra-stack-item"><b><i class="fa fa-cube" aria-hidden="true"></i>React</b><span>构建交互式 UI 的 JavaScript 库，Facebook 出品。</span></div>
+            <div class="ra-stack-item"><b><i class="fa fa-leaf" aria-hidden="true"></i>Vue 3</b><span>渐进式框架，Composition API，轻量易学。</span></div>
+            <div class="ra-stack-item"><b><i class="fa fa-shield" aria-hidden="true"></i>Angular</b><span>Google 出品，企业级全功能前端框架。</span></div>
+            <div class="ra-stack-item"><b><i class="fa fa-magic" aria-hidden="true"></i>jQuery</b><span>经典 DOM 操作库，大量实例题库。</span></div>
+            <div class="ra-stack-item"><b><i class="fa fa-columns" aria-hidden="true"></i>Bootstrap</b><span>响应式 CSS 框架，v3 / v4 / v5 全版本覆盖。</span></div>
+            <div class="ra-stack-item"><b><i class="fa fa-terminal" aria-hidden="true"></i>Node.js</b><span>JavaScript 后端运行时，前后端一体。</span></div>
+          </div>
+        </div>
+
+        <div class="ra-product-card">
+          <div class="ra-window">
+            <div class="ra-window-top"><span class="ra-dot"></span><span class="ra-dot"></span><span class="ra-dot"></span>frontend-example.js</div>
+            <div class="ra-code"><span class="ra-dim">// Vue 3 Composition API 示例</span>
+<span class="ra-key">import</span> { ref, computed } <span class="ra-key">from</span> <span class="ra-val">'vue'</span>
+
+<span class="ra-key">const</span> setup = () => {
+  <span class="ra-key">const</span> count = ref(<span class="ra-val">0</span>)
+  <span class="ra-key">const</span> double = computed(() => count.value * <span class="ra-val">2</span>)
+  <span class="ra-key">return</span> { count, double }
+}
+
+<span class="ra-dim">// React Hooks 示例</span>
+<span class="ra-key">const</span> [items, setItems] = useState([])
+useEffect(() => fetchData().then(setItems), [])</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-section ra-band">
+      <div class="ra-wrap">
+        <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>04 · AI 智能开发</div>
+        <h2 class="ra-heading">持续关注 <span class="ra-coral">AI 技术</span></h2>
+        <p class="ra-lead">覆盖从基础 LLM 理论到 Agent 框架、RAG、提示词工程与 Vibe Coding 工具链的系统化学习内容。</p>
+
+        <div class="ra-ai-grid">
+          <article class="ra-card ra-ai-main">
+            <div>
+              <div class="ra-card-kicker">核心模块</div>
+              <h3>AI Agent 智能体系统</h3>
+              <p>从零搭建具备感知、决策、记忆、工具调用能力的 AI 智能体。覆盖 LangChain、CrewAI、LangGraph 常见框架。</p>
+              <div class="ra-chip-row">
+                <span class="ra-chip">LangChain</span><span class="ra-chip">CrewAI</span><span class="ra-chip">LangGraph</span><span class="ra-chip">RAG</span><span class="ra-chip">向量数据库</span><span class="ra-chip">提示词工程</span><span class="ra-chip">多智能体</span>
+              </div>
+            </div>
+            <div><div class="ra-big-stat" data-count="10" data-suffix="+">10+</div><p>AI 方向课程模块</p></div>
+          </article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-microchip" aria-hidden="true"></i></div><div class="ra-card-num">AI</div></div><h3>大语言模型基础</h3><p>LLM 原理、Token、上下文窗口、提示词工程、推理与规划。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-search" aria-hidden="true"></i></div><div class="ra-card-num">RAG</div></div><h3>知识检索</h3><p>基于向量数据库的检索增强生成，了解知识问答系统的常见构建方法。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-bolt" aria-hidden="true"></i></div><div class="ra-card-num">CLI</div></div><h3>Vibe Coding</h3><p>Claude Code、OpenCode、Qoder、Trae 等 AI 编程工具的入门教程。</p></article>
+          <article class="ra-card"><div class="ra-card-head"><div class="ra-icon"><i class="fa fa-code" aria-hidden="true"></i></div><div class="ra-card-num">PY</div></div><h3>Python 实现 Agent</h3><p>工具调用、记忆系统、多模态 Agent、生产部署，提供 Python 实战示例。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-section">
+      <div class="ra-wrap ra-split">
+        <div>
+          <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>05 · AI Agent 深度解析</div>
+          <h2 class="ra-heading">智能体如何运作</h2>
+          <p class="ra-lead">RUNOOB 将 AI Agent 比作一家智能餐厅：大脑决策、工具执行、记忆存储、规划协调，四大核心组件缺一不可。</p>
+          <div class="ra-timeline">
+            <div class="ra-step"><div class="ra-step-index">1</div><div><h3><i class="fa fa-microchip" aria-hidden="true"></i>大脑（LLM 核心）</h3><p>听懂指令、制定目标、决定执行顺序，是智能体的指挥中心。</p></div></div>
+            <div class="ra-step"><div class="ra-step-index">2</div><div><h3><i class="fa fa-wrench" aria-hidden="true"></i>工具（Tool Calling）</h3><p>执行具体动作：调用 API、查询数据库、发送邮件、浏览网页。</p></div></div>
+            <div class="ra-step"><div class="ra-step-index">3</div><div><h3><i class="fa fa-database" aria-hidden="true"></i>记忆（Memory System）</h3><p>短期上下文 + 长期向量存储，保证多轮对话流程连贯不混乱。</p></div></div>
+            <div class="ra-step"><div class="ra-step-index">4</div><div><h3><i class="fa fa-tasks" aria-hidden="true"></i>规划（Planning）</h3><p>任务拆解、优先级排序、多智能体协作调度，面向复杂目标。</p></div></div>
+          </div>
+        </div>
+        <div class="ra-tool-card">
+          <div class="ra-card-kicker">Vibe Coding 工具链</div>
+          <h3>对话式开发的常见工作方式</h3>
+          <p class="ra-muted">RUNOOB 收录多种 AI 辅助编程工具教程，帮助学习者理解新一代开发流程。</p>
+          <div class="ra-tool-list">
+            <div class="ra-tool"><i class="fa fa-terminal" aria-hidden="true"></i>Claude Code — Anthropic 出品命令行 AI 编程</div>
+            <div class="ra-tool"><i class="fa fa-code-fork" aria-hidden="true"></i>OpenCode — 开源 AI 编程 CLI 工具</div>
+            <div class="ra-tool"><i class="fa fa-bug" aria-hidden="true"></i>Qoder — 智能代码生成与调试</div>
+            <div class="ra-tool"><i class="fa fa-desktop" aria-hidden="true"></i>Trae — 字节出品 AI IDE</div>
+            <div class="ra-tool"><i class="fa fa-sitemap" aria-hidden="true"></i>OpenClaw / QoderWork — AI 工作流平台</div>
+          </div>
+          <div class="ra-product-card" style="margin-top:22px;">
+            <div class="ra-window">
+              <div class="ra-window-top"><span class="ra-dot"></span><span class="ra-dot"></span><span class="ra-dot"></span>agent.py</div>
+              <div class="ra-code"><span class="ra-key">from</span> langchain.agents <span class="ra-key">import</span> initialize_agent
+<span class="ra-key">from</span> langchain.tools <span class="ra-key">import</span> DuckDuckGoSearchRun
+
+tools = [DuckDuckGoSearchRun()]
+agent = initialize_agent(tools, llm, agent=<span class="ra-val">"zero-shot"</span>)
+agent.run(<span class="ra-val">"RUNOOB AI 教程"</span>)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-section ra-band">
+      <div class="ra-wrap">
+        <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>06 · 平台特色</div>
+        <h2 class="ra-heading">为什么使用 RUNOOB？</h2>
+        <p class="ra-lead">这些能力覆盖日常学习、查阅与练习的常见场景。</p>
+        <div class="ra-feature-grid">
+          <article class="ra-feature-card"><div class="ra-feature-value"><i class="fa fa-gift" aria-hidden="true"></i>100%</div><h3>永久免费学习</h3><p>教程、参考手册、在线测验、代码实例免费开放，便于直接浏览与练习。</p></article>
+          <article class="ra-feature-card"><div class="ra-feature-value"><i class="fa fa-sitemap" aria-hidden="true"></i>50+</div><h3>覆盖范围较广</h3><p>从编程语言到 AI、前端、后端、数据库、DevOps、移动开发，集中整理。</p></article>
+          <article class="ra-feature-card"><div class="ra-feature-value"><i class="fa fa-codepen" aria-hidden="true"></i>∞</div><h3>边学边练</h3><p>内置在线代码编辑器，修改即运行，实验无需搭建本地环境，降低学习门槛。</p></article>
+          <article class="ra-feature-card"><div class="ra-feature-value"><i class="fa fa-list-alt" aria-hidden="true"></i>Quiz</div><h3>即学即测</h3><p>HTML、Python、JavaScript、SQL 等多门课程提供在线测验与考试。</p></article>
+          <article class="ra-feature-card"><div class="ra-feature-value"><i class="fa fa-android" aria-hidden="true"></i>AI</div><h3>辅助学习支持</h3><p>部分学习场景可结合 AI 问答辅助理解，帮助学习者进一步梳理知识点。</p></article>
+          <article class="ra-feature-card"><div class="ra-feature-value"><i class="fa fa-desktop" aria-hidden="true"></i>Web</div><h3>多端访问</h3><p>支持 PC、手机、平板等设备访问，便于在不同场景下查阅与学习。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ra-cta">
+      <div class="ra-wrap ra-cta-card">
+        <div>
+          <div class="ra-eyebrow"><span class="ra-mark"><i class="fa fa-code" aria-hidden="true"></i></span>开始你的编程之旅</div>
+          <h2>从入门到进阶，<br>从这里开始。</h2>
+          <p>无论你是刚入门的学习者，还是正在了解 AI 新方向的开发者，RUNOOB 都可以作为实用的学习入口与技术参考。</p>
+        </div>
+        <a class="ra-btn" href="./index.html" target="_blank" rel="noopener"><i class="fa fa-external-link" aria-hidden="true"></i>访问 www.runoob.com</a>
+      </div>
+    </section>
+
+    <footer class="ra-footer">
+      <div class="ra-wrap ra-footer-grid">
+        <div class="ra-footer-brand">
+          <strong><i class="fa fa-codepen" aria-hidden="true"></i>RUNOOB · 菜鸟教程</strong>
+          <div>www.runoob.com · 学的不仅是技术，更是梦想！</div>
+          <div style="
+            margin-top:12px;
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 16px;
+            background:linear-gradient(135deg, rgba(150,185,125,.10), rgba(150,185,125,.05));
+            border:1px solid rgba(150,185,125,.28);
+            border-radius:14px;
+            box-shadow:0 2px 10px rgba(150,185,125,.08);
+            font-size:15px;
+            font-weight:600;
+            color:var(--ra-coral-dark);
+            transition:.25s;
+            cursor:pointer;
+        ">
+            <span style="
+                width:34px;
+                height:34px;
+                border-radius:10px;
+                background:var(--ra-coral);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#fff;
+                font-size:16px;
+                flex-shrink:0;
+            ">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </span>
+            <a href="admin@runoob.com.html" style="color:inherit;text-decoration:none;letter-spacing:.3px;">admin@runoob.com</a>
+        </div>
+        </div>
+        <div class="ra-footer-note"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><div class="ra-footer-lines"><p>技术这条路，没有终点，只有不断刷新的起点。</p><p>感谢每一个仍在发光、仍在死磕的同行者。</p><p>以技术为炬，穿越迷雾，奔赴山海。</p><p>愿每一次代码落下，都能点亮前路。</p></div></div>
+      </div>
+    </footer>
+  <script>
+  (function () {
+    'use strict';
+    var root = document.getElementById('runoob-about');
+    if (!root) return;
+
+    /* ── 1. Scroll Reveal via IntersectionObserver ──────────── */
+    var REVEAL_SELECTORS = [
+      '.ra-section .ra-eyebrow',
+      '.ra-section .ra-heading',
+      '.ra-section .ra-lead',
+      '.ra-section .ra-split > div:first-child .ra-lead',
+      '.ra-intro-grid .ra-card',
+      '.ra-feature-grid .ra-feature-card',
+      '.ra-language-grid .ra-language',
+      '.ra-ai-grid .ra-card',
+      '.ra-stack-list .ra-stack-item',
+      '.ra-tool-list .ra-tool',
+      '.ra-timeline .ra-step',
+      '.ra-tool-card > .ra-card-kicker',
+      '.ra-tool-card > h3',
+      '.ra-tool-card > p',
+      '.ra-cta-card > *',
+      '.ra-footer-brand',
+      '.ra-footer-note',
+    ];
+
+    // Apply data-reveal + staggered data-delay to each selector group
+    REVEAL_SELECTORS.forEach(function (sel) {
+      var els = root.querySelectorAll(sel);
+      els.forEach(function (el, i) {
+        if (!el.hasAttribute('data-reveal')) {
+          el.setAttribute('data-reveal', '');
+          // Stagger siblings within the same parent
+          var siblings = el.parentElement
+            ? el.parentElement.querySelectorAll('[data-reveal]')
+            : [el];
+          var idx = Array.prototype.indexOf.call(siblings, el);
+          el.setAttribute('data-delay', Math.min(idx * 70, 280));
+        }
+      });
+    });
+
+    // Observe and reveal
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+            setTimeout(function () { el.classList.add('ra-visible'); }, delay);
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      root.querySelectorAll('[data-reveal]').forEach(function (el) {
+        observer.observe(el);
+      });
+    } else {
+      // Fallback: show all immediately
+      root.querySelectorAll('[data-reveal]').forEach(function (el) {
+        el.classList.add('ra-visible');
+      });
+    }
+
+    /* ── 2. CountUp Animation ───────────────────────────────── */
+    function animateCount(el) {
+      var target = parseFloat(el.getAttribute('data-count'));
+      var suffix = el.getAttribute('data-suffix') || '';
+      var duration = 1400;
+      var startTime = null;
+
+      function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        var value = Math.round(easeOutCubic(progress) * target);
+        el.textContent = value + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var countObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCount(entry.target);
+            countObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      root.querySelectorAll('[data-count]').forEach(function (el) {
+        countObserver.observe(el);
+      });
+    }
+
+    /* ── 3. Typewriter for Hero Terminal ────────────────────── */
+    var heroCode = root.querySelector('.ra-hero .ra-code');
+    if (heroCode) {
+      // Capture raw HTML and split by newlines preserving inline spans
+      var rawHTML = heroCode.innerHTML;
+      // Split on newline characters (text nodes between spans)
+      var lines = rawHTML.split(/\n/);
+
+      heroCode.innerHTML = '';
+      var cursor = document.createElement('span');
+      cursor.className = 'ra-cursor';
+      cursor.setAttribute('aria-hidden', 'true');
+
+      lines.forEach(function (lineHTML, i) {
+        var lineEl = document.createElement('span');
+        lineEl.className = 'ra-code-line';
+        lineEl.innerHTML = lineHTML;
+        heroCode.appendChild(lineEl);
+        if (i < lines.length - 1) {
+          heroCode.appendChild(document.createTextNode('\n'));
+        }
+      });
+      heroCode.appendChild(cursor);
+
+      var lineEls = heroCode.querySelectorAll('.ra-code-line');
+      var BASE_DELAY = 550; // start after hero entrance
+      var LINE_INTERVAL = 230;
+
+      lineEls.forEach(function (lineEl, i) {
+        setTimeout(function () {
+          lineEl.classList.add('ra-typed');
+        }, BASE_DELAY + i * LINE_INTERVAL);
+      });
+
+      // Remove cursor after all lines typed
+      setTimeout(function () {
+        cursor.style.animation = 'none';
+        cursor.style.opacity = '0';
+      }, BASE_DELAY + lineEls.length * LINE_INTERVAL + 1800);
+    }
+
+    /* ── 4. Card tilt on mouse move (desktop only) ──────────── */
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      var tiltCards = root.querySelectorAll('.ra-card, .ra-feature-card, .ra-tool-card');
+      tiltCards.forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var rect = card.getBoundingClientRect();
+          var x = (e.clientX - rect.left) / rect.width - 0.5;
+          var y = (e.clientY - rect.top)  / rect.height - 0.5;
+          card.style.transform = 'translateY(-4px) rotateX(' + (-y * 4) + 'deg) rotateY(' + (x * 4) + 'deg)';
+        });
+        card.addEventListener('mouseleave', function () {
+          card.style.transform = '';
+        });
+      });
+    }
+
+    /* ── 5. Smooth step-index pulse on scroll into view ─────── */
+    if ('IntersectionObserver' in window) {
+      var stepObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var idx = entry.target.querySelector('.ra-step-index');
+            if (idx) {
+              idx.style.transition = 'transform .3s cubic-bezier(.34,1.56,.64,1)';
+              idx.style.transform = 'scale(1.15)';
+              setTimeout(function () { idx.style.transform = ''; }, 320);
+            }
+          }
+        });
+      }, { threshold: 0.8 });
+      root.querySelectorAll('.ra-step').forEach(function (el) {
+        stepObserver.observe(el);
+      });
+    }
+
+  })();
+  </script>
+</div>				
+				
+			</div>
+
+		</div>
+
+	</div>
+		
+	
+</div>
+</div>
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="./html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="./jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="./charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="./tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="./tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="./ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="./disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="./aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="./for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="./archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="./wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="./index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="./index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="./static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="./static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="./wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="./wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="./static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模型微调 Fine-tuning | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-fine-tuning.html" />
+<meta name="keywords" content="模型微调 Fine-tuning">
+<meta name="description" content="模型微调 Fine-tuning   当你需要一个专门用于生成电商产品描述的模型时，有三种主要选择。  	 第一种是从头训练（Pre-training from scratch）。这需要收集海量文本数据（可能是万亿级 token），租用数十块 A100 GPU 训练几个月，花费数百万美元。这是 OpenAI、Google 这些巨头做的事，对绝大多数人来说不现实。  	 第二种是 Prompt 工程。给通用大模型一个精心设计的提示词，比如..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-transformer.html" rel="prev"> Transformer 深度解析</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-rlhf.html" rel="next"> RLHF 对齐训练</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>模型微调 Fine-tuning</h1>
+
+
+<p>当你需要一个专门用于生成电商产品描述的模型时，有三种主要选择。</p>
+
+	<ul>
+<li><p>第一种是从头训练（Pre-training from scratch）。这需要收集海量文本数据（可能是万亿级 token），租用数十块 A100 GPU 训练几个月，花费数百万美元。这是 OpenAI、Google 这些巨头做的事，对绝大多数人来说不现实。</p></li>
+
+	<li>
+<p>第二种是 Prompt 工程。给通用大模型一个精心设计的提示词，比如"你是一个专业的电商文案写手，请根据以下产品信息生成吸引人的描述..."。这种方式零成本、即时可用，但问题是：每次都要写长长的提示词、效果不稳定、容易被无关输入干扰、token 消耗大。</p></li>
+	<li>
+
+<p>第三种就是微调（Fine-tuning）。拿一个已经训练好的通用模型，用你的专有数据继续训练一小会儿，让它"学会"你的特定任务。这样得到的模型，既能保留通用能力，又能在你的任务上表现出色，而且成本可控。</p></li></ul>
+
+
+
+
+<p>三种方式的对比：</p>
+
+<table class="reference">
+<tr><th>方式</th><th>成本</th><th>效果</th><th>适用场景</th></tr>
+<tr><td>从头训练</td><td>极高（百万美元级）</td><td>完全定制</td><td>创建新的基础模型（仅巨头）</td></tr>
+<tr><td>Prompt 工程</td><td>几乎为零</td><td>不稳定，依赖提示词</td><td>简单任务、快速验证</td></tr>
+<tr><td>微调</td><td>中等（几百到几千美元）</td><td>稳定且专业</td><td>特定领域任务、产品化</td></tr>
+</table>
+
+<blockquote>
+<p>用一个简单的比喻：</p>
+	<ul>
+<li>从头训练就像自己从零开始培养一个医生，需要十几年。</li>
+	<li>Prompt 工程就像给一个普通医生一份详细的操作手册。</li>
+	<li>微调就像让一个已经有行医资格的医生去专科进修几个月，变成专科专家。</li></ul>
+
+
+
+</blockquote>
+
+<hr>
+
+<h2>为什么需要微调</h2>
+
+<p>不是所有任务都需要微调，先搞清楚什么时候该用，什么时候不该用。</p>
+
+<h3>Prompt 工程的局限</h3>
+
+<p>Prompt 工程很强大，但它有几个难以突破的天花板。</p>
+
+	<ul>
+<li><p><strong>第一个局限是上下文窗口限制。</strong>你的提示词和示例必须塞进模型的上下文窗口里（比如 4K、8K、128K、1024K token）。如果你的任务需要几百个示例才能说清楚，Prompt 就装不下了。</p></li>
+
+	<li>
+<p><strong>第二个局限是效果不稳定。</strong>同一个提示词，换个问法结果可能差异很大。模型心情好（采样随机性）时输出很好，心情不好时可能完全跑题。</p></li>
+	<li>
+
+<p><strong>第三个局限是推理成本高。</strong>每次推理都要把长长的提示词送进去，token 消耗大，响应速度慢。如果是高并发场景，成本会急剧上升。</p></li>
+	<li>
+
+<p><strong>第四个局限是遗忘问题。</strong>模型虽然看了你的提示词，但前面海量的预训练数据可能还在拉后腿。比如你让它输出 JSON，它可能还是会加上很多自然语言解释。</p></li></ul>
+
+
+
+
+<h3>微调的适用场景</h3>
+
+<p>当你的任务符合以下特征时，微调是值得考虑的。</p>
+
+	<ul>
+<li><p>特征一：任务定义清晰，输出格式固定。比如"把技术文档翻译成通俗易懂的博客"、"根据客户服务记录生成工单摘要"、"将自然语言转换成 SQL 查询"。</p></li>
+<li>
+
+<p>特征二：有几百到几千条高质量标注数据。太少数据微调不出效果，太多又没必要——一般 500-5000 条是比较理想的范围。</p>
+</li>
+<li>
+<p>特征三：需要在特定领域表现专业。比如医疗报告解读、法律文书摘要、金融新闻分析。通用模型可能不懂行业术语和惯例，微调能让它"入行"。</p>
+</li>
+<li>
+<p>特征四：对响应速度和成本敏感。微调后的小模型可能比通用大模型效果更好，而且推理速度快 10 倍，成本低 100 倍。</p>
+</li>
+<li>
+<p>特征五：需要严格遵循输出格式。比如必须输出 JSON、必须用特定的语气、必须包含某些字段。微调能让模型"记住"这些要求，不需要每次都在提示词里重复。</p>
+</li></ul>
+
+
+
+<h3>微调的成本收益分析</h3>
+
+<p>做微调之前，先算一笔账。</p>
+
+<p>成本主要来自三个方面：数据准备、计算资源、人工调试。数据准备通常占最大工作量——你需要收集、清洗、标注数据。计算资源现在已经很便宜了，用 LoRA + QLoRA 的话，一张消费级显卡（RTX 3090/4090）就能微调 7B/13B 模型。</p>
+
+<p>收益体现在几个方面：更好的效果、更低的推理成本、更快的响应速度、更稳定的输出。如果你的模型要对外提供服务，这些收益会持续累积。</p>
+
+<p>什么时候不应该微调？如果任务变化很快，数据格式每周都在变，那 Prompt 工程更灵活。如果只是做一次性探索，或者只有几十条数据，也不值得微调。</p>
+
+<table class="reference">
+<tr><th>因素</th><th>更适合 Prompt</th><th>更适合微调</th></tr>
+<tr><td>数据量</td><td>&lt; 100 条</td><td>&gt; 500 条</td></tr>
+<tr><td>任务稳定性</td><td>经常变化</td><td>相对固定</td></tr>
+<tr><td>使用频率</td><td>偶尔用</td><td>高频使用</td></tr>
+<tr><td>成本敏感度</td><td>低</td><td>高</td></tr>
+<tr><td>效果要求</td><td>可用就行</td><td>追求最佳</td></tr>
+</table>
+
+<hr>
+
+<h2>全量微调（Full Fine-tuning）</h2>
+
+<p>先了解最传统的微调方式，再看为什么今天我们很少用它。</p>
+
+<h3>原理与流程</h3>
+
+<p>全量微调的思路很简单：拿预训练模型的所有参数，在你的数据集上继续训练，更新所有权重。</p>
+
+<p>流程大致是这样的：</p>
+<ul>
+
+	<li><p>第一步，准备数据。把你的任务数据整理成"输入-输出"对的形式。</p></li>
+<li>
+
+<p>第二步，加载预训练模型。比如下载 LLaMA-2-7B、Mistral-7B 这样的开源模型。</p>
+</li>
+<li>
+<p>第三步，设置训练参数。学习率要设得很小（比如 1e-5 到 5e-5），因为不想把预训练学到的知识完全覆盖掉。</p>
+</li>
+<li>
+<p>第四步，开始训练。让模型在你的数据上跑几个 epoch（完整遍历数据集几次）。</p>
+</li>
+<li>
+<p>第五步，保存模型。训练完得到一个全新的权重文件，大小和原模型一样。</p>
+</li></ul>
+
+
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 全量微调概念演示（伪代码，不依赖框架）</span><br />
+<span style="color: #a50"># 展示核心思路，实际代码会用 HuggingFace</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> full_finetuning_concept<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;全量微调的核心概念演示&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 1. 加载预训练模型（所有参数都可训练）</span><br />
+&nbsp; &nbsp; model <span style="color: Gray;">=</span> load_pretrained_model<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;llama-2-7b&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 模型有 70 亿个参数，每个参数都会更新</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;模型参数总数：{count_parameters(model)}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 输出：模型参数总数：7000000000</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 2. 准备你的特定任务数据</span><br />
+&nbsp; &nbsp; train_data <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;input&quot;</span>: <span style="color: #a11;">&quot;产品：保温杯<span style="color: #000099; font-weight: bold;">\n</span>生成电商描述&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a11;">&quot;output&quot;</span>: <span style="color: #a11;">&quot;这款高品质保温杯采用 304 不锈钢内胆，真空隔热技术，保温时长可达 12 小时。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;input&quot;</span>: <span style="color: #a11;">&quot;产品：无线耳机<span style="color: #000099; font-weight: bold;">\n</span>生成电商描述&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a11;">&quot;output&quot;</span>: <span style="color: #a11;">&quot;真无线蓝牙耳机，蓝牙 5.3 稳定连接，主动降噪，续航 24 小时，佩戴舒适。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># ... 几百几千条类似数据</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 3. 设置优化器和很小的学习率</span><br />
+&nbsp; &nbsp; optimizer <span style="color: Gray;">=</span> create_optimizer<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> learning_rate<span style="color: Gray;">=</span><span style="color: Maroon;">2e-5</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 4. 训练循环</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span>: &nbsp;<span style="color: #a50"># 通常训练 2-5 个 epoch</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> batch <span style="color: Green;font-weight:bold;">in</span> create_batches<span style="color: Olive;">&#40;</span>train_data<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 前向传播</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loss <span style="color: Gray;">=</span> model.<span style="color: #05a;">compute_loss</span><span style="color: Olive;">&#40;</span>batch<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 反向传播，更新所有参数！</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loss.<span style="color: #05a;">backward</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">zero_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Epoch {epoch} 完成&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 5. 保存完整模型（70 亿个参数，约 13GB）</span><br />
+&nbsp; &nbsp; model.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;llama-2-7b-ecommerce-finetuned&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;全量微调完成，新模型已保存&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 这只是概念演示，实际训练需要大量显存</span><br />
+
+</div>
+</div>
+
+<h3>灾难性遗忘问题</h3>
+
+<p>全量微调有一个严重的问题：灾难性遗忘（Catastrophic Forgetting）。</p>
+
+<p>什么意思？当你在你的数据上训练时，模型会逐渐"忘记"它在预训练阶段学到的通用知识。就像一个人为了准备数学考试，拼命做数学题，结果把之前学的语文和英语都忘了。</p>
+
+<p>为什么会发生？因为全量微调会更新所有参数。预训练学到的知识都编码在这些参数里，大幅改动会破坏原有知识。</p>
+
+<p>结果就是：微调后的模型在你的任务上表现很好，但在其他通用任务上表现下降。更糟糕的是，它可能失去一些基本能力，比如遵循指令、理解复杂问题。</p>
+
+<p>怎么缓解？可以混合预训练数据一起训练，但这又回到了"需要海量数据"的老问题。或者用正则化约束参数不要变化太大，但效果有限。</p>
+
+<h3>显存需求计算</h3>
+
+<p>全量微调的另一个问题是显存需求太大。让我们算一算：</p>
+
+<p>训练一个模型需要的显存 = 模型参数 + 梯度 + 优化器状态 + 激活值。</p>
+
+<p>对于 LLaMA-7B 模型，全精度（FP32）的话，70 亿个参数 × 4 字节 = 28 GB。梯度也是 28 GB，优化器状态（Adam 优化器）需要 56 GB（梯度的 2 倍）。激活值随 batch size 和序列长度变化，至少也需要几 GB。</p>
+
+<p>加起来，全量微调 7B 模型需要约 100+ GB 显存——这意味着至少需要 8 张 A100（40GB）或者 2 张 A100（80GB）。</p>
+
+<p>如果用半精度（FP16/BF16），可以减半，但还是需要约 50-60 GB 显存。这仍然不是普通人能负担的。</p>
+
+<table class="reference">
+<tr><th>模型大小</th><th>全量微调显存（FP16）</th><th>需要的 GPU</th></tr>
+<tr><td>7B</td><td>50-60 GB</td><td>2×A100 (40GB) 或 1×A100 (80GB)</td></tr>
+<tr><td>13B</td><td>90-100 GB</td><td>3×A100 (40GB) 或 2×A100 (80GB)</td></tr>
+<tr><td>70B</td><td>400+ GB</td><td>12×A100 (40GB) 或 6×A100 (80GB)</td></tr>
+</table>
+
+<blockquote>
+<p>全量微调不是不能用，但它成本高、风险大。除非你有充分的理由（比如数据量非常大，需要改变模型的根本行为），否则应该优先考虑参数高效微调（PEFT）方法。</p>
+</blockquote>
+
+<hr>
+
+<h2>参数高效微调（PEFT）</h2>
+
+<p>PEFT（Parameter-Efficient Fine-Tuning）是一类只训练少量参数的方法的总称。它既保留了微调的效果，又大幅降低了成本。</p>
+
+<h3>PEFT 的核心思想</h3>
+
+<p>PEFT 的核心洞察是：<span class="marked">预训练模型已经包含了足够的知识，我们不需要修改所有参数，只需要"调整"一小部分参数来适应新任务</span>。</p>
+
+<p>就像一架已经造好的钢琴，你不需要重新制造整个钢琴，只需要微调几根琴弦，就能弹出你想要的音色。</p>
+
+<p>PEFT 的好处很明显：</p>
+
+	<ul>
+<li><p>第一，显存需求大幅降低。原来需要 60 GB，现在可能只需要 6 GB。</p></li>
+<li>
+
+<p>第二，不会灾难性遗忘。原模型参数不动，只是加了点新东西，原有知识不会被破坏。</p>
+</li>
+<li>
+<p>第三，存储成本低。PEFT 通常只保存新增的少量参数（几 MB 到几百 MB），不用保存整个模型。</p>
+</li>
+<li>
+<p>第四，可以做"任务组合"。训练多个小适配器（Adapter），推理时按需加载，一个模型可以当多个模型用。</p>
+</li></ul>
+
+
+
+<h3>主流 PEFT 方法概览</h3>
+
+<p>PEFT 不是一种方法，而是一类方法的统称。让我们看看几种主流方法：</p>
+
+<ul>
+	<li><p>第一种是 Adapter（适配器）。在 Transformer 的每一层中间插入小的神经网络模块。训练时只训练这些 Adapter，原模型参数冻结。这是早期的 PEFT 方法，现在用得少了。</p></li>
+<li>
+
+<p>第二种是 Prefix Tuning（前缀微调）。在模型的每一层前面加上可学习的"前缀"向量。这些前缀向量只占很小一部分，但能引导模型的输出。</p>
+</li>
+<li>
+<p>第三种是 Prompt Tuning（提示微调）。只在输入层加上可学习的软提示（Soft Prompt）。这是最简单的方法，但效果也相对有限。</p>
+</li>
+<li>
+<p>第四种是 LoRA（Low-Rank Adaptation，低秩适配）。在模型的注意力层旁边增加低秩矩阵。这是目前最流行、效果最好的 PEFT 方法。</p>
+</li>
+<li>
+<p>第五种是 QLoRA（量化 LoRA）。在 LoRA 的基础上再加上模型量化，进一步降低显存需求。这是今天的主流选择。</p>
+</li></ul>
+
+
+
+<table class="reference">
+<tr><th>方法</th><th>原理</th><th>可训练参数量</th><th>效果</th></tr>
+<tr><td>全量微调</td><td>更新所有参数</td><td>100%</td><td>好，但可能遗忘</td></tr>
+<tr><td>Adapter</td><td>插入小网络</td><td>0.1%-1%</td><td>中等</td></tr>
+<tr><td>Prefix Tuning</td><td>添加前缀向量</td><td>0.1%-1%</td><td>中等</td></tr>
+<tr><td>Prompt Tuning</td><td>添加软提示</td><td>&lt; 0.1%</td><td>一般</td></tr>
+<tr><td>LoRA</td><td>低秩矩阵适配</td><td>0.1%-1%</td><td>接近全量微调</td></tr>
+<tr><td>QLoRA</td><td>量化 + LoRA</td><td>0.1%-1%</td><td>接近全量微调</td></tr>
+</table>
+
+<blockquote>
+<p>今天的最佳实践很明确：<span class="marked">首选 LoRA，显存不够就用 QLoRA</span>。这两种方法效果好、成本低、生态成熟，大多数情况下是最优选择。</p>
+</blockquote>
+
+<hr>
+
+<h2>LoRA（Low-Rank Adaptation）</h2>
+
+<p>LoRA 是目前最主流的微调方法，理解它的原理很重要。</p>
+
+<h3>低秩分解原理（直觉理解）</h3>
+
+<p>先理解什么是"秩"（Rank），什么是"低秩"。</p>
+
+<p>假设你有一个 100 × 100 的矩阵，它里面的数据可能不是完全随机的。如果这些数据可以由很少几个"模式"组合而成，我们就说这个矩阵的秩很低。</p>
+
+<p>举个例子：如果每一行都是第一行的倍数，那么这个矩阵的秩是 1。如果每一行都是前两行的线性组合，那么秩是 2。以此类推。</p>
+
+<p>LoRA 的核心洞察是：<span class="marked">大模型在适应新任务时，权重的变化量通常是"低秩"的——也就是说，这种变化可以用很少几个参数来表示</span>。</p>
+
+<p>这就像，虽然有 1000 种不同的电商产品描述，但它们的写作风格可能只是由几个核心因素决定的：语气、长度、强调点。不需要用 1000 个不同的方向去描述变化，用 8 个、16 个、32 个就够了。</p>
+
+<p>所以 LoRA 的做法是：冻结原模型的所有参数，在注意力层旁边增加两个小矩阵 A 和 B。A 是 d × r，B 是 r × d，其中 r 是秩（Rank），通常取 8、16、32 这样的小数字。</p>
+
+<p>原模型输出 = 原模型前向传播。</p>
+
+<p>LoRA 输出 = 原模型前向传播 + (输入 × A × B) × 缩放系数。</p>
+
+<p>训练时只训练 A 和 B，原模型参数完全不动。</p>
+
+<h3>LoRA 数学推导</h3>
+
+<p>不用怕，数学推导很简单，只有几行。</p>
+
+<p>假设原模型的某个层是一个线性变换：h = W₀x，其中 W₀ 是预训练好的权重矩阵，形状是 d × d。</p>
+
+<p>微调时，我们想更新 W₀，但又不想更新太多。LoRA 的做法是把 W₀ 的变化量表示为两个小矩阵的乘积：ΔW = BA。</p>
+
+<p>所以微调后的输出是：h = W₀x + (BA)x。</p>
+
+<p>这里 B 的形状是 d × r，A 的形状是 r × d，r 就是秩（Rank）。</p>
+
+<p>更精确一点，LoRA 论文中的公式是：</p>
+
+<p>h = W₀x + α * (BA)x</p>
+
+<p>其中 α 是一个缩放系数，通常设为 r 的某个倍数，这样当改变 r 时不需要重新调整超参数。</p>
+
+<p>训练时，W₀ 完全冻结，只有 A 和 B 是可训练的。</p>
+
+<p>初始化时，A 用随机高斯分布初始化，B 初始化为零，这样训练开始时 LoRA 部分的输出为零，不影响原模型行为。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># LoRA 核心原理的极简实现</span><br />
+<span style="color: #a50"># 不依赖任何框架，纯 NumPy 演示</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> LoRALayer:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;LoRA 层的极简实现&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d: <span style="color: Teal;">int</span><span style="color: Gray;">,</span> r: <span style="color: Teal;">int</span><span style="color: Gray;">,</span> alpha: <span style="color: Teal;">float</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">1.0</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; d: 输入/输出维度（比如 4096）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; r: 秩（比如 8, 16, 32）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; alpha: 缩放系数<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d</span> <span style="color: Gray;">=</span> d<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">r</span> <span style="color: Gray;">=</span> r<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">alpha</span> <span style="color: Gray;">=</span> alpha<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 冻结的原始权重（模拟预训练模型）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">W_0</span> <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>d<span style="color: Gray;">,</span> d<span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">0.01</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">W_0</span>.<span style="color: #05a;">flags</span>.<span style="color: #05a;">writeable</span> <span style="color: Gray;">=</span> <span style="color: Teal;">False</span> &nbsp;<span style="color: #a50"># 标记为不可训练</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># LoRA 的 A 和 B 矩阵，可训练</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># A: r × d，用随机高斯初始化</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">A</span> <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>r<span style="color: Gray;">,</span> d<span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">0.01</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># B: d × r，初始化为零（训练初期不影响原模型）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">B</span> <span style="color: Gray;">=</span> np.<span style="color: #05a;">zeros</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#40;</span>d<span style="color: Gray;">,</span> r<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x: np.<span style="color: #05a;">ndarray</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> np.<span style="color: #05a;">ndarray</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;前向传播：原模型输出 + LoRA 输出&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 原模型输出</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; original_output <span style="color: Gray;">=</span> x <span style="color: Gray;">@</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">W_0</span>.<span style="color: #05a;">T</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># LoRA 输出：(x @ A.T) @ B.T = x @ (B @ A).T</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; lora_output <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>x <span style="color: Gray;">@</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">A</span>.<span style="color: #05a;">T</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">@</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">B</span>.<span style="color: #05a;">T</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 合并输出</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> original_output + <span style="color: Teal;">self</span>.<span style="color: #05a;">alpha</span> * lora_output<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> get_trainable_params<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;获取可训练参数（只有 A 和 B）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;A&quot;</span>: <span style="color: Teal;">self</span>.<span style="color: #05a;">A</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;B&quot;</span>: <span style="color: Teal;">self</span>.<span style="color: #05a;">B</span><span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> count_params<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;统计参数数量&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; total_original <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d</span> * <span style="color: Teal;">self</span>.<span style="color: #05a;">d</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; total_lora <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">r</span> * <span style="color: Teal;">self</span>.<span style="color: #05a;">d</span> + <span style="color: Teal;">self</span>.<span style="color: #05a;">d</span> * <span style="color: Teal;">self</span>.<span style="color: #05a;">r</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;original_params&quot;</span>: total_original<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;lora_params&quot;</span>: total_lora<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;ratio&quot;</span>: total_lora / total_original * <span style="color: Maroon;">100</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 演示 LoRA 的参数节省效果</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 假设 d = 4096（类似 LLaMA-7B 的隐藏层维度）</span><br />
+<span style="color: #a50"># r = 8（常用的秩大小）</span><br />
+d <span style="color: Gray;">=</span> <span style="color: Maroon;">4096</span><br />
+r <span style="color: Gray;">=</span> <span style="color: Maroon;">8</span><br />
+<br />
+lora <span style="color: Gray;">=</span> LoRALayer<span style="color: Olive;">&#40;</span>d<span style="color: Gray;">=</span>d<span style="color: Gray;">,</span> r<span style="color: Gray;">=</span>r<span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span>r<span style="color: Olive;">&#41;</span><br />
+params_info <span style="color: Gray;">=</span> lora.<span style="color: #05a;">count_params</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;原始参数数量：{params_info['original_params']:,}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;LoRA 参数数量：{params_info['lora_params']:,}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;参数占比：{params_info['ratio']:.4f}%&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 输出示例：</span><br />
+<span style="color: #a50"># 原始参数数量：16,777,216</span><br />
+<span style="color: #a50"># LoRA 参数数量：65,536</span><br />
+<span style="color: #a50"># 参数占比：0.3906%</span><br />
+
+</div>
+</div>
+
+<p>你看，LoRA 只需要训练 0.4% 的参数，却能达到接近全量微调的效果。这就是它的魔力所在。</p>
+
+<h3>r（秩）和 α 参数的选择</h3>
+
+<p>LoRA 有两个关键超参数：秩 r 和缩放系数 α。</p>
+
+<p>r 决定了 LoRA 的容量。r 越大，能表示的变化越复杂，但参数量也越大。</p>
+
+<p>常见的 r 取值：8、16、32、64。对大多数任务，r = 8 或 16 就足够了。r 超过 64 通常收益递减，而且会增加训练成本。</p>
+
+<p>怎么选 r？一个实用的建议是：先试 r = 8，如果效果不好，再增加到 16、32。不要一开始就用很大的 r。</p>
+
+<p>α 是缩放系数。常见的设置是 α = r，这样 ΔW = BA 的尺度大致保持稳定。或者设 α = 1，让用户自己调整。</p>
+
+<p>其他需要考虑的参数：</p>
+
+<p>目标层（target_modules）：LoRA 应该加在哪些层上？通常只加在注意力层的 query 和 value 投影上（q_proj, v_proj），效果就很好。也可以加在更多层上，但这样会增加参数量。</p>
+
+<p>Dropout：LoRA 可以加 dropout 防止过拟合，常见值是 0.05 或 0.1。</p>
+
+<table class="reference">
+<tr><th>参数</th><th>常见取值</th><th>说明</th></tr>
+<tr><td>r（秩）</td><td>8, 16, 32</td><td>越大容量越大，但参数量也越大</td></tr>
+<tr><td>alpha</td><td>r 或 1</td><td>缩放系数，通常设为 r</td></tr>
+<tr><td>target_modules</td><td>["q_proj", "v_proj"]</td><td>要加 LoRA 的层</td></tr>
+<tr><td>lora_dropout</td><td>0.0, 0.05, 0.1</td><td>防止过拟合</td></tr>
+</table>
+
+<h3>合并 LoRA 权重</h3>
+
+<p>训练好 LoRA 后，推理时有两种选择。</p>
+	<ul>
+<li>
+<p>第一种是保持 LoRA 分开。推理时加载原模型，再加载 LoRA 权重，动态计算合并输出。这种方式的好处是可以灵活切换多个 LoRA，缺点是推理会稍微慢一点（通常可以忽略）。</p></li>
+	<li>
+
+<p>第二种是合并 LoRA 权重。把 LoRA 的 ΔW = BA 加到原模型的 W₀ 上，得到 W = W₀ + α×BA。这样就得到了一个单一的模型文件，推理时和普通模型一样。</p></li></ul>
+
+
+
+
+<p>合并的好处是推理速度快，不需要特殊的 LoRA 支持。坏处是一旦合并就不能撤销，而且如果有多个 LoRA，需要分别合并成不同的模型文件。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># LoRA 权重合并演示</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> merge_lora_weights<span style="color: Olive;">&#40;</span>W_0: np.<span style="color: #05a;">ndarray</span><span style="color: Gray;">,</span> A: np.<span style="color: #05a;">ndarray</span><span style="color: Gray;">,</span> B: np.<span style="color: #05a;">ndarray</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; alpha: <span style="color: Teal;">float</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">1.0</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> np.<span style="color: #05a;">ndarray</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 将 LoRA 权重合并到原始权重中<br />
+&nbsp; &nbsp; W = W_0 + alpha * (B @ A)<br />
+<br />
+&nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; W_0: 原始权重 (d, d)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; A: LoRA A 矩阵 (r, d)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; B: LoRA B 矩阵 (d, r)<br />
+&nbsp; &nbsp; &nbsp; &nbsp; alpha: 缩放系数<br />
+<br />
+&nbsp; &nbsp; 返回:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 合并后的权重<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 计算 delta_W = alpha * (B @ A)</span><br />
+&nbsp; &nbsp; delta_W <span style="color: Gray;">=</span> alpha * <span style="color: Olive;">&#40;</span>B <span style="color: Gray;">@</span> A<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 合并到原始权重</span><br />
+&nbsp; &nbsp; W_merged <span style="color: Gray;">=</span> W_0 + delta_W<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> W_merged<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 演示合并过程</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+d <span style="color: Gray;">=</span> <span style="color: Maroon;">4096</span> &nbsp;<span style="color: #a50"># 隐藏层维度</span><br />
+r <span style="color: Gray;">=</span> <span style="color: Maroon;">8</span> &nbsp; &nbsp; <span style="color: #a50"># LoRA 秩</span><br />
+<br />
+<span style="color: #a50"># 模拟原始权重和 LoRA 权重</span><br />
+W_0 <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>d<span style="color: Gray;">,</span> d<span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">0.01</span><br />
+A <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>r<span style="color: Gray;">,</span> d<span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">0.01</span><br />
+B <span style="color: Gray;">=</span> np.<span style="color: #05a;">zeros</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#40;</span>d<span style="color: Gray;">,</span> r<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 实际中 B 是训练后的结果</span><br />
+<br />
+<span style="color: #a50"># 合并权重</span><br />
+W_merged <span style="color: Gray;">=</span> merge_lora_weights<span style="color: Olive;">&#40;</span>W_0<span style="color: Gray;">,</span> A<span style="color: Gray;">,</span> B<span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span>r<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;原始权重形状：{W_0.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;合并后权重形状：{W_merged.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;权重合并完成，可以像普通模型一样使用&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>QLoRA（量化 LoRA）</h2>
+
+<p>QLoRA 把 LoRA 的低成本推向了极致——在消费级显卡上就能微调 70B 模型。</p>
+
+<h3>4-bit 量化 + LoRA</h3>
+
+<p>QLoRA 的思路很简单：把模型量化到 4-bit，然后在上面做 LoRA 微调。</p>
+
+<p>什么是量化？就是把浮点数（FP16/BF16，每个占 2 字节）转换成更低精度的表示。4-bit 量化就是用 4 个比特（0.5 字节）来表示一个权重。</p>
+
+<p>这样一来，模型大小可以减少 75%：7B 模型从 13 GB 降到约 3.5 GB，13B 从 26 GB 降到约 6.5 GB，70B 从 140 GB 降到约 35 GB。</p>
+
+<p>但直接量化会损失精度。QLoRA 的创新是用了一种叫 NF4（Normalized Float 4）的数据类型，它能更好地保留神经网络权重的信息。</p>
+
+<p>QLoRA 的做法是：</p>
+	<ul>
+<li>
+<p>1. 把预训练模型量化到 4-bit（NF4 格式）。</p></li>
+	<li>
+
+<p>2. 在上面加 LoRA 适配器。</p></li>
+	<li>
+
+<p>3. 训练时，4-bit 量化的原模型完全冻结，只训练 LoRA 的 FP16 权重。</p></li></ul>
+
+
+
+
+<p>这样做的效果：显存需求再降 75%，同时效果几乎没有损失。</p>
+
+<h3>bitsandbytes 库</h3>
+
+<p>bitsandbytes 是实现量化的核心库，由 Tim Dettmers 开发。</p>
+
+<p>它提供了：</p>
+	<ul>
+<li>
+<p>1. 4-bit 量化（NF4）。</p></li>
+	<li>
+
+<p>2. 双量化（Double Quantization）——把量化常数也量化，再省一点显存。</p></li>
+	<li>
+
+<p>3. 分页优化器（Paged Optimizer）——显存不够时把部分数据转移到 CPU 内存。</p></li></ul>
+
+
+
+
+<p>普通用户不需要直接和 bitsandbytes 打交道，peft 库和 transformers 库已经把它封装好了。但知道它的存在很有用。</p>
+
+<h3>消费级 GPU 微调方案</h3>
+
+<p>有了 QLoRA，普通人也能玩得起微调了。</p>
+
+<p>RTX 3090/4090（24GB VRAM）可以轻松微调 7B/13B 模型，甚至 70B 模型也能尝试（需要更长的序列长度或者更小的 batch size）。</p>
+
+<p>显存需求估算：</p>
+
+<table class="reference">
+<tr><th>模型大小</th><th>QLoRA 显存需求</th><th>适合的 GPU</th></tr>
+<tr><td>7B</td><td>5-8 GB</td><td>RTX 3060/4060 及以上</td></tr>
+<tr><td>13B</td><td>8-12 GB</td><td>RTX 3070/4070 及以上</td></tr>
+<tr><td>34B</td><td>15-20 GB</td><td>RTX 3090/4090</td></tr>
+<tr><td>70B</td><td>30-40 GB</td><td>RTX 3090/4090 × 2 或 A100</td></tr>
+</table>
+
+<blockquote>
+<p>QLoRA 是游戏规则改变者。它把大模型微调从"只有大公司能做"变成了"普通人在自己的游戏本上就能做"。这是开源 AI 最重要的进步之一。</p>
+</blockquote>
+
+<hr>
+
+<h2>训练数据准备</h2>
+
+<p>数据准备是微调过程中最耗时、最关键的部分。垃圾进，垃圾出——数据质量决定了模型的上限。</p>
+
+<h3>数据格式（Alpaca、ShareGPT 格式）</h3>
+
+<p>常见的数据格式有几种，选择一种然后保持一致。</p>
+
+<p>第一种是 Alpaca 格式。这是最流行的格式之一，由 Stanford Alpaca 项目推广。</p>
+
+<p>格式是：instruction（指令）、input（输入，可选）、output（输出）。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># Alpaca 数据格式示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+alpaca_data <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;instruction&quot;</span>: <span style="color: #a11;">&quot;生成一个电商产品描述&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;input&quot;</span>: <span style="color: #a11;">&quot;产品名称：智能运动手表<span style="color: #000099; font-weight: bold;">\n</span>功能：心率监测、睡眠追踪、GPS定位、50米防水&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;output&quot;</span>: <span style="color: #a11;">&quot;这款智能运动手表是运动爱好者的理想伴侣。它配备精准的心率监测和科学的睡眠追踪功能，帮助你全面了解自己的健康状态。内置 GPS 让你无需携带手机也能记录运动轨迹。50米防水等级，游泳也能放心佩戴。&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;instruction&quot;</span>: <span style="color: #a11;">&quot;将以下文本改写成更口语化的表达&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;input&quot;</span>: <span style="color: #a11;">&quot;本产品采用先进技术，具有高性能和低功耗的特点。&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;output&quot;</span>: <span style="color: #a11;">&quot;这款产品用了很先进的技术，性能强还省电！&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># ... 更多数据</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Alpaca 格式包含三个字段：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;- instruction：任务指令（必填）&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;- input：额外输入（可选，没有的话可以为空字符串）&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;- output：期望输出（必填）&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>第二种是 ShareGPT 格式。这种格式用于对话数据，支持多轮对话。</p>
+
+<p>格式是：conversations（对话列表），每一轮有 from（角色）和 value（内容）。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># ShareGPT 数据格式示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+sharegpt_data <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;conversations&quot;</span>: <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;from&quot;</span>: <span style="color: #a11;">&quot;human&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;value&quot;</span>: <span style="color: #a11;">&quot;你好，我想了解一下你们的智能手表&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;from&quot;</span>: <span style="color: #a11;">&quot;gpt&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;value&quot;</span>: <span style="color: #a11;">&quot;您好！我们的智能手表有心率监测、睡眠追踪、GPS 定位等功能，还有 50 米防水。您有什么具体想了解的吗？&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;from&quot;</span>: <span style="color: #a11;">&quot;human&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;value&quot;</span>: <span style="color: #a11;">&quot;电池续航怎么样？&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;from&quot;</span>: <span style="color: #a11;">&quot;gpt&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;value&quot;</span>: <span style="color: #a11;">&quot;正常使用可以续航 7 天，开启 GPS 运动模式可以续航 12 小时。&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># ... 更多对话</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ShareGPT 格式用于多轮对话数据：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;- conversations：对话列表&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;- from：角色（通常是 human 和 gpt）&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;- value：对话内容&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>还有一种简单的输入-输出对格式，适合简单任务。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 简单输入-输出对格式</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+simple_data <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: <span style="color: #a11;">&quot;用户：生成产品描述<span style="color: #000099; font-weight: bold;">\n</span>产品：保温杯<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>助手：这款高品质保温杯采用...&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: <span style="color: #a11;">&quot;用户：生成产品描述<span style="color: #000099; font-weight: bold;">\n</span>产品：无线耳机<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>助手：真无线蓝牙耳机，蓝牙 5.3...&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># ... 更多数据</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;这种格式直接把所有内容拼接到一个 text 字段里，最灵活但也最不标准化。&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>哪种格式最好？Alpaca 格式最通用，大多数训练框架都支持。如果是对话任务，ShareGPT 更合适。</p>
+
+<h3>数据清洗要点</h3>
+
+<p>数据清洗比想象中重要得多。你的模型表现如何，80% 取决于数据质量。</p>
+	<ul>
+<li>
+<p>第一，去重。重复的数据会让模型过度拟合那些重复出现的模式。检查并删除完全重复或高度相似的数据。</p></li>
+	<li>
+
+<p>第二，过滤低质量数据。删除太短、太长、格式混乱、有明显错误的数据。比如输出只有几个字的，或者有乱码的。</p></li>
+	<li>
+
+<p>第三，统一格式。比如有的输出用中文引号，有的用英文引号；有的用句号结尾，有的不用。尽量统一，这样模型学得更快。</p></li>
+	<li>
+
+<p>第四，平衡分布。如果某类数据特别多，某类特别少，模型会偏向多数类。可以考虑过采样少数类，或者欠采样多数类。</p></li>
+	<li>
+
+<p>第五，检查数据泄露。确保测试集和验证集没有出现在训练集里。</p></li></ul>
+
+
+
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 数据清洗简单示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> json<br />
+<span style="color: Green;font-weight:bold;">from</span> typing <span style="color: Green;font-weight:bold;">import</span> List<span style="color: Gray;">,</span> Dict<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> clean_alpaca_data<span style="color: Olive;">&#40;</span>data: List<span style="color: Olive;">&#91;</span>Dict<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> List<span style="color: Olive;">&#91;</span>Dict<span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;简单的数据清洗函数&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; cleaned <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; seen_outputs <span style="color: Gray;">=</span> <span style="color: Teal;">set</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> item <span style="color: Green;font-weight:bold;">in</span> data:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 1. 检查必要字段是否存在</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;instruction&quot;</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Green;font-weight:bold;">in</span> item <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;output&quot;</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Green;font-weight:bold;">in</span> item:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; instruction <span style="color: Gray;">=</span> item<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;instruction&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> item<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;output&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 2. 过滤太短的输出</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>output<span style="color: Olive;">&#41;</span> <span style="color: Gray;">&lt;</span> <span style="color: Maroon;">10</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 3. 过滤太长的输出（根据任务调整）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>output<span style="color: Olive;">&#41;</span> <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">2000</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 4. 去重（用输出做近似去重）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> output <span style="color: Green;font-weight:bold;">in</span> seen_outputs:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; seen_outputs.<span style="color: #05a;">add</span><span style="color: Olive;">&#40;</span>output<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 5. 简单的格式统一</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 比如把中文引号改成英文引号</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> output.<span style="color: #05a;">replace</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;&quot;&quot;, &quot;<span style="color: #000099; font-weight: bold;">\&quot;</span>&quot;).replace(&quot;&quot;&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\&quot;</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 去除首尾空白</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> output.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; cleaned.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;instruction&quot;</span>: instruction<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;input&quot;</span>: item.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;input&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;output&quot;</span>: output<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> cleaned<br />
+<br />
+<br />
+<span style="color: #a50"># 加载数据</span><br />
+<span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;data/training_data_raw.json&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;r&quot;</span><span style="color: Gray;">,</span> encoding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; raw_data <span style="color: Gray;">=</span> json.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span>f<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 清洗数据</span><br />
+cleaned_data <span style="color: Gray;">=</span> clean_alpaca_data<span style="color: Olive;">&#40;</span>raw_data<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;原始数据量：{len(raw_data)}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;清洗后数据量：{len(cleaned_data)}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;过滤了 {len(raw_data) - len(cleaned_data)} 条低质量数据&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 保存清洗后的数据</span><br />
+<span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;data/training_data_cleaned.json&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;w&quot;</span><span style="color: Gray;">,</span> encoding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; json.<span style="color: #05a;">dump</span><span style="color: Olive;">&#40;</span>cleaned_data<span style="color: Gray;">,</span> f<span style="color: Gray;">,</span> ensure_ascii<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> indent<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;清洗后的数据已保存到 data/training_data_cleaned.json&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>数据量的经验规则</h3>
+
+<p>需要多少数据？这是最常问的问题之一。</p>
+
+<p>答案是：看任务难度。</p>
+	<ul>
+<li>
+<p>简单任务（比如把一段文本改成更口语化）：100-300 条可能就够了。</p></li>
+
+	<li>
+<p>中等任务（比如生成特定格式的摘要）：300-1000 条比较合适。</p></li>
+	<li>
+
+<p>复杂任务（比如专业领域的问答）：1000-5000 条比较理想。</p></li></ul>
+
+
+
+
+<p>当然，数据越多通常越好，但边际收益递减。1000 条数据比 500 条好很多，但 10000 条不一定比 5000 条好多少。</p>
+
+<p>一个实用的建议是：先准备 500 条高质量数据，试跑一次。如果效果不好，再分析是数据不够、数据质量差、还是超参数问题，然后针对性改进。</p>
+
+<p>数据质量 >> 数据数量。1000 条精心编写的数据，比 10000 条凑合的数据效果好得多。</p>
+
+<blockquote>
+<p>数据准备阶段多花时间是值得的。模型训练只是"按个按钮"的事，但数据质量决定了那个按钮按下去有没有价值。</p>
+</blockquote>
+
+<hr>
+
+<h2>监督微调（SFT）实战</h2>
+
+<p>终于到了实战环节。我们用 Unsloth 或 LLaMA-Factory 来实现完整的微调流程。</p>
+
+<h3>环境配置</h3>
+
+<p>第一步，安装必要的库。</p>
+
+<div class="example">
+<h2 class="example">环境配置</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># ============================================</span><br />
+<span style="color: #666666; font-style: italic;"># 安装依赖（推荐用 conda 创建新环境）</span><br />
+<span style="color: #666666; font-style: italic;"># ============================================</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 创建新的 conda 环境</span><br />
+conda create <span style="color: #660033;">-n</span> finetuning <span style="color: #007800;">python</span>=<span style="color: #000000;">3.10</span> <span style="color: #660033;">-y</span><br />
+conda activate finetuning<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 安装 PyTorch（根据你的 CUDA 版本选择合适的命令）</span><br />
+<span style="color: #666666; font-style: italic;"># 访问 https://pytorch.org/get-started/locally/ 获取最新命令</span><br />
+conda <span style="color: #c20cb9; font-weight: bold;">install</span> pytorch pytorch-cuda=<span style="color: #000000;">12.1</span> <span style="color: #660033;">-c</span> pytorch <span style="color: #660033;">-c</span> nvidia<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 安装 HuggingFace 生态库</span><br />
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> transformers datasets accelerate peft bitsandbytes<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 安装 Unsloth（可选，更快的训练速度）</span><br />
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> <span style="color: #a10;">&quot;unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git&quot;</span><br />
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> <span style="color: #660033;">--no-deps</span> trl xformers<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 或者用 LLaMA-Factory（一站式训练框架）</span><br />
+<span style="color: #c20cb9; font-weight: bold;">git clone</span> <span style="color: #660033;">--depth</span> <span style="color: #000000;">1</span> https:<span style="color: #000000; font-weight: bold;">//</span>github.com<span style="color: #000000; font-weight: bold;">/</span>hiyouga<span style="color: #000000; font-weight: bold;">/</span>LLaMA-Factory.git<br />
+<span style="color: #7a0874; font-weight: bold;">cd</span> LLaMA-Factory<br />
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> <span style="color: #660033;">-e</span> <span style="color: #a10;">&quot;.[torch,metrics]&quot;</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">echo</span> <span style="color: #a10;">&quot;环境配置完成！&quot;</span><br />
+
+</div>
+</div>
+
+<h3>使用 Unsloth/LLaMA-Factory</h3>
+
+<p>Unsloth 是一个优化的训练库，速度快、显存省。LLaMA-Factory 是一个一站式训练框架，支持多种模型和方法。</p>
+
+<p>我们先看用 Unsloth + peft 训练的代码：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 使用 Unsloth 进行 LoRA 微调（完整版）</span><br />
+<span style="color: #a50"># 可以在 RTX 3090/4090 上运行</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">from</span> datasets <span style="color: Green;font-weight:bold;">import</span> load_dataset<span style="color: Gray;">,</span> Dataset<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; AutoModelForCausalLM<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; AutoTokenizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; TrainingArguments<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; BitsAndBytesConfig<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">from</span> peft <span style="color: Green;font-weight:bold;">import</span> LoraConfig<span style="color: Gray;">,</span> get_peft_model<br />
+<span style="color: Green;font-weight:bold;">from</span> trl <span style="color: Green;font-weight:bold;">import</span> SFTTrainer<br />
+<span style="color: Green;font-weight:bold;">import</span> json<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 1. 配置参数</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+MODEL_NAME <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;unsloth/mistral-7b-v0.2-bnb-4bit&quot;</span> &nbsp;<span style="color: #a50"># 或其他模型</span><br />
+DATA_PATH <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;data/training_data_cleaned.json&quot;</span> &nbsp; &nbsp;<span style="color: #a50"># 你的数据</span><br />
+OUTPUT_DIR <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;output/runoob-ecommerce-model&quot;</span> &nbsp; &nbsp; <span style="color: #a50"># 输出目录</span><br />
+<br />
+<span style="color: #a50"># 4-bit 量化配置</span><br />
+bnb_config <span style="color: Gray;">=</span> BitsAndBytesConfig<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; load_in_4bit<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; bnb_4bit_use_double_quant<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; bnb_4bit_quant_type<span style="color: Gray;">=</span><span style="color: #a11;">&quot;nf4&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; bnb_4bit_compute_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">bfloat16</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># LoRA 配置</span><br />
+lora_config <span style="color: Gray;">=</span> LoraConfig<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; r<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 秩，8-64 都可，16 是不错的起点</span><br />
+&nbsp; &nbsp; lora_alpha<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 缩放系数，通常等于 r</span><br />
+&nbsp; &nbsp; target_modules<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 要加 LoRA 的层，这些是常用选择</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;q_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;k_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;v_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;o_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;gate_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;up_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;down_proj&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; lora_dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.05</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Dropout 防止过拟合</span><br />
+&nbsp; &nbsp; bias<span style="color: Gray;">=</span><span style="color: #a11;">&quot;none&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; task_type<span style="color: Gray;">=</span><span style="color: #a11;">&quot;CAUSAL_LM&quot;</span> &nbsp; &nbsp;<span style="color: #a50"># 因果语言模型</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 训练参数</span><br />
+training_args <span style="color: Gray;">=</span> TrainingArguments<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; output_dir<span style="color: Gray;">=</span>OUTPUT_DIR<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; per_device_train_batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 每张卡的 batch size</span><br />
+&nbsp; &nbsp; per_device_eval_batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; gradient_accumulation_steps<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 梯度累积，等效更大的 batch</span><br />
+&nbsp; &nbsp; learning_rate<span style="color: Gray;">=</span><span style="color: Maroon;">2e-5</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 学习率，2e-5 到 5e-5 是常用范围</span><br />
+&nbsp; &nbsp; num_train_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 训练轮数，2-5 轮合适</span><br />
+&nbsp; &nbsp; logging_steps<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 每 10 步记录一次</span><br />
+&nbsp; &nbsp; evaluation_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;epoch&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 每个 epoch 评估一次</span><br />
+&nbsp; &nbsp; save_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;epoch&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 每个 epoch 保存一次</span><br />
+&nbsp; &nbsp; fp16<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 用混合精度训练</span><br />
+&nbsp; &nbsp; bf16<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 如果是 Ampere 及以上显卡（30/40 系），可以设 bf16=True</span><br />
+&nbsp; &nbsp; optim<span style="color: Gray;">=</span><span style="color: #a11;">&quot;paged_adamw_32bit&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 分页优化器，防止 OOM</span><br />
+&nbsp; &nbsp; report_to<span style="color: Gray;">=</span><span style="color: #a11;">&quot;none&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 不向 wandb 等平台报告</span><br />
+&nbsp; &nbsp; save_total_limit<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 最多保存 3 个 checkpoint</span><br />
+&nbsp; &nbsp; load_best_model_at_end<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 最后加载最佳模型</span><br />
+&nbsp; &nbsp; metric_for_best_model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;eval_loss&quot;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 用 eval loss 选最佳模型</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 2. 加载数据并格式化</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> format_example<span style="color: Olive;">&#40;</span>example<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;将 Alpaca 格式数据格式化成模型输入&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; instruction <span style="color: Gray;">=</span> example<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;instruction&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; input_text <span style="color: Gray;">=</span> example.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;input&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; output <span style="color: Gray;">=</span> example<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;output&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> input_text.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;&quot;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 没有额外输入的情况</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;&quot;&quot;Below is an instruction that describes a task. Write a response that appropriately completes the request.<br />
+<br />
+### Instruction:<br />
+{instruction}<br />
+<br />
+### Response:<br />
+&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 有额外输入的情况</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;&quot;&quot;Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.<br />
+<br />
+### Instruction:<br />
+{instruction}<br />
+<br />
+### Input:<br />
+{input_text}<br />
+<br />
+### Response:<br />
+&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 完整文本是 prompt + output</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;prompt&quot;</span>: prompt<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;completion&quot;</span>: output<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: prompt + output<br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 加载数据</span><br />
+dataset <span style="color: Gray;">=</span> load_dataset<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;json&quot;</span><span style="color: Gray;">,</span> data_files<span style="color: Gray;">=</span>DATA_PATH<span style="color: Gray;">,</span> split<span style="color: Gray;">=</span><span style="color: #a11;">&quot;train&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 划分训练集和验证集（90% 训练，10% 验证）</span><br />
+dataset <span style="color: Gray;">=</span> dataset.<span style="color: #05a;">train_test_split</span><span style="color: Olive;">&#40;</span>test_size<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> seed<span style="color: Gray;">=</span><span style="color: Maroon;">42</span><span style="color: Olive;">&#41;</span><br />
+train_dataset <span style="color: Gray;">=</span> dataset<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;train&quot;</span><span style="color: Olive;">&#93;</span><br />
+eval_dataset <span style="color: Gray;">=</span> dataset<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;test&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: #a50"># 格式化数据</span><br />
+train_dataset <span style="color: Gray;">=</span> train_dataset.<span style="color: Teal;">map</span><span style="color: Olive;">&#40;</span>format_example<span style="color: Olive;">&#41;</span><br />
+eval_dataset <span style="color: Gray;">=</span> eval_dataset.<span style="color: Teal;">map</span><span style="color: Olive;">&#40;</span>format_example<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;训练集大小：{len(train_dataset)}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;验证集大小：{len(eval_dataset)}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 3. 加载模型和 tokenizer</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;正在加载模型...&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>MODEL_NAME<span style="color: Olive;">&#41;</span><br />
+tokenizer.<span style="color: #05a;">pad_token</span> <span style="color: Gray;">=</span> tokenizer.<span style="color: #05a;">eos_token</span> &nbsp;<span style="color: #a50"># 设置 pad token</span><br />
+tokenizer.<span style="color: #05a;">padding_side</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;right&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 从右边 padding</span><br />
+<br />
+model <span style="color: Gray;">=</span> AutoModelForCausalLM.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; MODEL_NAME<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; quantization_config<span style="color: Gray;">=</span>bnb_config<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; trust_remote_code<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; use_auth_token<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 如果需要 HuggingFace 登录</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 包装 LoRA</span><br />
+model <span style="color: Gray;">=</span> get_peft_model<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> lora_config<span style="color: Olive;">&#41;</span><br />
+model.<span style="color: #05a;">print_trainable_parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 打印可训练参数比例</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 4. 创建训练器并开始训练</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+trainer <span style="color: Gray;">=</span> SFTTrainer<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; train_dataset<span style="color: Gray;">=</span>train_dataset<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; eval_dataset<span style="color: Gray;">=</span>eval_dataset<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; args<span style="color: Gray;">=</span>training_args<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; tokenizer<span style="color: Gray;">=</span>tokenizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; peft_config<span style="color: Gray;">=</span>lora_config<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; dataset_text_field<span style="color: Gray;">=</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 哪个字段包含完整文本</span><br />
+&nbsp; &nbsp; max_seq_length<span style="color: Gray;">=</span><span style="color: Maroon;">2048</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 最大序列长度</span><br />
+&nbsp; &nbsp; packing<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 不打包样本</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;开始训练...&quot;</span><span style="color: Olive;">&#41;</span><br />
+trainer.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;训练完成！&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 5. 保存模型</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 保存 LoRA 适配器（体积小，几 MB 到几十 MB）</span><br />
+model.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;{OUTPUT_DIR}/lora_adapter&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;{OUTPUT_DIR}/lora_adapter&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;LoRA 适配器已保存到 {OUTPUT_DIR}/lora_adapter&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 如果想合并 LoRA 权重（可选）</span><br />
+<span style="color: #a50"># merged_model = model.merge_and_unload()</span><br />
+<span style="color: #a50"># merged_model.save_pretrained(f&quot;{OUTPUT_DIR}/merged_model&quot;)</span><br />
+<span style="color: #a50"># tokenizer.save_pretrained(f&quot;{OUTPUT_DIR}/merged_model&quot;)</span><br />
+<span style="color: #a50"># print(f&quot;合并后的模型已保存到 {OUTPUT_DIR}/merged_model&quot;)</span><br />
+
+</div>
+</div>
+
+<p>如果你想用更简单的方式，可以用 LLaMA-Factory，它提供了 Web UI 和命令行两种方式：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># ============================================</span><br />
+<span style="color: #666666; font-style: italic;"># 使用 LLaMA-Factory 训练</span><br />
+<span style="color: #666666; font-style: italic;"># ============================================</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 方式一：启动 Web UI（最直观）</span><br />
+<span style="color: #7a0874; font-weight: bold;">cd</span> LLaMA-Factory<br />
+python src<span style="color: #000000; font-weight: bold;">/</span>train_web.py<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 方式二：命令行训练（适合自动化）</span><br />
+python src<span style="color: #000000; font-weight: bold;">/</span>train.py \<br />
+&nbsp; &nbsp; --model_name_or_path mistralai<span style="color: #000000; font-weight: bold;">/</span>Mistral-7B-v0.2 \<br />
+&nbsp; &nbsp; <span style="color: #660033;">--dataset</span> runoob_ecommerce \<br />
+&nbsp; &nbsp; --dataset_dir .<span style="color: #000000; font-weight: bold;">/</span>data \<br />
+&nbsp; &nbsp; --output_dir .<span style="color: #000000; font-weight: bold;">/</span>output<span style="color: #000000; font-weight: bold;">/</span>runoob-model \<br />
+&nbsp; &nbsp; --finetuning_type lora \<br />
+&nbsp; &nbsp; --quantization_bit <span style="color: #000000;">4</span> \<br />
+&nbsp; &nbsp; --lora_rank <span style="color: #000000;">16</span> \<br />
+&nbsp; &nbsp; --lora_alpha <span style="color: #000000;">16</span> \<br />
+&nbsp; &nbsp; --lora_dropout <span style="color: #000000;">0.05</span> \<br />
+&nbsp; &nbsp; --lora_target q_proj,v_proj,k_proj,o_proj,gate_proj,up_proj,down_proj \<br />
+&nbsp; &nbsp; --per_device_train_batch_size <span style="color: #000000;">4</span> \<br />
+&nbsp; &nbsp; --gradient_accumulation_steps <span style="color: #000000;">4</span> \<br />
+&nbsp; &nbsp; --lr_scheduler_type cosine \<br />
+&nbsp; &nbsp; --logging_steps <span style="color: #000000;">10</span> \<br />
+&nbsp; &nbsp; --save_strategy epoch \<br />
+&nbsp; &nbsp; --learning_rate 2e-5 \<br />
+&nbsp; &nbsp; --num_train_epochs <span style="color: #000000;">3</span> \<br />
+&nbsp; &nbsp; <span style="color: #660033;">--fp16</span> <span style="color: #c20cb9; font-weight: bold;">true</span> \<br />
+&nbsp; &nbsp; --plot_loss <span style="color: #c20cb9; font-weight: bold;">true</span><br />
+
+</div>
+</div>
+
+<h3>训练超参数设置</h3>
+
+<p>超参数选择是一门艺术，但也有一些经验规则。</p>
+
+<p>学习率（Learning Rate）：这是最重要的超参数。对 LoRA 来说，2e-5 到 5e-5 是安全的起点。如果训练不稳定（loss 震荡），就调小一点。如果训练太慢（loss 下降很慢），就调大一点。</p>
+
+<p>Batch Size：越大越好，但受显存限制。per_device_train_batch_size 设为 2、4、8 都可以。如果显存不够，就用 gradient_accumulation_steps 来累积梯度。比如 batch_size=2，accumulation_steps=4，等效 batch_size=8。</p>
+
+<p>Epochs：2-5 轮比较合适。太少模型没学会，太多可能过拟合。可以看 eval loss，当 eval loss 不再下降时就可以停止了。</p>
+
+<p>LoRA Rank（r）：8-64 都可以。16 是一个不错的起点。小任务用 8，复杂任务用 32 或 64。</p>
+
+<p>Max Sequence Length：根据你的数据决定。512、1024、2048、4096 都常见。越长需要的显存越多。</p>
+
+<table class="reference">
+<tr><th>超参数</th><th>推荐起始值</th><th>调整方向</th></tr>
+<tr><td>learning_rate</td><td>2e-5</td><td>loss 震荡就减小，下降太慢就增大</td></tr>
+<tr><td>per_device_train_batch_size</td><td>4</td><td>显存够就增大，不够就减小</td></tr>
+<tr><td>gradient_accumulation_steps</td><td>4</td><td>等效 batch = batch_size × accumulation</td></tr>
+<tr><td>num_train_epochs</td><td>3</td><td>过拟合就减少，欠拟合就增加</td></tr>
+<tr><td>lora_rank (r)</td><td>16</td><td>简单任务 8，复杂任务 32-64</td></tr>
+<tr><td>max_seq_length</td><td>1024 或 2048</td><td>根据你的数据长度调整</td></tr>
+</table>
+
+<h3>训练监控与 Loss 解读</h3>
+
+<p>训练时要关注几个指标。</p>
+<ul>
+
+	<li><p>Train Loss：训练集上的损失，应该 steadily 下降。如果下降很快，说明学习率可能太大或者数据太少。如果下降很慢，说明学习率太小或者模型容量不够。</p></li>
+	<li>
+
+<p>Eval Loss：验证集上的损失，这是最重要的指标。它应该和 train loss 一起下降。如果 eval loss 开始上升而 train loss 继续下降，说明过拟合了，应该停止训练。</p></li></ul>
+
+
+
+
+<p>过拟合的表现：eval loss 先降后升，而 train loss 持续下降。解决方法：减少 epoch、增加 dropout、增加数据、减小 LoRA rank。</p>
+
+<p>欠拟合的表现：train loss 和 eval loss 都很高，而且下降很慢。解决方法：增加 epoch、增大 LoRA rank、增加数据、稍微增大学习率。</p>
+
+<hr>
+
+<h2>微调效果评估</h2>
+
+<p>训练完了，怎么知道模型好不好？</p>
+
+<h3>评估指标选择</h3>
+
+<p>评估方式取决于你的任务类型。</p>
+
+<p>第一种是人工评估。让人来读模型的输出，给质量打分。这是最可靠的方式，但也是最耗时的。</p>
+
+<p>可以做一个简单的评分表：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 简单的人工评估模板</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+evaluation_prompts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;instruction&quot;</span>: <span style="color: #a11;">&quot;生成一个电商产品描述&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;input&quot;</span>: <span style="color: #a11;">&quot;产品名称：便携咖啡机<span style="color: #000099; font-weight: bold;">\n</span>功能：一键萃取、便携设计、USB充电&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;reference&quot;</span>: <span style="color: #a11;">&quot;这款便携咖啡机让你随时随地享受现磨咖啡。一键萃取操作简单，小巧便携的设计适合办公室、旅行、户外使用。USB 充电设计，无需担心电源问题。&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;instruction&quot;</span>: <span style="color: #a11;">&quot;生成一个电商产品描述&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;input&quot;</span>: <span style="color: #a11;">&quot;产品名称：机械键盘<span style="color: #000099; font-weight: bold;">\n</span>特点：青轴、RGB背光、87键、PBT键帽&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;reference&quot;</span>: <span style="color: #a11;">&quot;这款 87 键机械键盘采用清脆的青轴，打字手感出色。全键 RGB 背光，夜晚使用也清晰。PBT 键帽耐用不打油，长期使用依然如新。&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># ... 10-20 个测试用例</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> evaluate_model<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> tokenizer<span style="color: Gray;">,</span> prompts<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;用一组提示词评估模型&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; results <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> item <span style="color: Green;font-weight:bold;">in</span> prompts:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 生成输出</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; inputs <span style="color: Gray;">=</span> format_example_for_inference<span style="color: Olive;">&#40;</span>item<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> generate_with_model<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> tokenizer<span style="color: Gray;">,</span> inputs<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; results.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;instruction&quot;</span>: item<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;instruction&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;input&quot;</span>: item<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;input&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model_output&quot;</span>: output<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;reference&quot;</span>: item<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;reference&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 留空让人来评分</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;score_relevance&quot;</span>: <span style="color: Teal;">None</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 1-5，相关性</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;score_quality&quot;</span>: <span style="color: Teal;">None</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 1-5，质量</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;score_format&quot;</span>: <span style="color: Teal;">None</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a50"># 1-5，格式正确性</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> results<br />
+<br />
+<br />
+<span style="color: #a50"># 运行评估</span><br />
+results <span style="color: Gray;">=</span> evaluate_model<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> tokenizer<span style="color: Gray;">,</span> evaluation_prompts<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 保存结果，后续人工打分</span><br />
+<span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;evaluation_results.json&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;w&quot;</span><span style="color: Gray;">,</span> encoding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; json.<span style="color: #05a;">dump</span><span style="color: Olive;">&#40;</span>results<span style="color: Gray;">,</span> f<span style="color: Gray;">,</span> ensure_ascii<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> indent<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;评估结果已保存，请人工打分后再分析&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>第二种是自动评估。用 BLEU、ROUGE、BLEURT 等指标。这些指标不完美，但可以做快速迭代。</p>
+
+<p>第三种是 A/B 测试。把旧模型和新模型的输出混在一起让人盲评，看新模型是不是真的更好。</p>
+
+<h3>防止过拟合</h3>
+
+<p>过拟合是微调最常见的问题。表现是训练集上表现很好，但新数据上表现很差。</p>
+
+<p>防止过拟合的方法：</p>
+
+<p>1. 早停（Early Stopping）：监控 eval loss，当它停止下降时就停止训练。</p>
+
+<p>2. 增加数据：更多、更多样的数据是最好的防过拟合方法。</p>
+
+<p>3. 数据增强：改写现有数据，创造变化。</p>
+
+<p>4. 减小模型容量：减小 LoRA rank，减少 LoRA 的层数。</p>
+
+<p>5. 增加 Dropout：LoRA 配置里的 lora_dropout 设为 0.05 或 0.1。</p>
+
+<p>6. 权重衰减（Weight Decay）：在训练参数里加 weight_decay=0.01。</p>
+
+<hr>
+
+<h2>微调模型部署</h2>
+
+<p>模型训练好了，怎么用起来？</p>
+
+<h3>加载 LoRA 进行推理</h3>
+
+<p>第一种方式是加载原模型，再加载 LoRA 适配器。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 加载 LoRA 并进行推理</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoModelForCausalLM<span style="color: Gray;">,</span> AutoTokenizer<br />
+<span style="color: Green;font-weight:bold;">from</span> peft <span style="color: Green;font-weight:bold;">import</span> PeftModel<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> load_finetuned_model<span style="color: Olive;">&#40;</span>base_model_name<span style="color: Gray;">,</span> lora_adapter_path<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;加载基础模型和 LoRA 适配器&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 加载 tokenizer</span><br />
+&nbsp; &nbsp; tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>base_model_name<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; tokenizer.<span style="color: #05a;">pad_token</span> <span style="color: Gray;">=</span> tokenizer.<span style="color: #05a;">eos_token</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 加载基础模型</span><br />
+&nbsp; &nbsp; model <span style="color: Gray;">=</span> AutoModelForCausalLM.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; base_model_name<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; torch_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">float16</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; trust_remote_code<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 加载 LoRA 适配器</span><br />
+&nbsp; &nbsp; model <span style="color: Gray;">=</span> PeftModel.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> lora_adapter_path<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 合并权重（可选，这样推理更快）</span><br />
+&nbsp; &nbsp; model <span style="color: Gray;">=</span> model.<span style="color: #05a;">merge_and_unload</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> model<span style="color: Gray;">,</span> tokenizer<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> generate_product_description<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> tokenizer<span style="color: Gray;">,</span> product_name<span style="color: Gray;">,</span> features<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;生成电商产品描述&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 构造提示词（和训练时一样！）</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;&quot;&quot;Below is an instruction that describes a task. Write a response that appropriately completes the request.<br />
+<br />
+### Instruction:<br />
+生成一个电商产品描述<br />
+<br />
+### Input:<br />
+产品名称：{product_name}<br />
+功能：{features}<br />
+<br />
+### Response:<br />
+&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 生成</span><br />
+&nbsp; &nbsp; inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>prompt<span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">device</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model.<span style="color: #05a;">generate</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **inputs<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_new_tokens<span style="color: Gray;">=</span><span style="color: Maroon;">200</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; temperature<span style="color: Gray;">=</span><span style="color: Maroon;">0.7</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 控制随机性，0-1，越大越随机</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; top_p<span style="color: Gray;">=</span><span style="color: Maroon;">0.9</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; do_sample<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pad_token_id<span style="color: Gray;">=</span>tokenizer.<span style="color: #05a;">eos_token_id</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 解码输出</span><br />
+&nbsp; &nbsp; generated_text <span style="color: Gray;">=</span> tokenizer.<span style="color: #05a;">decode</span><span style="color: Olive;">&#40;</span>outputs<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> skip_special_tokens<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 只取 Response 部分</span><br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> generated_text.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;### Response:&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> response<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 使用示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+BASE_MODEL <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;mistralai/Mistral-7B-v0.2&quot;</span><br />
+LORA_PATH <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;output/runoob-ecommerce-model/lora_adapter&quot;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;正在加载模型...&quot;</span><span style="color: Olive;">&#41;</span><br />
+model<span style="color: Gray;">,</span> tokenizer <span style="color: Gray;">=</span> load_finetuned_model<span style="color: Olive;">&#40;</span>BASE_MODEL<span style="color: Gray;">,</span> LORA_PATH<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;模型加载完成！&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 测试生成</span><br />
+product_name <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;智能扫地机器人&quot;</span><br />
+features <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;激光导航、自动回充、APP控制、2000Pa大吸力&quot;</span><br />
+<br />
+description <span style="color: Gray;">=</span> generate_product_description<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">,</span> tokenizer<span style="color: Gray;">,</span> product_name<span style="color: Gray;">,</span> features<br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>产品名称：{product_name}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;生成的描述：<span style="color: #000099; font-weight: bold;">\n</span>{description}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>部署方式</h3>
+
+<p>部署有几种常见选择。</p>
+	<ul>
+<li>
+<p>第一种是用 vLLM。这是一个高性能的推理引擎，支持 LoRA、连续批处理等功能。生产环境推荐。</p></li>
+	<li>
+
+<p>第二种是用 Text Generation Inference。HuggingFace 官方的推理服务，功能全面。</p></li>
+	<li>
+
+<p>第三种是用 FastAPI 自己封装。简单直接，适合小规模部署。</p></li>
+	<li>
+
+<p>第四种是用 Ollama。把模型转成 GGUF 格式，用 Ollama 运行，适合本地部署。</p></li></ul>
+
+
+
+
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-transformer.html" rel="prev"> Transformer 深度解析</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-rlhf.html" rel="next"> RLHF 对齐训练</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31517' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31517;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31517, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31517},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31517;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

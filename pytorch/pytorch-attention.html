@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch 注意力机制 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/pytorch/pytorch-attention.html" />
+<meta name="keywords" content="PyTorch 注意力机制">
+<meta name="description" content="document.addEventListener(&#039;DOMContentLoaded&#039;, function() {     var articleBody = document.querySelector(&#039;.article-body&#039;);     if (articleBody) {         renderMathInElement(articleBody, {             ..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>PyTorch 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="PyTorch 教程"  href="/pytorch/pytorch-tutorial.html" >
+			PyTorch 教程			</a>
+						<a target="_top" data-p="par" title="PyTorch 简介"  href="/pytorch/pytorch-intro.html" >
+			PyTorch 简介			</a>
+						<a target="_top" data-p="par" title="PyTorch 安装"  href="/pytorch/pytorch-install.html" >
+			PyTorch 安装			</a>
+						<a target="_top" data-p="par" title="PyTorch 基础"  href="/pytorch/pytorch-basic.html" >
+			PyTorch 基础			</a>
+			<a target="_top"  title="PyTorch 张量" href="/pytorch/pytorch-tensor.html">PyTorch 张量</a>			<a target="_top" data-p="par" title="PyTorch 神经网络基础"  href="/pytorch/pytorch-neural-network.html" >
+			PyTorch 神经网络基础			</a>
+			<a target="_top"  title="PyTorch 第一个神经网络" href="/pytorch/pytorch-first-neural-network.html">PyTorch 第一个神经网络</a>			<a target="_top" data-p="par" title="PyTorch 数据处理与加载"  href="/pytorch/pytorch-dataset-dataloader.html" >
+			PyTorch 数据处理与加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 线性回归"  href="/pytorch/pytorch-linear-regression.html" >
+			PyTorch 线性回归			</a>
+						<a target="_top" data-p="par" title="PyTorch 卷积神经网络"  href="/pytorch/pytorch-cnn.html" >
+			PyTorch 卷积神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 循环神经网络"  href="/pytorch/pytorch-recurrent-neural-network.html" >
+			PyTorch 循环神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据集"  href="/pytorch/pytorch-datasets.html" >
+			PyTorch 数据集			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据转换"  href="/pytorch/pytorch-transforms.html" >
+			PyTorch 数据转换			</a>
+						<a target="_top" data-p="par" title="Pytorch torch 参考手册"  href="/pytorch/pytorch-torch-ref.html" >
+			Pytorch torch			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.nn 参考手册"  href="/pytorch/pytorch-torch-nn-ref.html" >
+			PyTorch torch.nn			</a>
+						<a target="_top" data-p="par" title="Transformer 模型"  href="/pytorch/transformer-model.html" >
+			Transformer 模型			</a>
+						<a target="_top" data-p="par" title="PyTorch 构建 Transformer 模型"  href="/pytorch/pytorch-transformer-model.html" >
+			PyTorch Transformer			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.optim 优化器模块"  href="/pytorch/pytorch-torch-optim.html" >
+			PyTorch torch.optim			</a>
+						<a target="_top" data-p="par" title="PyTorch torchvision 计算机视觉模块"  href="/pytorch/pytorch-torchvision.html" >
+			PyTorch torchvision			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型部署"  href="/pytorch/pytorch-model-deployment.html" >
+			PyTorch 模型部署			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型保存和加载"  href="/pytorch/pytorch-model-save.html" >
+			PyTorch 模型保存和加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 图像分类项目"  href="/pytorch/pytorch-image-classification.html" >
+			PyTorch 图像分类			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 文本情感分析项目"  href="/pytorch/pytorch-text-classification.html" >
+			PyTorc 文本情感分析			</a>
+						<a target="_top" data-p="par" title="PyTorch Autograd 自动微分"  href="/pytorch/pytorch-autograd.html" >
+			PyTorch Autograd			</a>
+						<a target="_top" data-p="par" title="PyTorch GPU / CUDA 加速"  href="/pytorch/pytorch-gpu-cuda.html" >
+			PyTorch GPU / CUDA 加速			</a>
+						<a target="_top" data-p="par" title="PyTorch 损失函数"  href="/pytorch/pytorch-loss-function.html" >
+			PyTorch 损失函数			</a>
+						<a target="_top" data-p="par" title="PyTorch 学习率调度器"  href="/pytorch/pytorch-lr-scheduler.html" >
+			PyTorch 学习率调度器			</a>
+						<a target="_top" data-p="par" title="PyTorch 迁移学习"  href="/pytorch/pytorch-transfer-learning.html" >
+			PyTorch 迁移学习			</a>
+						<a target="_top" data-p="par" title="PyTorch 批归一化与 Dropout"  href="/pytorch/pytorch-batchnorm-dropout.html" >
+			PyTorch 批归一化			</a>
+						<a target="_top" data-p="par" title="PyTorch LSTM / GRU"  href="/pytorch/pytorch-lstm-gru.html" >
+			PyTorch LSTM / GRU			</a>
+						<a target="_top" data-p="par" title="PyTorch 词嵌入 (Embedding)"  href="/pytorch/pytorch-embedding.html" >
+			PyTorch 词嵌入			</a>
+						<a target="_top" data-p="par" title="PyTorch 生成对抗网络 (GAN)"  href="/pytorch/pytorch-gan.html" >
+			PyTorch 生成对抗网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 自编码器 (Autoencoder)"  href="/pytorch/pytorch-autoencoder.html" >
+			PyTorch 自编码器			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型评估与调试"  href="/pytorch/pytorch-evaluation-debugging.html" >
+			PyTorch 模型评估与调试			</a>
+						<a target="_top" data-p="par" title="PyTorch torchtext"  href="/pytorch/pytorch-torchtext.html" >
+			PyTorch torchtext			</a>
+						<a target="_top" data-p="par" title="PyTorch 混合精度训练 (AMP)"  href="/pytorch/pytorch-amp.html" >
+			PyTorch 混合精度训练			</a>
+						<a target="_top" data-p="par" title="PyTorch TorchScript/ONNX 导出"  href="/pytorch/pytorch-torchscript-onnx-export.html" >
+			PyTorch TorchScript/ONNX 导出			</a>
+						<a target="_top" data-p="par" title="PyTorch 分布式训练"  href="/pytorch/pytorch-distributed.html" >
+			PyTorch 分布式训练			</a>
+						<a target="_top" data-p="par" title="PyTorch 注意力机制"  href="/pytorch/pytorch-attention.html" >
+			PyTorch 注意力机制			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-distributed.html" rel="prev"> PyTorch 分布式训练</a> </div>
+			<div class="next-design-link"></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<link rel="stylesheet" href="../static.jyshare.com/assets/libs/katex-0.15.2/dist/katex.min.css">
+<script src="../static.jyshare.com/assets/libs/katex-0.15.2/dist/katex.min.js"></script>
+<script src="../static.jyshare.com/assets/libs/katex-0.15.2/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var articleBody = document.querySelector('.article-body');
+    if (articleBody) {
+        renderMathInElement(articleBody, {
+            delimiters: [
+                { left: "\\[", right: "\\]", display: true },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "$$", right: "$$", display: false }
+            ],
+            throwOnError: false
+        });
+    }
+});
+</script>
+
+
+<h1>PyTorch 注意力机制</h1>
+
+<p>注意力机制（Attention Mechanism）是深度学习中最重要的概念之一。</p><p>注意力机制让模型学会"关注"输入中最相关的部分，在自然语言处理、计算机视觉等领域取得了巨大成功。</p><p>本节详细介绍注意力机制的核心原理、PyTorch 实现以及各种注意力变体。</p>
+
+<blockquote><p><strong>适用版本：</strong>本文代码基于 PyTorch 2.0+ 编写。<code>nn.MultiheadAttention</code> 的 <code>batch_first</code> 参数在 PyTorch 1.9 引入，早期版本需要手动处理维度。</p></blockquote>
+
+<hr>
+
+<h2>1. 注意力机制基础</h2>
+
+<h3>1.1 为什么需要注意力</h3>
+
+<p>传统的序列到序列（Seq2Seq）模型存在一个根本问题：<span class="marked">Encoder 需要将所有信息压缩到一个固定长度的向量中</span>。对于长序列，这个向量会成为信息瓶颈——句子越长，信息丢失越严重。</p>
+
+<p>注意力机制的核心理念是：让 Decoder 在生成每个输出时，能够"看"到 Encoder 的所有隐藏状态，并根据当前上下文动态地分配不同的注意力权重。这就像人类翻译时，每翻译一个词都会回头去看原文的对应部分。</p>
+
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:800px;display:block;margin:18px auto;">
+  <defs>
+    <marker id="attArr" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,4 L0,8" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <filter id="attShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  <rect width="800" height="320" rx="14" fill="#f8fafc" filter="url(#attShadow)"/>
+  <text x="400" y="30" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700" fill="#0f172a">Seq2Seq：固定向量 vs 注意力机制</text>
+
+  <!-- Left: Fixed vector bottleneck -->
+  <text x="180" y="62" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="600" fill="#ef4444">固定向量（信息瓶颈）</text>
+  <!-- Encoder -->
+  <g transform="translate(60,80)">
+    <rect x="0" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="25" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">x₁</text>
+    <rect x="58" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="83" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">x₂</text>
+    <rect x="116" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="141" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">x₃</text>
+    <rect x="174" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="199" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">x₄</text>
+  </g>
+  <!-- Bottleneck arrow -->
+  <line x1="180" y1="118" x2="180" y2="148" stroke="#ef4444" stroke-width="2" marker-end="url(#attArr)"/>
+  <rect x="130" y="150" width="100" height="32" rx="16" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="180" y="171" text-anchor="middle" font-family="ui-monospace" font-size="10" font-weight="600" fill="#dc2626">c（固定向量）</text>
+  <!-- Decoder -->
+  <line x1="180" y1="184" x2="180" y2="210" stroke="#ef4444" stroke-width="2" marker-end="url(#attArr)"/>
+  <g transform="translate(60,212)">
+    <rect x="0" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="25" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₁</text>
+    <rect x="58" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="83" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₂</text>
+    <rect x="116" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="141" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₃</text>
+    <rect x="174" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="199" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₄</text>
+  </g>
+  <text x="180" y="272" text-anchor="middle" font-family="system-ui" font-size="10" fill="#94a3b8">所有解码步共享同一个 c</text>
+
+  <!-- Divider -->
+  <line x1="400" y1="50" x2="400" y2="290" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- Right: Attention -->
+  <text x="620" y="62" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="600" fill="#10b981">注意力机制（动态加权）</text>
+  <!-- Encoder with hidden states -->
+  <g transform="translate(490,80)">
+    <rect x="0" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="25" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">h₁</text>
+    <rect x="58" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="83" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">h₂</text>
+    <rect x="116" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="141" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">h₃</text>
+    <rect x="174" y="0" width="50" height="30" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="199" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#1d4ed8">h₄</text>
+  </g>
+  <!-- Dynamic attention lines with varying thickness -->
+  <g transform="translate(490,80)">
+    <line x1="25" y1="140" x2="25" y2="35" stroke="#10b981" stroke-width="4" opacity="0.8"/>
+    <line x1="25" y1="140" x2="83" y2="35" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <line x1="25" y1="140" x2="141" y2="35" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <line x1="25" y1="140" x2="199" y2="35" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <line x1="83" y1="140" x2="25" y2="35" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <line x1="83" y1="140" x2="83" y2="35" stroke="#10b981" stroke-width="4" opacity="0.8"/>
+    <line x1="83" y1="140" x2="141" y2="35" stroke="#10b981" stroke-width="1.5" opacity="0.4"/>
+    <line x1="83" y1="140" x2="199" y2="35" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <line x1="141" y1="140" x2="25" y2="35" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <line x1="141" y1="140" x2="83" y2="35" stroke="#10b981" stroke-width="2.5" opacity="0.6"/>
+    <line x1="141" y1="140" x2="141" y2="35" stroke="#10b981" stroke-width="3" opacity="0.7"/>
+    <line x1="141" y1="140" x2="199" y2="35" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <line x1="199" y1="140" x2="25" y2="35" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <line x1="199" y1="140" x2="83" y2="35" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <line x1="199" y1="140" x2="141" y2="35" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <line x1="199" y1="140" x2="199" y2="35" stroke="#10b981" stroke-width="4" opacity="0.8"/>
+  </g>
+  <!-- Decoder -->
+  <g transform="translate(490,222)">
+    <rect x="0" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="25" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₁</text>
+    <rect x="58" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="83" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₂</text>
+    <rect x="116" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="141" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₃</text>
+    <rect x="174" y="0" width="50" height="30" rx="6" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+    <text x="199" y="20" text-anchor="middle" font-family="ui-monospace" font-size="10" fill="#be185d">y₄</text>
+  </g>
+  <text x="620" y="282" text-anchor="middle" font-family="system-ui" font-size="10" fill="#94a3b8">每步生成不同的上下文向量 c_t</text>
+
+  <!-- Bottom note -->
+  <rect x="200" y="296" width="400" height="20" rx="4" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="0.5"/>
+  <text x="400" y="310" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="600" fill="#059669">线越粗 → 注意力权重越大 → 该位置信息越重要</text>
+</svg>
+
+<h3>1.2 注意力机制的本质</h3>
+
+<p>注意力机制可以看作是一种<span class="marked">加权求和</span>操作。给定查询（Query）、键（Key）和值（Value），通过计算 Query 与每个 Key 的相似度来分配权重，再对 Value 进行加权求和：</p>
+<p class="math">
+\[\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V\]$$</p>
+
+<p>其中：</p>
+<ul class="math">
+<li><strong>Q（Query）</strong>：查询向量，表示"我正在寻找什么信息"</li>
+<li><strong>K（Key）</strong>：键向量，表示"我这里有什么信息"（用于匹配）</li>
+<li><strong>V（Value）</strong>：值向量，表示"我实际能提供的内容"</li>
+<li><strong>$$d_k$$</strong>：Key 的维度，$$\sqrt{d_k}$$ 用于缩放，防止点积值过大导致 softmax 梯度消失</li>
+</ul>
+
+<p>为什么要除以 $$\sqrt{d_k}$$？当 $$d_k$$ 较大时，Q 和 K 的点积的方差会随维度线性增长，导致 softmax 的输入值过大，梯度趋近于零。缩放后使方差恢复到 1，保证梯度正常流动。</p>
+
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:18px auto;">
+  <defs>
+    <marker id="attArr2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,4 L0,8" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <filter id="attCard">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+  <rect width="700" height="260" rx="14" fill="#f8fafc" filter="url(#attCard)"/>
+  <text x="350" y="28" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700" fill="#0f172a">Scaled Dot-Product Attention 计算流程</text>
+
+  <!-- Q -->
+  <rect x="30" y="55" width="80" height="40" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+  <text x="70" y="80" text-anchor="middle" font-family="ui-monospace" font-size="13" font-weight="700" fill="#1d4ed8">Q</text>
+  <text x="70" y="108" text-anchor="middle" font-family="system-ui" font-size="9" fill="#64748b">[batch, seq_q, d_k]</text>
+
+  <!-- K -->
+  <rect x="30" y="130" width="80" height="40" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.2"/>
+  <text x="70" y="155" text-anchor="middle" font-family="ui-monospace" font-size="13" font-weight="700" fill="#059669">K</text>
+  <text x="70" y="183" text-anchor="middle" font-family="system-ui" font-size="9" fill="#64748b">[batch, seq_k, d_k]</text>
+
+  <!-- MatMul -->
+  <line x1="112" y1="75" x2="158" y2="95" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+  <line x1="112" y1="150" x2="158" y2="105" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+  <rect x="162" y="70" width="70" height="52" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="197" y="93" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="600" fill="#334155">MatMul</text>
+  <text x="197" y="108" text-anchor="middle" font-family="ui-monospace" font-size="8" fill="#94a3b8">QKᵀ</text>
+
+  <!-- Scale -->
+  <line x1="234" y1="96" x2="268" y2="96" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+  <rect x="272" y="70" width="70" height="52" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="307" y="93" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="600" fill="#b45309">Scale</text>
+  <text x="307" y="108" text-anchor="middle" font-family="ui-monospace" font-size="8" fill="#fbbf24">÷ √d_k</text>
+
+  <!-- Softmax -->
+  <line x1="344" y1="96" x2="378" y2="96" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+  <rect x="382" y="70" width="78" height="52" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="1"/>
+  <text x="421" y="93" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="600" fill="#be185d">Softmax</text>
+  <text x="421" y="108" text-anchor="middle" font-family="ui-monospace" font-size="8" fill="#f9a8d4">归一化</text>
+
+  <!-- MatMul with V -->
+  <line x1="462" y1="96" x2="510" y2="96" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+  <rect x="30" y="200" width="80" height="40" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.2"/>
+  <text x="70" y="225" text-anchor="middle" font-family="ui-monospace" font-size="13" font-weight="700" fill="#dc2626">V</text>
+  <text x="70" y="250" text-anchor="middle" font-family="system-ui" font-size="9" fill="#64748b">[batch, seq_k, d_v]</text>
+  <line x1="112" y1="220" x2="510" y2="110" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+
+  <rect x="514" y="70" width="70" height="52" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="549" y="93" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="600" fill="#334155">MatMul</text>
+  <text x="549" y="108" text-anchor="middle" font-family="ui-monospace" font-size="8" fill="#94a3b8">× V</text>
+
+  <!-- Output -->
+  <line x1="586" y1="96" x2="620" y2="96" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#attArr2)"/>
+  <rect x="624" y="74" width="60" height="44" rx="8" fill="#6366f1" opacity="0.9"/>
+  <text x="654" y="100" text-anchor="middle" font-family="system-ui" font-size="10" font-weight="600" fill="white">Output</text>
+
+  <!-- Mask (optional) -->
+  <g opacity="0.7">
+    <rect x="382" y="140" width="78" height="36" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="3 2"/>
+    <text x="421" y="156" text-anchor="middle" font-family="system-ui" font-size="9" fill="#94a3b8">Mask（可选）</text>
+    <text x="421" y="169" text-anchor="middle" font-family="ui-monospace" font-size="8" fill="#94a3b8">-∞ 填充</text>
+    <line x1="421" y1="140" x2="421" y2="124" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 2" marker-end="url(#attArr2)"/>
+  </g>
+
+  <!-- Bottom formula -->
+  <text x="350" y="210" text-anchor="middle" font-family="ui-monospace" font-size="11" fill="#334155">
+    Output = softmax(QKᵀ / √d_k) · V
+  </text>
+  <text x="350" y="230" text-anchor="middle" font-family="system-ui" font-size="10" fill="#94a3b8">
+    输出形状: [batch, seq_q, d_v] — 每个 Query 位置得到一个 d_v 维的上下文向量
+  </text>
+</svg>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">functional</span> <span style="color: Green;font-weight:bold;">as</span> F<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> scaled_dot_product_attention<span style="color: Olive;">&#40;</span>Q<span style="color: Gray;">,</span> K<span style="color: Gray;">,</span> V<span style="color: Gray;">,</span> mask<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 缩放点积注意力<br />
+<br />
+&nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Q: 查询张量 [batch, n_heads, seq_len_q, d_k]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; K: 键张量 [batch, n_heads, seq_len_k, d_k]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; V: 值张量 [batch, n_heads, seq_len_v, d_v]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; mask: 掩码张量，被掩码位置设为 False/0<br />
+<br />
+&nbsp; &nbsp; 返回:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; output: 注意力输出 [batch, n_heads, seq_len_q, d_v]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; attention_weights: 注意力权重 [batch, n_heads, seq_len_q, seq_len_k]<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; d_k <span style="color: Gray;">=</span> Q.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 1. 计算 QK^T / sqrt(d_k)</span><br />
+&nbsp; &nbsp; scores <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>Q<span style="color: Gray;">,</span> K.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">2</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> / <span style="color: #05a;">math</span>.<span style="color: #05a;">sqrt</span><span style="color: Olive;">&#40;</span>d_k<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 2. 应用掩码（可选）</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># &nbsp; &nbsp;掩码位置设为极小值，softmax 后趋近于 0</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> mask <span style="color: Green;font-weight:bold;">is</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> scores.<span style="color: #05a;">masked_fill</span><span style="color: Olive;">&#40;</span>mask <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1e9</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 3. Softmax 归一化 → 注意力权重</span><br />
+&nbsp; &nbsp; attention_weights <span style="color: Gray;">=</span> F.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>scores<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 4. 加权求和</span><br />
+&nbsp; &nbsp; output <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>attention_weights<span style="color: Gray;">,</span> V<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> output<span style="color: Gray;">,</span> attention_weights<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+batch_size<span style="color: Gray;">,</span> n_heads <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><br />
+seq_len_q<span style="color: Gray;">,</span> seq_len_k <span style="color: Gray;">=</span> <span style="color: Maroon;">5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">6</span><br />
+d_k<span style="color: Gray;">,</span> d_v <span style="color: Gray;">=</span> <span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">16</span><br />
+<br />
+Q <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> seq_len_q<span style="color: Gray;">,</span> d_k<span style="color: Olive;">&#41;</span><br />
+K <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> seq_len_k<span style="color: Gray;">,</span> d_k<span style="color: Olive;">&#41;</span><br />
+V <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> seq_len_k<span style="color: Gray;">,</span> d_v<span style="color: Olive;">&#41;</span><br />
+<br />
+output<span style="color: Gray;">,</span> attn_weights <span style="color: Gray;">=</span> scaled_dot_product_attention<span style="color: Olive;">&#40;</span>Q<span style="color: Gray;">,</span> K<span style="color: Gray;">,</span> V<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># [2, 4, 5, 16]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;注意力权重形状: {attn_weights.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># [2, 4, 5, 6]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;权重行求和（应为 1.0）: {attn_weights[0, 0, 0].sum().item():.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>注意力权重的本质是概率分布——经过 softmax 后，每一行的和为 1。权重越大表示模型对该位置越"关注"。</p></blockquote>
+
+<hr>
+
+<h2>2. PyTorch 注意力模块</h2>
+
+<h3>2.1 Multi-Head Attention</h3>
+
+<p><span class="marked">Multi-Head Attention（多头注意力）</span> 允许模型同时关注来自不同位置的不同表示子空间的信息。它将 Q、K、V 分别通过不同的线性投影映射到多个子空间，在每个子空间独立计算注意力，最后拼接结果再做一次线性变换。</p>
+
+<p>这就像让多个人从不同角度同时审视同一段文本——有人关注语法结构，有人关注语义关联，有人关注长距离依赖。多头机制让模型能捕获更丰富的模式。</p>
+
+<p>$$\text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)W^O$$</p>
+<p>
+$$\text{where head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">functional</span> <span style="color: Green;font-weight:bold;">as</span> F<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> MultiHeadAttention<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">assert</span> d_model % n_heads <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;d_model 必须能被 n_heads 整除&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d_model</span> <span style="color: Gray;">=</span> d_model<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span> <span style="color: Gray;">=</span> n_heads<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span> <span style="color: Gray;">=</span> d_model // n_heads &nbsp;<span style="color: #a50"># 每个头的维度</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Q、K、V 的线性投影（一次计算所有头，更高效）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_q</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_k</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_v</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 输出投影</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_o</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> query<span style="color: Gray;">,</span> key<span style="color: Gray;">,</span> value<span style="color: Gray;">,</span> mask<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; query: [batch, seq_len_q, d_model]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; key: &nbsp; [batch, seq_len_k, d_model]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value: [batch, seq_len_k, d_model]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mask: &nbsp;[batch, 1, 1, seq_len_k] 或 [batch, 1, seq_len_q, seq_len_k]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; batch_size <span style="color: Gray;">=</span> query.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 1. 线性投影，然后分头</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># &nbsp; &nbsp;[batch, seq_len, d_model] → [batch, seq_len, n_heads, d_k]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># &nbsp; &nbsp;→ [batch, n_heads, seq_len, d_k]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; Q <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_q</span><span style="color: Olive;">&#40;</span>query<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; K <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_k</span><span style="color: Olive;">&#40;</span>key<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; V <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_v</span><span style="color: Olive;">&#40;</span>value<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 2. 缩放点积注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>Q<span style="color: Gray;">,</span> K.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">2</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> / <span style="color: #05a;">math</span>.<span style="color: #05a;">sqrt</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> mask <span style="color: Green;font-weight:bold;">is</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> scores.<span style="color: #05a;">masked_fill</span><span style="color: Olive;">&#40;</span>mask <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1e9</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> F.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>scores<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span>attn_weights<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 3. 加权求和</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; context <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>attn_weights<span style="color: Gray;">,</span> V<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 4. 合并多头：[batch, n_heads, seq_len, d_k] → [batch, seq_len, d_model]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; context <span style="color: Gray;">=</span> context.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">contiguous</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_model</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 5. 输出投影</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_o</span><span style="color: Olive;">&#40;</span>context<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> output<span style="color: Gray;">,</span> attn_weights<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+d_model<span style="color: Gray;">,</span> n_heads <span style="color: Gray;">=</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><br />
+seq_len<span style="color: Gray;">,</span> batch <span style="color: Gray;">=</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><br />
+<br />
+layer <span style="color: Gray;">=</span> MultiHeadAttention<span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> n_heads<span style="color: Olive;">&#41;</span><br />
+<br />
+query <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+key <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+value <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+output<span style="color: Gray;">,</span> attn_weights <span style="color: Gray;">=</span> layer<span style="color: Olive;">&#40;</span>query<span style="color: Gray;">,</span> key<span style="color: Gray;">,</span> value<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># [4, 10, 128]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;注意力权重形状: {attn_weights.shape}&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: #a50"># [4, 8, 10, 10]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;每头维度 d_k = {d_model // n_heads}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>2.2 PyTorch 内置 MultiheadAttention</h3>
+
+<p>PyTorch 提供了经过高度优化的 <code>nn.MultiheadAttention</code>，底层使用了融合算子（fused kernels），在大多数场景下比手动实现更快。推荐在生产环境中使用。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> TransformerAttention<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用 PyTorch 内置 MultiheadAttention 的自注意力层&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">attention</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">MultiheadAttention</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; embed_dim<span style="color: Gray;">=</span>d_model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; num_heads<span style="color: Gray;">=</span>n_heads<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dropout<span style="color: Gray;">=</span>dropout<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; batch_first<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 输入格式为 [batch, seq, features]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># PyTorch 2.0+ 可启用 Flash Attention 后端：</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># attn_implementation=&quot;flash_attention_2&quot; &nbsp;# 需要安装 flash-attn</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">layernorm</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 自注意力：Q、K、V 都是 x<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: [batch, seq_len, d_model]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; key_padding_mask: [batch, seq_len]，True 表示该位置是 padding<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_output<span style="color: Gray;">,</span> attn_weights <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">attention</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x<span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># self-attention</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; key_padding_mask<span style="color: Gray;">=</span>key_padding_mask<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Pre-Norm 残差连接（比 Post-Norm 训练更稳定）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; output <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">layernorm</span><span style="color: Olive;">&#40;</span>x + attn_output<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> output<span style="color: Gray;">,</span> attn_weights<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+d_model<span style="color: Gray;">,</span> n_heads <span style="color: Gray;">=</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><br />
+seq_len<span style="color: Gray;">,</span> batch <span style="color: Gray;">=</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><br />
+<br />
+model <span style="color: Gray;">=</span> TransformerAttention<span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> n_heads<span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 创建 padding mask：True 表示该位置应被忽略</span><br />
+key_padding_mask <span style="color: Gray;">=</span> torch.<span style="color: #05a;">zeros</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> dtype<span style="color: Gray;">=</span>torch.<span style="color: Teal;">bool</span><span style="color: Olive;">&#41;</span><br />
+key_padding_mask<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">7</span>:<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">True</span> &nbsp; <span style="color: #a50"># 第一个样本的后 3 个位置是 padding</span><br />
+key_padding_mask<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span>:<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">True</span> &nbsp; <span style="color: #a50"># 第二个样本的后 5 个位置是 padding</span><br />
+<br />
+output<span style="color: Gray;">,</span> attn_weights <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Gray;">=</span>key_padding_mask<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># [4, 10, 128]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;注意力权重形状: {attn_weights.shape}&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: #a50"># [4, 10, 10]</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>注意 mask 类型：</strong><code>nn.MultiheadAttention</code> 的 <code>key_padding_mask</code> 使用 <strong>True = 忽略</strong> 的约定，与某些自定义实现中 0 = 忽略的约定相反。使用时务必确认。</p></blockquote>
+
+<hr>
+
+<h2>3. 注意力机制的变体</h2>
+
+<h3>3.1 自注意力（Self-Attention）</h3>
+
+<p><span class="marked">自注意力</span> 是注意力机制的一种特殊形式——Q、K、V 都来自同一个输入序列。它让序列中的每个位置都能直接关注到所有其他位置，从而捕获全局依赖关系。这是 Transformer 的核心组件，也是它优于 RNN 的关键所在：RNN 需要逐步传递信息，而自注意力一步到位。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">functional</span> <span style="color: Green;font-weight:bold;">as</span> F<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> SelfAttention<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;多头自注意力层，支持因果掩码（用于自回归生成）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">assert</span> d_model % n_heads <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d_model</span> <span style="color: Gray;">=</span> d_model<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span> <span style="color: Gray;">=</span> n_heads<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span> <span style="color: Gray;">=</span> d_model // n_heads<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_q</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_k</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_v</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">out_proj</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> _split_heads<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> batch_size<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;[batch, seq, d_model] → [batch, n_heads, seq, d_k]&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> causal<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 自注意力：Q、K、V 都来自同一个输入 x<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: [batch, seq_len, d_model]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; causal: 是否使用因果掩码（防止看到未来位置）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; batch_size<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> x.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 投影 + 分头</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; Q <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>._split_heads<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">w_q</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> batch_size<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; K <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>._split_heads<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">w_k</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> batch_size<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; V <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>._split_heads<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">w_v</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> batch_size<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 计算注意力分数</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>Q<span style="color: Gray;">,</span> K.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">2</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> / <span style="color: #05a;">math</span>.<span style="color: #05a;">sqrt</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 因果掩码：上三角矩阵设为 -inf，防止看到未来 token</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> causal:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; causal_mask <span style="color: Gray;">=</span> torch.<span style="color: #05a;">triu</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; torch.<span style="color: #05a;">ones</span><span style="color: Olive;">&#40;</span>seq_len<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> device<span style="color: Gray;">=</span>x.<span style="color: #05a;">device</span><span style="color: Gray;">,</span> dtype<span style="color: Gray;">=</span>torch.<span style="color: Teal;">bool</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; diagonal<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> scores.<span style="color: #05a;">masked_fill</span><span style="color: Olive;">&#40;</span>causal_mask.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Teal;">float</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'-inf'</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> F.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>scores<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span>attn_weights<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 加权求和 + 合并多头</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; context <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>attn_weights<span style="color: Gray;">,</span> V<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; context <span style="color: Gray;">=</span> context.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">contiguous</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_model</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">out_proj</span><span style="color: Olive;">&#40;</span>context<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> attn_weights<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+d_model<span style="color: Gray;">,</span> n_heads <span style="color: Gray;">=</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><br />
+seq_len<span style="color: Gray;">,</span> batch <span style="color: Gray;">=</span> <span style="color: Maroon;">20</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><br />
+<br />
+attn <span style="color: Gray;">=</span> SelfAttention<span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> n_heads<span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 不使用因果掩码（Encoder 场景）</span><br />
+output_enc<span style="color: Gray;">,</span> weights_enc <span style="color: Gray;">=</span> attn<span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> causal<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;[Encoder] 输出: {output_enc.shape}, 权重: {weights_enc.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 使用因果掩码（Decoder / 自回归生成场景）</span><br />
+output_dec<span style="color: Gray;">,</span> weights_dec <span style="color: Gray;">=</span> attn<span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> causal<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;[Decoder] 输出: {output_dec.shape}, 权重: {weights_dec.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 验证因果性：第一个 token 不应该关注后面的 token</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;causal=True 时，weights[0,0,0,5:]（应全为0）: {weights_dec[0, 0, 0, 5:].tolist()[:5]}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>3.2 交叉注意力（Cross-Attention）</h3>
+
+<p><span class="marked">交叉注意力</span> 中，Q 来自一个序列（如 Decoder），K 和 V 来自另一个序列（如 Encoder）。这是 Encoder-Decoder 架构的桥梁——让 Decoder 在生成每个 token 时，能动态地"查阅"Encoder 的所有输出。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">functional</span> <span style="color: Green;font-weight:bold;">as</span> F<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> CrossAttention<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;交叉注意力：Q 来自目标序列，K/V 来自源序列&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">assert</span> d_model % n_heads <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d_model</span> <span style="color: Gray;">=</span> d_model<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span> <span style="color: Gray;">=</span> n_heads<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span> <span style="color: Gray;">=</span> d_model // n_heads<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_q</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_k</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">w_v</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">out_proj</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> target<span style="color: Gray;">,</span> source<span style="color: Gray;">,</span> mask<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; target: 目标序列 [batch, target_len, d_model] &nbsp;→ 提供 Q<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; source: 源序列 &nbsp; [batch, source_len, d_model] &nbsp;→ 提供 K, V<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mask: &nbsp; 可选掩码<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; batch_size <span style="color: Gray;">=</span> target.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; target_len <span style="color: Gray;">=</span> target.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; source_len <span style="color: Gray;">=</span> source.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 投影 + 分头</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; Q <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_q</span><span style="color: Olive;">&#40;</span>target<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> target_len<span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; K <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_k</span><span style="color: Olive;">&#40;</span>source<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> source_len<span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; V <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">w_v</span><span style="color: Olive;">&#40;</span>source<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> source_len<span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">n_heads</span><span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 注意力计算</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>Q<span style="color: Gray;">,</span> K.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">2</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> / <span style="color: #05a;">math</span>.<span style="color: #05a;">sqrt</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">d_k</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> mask <span style="color: Green;font-weight:bold;">is</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> scores.<span style="color: #05a;">masked_fill</span><span style="color: Olive;">&#40;</span>mask <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">float</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'-inf'</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> F.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>scores<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span>attn_weights<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 加权求和 + 合并多头</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; context <span style="color: Gray;">=</span> torch.<span style="color: #05a;">matmul</span><span style="color: Olive;">&#40;</span>attn_weights<span style="color: Gray;">,</span> V<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; context <span style="color: Gray;">=</span> context.<span style="color: #05a;">transpose</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">contiguous</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>batch_size<span style="color: Gray;">,</span> target_len<span style="color: Gray;">,</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">d_model</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">out_proj</span><span style="color: Olive;">&#40;</span>context<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> attn_weights<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+d_model<span style="color: Gray;">,</span> n_heads <span style="color: Gray;">=</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><br />
+batch <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span><br />
+target_len<span style="color: Gray;">,</span> source_len <span style="color: Gray;">=</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">15</span><br />
+<br />
+cross_attn <span style="color: Gray;">=</span> CrossAttention<span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> n_heads<span style="color: Olive;">&#41;</span><br />
+target <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> target_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># Decoder 输出</span><br />
+source <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> source_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># Encoder 输出</span><br />
+<br />
+output<span style="color: Gray;">,</span> weights <span style="color: Gray;">=</span> cross_attn<span style="color: Olive;">&#40;</span>target<span style="color: Gray;">,</span> source<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;目标序列形状: {target.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;源序列形状: &nbsp; {source.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: &nbsp; &nbsp; {output.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># [2, 10, 256]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;权重形状: &nbsp; &nbsp; {weights.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># [2, 8, 10, 15]</span><br />
+<span style="color: #a50"># 权重含义：每个 target 位置对每个 source 位置的关注程度</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>自注意力 vs 交叉注意力：</strong>自注意力中 Q/K/V 形状相同（$$seq \times seq$$ 的权重矩阵）；交叉注意力中 Q 长度与 K 长度可以不同（$$target \times source$$ 的权重矩阵）。</p></blockquote>
+
+<h3>3.3 位置编码（Positional Encoding）</h3>
+
+<p>注意力机制本身具有<strong>置换不变性</strong>——打乱输入顺序不会改变输出。但语言和图像都是有序的，因此需要通过位置编码显式注入位置信息。原始 Transformer 使用正弦/余弦函数生成固定的位置编码：</p>
+
+<p>$$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right), \quad PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> PositionalEncoding<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;正弦/余弦位置编码（Transformer 原始方案）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> max_len<span style="color: Gray;">=</span><span style="color: Maroon;">5000</span><span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span>dropout<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 预计算位置编码矩阵 [max_len, d_model]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; pe <span style="color: Gray;">=</span> torch.<span style="color: #05a;">zeros</span><span style="color: Olive;">&#40;</span>max_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; position <span style="color: Gray;">=</span> torch.<span style="color: #05a;">arange</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> max_len<span style="color: Gray;">,</span> dtype<span style="color: Gray;">=</span>torch.<span style="color: Teal;">float</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># div_term: 控制不同频率维度的衰减速度</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; div_term <span style="color: Gray;">=</span> torch.<span style="color: #05a;">exp</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; torch.<span style="color: #05a;">arange</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span>.<span style="color: Teal;">float</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> * <span style="color: Olive;">&#40;</span>-<span style="color: #05a;">math</span>.<span style="color: #05a;">log</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10000.0</span><span style="color: Olive;">&#41;</span> / d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; pe<span style="color: Olive;">&#91;</span>:<span style="color: Gray;">,</span> <span style="color: Maroon;">0</span>::<span style="color: Maroon;">2</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> torch.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>position * div_term<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 偶数维度</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; pe<span style="color: Olive;">&#91;</span>:<span style="color: Gray;">,</span> <span style="color: Maroon;">1</span>::<span style="color: Maroon;">2</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> torch.<span style="color: #05a;">cos</span><span style="color: Olive;">&#40;</span>position * div_term<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 奇数维度</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; pe <span style="color: Gray;">=</span> pe.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># [1, max_len, d_model]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">register_buffer</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'pe'</span><span style="color: Gray;">,</span> pe<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 不参与训练</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; x: [batch, seq_len, d_model]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 返回: x + positional_encoding<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> x + <span style="color: Teal;">self</span>.<span style="color: #05a;">pe</span><span style="color: Olive;">&#91;</span>:<span style="color: Gray;">,</span> :x.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> :<span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+d_model <span style="color: Gray;">=</span> <span style="color: Maroon;">128</span><br />
+seq_len <span style="color: Gray;">=</span> <span style="color: Maroon;">50</span><br />
+batch <span style="color: Gray;">=</span> <span style="color: Maroon;">4</span><br />
+<br />
+pe <span style="color: Gray;">=</span> PositionalEncoding<span style="color: Olive;">&#40;</span>d_model<span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+output <span style="color: Gray;">=</span> pe<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入形状: {x.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输出形状: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;位置编码形状: {pe.pe.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># [1, 5000, 128]</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>4. 注意力机制的视觉应用</h2>
+
+<p>注意力机制不仅适用于序列数据，在计算机视觉中同样大放异彩。以下介绍三种经典的视觉注意力模块：</p>
+
+<h3>4.1 通道注意力（Channel Attention）</h3>
+
+<p><span class="marked">通道注意力</span>（如 SENet）让网络学习"哪些通道更重要"。它对每个通道进行全局池化压缩空间信息，再通过两层全连接网络学习通道间的依赖关系。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> SEBlock<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;Squeeze-and-Excitation Block（通道注意力）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> channels<span style="color: Gray;">,</span> reduction<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">squeeze</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">AdaptiveAvgPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 全局平均池化</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">excitation</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>channels<span style="color: Gray;">,</span> channels // reduction<span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>channels // reduction<span style="color: Gray;">,</span> channels<span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Sigmoid</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 输出 0~1 的通道权重</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># x: [batch, channels, H, W]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; b<span style="color: Gray;">,</span> c<span style="color: Gray;">,</span> _<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> x.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Squeeze: [B, C, H, W] → [B, C, 1, 1] → [B, C]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; y <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">squeeze</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>b<span style="color: Gray;">,</span> c<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Excitation: 学习通道权重 [B, C]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; y <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">excitation</span><span style="color: Olive;">&#40;</span>y<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>b<span style="color: Gray;">,</span> c<span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 通道加权：每个通道乘以对应的权重</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x * y.<span style="color: #05a;">expand_as</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+se <span style="color: Gray;">=</span> SEBlock<span style="color: Olive;">&#40;</span>channels<span style="color: Gray;">=</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> reduction<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+output <span style="color: Gray;">=</span> se<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入: {x.shape} → 输出: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>4.2 空间注意力（Spatial Attention）</h3>
+
+<p><span class="marked">空间注意力</span> 让网络学习"哪些位置更重要"。它在通道维度上进行压缩（取均值和最大值），然后用卷积学习空间权重图。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> SpatialAttention<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;空间注意力模块&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> kernel_size<span style="color: Gray;">=</span><span style="color: Maroon;">7</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; padding <span style="color: Gray;">=</span> kernel_size // <span style="color: Maroon;">2</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 输入 2 个通道（均值 + 最大值），输出 1 个通道（注意力图）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">conv</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> kernel_size<span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span>padding<span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">sigmoid</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sigmoid</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># x: [batch, channels, H, W]</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 通道压缩：取均值和最大值 → [B, 1, H, W] 各一个</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; avg_out <span style="color: Gray;">=</span> torch.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> keepdim<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; max_out<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> torch.<span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> keepdim<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 拼接 → [B, 2, H, W]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scale <span style="color: Gray;">=</span> torch.<span style="color: #05a;">cat</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>avg_out<span style="color: Gray;">,</span> max_out<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 卷积 + Sigmoid → 空间权重图 [B, 1, H, W]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scale <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">sigmoid</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">conv</span><span style="color: Olive;">&#40;</span>scale<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 空间加权</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x * scale<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+spatial_attn <span style="color: Gray;">=</span> SpatialAttention<span style="color: Olive;">&#40;</span>kernel_size<span style="color: Gray;">=</span><span style="color: Maroon;">7</span><span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+output <span style="color: Gray;">=</span> spatial_attn<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入: {x.shape} → 输出: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>4.3 CBAM（Convolutional Block Attention Module）</h3>
+
+<p>CBAM 将通道注意力和空间注意力<strong>串联</strong>应用：先通过通道注意力选择重要通道，再通过空间注意力选择重要位置。两者互补，效果优于单独使用。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> CBAM<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;CBAM: 通道注意力 + 空间注意力&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> channels<span style="color: Gray;">,</span> reduction<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> kernel_size<span style="color: Gray;">=</span><span style="color: Maroon;">7</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 通道注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">channel_attn</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AdaptiveAvgPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Flatten</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>channels<span style="color: Gray;">,</span> channels // reduction<span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>channels // reduction<span style="color: Gray;">,</span> channels<span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Sigmoid</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 空间注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">spatial_attn</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> kernel_size<span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span>kernel_size // <span style="color: Maroon;">2</span><span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Sigmoid</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 1. 通道注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; b<span style="color: Gray;">,</span> c<span style="color: Gray;">,</span> _<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> x.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ca <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">channel_attn</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">view</span><span style="color: Olive;">&#40;</span>b<span style="color: Gray;">,</span> c<span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> x * ca<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 2. 空间注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; avg_out <span style="color: Gray;">=</span> torch.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> keepdim<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; max_out<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> torch.<span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> keepdim<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; sa <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">spatial_attn</span><span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">cat</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>avg_out<span style="color: Gray;">,</span> max_out<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> x * sa<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+cbam <span style="color: Gray;">=</span> CBAM<span style="color: Olive;">&#40;</span>channels<span style="color: Gray;">=</span><span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+output <span style="color: Gray;">=</span> cbam<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入: {x.shape} → 输出: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>5. 注意力机制在 NLP 中的应用</h2>
+
+<h3>5.1 Transformer Encoder</h3>
+
+<p>Transformer Encoder 由 N 个相同的层堆叠而成，每层包含两个子层：<strong>多头自注意力</strong>和<strong>前馈网络</strong>。每个子层都使用残差连接和层归一化。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> TransformerEncoderLayer<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;单层 Transformer Encoder&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> d_ff<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 多头自注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">self_attn</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">MultiheadAttention</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span>dropout<span style="color: Gray;">,</span> batch_first<span style="color: Gray;">=</span><span style="color: Teal;">True</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 前馈网络（两层线性 + 激活）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">ffn</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_ff<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">GELU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># GELU 比 ReLU 更常用</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_ff<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 层归一化（Pre-Norm 风格，训练更稳定）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">norm1</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">norm2</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 子层 1: 自注意力</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; residual <span style="color: Gray;">=</span> x<br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">norm1</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># Pre-Norm</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_out<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">self_attn</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Gray;">=</span>key_padding_mask<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> residual + <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span>attn_out<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 子层 2: 前馈网络</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; residual <span style="color: Gray;">=</span> x<br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">norm2</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># Pre-Norm</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> residual + <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">ffn</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> TransformerEncoder<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;多层 Transformer Encoder&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> d_ff<span style="color: Gray;">,</span> num_layers<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">layers</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">ModuleList</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; TransformerEncoderLayer<span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> d_ff<span style="color: Gray;">,</span> dropout<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>num_layers<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">final_norm</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> layer <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">layers</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> layer<span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">final_norm</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> d_ff <span style="color: Gray;">=</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">512</span><br />
+num_layers<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> batch <span style="color: Gray;">=</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">20</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><br />
+<br />
+encoder <span style="color: Gray;">=</span> TransformerEncoder<span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> d_ff<span style="color: Gray;">,</span> num_layers<span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># Padding mask: True = 忽略该位置</span><br />
+key_padding_mask <span style="color: Gray;">=</span> torch.<span style="color: #05a;">zeros</span><span style="color: Olive;">&#40;</span>batch<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> dtype<span style="color: Gray;">=</span>torch.<span style="color: Teal;">bool</span><span style="color: Olive;">&#41;</span><br />
+key_padding_mask<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">15</span>:<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">True</span><br />
+<br />
+output <span style="color: Gray;">=</span> encoder<span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> key_padding_mask<span style="color: Gray;">=</span>key_padding_mask<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入: {x.shape} → 输出: {output.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>5.2 注意力可视化</h3>
+
+<p>可视化注意力权重是理解和调试 Transformer 模型的重要手段。通过热力图可以直观地看到模型在每个位置关注了哪些信息。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> visualize_attention<span style="color: Olive;">&#40;</span>attention_weights<span style="color: Gray;">,</span> tokens<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Gray;">,</span> save_path<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 可视化多头注意力权重<br />
+<br />
+&nbsp; &nbsp; 参数:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; attention_weights: [n_heads, seq_len, seq_len]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; tokens: token 列表（可选）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; save_path: 保存路径（可选）<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; n_heads <span style="color: Gray;">=</span> attention_weights.<span style="color: #05a;">shape</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; seq_len <span style="color: Gray;">=</span> attention_weights.<span style="color: #05a;">shape</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; fig<span style="color: Gray;">,</span> axes <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplots</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> n_heads<span style="color: Gray;">,</span> figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span>n_heads * <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3.5</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> n_heads <span style="color: Gray;">==</span> <span style="color: Maroon;">1</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; axes <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>axes<span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> head <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>n_heads<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ax <span style="color: Gray;">=</span> axes<span style="color: Olive;">&#91;</span>head<span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn <span style="color: Gray;">=</span> attention_weights<span style="color: Olive;">&#91;</span>head<span style="color: Olive;">&#93;</span>.<span style="color: #05a;">detach</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">cpu</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">numpy</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; im <span style="color: Gray;">=</span> ax.<span style="color: #05a;">imshow</span><span style="color: Olive;">&#40;</span>attn<span style="color: Gray;">,</span> cmap<span style="color: Gray;">=</span><span style="color: #a11;">'Blues'</span><span style="color: Gray;">,</span> aspect<span style="color: Gray;">=</span><span style="color: #a11;">'auto'</span><span style="color: Gray;">,</span> vmin<span style="color: Gray;">=</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> vmax<span style="color: Gray;">=</span>attn.<span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">'Head {head + 1}'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> fontweight<span style="color: Gray;">=</span><span style="color: #a11;">'bold'</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Key'</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Query'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> tokens <span style="color: Green;font-weight:bold;">is</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_xticks</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>tokens<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_yticks</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>tokens<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_xticklabels</span><span style="color: Olive;">&#40;</span>tokens<span style="color: Gray;">,</span> rotation<span style="color: Gray;">=</span><span style="color: Maroon;">90</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ax.<span style="color: #05a;">set_yticklabels</span><span style="color: Olive;">&#40;</span>tokens<span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; plt.<span style="color: #05a;">tight_layout</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> save_path:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; plt.<span style="color: #05a;">savefig</span><span style="color: Olive;">&#40;</span>save_path<span style="color: Gray;">,</span> dpi<span style="color: Gray;">=</span><span style="color: Maroon;">150</span><span style="color: Gray;">,</span> bbox_inches<span style="color: Gray;">=</span><span style="color: #a11;">'tight'</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 模拟训练后的注意力权重</span><br />
+n_heads<span style="color: Gray;">,</span> seq_len <span style="color: Gray;">=</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><br />
+attention_weights <span style="color: Gray;">=</span> torch.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span>n_heads<span style="color: Gray;">,</span> seq_len<span style="color: Gray;">,</span> seq_len<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+tokens <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">'The'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'cat'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'sat'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'on'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'the'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'mat'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'.'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'[PAD]'</span><span style="color: Olive;">&#93;</span><br />
+<br />
+visualize_attention<span style="color: Olive;">&#40;</span>attention_weights<span style="color: Gray;">,</span> tokens<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>6. 完整的注意力分类器</h2>
+
+<h3>6.1 基于注意力的文本分类</h3>
+
+<p>以下是一个完整的文本分类模型：使用 Transformer Encoder 提取特征，再通过注意力池化（Attention Pooling）将变长序列压缩为固定长度的向量，最后送入分类器。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> AttentionClassifier<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;基于 Transformer + 注意力池化的文本分类模型&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> vocab_size<span style="color: Gray;">,</span> embed_dim<span style="color: Gray;">,</span> hidden_dim<span style="color: Gray;">,</span> num_classes<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;n_heads<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> num_layers<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">embed_dim</span> <span style="color: Gray;">=</span> embed_dim<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 词嵌入</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">embedding</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Embedding</span><span style="color: Olive;">&#40;</span>vocab_size<span style="color: Gray;">,</span> embed_dim<span style="color: Gray;">,</span> padding_idx<span style="color: Gray;">=</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">pos_encoding</span> <span style="color: Gray;">=</span> PositionalEncoding<span style="color: Olive;">&#40;</span>embed_dim<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span>dropout<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Transformer 编码器</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; encoder_layer <span style="color: Gray;">=</span> nn.<span style="color: #05a;">TransformerEncoderLayer</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; d_model<span style="color: Gray;">=</span>embed_dim<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nhead<span style="color: Gray;">=</span>n_heads<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dim_feedforward<span style="color: Gray;">=</span>hidden_dim<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dropout<span style="color: Gray;">=</span>dropout<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; batch_first<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; activation<span style="color: Gray;">=</span><span style="color: #a11;">'gelu'</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">transformer</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">TransformerEncoder</span><span style="color: Olive;">&#40;</span>encoder_layer<span style="color: Gray;">,</span> num_layers<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 注意力池化：学习每个位置的重要性权重</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">attn_pool</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>embed_dim<span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 每个位置输出一个标量权重</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 分类头</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>embed_dim<span style="color: Gray;">,</span> hidden_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">GELU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>hidden_dim<span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; x: [batch, seq_len] — token ids<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 返回: logits [batch, num_classes], attn_weights [batch, seq_len]<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 词嵌入 + 位置编码</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; mask <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>x <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># padding mask</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">embedding</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> * <span style="color: #05a;">math</span>.<span style="color: #05a;">sqrt</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">embed_dim</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">pos_encoding</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># Transformer 编码</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">transformer</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> src_key_padding_mask<span style="color: Gray;">=</span>mask<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 注意力池化：为每个位置计算权重，加权求和</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">attn_pool</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">squeeze</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># [batch, seq_len]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> scores.<span style="color: #05a;">masked_fill</span><span style="color: Olive;">&#40;</span>mask<span style="color: Gray;">,</span> <span style="color: Teal;">float</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'-inf'</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 忽略 padding</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_weights <span style="color: Gray;">=</span> torch.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>scores<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># [batch, seq_len]</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; pooled <span style="color: Gray;">=</span> torch.<span style="color: #05a;">bmm</span><span style="color: Olive;">&#40;</span>attn_weights.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">squeeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># [batch, embed_dim]</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 分类</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; logits <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span><span style="color: Olive;">&#40;</span>pooled<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> logits<span style="color: Gray;">,</span> attn_weights<br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+model <span style="color: Gray;">=</span> AttentionClassifier<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; vocab_size<span style="color: Gray;">=</span><span style="color: Maroon;">10000</span><span style="color: Gray;">,</span> embed_dim<span style="color: Gray;">=</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> hidden_dim<span style="color: Gray;">=</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> num_classes<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 模拟输入（含 padding）</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randint</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10000</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+x<span style="color: Olive;">&#91;</span>:<span style="color: Gray;">,</span> -<span style="color: Maroon;">10</span>:<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">0</span> &nbsp;<span style="color: #a50"># 最后 10 个位置是 padding</span><br />
+<br />
+logits<span style="color: Gray;">,</span> attn_weights <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;输入: {x.shape}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Logits: {logits.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># [16, 5]</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;注意力权重: {attn_weights.shape}&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: #a50"># [16, 50]</span><br />
+
+</div>
+</div>
+
+<h3>6.2 常见注意力变体对比</h3>
+
+<table class="reference">
+<tr>
+<th>类型</th>
+<th>Q 来源</th>
+<th>K/V 来源</th>
+<th>核心用途</th>
+<th>典型应用</th>
+</tr>
+<tr>
+<td>自注意力（Self-Attention）</td>
+<td>自身</td>
+<td>自身</td>
+<td>序列内部全局交互</td>
+<td>Transformer、BERT、ViT</td>
+</tr>
+<tr>
+<td>交叉注意力（Cross-Attention）</td>
+<td>目标序列</td>
+<td>源序列</td>
+<td>跨序列信息融合</td>
+<td>机器翻译、图像描述、Stable Diffusion</td>
+</tr>
+<tr>
+<td>通道注意力（Channel Attention）</td>
+<td>全局池化特征</td>
+<td>同上</td>
+<td>学习通道重要性</td>
+<td>SENet、CBAM</td>
+</tr>
+<tr>
+<td>空间注意力（Spatial Attention）</td>
+<td>通道压缩特征</td>
+<td>同上</td>
+<td>学习空间位置重要性</td>
+<td>CBAM、Spatial Transformer</td>
+</tr>
+<tr>
+<td>稀疏注意力（Sparse Attention）</td>
+<td>部分位置</td>
+<td>部分位置</td>
+<td>降低长序列计算复杂度</td>
+<td>Longformer、BigBird</td>
+</tr>
+</table>
+
+<hr>
+
+<h2>7. 最佳实践与常见问题</h2>
+
+<h3>7.1 使用技巧</h3>
+
+<ul>
+<li><strong>掩码一致性</strong>：确保 padding mask 和 causal mask 的方向一致（True = 忽略 vs 1 = 保留）。不同 API 约定可能不同。</li>
+<li><strong>头数选择</strong>：通常设为 $$d_{model}$$ 的因数，常用 8 或 16。头太多会降低每头的维度 $$d_k$$，可能损害性能。</li>
+<li><strong>残差连接</strong>：注意力层前后务必使用残差连接 + 层归一化，这是训练深层 Transformer 的必要条件。</li>
+<li><strong>学习率预热</strong>：Transformer 训练初期梯度波动较大，使用 warmup + cosine decay 调度器可显著提升稳定性。</li>
+<li><strong>Flash Attention</strong>：PyTorch 2.0+ 支持通过 <code>nn.functional.scaled_dot_product_attention</code> 自动调用 Flash Attention，显存和速度均有大幅优化。</li>
+</ul>
+
+<h3>7.2 常见问题</h3>
+
+<table class="reference">
+<tr>
+<th>问题</th>
+<th>原因</th>
+<th>解决方案</th>
+</tr>
+<tr>
+<td>注意力权重全为均匀分布</td>
+<td>输入未归一化或学习率过大</td>
+<td>检查输入尺度，使用 LayerNorm，降低学习率</td>
+</tr>
+<tr>
+<td>训练 loss 不下降</td>
+<td>位置编码缺失或 mask 错误</td>
+<td>确认位置编码已添加，检查 mask 方向</td>
+</tr>
+<tr>
+<td>显存溢出（长序列）</td>
+<td>注意力矩阵 $$O(n^2)$$ 复杂度</td>
+<td>使用 Flash Attention、梯度检查点或稀疏注意力</td>
+</tr>
+<tr>
+<td>推理时注意力退化</td>
+<td>训练/推理时 mask 不一致</td>
+<td>确保 padding mask 在训练和推理时使用相同逻辑</td>
+</tr>
+</table>
+
+<blockquote><p>注意力机制是现代深度学习的核心技术。从 NLP 到 CV，从语音到蛋白质结构预测，几乎所有前沿模型都以注意力为基础。理解其原理和实现，是掌握 Transformer、ViT、Stable Diffusion、GPT 等模型的关键第一步。</p></blockquote>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-distributed.html" rel="prev"> PyTorch 分布式训练</a> </div>
+			<div class="next-design-link"></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30671' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30671;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30671, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30671},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30671;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

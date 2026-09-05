@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 伦理与安全 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-ethics.html" />
+<meta name="keywords" content="AI 伦理与安全">
+<meta name="description" content="AI 伦理与安全      你可能觉得伦理是个很抽象的词，离日常生活很远。  但想想这些场景：  	 招聘时用 AI 筛选简历，结果它把所有女性求职者都淘汰了——不是因为它有偏见，而是因为训练数据里历史上的成功者多为男性。 	  有人把公司的商业机密输入 AI 工具，结果这些内容被用来训练它的下一个版本，你的竞争对手也能从它的输出里得到相关信息。 	  看到一条新闻说某个名人发表了惊人言论，还有视频为证，结果这视频是 AI 生成的深度伪..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/how-ai-works.html" rel="prev"> AI 工作原理</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-use-cases.html" rel="next"> AI 应用场景</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>AI 伦理与安全</h1>
+
+
+
+
+
+<p>你可能觉得伦理是个很抽象的词，离日常生活很远。</p>
+
+<p>但想想这些场景：</p>
+
+	<ul>
+<li><p>招聘时用 AI 筛选简历，结果它把所有女性求职者都淘汰了——不是因为它有偏见，而是因为训练数据里历史上的成功者多为男性。</p></li>
+	<li>
+
+<p>有人把公司的商业机密输入 AI 工具，结果这些内容被用来训练它的下一个版本，你的竞争对手也能从它的输出里得到相关信息。</p></li>
+	<li>
+
+<p>看到一条新闻说某个名人发表了惊人言论，还有视频为证，结果这视频是 AI 生成的深度伪造。</p></li></ul>
+
+
+
+
+<p>这些不是科幻，而是真实发生过或正在发生的事。</p>
+
+<blockquote>
+<p>AI 不是中立的工具，它反映训练数据里的偏见，它能被用来做坏事，它的输出可能有严重错误。在享受 AI 便利的同时，你需要知道它的风险。</p>
+<p>能力越大，责任越大，了解 AI 的风险，才能负责任地使用 AI。</p>
+</blockquote>
+
+<hr>
+
+<h2>AI 偏见问题</h2>
+
+<p>AI 不会天生有偏见，但它会从训练数据里继承偏见。</p>
+
+<p>如果训练数据里女性工程师的样本很少，AI 可能会认为<span class="marked">工程师</span>这个词默认对应男性。</p>
+
+<p>如果历史上某类人在贷款审批中被不公平对待，AI 学到的规律可能会延续甚至放大这种不公平。</p>
+
+<h3>偏见从哪里来</h3>
+
+<p>AI 偏见主要有三个来源：</p>
+
+<table class="reference">
+<tr><th>来源</th><th>说明</th><th>例子</th></tr>
+<tr><td>训练数据偏见</td><td>数据本身就包含不公平的历史模式</td><td>某些职位男性占比高，AI 就认为这个职位适合男性</td></tr>
+<tr><td>标注偏见</td><td>人工标注时带入了标注者的主观倾向</td><td>不同人对攻击性内容的判断标准不一样</td></tr>
+<tr><td>使用场景偏差</td><td>训练场景和实际使用场景不匹配</td><td>主要用浅色皮肤人训练的人脸识别，对深色皮肤识别率低</td></tr>
+</table>
+
+<h3>真实的偏见案例</h3>
+
+<p>2018 年，亚马逊发现他们的 AI 招聘系统对女性有偏见，这个系统分析过去十年的简历数据，而这些简历大多来自男性。结果是，简历里有"女子"、"女性"字样的会被扣分，女子学院的毕业生也会被降低评分，亚马逊最终弃用了这个系统。</p>
+
+<p>类似的例子还有：，某些人脸识别系统对深色皮肤的识别错误率远高于浅色皮肤。</p>
+
+<p>某些医疗 AI 模型对特定种族的诊断准确率更低。</p>
+
+<p><span class="marked">偏见不是"XX 正确"问题，是真实的伤害——它可能让一个人失去工作、贷款、甚至获得正确医疗诊断的机会。</span></p>
+
+<h3>如何检测 AI 偏见</h3>
+
+<p>我们可以用代码来做一个简单的偏见检测示例：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># AI 偏见检测示例</span><br />
+<span style="color: #a50"># 检测文本中是否存在性别、种族等方面的偏见倾向</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> BiasDetector:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;简单的偏见检测器，用于演示偏见检测的基本思路&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;初始化偏见相关的关键词和模式&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 性别相关的职业刻板印象</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">gendered_occupations</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;护士&quot;</span>: <span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;工程师&quot;</span>: <span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;程序员&quot;</span>: <span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;教师&quot;</span>: <span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;厨师&quot;</span>: <span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;保姆&quot;</span>: <span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;科学家&quot;</span>: <span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;秘书&quot;</span>: <span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 被认为是&quot;积极&quot;的词</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">positive_words</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;优秀&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;聪明&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;能干&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;成功&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;杰出&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;专业&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;可靠&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;负责&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 被认为是&quot;消极&quot;的词</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">negative_words</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;情绪化&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;软弱&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;不理性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;敏感&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;冲动&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;粗心&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;靠不住&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 测试用的句子模板</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">test_templates</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;{occupation}应该是{gender}的工作&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;{gender}更适合做{occupation}&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;这个{occupation}很{adjective}&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> analyze_gender_bias<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> text: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;分析文本中的性别偏见迹象&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: text<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;has_gendered_occupation&quot;</span>: <span style="color: Teal;">False</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;has_gender_mention&quot;</span>: <span style="color: Teal;">False</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;bias_warning&quot;</span>: <span style="color: #a11;">&quot;&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 检查是否包含性别化的职业表述</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> occupation<span style="color: Gray;">,</span> gender <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">gendered_occupations</span>.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> occupation <span style="color: Green;font-weight:bold;">in</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;has_gendered_occupation&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">True</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;occupation&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> occupation<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;stereotyped_gender&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> gender<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 检查是否有性别提及</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;男&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;女&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;男性&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;女性&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;has_gender_mention&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">True</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 生成警告（如果有）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;has_gendered_occupation&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Green;font-weight:bold;">and</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;has_gender_mention&quot;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;bias_warning&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;&amp;#x26a0;&amp;#xfe0f; 注意：文本将职业'{result['occupation']}'与特定性别关联，&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;这可能存在刻板印象风险&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> result<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> detect_bias_in_sentences<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> sentences: <span style="color: Teal;">list</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">list</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;批量检测一组句子的偏见&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; results <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> sentence <span style="color: Green;font-weight:bold;">in</span> sentences:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; analysis <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">analyze_gender_bias</span><span style="color: Olive;">&#40;</span>sentence<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; results.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>analysis<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> results<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> runoob_demo_test<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;runoob 演示：测试一些常见的偏见表述&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; test_sentences <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;工程师应该是男性的工作&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;女性更适合做护士&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;这个程序员很优秀&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;她当医生很出色&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;男性不适合做幼儿园老师&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB AI 偏见检测演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; results <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">detect_bias_in_sentences</span><span style="color: Olive;">&#40;</span>test_sentences<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> result <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span>results<span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>测试 {i}: {result['text']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;bias_warning&quot;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp; {result['bias_warning']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot; &nbsp; ✓ 未检测到明显的性别刻板印象&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> results<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 更高级的偏见检测：统计分析</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> analyze_representation_distribution<span style="color: Olive;">&#40;</span>data: <span style="color: Teal;">list</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 分析数据中不同群体的代表性分布<br />
+&nbsp; &nbsp; 比如：在招聘数据中，男女简历的通过率是否一致<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 示例数据：群体标签 + 结果（通过/不通过）</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 实际应用中，这应该是真实的业务数据</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> <span style="color: #05a;">collections</span> <span style="color: Green;font-weight:bold;">import</span> defaultdict<br />
+<br />
+&nbsp; &nbsp; counts <span style="color: Gray;">=</span> defaultdict<span style="color: Olive;">&#40;</span><span style="color: Green;font-weight:bold;">lambda</span>: <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;total&quot;</span>: <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;positive&quot;</span>: <span style="color: Maroon;">0</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> group<span style="color: Gray;">,</span> outcome <span style="color: Green;font-weight:bold;">in</span> data:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; counts<span style="color: Olive;">&#91;</span>group<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;total&quot;</span><span style="color: Olive;">&#93;</span> +<span style="color: Gray;">=</span> <span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> outcome <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;positive&quot;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; counts<span style="color: Olive;">&#91;</span>group<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#93;</span> +<span style="color: Gray;">=</span> <span style="color: Maroon;">1</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 计算各群体的通过率</span><br />
+&nbsp; &nbsp; rates <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> group<span style="color: Gray;">,</span> stats <span style="color: Green;font-weight:bold;">in</span> counts.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> stats<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;total&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rates<span style="color: Olive;">&#91;</span>group<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;total&quot;</span>: stats<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;total&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;positive&quot;</span>: stats<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;rate&quot;</span>: stats<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#93;</span> / stats<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;total&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 检查通过率差异是否过大（简化版）</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 实际应用中应该用统计学显著性检验</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>rates<span style="color: Olive;">&#41;</span> <span style="color: Gray;">&gt;=</span> <span style="color: Maroon;">2</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; all_rates <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;rate&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> rates.<span style="color: #05a;">values</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; max_rate <span style="color: Gray;">=</span> <span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span>all_rates<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; min_rate <span style="color: Gray;">=</span> <span style="color: Teal;">min</span><span style="color: Olive;">&#40;</span>all_rates<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> max_rate - min_rate <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">0.2</span>: &nbsp;<span style="color: #a50"># 差异超过 20% 值得注意</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rates<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;_warning&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;检测到群体间差异较大：最高通过率 {max_rate:.1%}，&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;最低通过率 {min_rate:.1%}，建议进一步调查&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> rates<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 运行演示</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 演示 1：简单偏见检测</span><br />
+&nbsp; &nbsp; detector <span style="color: Gray;">=</span> BiasDetector<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; detector.<span style="color: #05a;">runoob_demo_test</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB 代表性分布分析演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 演示 2：通过率分布分析</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 模拟数据：(群体, 结果)，&quot;positive&quot;表示通过</span><br />
+&nbsp; &nbsp; hiring_data <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;男性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;negative&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;positive&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;negative&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;negative&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;negative&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;女性&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;negative&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; distribution <span style="color: Gray;">=</span> analyze_representation_distribution<span style="color: Olive;">&#40;</span>hiring_data<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> group<span style="color: Gray;">,</span> stats <span style="color: Green;font-weight:bold;">in</span> distribution.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> group.<span style="color: #05a;">startswith</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;_&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span> &nbsp;<span style="color: #a50"># 跳过警告字段</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>群体: {group}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;总数: {stats['total']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;通过: {stats['positive']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;通过率: {stats['rate']:.1%}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;_warning&quot;</span> <span style="color: Green;font-weight:bold;">in</span> distribution:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&amp;#x26a0;&amp;#xfe0f; 警告: {distribution['_warning']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>运行上面的代码，你会看到：</p>
+
+<pre>
+============================================================
+RUNOOB AI 偏见检测演示
+============================================================
+
+测试 1: 工程师应该是男性的工作
+   &amp;#x26a0;&amp;#xfe0f; 注意：文本将职业'工程师'与特定性别关联，这可能存在刻板印象风险
+
+测试 2: 女性更适合做护士
+   &amp;#x26a0;&amp;#xfe0f; 注意：文本将职业'护士'与特定性别关联，这可能存在刻板印象风险
+
+测试 3: 这个程序员很优秀
+   ✓ 未检测到明显的性别刻板印象
+
+测试 4: 她当医生很出色
+   ✓ 未检测到明显的性别刻板印象
+
+测试 5: 男性不适合做幼儿园老师
+   ✓ 未检测到明显的性别刻板印象
+
+============================================================
+RUNOOB 代表性分布分析演示
+============================================================
+
+群体: 男性
+  总数: 5
+  通过: 4
+  通过率: 80.0%
+
+群体: 女性
+  总数: 5
+  通过: 1
+  通过率: 20.0%
+警告: 检测到群体间差异较大：最高通过率 80.0%，最低通过率 20.0%，建议进一步调查
+</pre>
+
+<p>这个示例展示了偏见检测的基本思路：<span class="marked">检查不同群体是否被公平对待</span>。</p>
+
+<h3>如何应对 AI 偏见</h3>
+
+<p>没有完美的解决方案，但有一些最佳实践可以减少偏见的影响：</p>
+
+<table class="reference">
+<tr><th>方法</th><th>说明</th><th>谁来做</th></tr>
+<tr><td>数据审查</td><td>检查训练数据的代表性，确保各群体都有足够样本</td><td>数据科学家</td></tr>
+<tr><td>偏见审计</td><td>定期测试模型在不同群体上的表现差异</td><td>AI 团队</td></tr>
+<tr><td>人工复核</td><td>高风险决策（如招聘、贷款）保留人工审核环节</td><td>业务方</td></tr>
+<tr><td>多样化团队</td><td>让不同背景的人参与 AI 开发，能发现更多盲点</td><td>公司管理层</td></tr>
+</table>
+
+<blockquote>
+<p>记住：<span class="marked">AI 不是客观的，它只是放大了数据里已有的模式。如果你用有偏见的数据训练 AI，你会得到一个有偏见的 AI。</span></p>
+</blockquote>
+
+<hr>
+
+<h2>隐私与数据安全</h2>
+
+<p>你输入 AI 的内容，会去哪里？会被保存吗？会被用来做什么？</p>
+
+<p>这些问题比你想象的更重要。</p>
+
+<h3>你输入 AI 的内容可能被保存</h3>
+
+<p>大多数 AI 工具的服务条款里都写着：你的输入可能被收集，用来改进服务。</p>
+
+<p>如果你把这些信息输入 AI，它们可能会被保存甚至被用于训练：</p>
+
+<p><span class="tag1">公司商业机密</span> <span class="tag1">个人身份证号</span> <span class="tag1">客户隐私信息</span> <span class="tag1">未公开的产品计划</span> <span class="tag1">财务数据</span></p>
+
+<p>2023 年就发生过这样的事：某公司员工把公司的机密代码输入 AI 工具，结果这些代码出现在了该 AI 工具给其他用户的建议里。</p>
+
+<h3>什么不能告诉 AI</h3>
+
+<p>一个简单的原则：<span class="marked">如果这件事你不想让陌生人知道，就不要告诉 AI</span>。</p>
+
+<p>具体来说：</p>
+
+<table class="reference">
+<tr><th>信息类型</th><th>风险等级</th><th>说明</th></tr>
+<tr><td>个人身份信息（身份证号、银行卡号）</td><td><span class="tag1 red">极高</span></td><td>绝对不要输入</td></tr>
+<tr><td>公司商业机密、未公开信息</td><td><span class="tag1 red">极高</span></td><td>除非用公司内部部署的 AI</td></tr>
+<tr><td>客户隐私数据</td><td><span class="tag1 red">极高</span></td><td>可能违反数据保护法规</td></tr>
+<tr><td>个人敏感经历</td><td><span class="tag1 orange">高</span></td><td>慎重考虑</td></tr>
+<tr><td>普通工作文档</td><td><span class="tag1 green">低</span></td><td>一般没问题</td></tr>
+</table>
+
+<h3>保护隐私的最佳实践</h3>
+
+<p>如果你必须用 AI 处理敏感信息：</p>
+	<ul>
+<li>
+<p>第一，看有没有企业版选项。很多 AI 工具提供企业版，承诺不保存、不使用你的数据来训练。</p></li>
+	<li>
+
+<p>第二，使用本地部署的模型。有些模型可以在你自己的电脑上运行，数据完全不离开你的设备。</p></li>
+	<li>
+
+<p>第三，脱敏处理。把敏感信息替换成占位符，比如把 "张三" 换成 "用户A"，把 "100万元" 换成 "X万元"。</p></li></ul>
+
+
+
+
+<blockquote>
+<p>重要提醒：<span class="marked">不要假设 AI 会帮你保密。除非合同里明确写了数据不保存、不用于训练，否则默认你的输入可能被用于改进产品。</span></p>
+</blockquote>
+
+<hr>
+
+<h2>AI 幻觉问题</h2>
+
+<p>AI 会一本正经地胡说八道，这叫<span class="marked">幻觉（Hallucination）</span>。</p>
+
+<p>它会编造不存在的论文、引用不存在的法律条文、生成根本不存在的代码库。最危险的是，它说这些话时语气特别肯定。</p>
+
+<h3>什么是 AI 幻觉</h3>
+
+<p>幻觉的典型表现：</p>
+
+	<ul>
+<li><p>你问它：谁发现了重力？，它说：牛顿在 1687 年的《自然哲学的数学原理》中提出了万有引力定律 ——这是对的。</p></li>
+
+
+	<li><p>你问它：谁发现了反重力？，它可能会编造一个名字和一个不存在的研究机构，说得有鼻子有眼。</p></li></ul>
+
+
+
+
+<p>问题在于：<span class="marked">AI 不知道自己在编造，它只是在生成看起来合理的文字序列</span>。</p>
+
+<h3>真实的幻觉案例</h3>
+
+<p>2023 年，有律师用 AI 写法律文书，结果 AI 引用了 6 个不存在的案例。</p>
+
+<p>法官发现这些案例根本查不到，问律师是怎么回事，律师才发现是 AI 编造的。</p>
+
+<p>另一个常见场景是代码生成：AI 给你一段看起来很完美的代码，但它调用了一个根本不存在的库函数。</p>
+
+<p>还有学术写作：AI 会编造不存在的参考文献，格式看起来特别正规。</p>
+
+<h3>如何识别和应对幻觉</h3>
+
+<p>没有办法完全避免幻觉，但你可以降低它的风险：</p>
+
+<table class="reference">
+<tr><th>场景</th><th>应对方法</th><th>验证手段</th></tr>
+<tr><td>事实查询</td><td>要求 AI 提供来源链接</td><td>自己搜索验证关键事实</td></tr>
+<tr><td>代码生成</td><td>要求 AI 使用常见、稳定的库</td><td>运行测试，检查函数是否真实存在</td></tr>
+<tr><td>法律/医疗建议</td><td>只做参考，不做最终依据</td><td>咨询专业人士</td></tr>
+<tr><td>学术引用</td><td>不要直接使用 AI 给的引用</td><td>每一个引用都要去搜索确认</td></tr>
+</table>
+
+<p>一个实用的技巧是：<span class="marked">对于重要信息，让 AI 至少用两种不同的方式回答，看是否一致</span>。</p>
+
+<p>如果第一次说"这个研究在 2020 年发表"，第二次说"这项工作在 2021 年首次提出"，你就要警惕了——至少有一个是错的，可能两个都是错的。</p>
+
+<blockquote>
+<p>高风险场景的黄金法则：<span class="marked">不要信任，要验证</span>。AI 的输出永远是参考，不是最终答案。涉及法律、医疗、投资、安全等重要决策时，必须人工查证。</span></p>
+</blockquote>
+
+<hr>
+
+<h2>深度伪造风险</h2>
+
+<p>有图有真相这句话，在 AI 时代已经不成立了。</p>
+
+<p>AI 可以生成极其逼真的照片、视频、音频，让人很难分辨真假。这叫深度伪造（Deepfake）。</p>
+
+<h3>什么是深度伪造</h3>
+
+<p>深度伪造技术可以：</p>
+	<ul>
+<li>
+<p>把一张脸换到另一个人的身体上；</p></li>
+	<li>
+
+<p>让一个人说出他从来没说过的话；</p></li>
+	<li>
+
+<p>生成完全不存在的人的照片；</p></li>
+	<li>
+
+<p>模仿某个人的声音，用他的音色说任意内容。</p></li></ul>
+
+
+
+
+<p>2023 年，就有骗子用 AI 模仿某公司 CEO 的声音，骗走了公司 24 万美元。</p>
+
+<h3>如何识别 AI 生成内容</h3>
+
+<p>虽然深度伪造越来越逼真，但还是有一些蛛丝马迹可以识别：</p>
+
+<table class="reference">
+<tr><th>类型</th><th>常见破绽</th><th>检查方法</th></tr>
+<tr><td>AI 图像</td><td>手指异常、牙齿奇怪、光影不一致</td><td>仔细看细节，特别是手部</td></tr>
+<tr><td>AI 视频</td><td>眨眼不自然、面部表情僵硬</td><td>看动作是否流畅自然</td></tr>
+<tr><td>AI 音频</td><td>背景杂音异常、语速节奏奇怪</td><td>注意听语气和停顿是否自然</td></tr>
+</table>
+
+<p>另外，现在也有专门的工具可以检测内容是否是 AI 生成的。</p>
+
+<p>但长远来看，检测会越来越难——AI 生成的内容会越来越逼真。</p>
+
+<h3>法律与道德边界</h3>
+
+<p>深度伪造的合理使用场景：</p>
+
+<p><span class="tag1 green">电影特效</span> <span class="tag1 green">历史纪录片还原</span> <span class="tag1 green">语言学习（让 AI 用你的母语发音）</span></p>
+
+<p>深度伪造的滥用场景：</p>
+
+<p><span class="tag1 red">造谣诽谤</span> <span class="tag1 red">诈骗</span> <span class="tag1 red">制作色情内容</span> <span class="tag1 red">伪造证据</span></p>
+
+<p>很多国家正在制定相关法律。在中国，利用深度伪造实施诈骗、诽谤等行为是明确违法的。</p>
+
+<blockquote>
+<p>面对视频/音频证据时的新准则：<span class="marked">除非有多个独立来源验证，否则不要轻信单一的视听证据。在 AI 时代，眼见不一定为实。</span></p>
+</blockquote>
+
+<hr>
+
+<h2>知识产权问题</h2>
+
+<p>AI 生成的内容，版权归谁？</p>
+
+<p>这是一个正在发展中的法律领域，目前还没有全球统一的答案。</p>
+
+<h3>AI 生成内容的版权归属</h3>
+
+<p>目前的大致原则：</p>
+
+<table class="reference">
+<tr><th>地区</th><th>AI 生成内容能否获得版权</th><th>说明</th></tr>
+<tr><td>美国</td><td>一般不能</td><td>版权局要求有"人类作者"</td></tr>
+
+<tr><td>欧盟</td><td>正在制定中</td><td>倾向于保护人类创作者</td></tr>
+</table>
+
+<p>关键点：<span class="marked">纯 AI 生成的内容，通常不受版权保护</span>。如果你只是输入"画一只猫"，生成的图片你不能主张版权。</p>
+
+<p>但如果你在 prompt 里投入了大量创造性的设计，情况可能不一样——这属于法律灰色地带。</p>
+
+<h3>训练数据的版权争议</h3>
+
+<p>另一个争议更大的问题：AI 用受版权保护的作品训练，算不算侵权？</p>
+
+<p>比如，AI 读了一万本受版权保护的小说，然后能生成风格类似的新小说，这侵犯了原作者的权利吗？</p>
+
+<p>这个问题目前还在诉讼中，不同国家可能会有不同的判决。</p>
+
+<p>作为使用者，你需要知道：</p>
+
+<p>你用 AI 生成的内容，可能包含训练数据里的元素。如果 AI"借鉴"了某个受版权保护的作品太多，你可能有风险。</p>
+
+<p>最安全的做法：<span class="marked">商业使用前，确认你用的 AI 工具的训练数据来源是合法的</span>。</p>
+
+<h3>使用 AI 创作的注意事项</h3>
+
+<p>如果你用 AI 来创作：</p>
+	<ul>
+<li>
+<p>第一，了解你使用的 AI 工具的条款。它允许商业使用吗？它对生成内容的版权有什么声明？</p></li>
+	<li>
+
+<p>第二，公开透明。如果你的作品里大量使用了 AI，考虑说明这一点。</p></li>
+	<li>
+
+<p>第三，不要用 AI 直接模仿某个特定艺术家的风格来牟利。这不仅可能有法律风险，也不符合道德规范。</p></li></ul>
+
+
+
+
+<hr>
+
+<h2>负责任的 AI 使用准则</h2>
+
+<p>说了这么多风险，不是让你恐惧 AI，而是让你更安全地使用它。</p>
+
+<p>这里有一套简单的准则，帮你负责任地使用 AI。</p>
+
+<h3>三个核心原则</h3>
+
+<table class="reference">
+<tr><th>原则</th><th>说明</th><th>具体做法</th></tr>
+<tr><td>核实重要信息</td><td>AI 输出只是参考，不是真理</td><td>重要事实要搜索确认，交叉验证</td></tr>
+<tr><td>不依赖 AI 做重大决策</td><td>AI 没有责任感，后果由你承担</td><td>医疗、法律、投资等决策要人工判断</td></tr>
+<tr><td>透明声明 AI 使用</td><td>让别人知道内容有 AI 参与</td><td>公开发布时考虑说明 AI 的作用</td></tr>
+</table>
+
+<h3>不同场景的检查清单</h3>
+
+<p>用 AI 写邮件/文档前，问自己：</p>
+	<ul>
+<li>
+<p>这里面有敏感信息吗？</p></li>	<li>
+
+
+<p>事实部分我验证过了吗？</p></li></ul>
+
+
+
+
+<p>用 AI 写代码前，问自己：</p>
+	<ul>
+<li>
+<p>这些函数真实存在吗？</p></li>
+
+	<li>
+<p>有没有安全漏洞？</p></li>
+
+	<li>
+<p>我理解这段代码在做什么吗？</p></li></ul>
+
+
+
+
+<p>用 AI 生成公开发布的内容前，问自己：</p>
+	<ul>
+<li>
+<p>我需要声明 AI 的使用吗？</p></li>
+	<li>
+
+<p>有没有侵犯版权的风险？</p></li></ul>
+
+
+
+
+<h3>当 AI 的建议与你的判断冲突时</h3>
+
+<p>听谁的？</p>
+
+<p>这个问题没有标准答案，但你可以按这个顺序考虑：</p>
+	<ul>
+<li>
+<p>第一，谁对结果负责？如果你负责，你的判断优先。</p></li>
+	<li>
+
+<p>第二，谁更了解这个具体场景？你比 AI 更了解你的具体情况。</p></li>
+	<li>
+
+<p>第三，风险有多大？如果风险高，倾向于保守和人工判断。</p></li></ul>
+
+
+
+
+<blockquote>
+<p>记住：<span class="marked">你是决策者，AI 是顾问。最终的责任在你，不在 AI。</span></p>
+</blockquote>
+
+<hr>
+
+<h2>各国 AI 监管动态</h2>
+
+<p>AI 发展太快，法律在努力跟上。了解主要国家的监管方向，能帮你判断什么是合规的。</p>
+
+<h3>全球主要监管框架</h3>
+
+<table class="reference">
+<tr><th>地区</th><th>主要法规/倡议</th><th>核心思路</th><th>重点关注</th></tr>
+<tr><td>欧盟</td><td>《AI 法案》</td><td>按风险分级监管</td><td>高风险场景必须合规</td></tr>
+<tr><td>美国</td><td>各部门分头监管</td><td>行业自律 + 重点领域管制</td><td>安全、歧视、透明度</td></tr>
+<tr><td>中国</td><td>《生成式人工智能服务管理暂行办法》</td><td>内容安全 + 算法透明</td><td>内容合规、数据安全</td></tr>
+<tr><td>英国</td><td>AI 安全与创新框架</td><td>鼓励创新 + 审慎监管</td><td>安全测试、伦理</td></tr>
+</table>
+
+<h3>高风险 AI 应用的共同监管趋势</h3>
+
+<p>不管哪个国家，以下场景都被认为是高风险，会受到更严格的监管：</p>
+
+<p><span class="tag1">医疗诊断</span> <span class="tag1">金融决策</span> <span class="tag1">司法量刑</span> <span class="tag1">招聘筛选</span> <span class="tag1">教育评分</span> <span class="tag1">公共服务资源分配</span></p>
+
+<p>这些场景的共同特点：直接影响人的基本权利。</p>
+
+<p>如果你在做这些领域的 AI 应用，需要特别注意合规问题。</p>
+
+<h3>对个人使用者的影响</h3>
+
+<p>监管主要针对企业，但也影响个人使用者：</p>
+
+<p>你使用的 AI 工具需要符合当地的内容审核要求；</p>
+
+<p>某些高风险 AI 服务可能需要实名使用；</p>
+
+<p>你有权知道你在和 AI 对话还是和人对话（透明度要求）。</p>
+
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/how-ai-works.html" rel="prev"> AI 工作原理</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-use-cases.html" rel="next"> AI 应用场景</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31495' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31495;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31495, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31495},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31495;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

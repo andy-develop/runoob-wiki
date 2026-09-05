@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6个用于大数据分析的工具 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./6-best-tools-for-big-data-analytics.html" />
+<meta name="keywords" content="6个用于大数据分析的工具">
+<meta name="description" content="大数据是一个含义广泛的术语，是指数据集，如此庞大而复杂的，他们需要专门设计的硬件和软件工具进行处理。该数据集通常是万亿或EB的大小。这些数据集收集自各种各样的来源：传感器，气候信息，公开的信息，如杂志，报纸，文章。大数据产生的其他例子包括购买交易记录，网络日志，病历，军事监控，视频和图像档案，及大型电子商务。 在大数据和大数据分析，他们对企业的影响有一个兴趣高涨。大数据分析是研究大量的数据的过程中寻找模式，相关性和其他有用的信息，可以帮..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<div class="container navigation">
+    <div class="row">
+        <div class="col nav">
+            
+
+                        <ul class="pc-nav" id="note-nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../w3cnote.html">笔记首页</a></li>
+                <li><a href="./android-tutorial-intro.html" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" title="ES6 教程">ES6 教程</a></li>
+                <li><a href="./ten-sorting-algorithm.html" title="排序算法">排序算法</a></li>
+                <li><a href="./hadoop-tutorial.html" title="Hadoop 教程">Hadoop</a></li>
+                <li><a href="./zookeeper-tutorial.html" title="Zookeeper 教程">Zookeeper</a></li>
+                <li><a href="./verilog-tutorial.html" title="Verilog 教程">Verilog</a></li>
+                <li><a href="../w3cnote_genre/code.html" title="编程技术">编程技术</a></li> 
+                <li><a href="../w3cnote_genre/coderlife.html" title="程序员人生">程序员人生</a></li>
+                
+                <!--<li><a href=".." class="runoob-pop">登录</a></li>
+                
+                
+                        <li>
+                <a style="font-weight:bold;" href="../linux/linux-tutorial.html" target="_blank" onclick="_hmt.push(['_trackEvent', 'aliyun', 'click', 'aliyun'])" title="kkb">云服务器</a>
+                </li>
+                <li><a href="http://gk.link/a/104mQ" target="_blank" style="font-weight: bold;"onclick="_hmt.push(['_trackEvent', '极客时间', 'click', 'jike'])" title="我的圈子">极客时间</a></li>
+            
+                
+                <li><a target="_blank" href="../shoppinglist.html" rel="nofollow">知识店铺</a></li> 
+        -->
+            </ul>
+                        
+              
+            <ul class="mobile-nav">
+                <li><a href="../w3cnote.html">首页</a></li>
+                <li><a href="../w3cnote_genre/android.html" target="_blank" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" target="_blank" title="ES6 教程">ES6</a></li>
+                <li><a href="../w3cnote_genre/joke.html" target="_blank" title="程序员笑话">逗乐</a></li>
+                
+                <a href="void(0).html" class="search-reveal">Search</a> 
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--  内容  -->
+<div class="container main">
+	<div class="row">
+
+		<div class="col middle-column big-middle-column">
+	 			<div class="article">
+			<div class="article-heading">
+				<h2>6个用于大数据分析的工具</h2>				<h3><em>分类</em> <a href="../w3cnote_genre/net-2.html" title="互联网" >互联网</a> </h3>
+			</div>
+			<div class="article-body note-body">
+				<div class="article-intro">
+					<!-- ad start-->
+			            <!-- ad end-->
+					<p>大数据是一个含义广泛的术语，是指数据集，如此庞大而复杂的，他们需要专门设计的硬件和软件工具进行处理。该数据集通常是万亿或EB的大小。这些数据集收集自各种各样的来源：传感器，气候信息，公开的信息，如杂志，报纸，文章。大数据产生的其他例子包括购买交易记录，网络日志，病历，军事监控，视频和图像档案，及大型电子商务。</p>
+<p>在大数据和大数据分析，他们对企业的影响有一个兴趣高涨。大数据分析是研究大量的数据的过程中寻找模式，相关性和其他有用的信息，可以帮助企业更好地适应变化，并做出更明智的决策。</p>
+<p><span style="color: #f73e05;"><strong>一、Hadoop</strong></span></p>
+<p>Hadoop 是一个能够对大量数据进行分布式处理的软件框架。但是 Hadoop 是以一种可靠、高效、可伸缩的方式进行处理的。Hadoop 是可靠的，因为它假设计算元素和存储会失败，因此它维护多个工作数据副本，确保能够针对失败的节点重新分布处理。Hadoop 是高效的，因为它以并行的方式工作，通过并行处理加快处理速度。Hadoop 还是可伸缩的，能够处理 PB 级数据。此外，Hadoop 依赖于社区服务器，因此它的成本比较低，任何人都可以使用。</p>
+<p><img fetchpriority="high" decoding="async" class=" size-full wp-image-22618 aligncenter" src="../wp-content/uploads/2015/03/39.jpg" alt="Hadoop" width="600" height="142" /></p>
+<p>Hadoop是一个能够让用户轻松架构和使用的分布式计算平台。用户可以轻松地在Hadoop上开发和运行处理海量数据的应用程序。它主要有以下几个优点：</p>
+<p><strong>⒈高可靠性。</strong>Hadoop按位存储和处理数据的能力值得人们信赖。</p>
+<p><strong>⒉高扩展性</strong>。Hadoop是在可用的计算机集簇间分配数据并完成计算任务的，这些集簇可以方便地扩展到数以千计的节点中。</p>
+<p><strong>⒊高效性</strong>。Hadoop能够在节点之间动态地移动数据，并保证各个节点的动态平衡，因此处理速度非常快。</p>
+<p><strong>⒋高容错性</strong>。Hadoop能够自动保存数据的多个副本，并且能够自动将失败的任务重新分配。</p>
+<p>Hadoop带有用 Java 语言编写的框架，因此运行在 Linux 生产平台上是非常理想的。Hadoop 上的应用程序也可以使用其他语言编写，比如 C++。</p>
+<p><strong><span style="color: #f73e05;">二、HPCC</span></strong></p>
+<p>HPCC，High Performance Computing and Communications（高性能计算与通信）的缩写。1993年，由美国科学、工程、技术联邦协调理事会向国会提交了"重大挑战项目：高性能计算与 通信"的报告，也就是被称为HPCC计划的报告，即美国总统科学战略项目，其目的是通过加强研究与开发解决一批重要的科学与技术挑战问题。HPCC是美国 实施信息高速公路而上实施的计划，该计划的实施将耗资百亿美元，其主要目标要达到：开发可扩展的计算系统及相关软件，以支持太位级网络传输性能，开发千兆 比特网络技术，扩展研究和教育机构及网络连接能力。</p>
+<p><img decoding="async" class=" size-full wp-image-22619 aligncenter" src="../wp-content/uploads/2015/03/48.jpg" alt="HPCC" width="600" height="290" /></p>
+<p>该项目主要由五部分组成：</p>
+<p><strong>1、高性能计算机系统（HPCS）</strong>，内容包括今后几代计算机系统的研究、系统设计工具、先进的典型系统及原有系统的评价等；</p>
+<p><strong>2、先进软件技术与算法（ASTA）</strong>，内容有巨大挑战问题的软件支撑、新算法设计、软件分支与工具、计算计算及高性能计算研究中心等；</p>
+<p><strong>3、国家科研与教育网格（NREN）</strong>，内容有中接站及10亿位级传输的研究与开发；</p>
+<p><strong>4、基本研究与人类资源（BRHR）</strong>，内容有基础研究、培训、教育及课程教材，被设计通过奖励调查者-开始的，长期 的调查在可升级的高性能计算中来增加创新意识流，通过提高教育和高性能的计算训练和通信来加大熟练的和训练有素的人员的联营，和来提供必需的基础架构来支 持这些调查和研究活动；</p>
+<p><strong>5、信息基础结构技术和应用（IITA</strong> ），目的在于保证美国在先进信息技术开发方面的领先地位。</p>
+<p><span style="color: #fa2807;"><strong>三、Storm</strong></span></p>
+<p><img decoding="async" class=" size-full wp-image-22620 aligncenter" src="../wp-content/uploads/2015/03/510.jpg" alt="Storm" width="562" height="386" /></p>
+<p>Storm是自由的开源软件，一个分布式的、容错的实时计算系统。Storm可以非常可靠的处理庞大的数据流，用于处理Hadoop的批量数据。Storm很简单，支持许多种编程语言，使用起来非常有趣。Storm由Twitter开源而来，其它知名的应用企业包括Groupon、淘宝、支付宝、阿里巴巴、乐元素、Admaster等等。</p>
+<p>Storm有许多应用领域：实时分析、在线机器学习、不停顿的计算、分布式RPC（远过程调用协议，一种通过网络从远程计算机程序上请求服务）、 ETL（Extraction-Transformation-Loading的缩写，即数据抽取、转换和加载）等等。Storm的处理速度惊人：经测 试，每个节点每秒钟可以处理100万个数据元组。Storm是可扩展、容错，很容易设置和操作。</p>
+<p><strong><span style="color: #f73e05;">四、Apache Drill</span></strong></p>
+<p>为了帮助企业用户寻找更为有效、加快Hadoop数据查询的方法，<a href="http://www.36dsj.com/archives/18262" target="_blank" rel="noopener">Apache软件基金会</a>近日发起了一项名为"Drill"的开源项目。Apache Drill 实现了 Google&#8217;s Dremel.</p>
+<p>据Hadoop厂商<a href="http://www.36dsj.com/archives/tag/mapr" target="_blank" rel="noopener">MapR </a>Technologies公司产品经理Tomer Shiran介绍，"Drill"已经作为Apache孵化器项目来运作，将面向全球软件工程师持续推广。</p>
+<p><img loading="lazy" decoding="async" class=" size-full wp-image-22621 aligncenter" src="../wp-content/uploads/2015/03/610.jpg" alt="Apache Drill" width="480" height="229" /></p>
+<p>该项目将会创建出开源版本的谷歌Dremel Hadoop工具（谷歌使用该工具来为Hadoop数据分析工具的互联网应用提速）。而"Drill"将有助于Hadoop用户实现更快查询海量数据集的目的。</p>
+<p>"Drill"项目其实也是从谷歌的Dremel项目中获得灵感：该项目帮助谷歌实现海量数据集的分析处理，包括分析抓取Web文档、跟踪安装在Android Market上的应用程序数据、分析垃圾邮件、分析谷歌分布式构建系统上的测试结果等等。</p>
+<p>通过开发"Drill"Apache开源项目，组织机构将有望建立Drill所属的API接口和灵活强大的体系架构，从而帮助支持广泛的数据源、数据格式和查询语言。</p>
+<p><strong><span style="color: #f73e05;">五、RapidMiner</span></strong></p>
+<p>RapidMiner是世界领先的数据挖掘解决方案，在一个非常大的程度上有着先进技术。它数据挖掘任务涉及范围广泛，包括各种数据艺术，能简化数据挖掘过程的设计和评价。</p>
+<p><img loading="lazy" decoding="async" class=" size-full wp-image-22622 aligncenter" src="../wp-content/uploads/2015/03/711.jpg" alt="RapidMiner" width="595" height="480" /></p>
+<p><strong>功能和特点</strong></p>
+<ul>
+<li>免费提供数据挖掘技术和库</li>
+<li>100%用Java代码（可运行在操作系统）</li>
+<li>数据挖掘过程简单，强大和直观</li>
+<li>内部XML保证了标准化的格式来表示交换数据挖掘过程</li>
+<li>可以用简单脚本语言自动进行大规模进程</li>
+<li>多层次的数据视图，确保有效和透明的数据</li>
+<li>图形用户界面的互动原型</li>
+<li>命令行（批处理模式）自动大规模应用</li>
+<li>Java API（应用编程接口）</li>
+<li>简单的插件和推广机制</li>
+<li>强大的可视化引擎，许多尖端的高维数据的可视化建模</li>
+<li>400多个数据挖掘运营商支持</li>
+</ul>
+<p>耶鲁大学已成功地应用在许多不同的应用领域，包括文本挖掘，多媒体挖掘，功能设计，数据流挖掘，集成开发的方法和分布式数据挖掘。</p>
+<p><strong><span style="color: #f73e05;">六、Pentaho BI</span></strong></p>
+<p>Pentaho BI 平台不同于传统的BI 产品，它是一个以流程为中心的，面向解决方案（Solution）的框架。其目的在于将一系列企业级BI产品、开源软件、API等等组件集成起来，方便商务智能应用的开发。它的出现，使得一系列的面向商务智能的独立产品如Jfree、Quartz等等，能够集成在一起，构成一项项复杂的、完整的商务智能解决方案。</p>
+<p><img loading="lazy" decoding="async" class=" wp-image-22623 size-medium aligncenter" src="../wp-content/uploads/2015/03/Pentaho-tools-600x375.png" alt="Pentaho BI" width="600" height="375" /></p>
+<p>Pentaho BI 平台，Pentaho Open BI 套件的核心架构和基础，是以流程为中心的，因为其中枢控制器是一个工作流引擎。工作流引擎使用流程定义来定义在BI 平台上执行的商业智能流程。流程可以很容易的被定制，也可以添加新的流程。BI 平台包含组件和报表，用以分析这些流程的性能。目前，Pentaho的主要组成元素包括报表生成、分析、数据挖掘和工作流管理等等。这些组件通过 J2EE、WebService、SOAP、HTTP、Java、JavaScript、Portals等技术集成到Pentaho平台中来。 Pentaho的发行，主要以Pentaho SDK的形式进行。</p>
+<p>Pentaho SDK共包含五个部分：Pentaho平台、Pentaho示例数据库、可独立运行的Pentaho平台、Pentaho解决方案示例和一个预先配制好的 Pentaho网络服务器。其中Pentaho平台是Pentaho平台最主要的部分，囊括了Pentaho平台源代码的主体；Pentaho数据库为 Pentaho平台的正常运行提供的数据服务，包括配置信息、Solution相关的信息等等，对于Pentaho平台来说它不是必须的，通过配置是可以用其它数据库服务取代的；可独立运行的Pentaho平台是Pentaho平台的独立运行模式的示例，它演示了如何使Pentaho平台在没有应用服务器支持的情况下独立运行；</p>
+<p>Pentaho解决方案示例是一个Eclipse工程，用来演示如何为Pentaho平台开发相关的商业智能解决方案。</p>
+<p>Pentaho BI 平台构建于服务器，引擎和组件的基础之上。这些提供了系统的J2EE 服务器，安全，portal，工作流，规则引擎，图表，协作，内容管理，数据集成，分析和建模功能。这些组件的大部分是基于标准的，可使用其他产品替换之。</p>
+
+<p><em>作者：经纬方略</em><br />
+<em>来源：http://www.36dsj.com/archives/22617</em></p>				</div>
+			</div>
+			<div class="previous-next-links">
+			<div class="previous-design-link">← <a href="./moible-and-web-thinking.html" rel="prev"> 形象生动的画面：移动思维和WEB思维</a> </div>
+			<div class="next-design-link"><a href="./these-developers-do-not-blend-on-the-development-of-apple-watch.html" rel="next"> 这类开发者，就别掺合 Apple Watch 的开发了</a> →</div>
+			</div>
+			<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="../tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="./runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=".." class="runoob-pop">登录</a>！</h3>
+		<p><a href="./runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href="..">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='11464' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  11464;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 11464, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":11464},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+			<style>
+@media screen and (max-width: 768px) {
+	#w3cnote-ad728 {
+		display: none;
+	}
+}
+p.note-author {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<script>
+var aid = 11464;
+</script>
+	</div>
+		
+	</div>
+	<div class="listcol last right-column">
+
+
+
+
+<!--
+	<div class="tab tab-light-blue"> 订阅</div>
+	<div class="sidebar-box">
+		<div class="socialicons">
+			<a href="/feed.html" class="rss">RSS 订阅</a>
+		
+			<form action="//list.qq.com/cgi-bin/qf_compose_send" method="post">
+			<input type="hidden" value="qf_booked_feedback" name="t">
+			<input type="hidden" value="4b67b6b6c1f5e792559940cab4aebb8f1126fba880bff1a8" name="id">
+			<input class="placeholder" id="feed_email" name="to" value="输入邮箱 订阅笔记" autocomplete="off">
+			<input type="submit" value="订阅" class="btn btn-primary">
+			</form>
+		
+		</div>
+ 
+	</div>
+-->	
+
+
+
+<!--
+	<div class="sidebar-box cate-list">
+	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">笔记列表</a>
+		</div>
+
+ 
+
+</div>
+-->
+<div class="sidebar-box cate-list" style="display:none;">
+	<div class="sidebar-box recommend-here list-link">
+	<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">热门文章</a>
+	</div>
+	<div class="membership"> 
+		<ul class="membership">
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/ZaP6YNgKTCHYy3r2WPBBaw" title="2024 年 04 月 JavaScript 框架排行榜" >2024 年 04 月 JavaScript 框架排行榜</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/JBR2twC0t6krjjuxqvhsEQ" title="免费、开源、好用的 SQL 客户端合集" >免费、开源、好用的 SQL 客户端合集</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/TwV3YQjA1glyaW7TiHvhlA" title="优雅的代码规范，提升代码质量" >优雅的代码规范，提升代码质量</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/CnUJ-2OHPbBKlnVpjDzavA" title="命令行中的趣味世界，牛也能说话，有趣又好玩" >命令行中的趣味世界，牛也能说话，有趣又好玩</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/7NKl-mD7N8CeSNQlbKDEWA" title="2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？" >2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/yWlSVDKobtDhThnhirVRpw" title="免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端" >免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端</a></li>
+					</ul>
+	</div>
+</div>
+
+	 <div class="sidebar-box cate-list">
+		 		
+		
+	 	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">教程列表</a>
+		</div>
+		
+		<div class="cate-items"> 
+				<a href="../ado.html">ADO 教程</a>
+	<a href="../ai-agent.html">AI Agent 教程</a>
+	<a href="../ai.html">AI 入门教程</a>
+	<a href="../ai-math.html">AI 数学基础</a>
+	<a href="../ajax.html">Ajax 教程</a>
+	<a href="../android.html">Android 教程</a>
+	<a href="../angularjs2.html">Angular2 教程</a>
+	<a href="../angularjs.html">AngularJS 教程</a>
+	<a href="../appml.html">AppML 教程</a>
+	<a href="../asp.html">ASP 教程</a>
+	<a href="../aspnet.html">ASP.NET 教程</a>
+	<a href="../bootstrap.html">Bootstrap 教程</a>
+	<a href="../bootstrap4.html">Bootstrap4 教程</a>
+	<a href="../bootstrap5.html">Bootstrap5 教程</a>
+	<a href="../cprogramming.html">C 教程</a>
+	<a href="../c-dsa.html">C 语言数据结构与算法</a>
+	<a href="../csharp.html">C# 教程</a>
+	<a href="../cplusplus.html">C++ 教程</a>
+	<a href="../chartjs.html">Chart.js 教程</a>
+	<a href="../claude-code.html">Claude Code 教程</a>
+	<a href="../cmake.html">CMake 教程</a>
+	<a href="../codex.html">Codex 教程</a>
+	<a href="../cssref.html">CSS 参考手册</a>
+	<a href="../css.html">CSS 教程</a>
+	<a href="../css3.html">CSS3 教程</a>
+	<a href="../cursor.html">Cursor 教程</a>
+	<a href="../dart.html">Dart 教程</a>
+	<a href="../dash.html">Dash 教程</a>
+	<a href="../deepseek-harness.html">DeepSeek Harness</a>
+	<a href="../django.html">Django 教程</a>
+	<a href="../docker.html">Docker 教程</a>
+	<a href="../dtd.html">DTD 教程</a>
+	<a href="../echarts.html">ECharts 教程</a>
+	<a href="../eclipse.html">Eclipse 教程</a>
+	<a href="../electron.html">Electron 教程</a>
+	<a href="../fastapi.html">FastAPI 教程</a>
+	<a href="../firebug.html">Firebug 教程</a>
+	<a href="../flask.html">Flask 教程</a>
+	<a href="../flutter.html">Flutter 教程</a>
+	<a href="../font-awesome.html">Font Awesome 图标</a>
+	<a href="../foundation.html">Foundation 教程</a>
+	<a href="../git.html">Git 教程</a>
+	<a href="../go.html">Go 语言教程</a>
+	<a href="../googleapi.html">Google 地图 API 教程</a>
+	<a href="../hermes-agent.html">Hermes Agent</a>
+	<a href="../highcharts.html">Highcharts 教程</a>
+	<a href="../htmldom.html">HTML DOM 教程</a>
+	<a href="../tags.html">HTML 参考手册</a>
+	<a href="../charsets.html">HTML 字符集</a>
+	<a href="../html.html">HTML 教程</a>
+	<a href="../http.html">HTTP 教程</a>
+	<a href="../ionic.html">ionic 教程</a>
+	<a href="../ios.html">iOS 教程</a>
+	<a href="../java.html">Java 教程</a>
+	<a href="../jsref.html">JavaScript 参考手册</a>
+	<a href="../js.html">Javascript 教程</a>
+	<a href="../jeasyui.html">jQuery EasyUI 教程</a>
+	<a href="../jquerymobile.html">jQuery Mobile 教程</a>
+	<a href="../jqueryui.html">jQuery UI 教程</a>
+	<a href="../jquery.html">jQuery 教程</a>
+	<a href="../json.html">JSON 教程</a>
+	<a href="../jsp.html">JSP 教程</a>
+	<a href="../julia.html">Julia 教程</a>
+	<a href="../jupyter-notebook.html">Jupyter Notebook 教程</a>
+	<a href="../kotlin.html">Kotlin 教程</a>
+	<a href="../langchain.html">LangChain 教程</a>
+	<a href="../latex.html">LaTeX 教程</a>
+	<a href="../linux.html">Linux 教程</a>
+	<a href="../lua.html">Lua 教程</a>
+	<a href="../markdown.html">Markdown 教程</a>
+	<a href="../matplotlib.html">Matplotlib 教程</a>
+	<a href="../maven.html">Maven 教程</a>
+	<a href="../memcached.html">Memcached 教程</a>
+	<a href="../mongodb.html">MongoDB 教程</a>
+	<a href="../mysql.html">MySQL 教程</a>
+	<a href="../nextjs.html">Next.js 教程</a>
+	<a href="../nlp.html">NLP 教程</a>
+	<a href="../nodejs.html">Node.js 教程</a>
+	<a href="../numpy.html">NumPy 教程</a>
+	<a href="../obsidian.html">Obsidian 教程</a>
+	<a href="../ollama.html">Ollama 教程</a>
+	<a href="../opencode.html">OpenCode 教程</a>
+	<a href="../opencv.html">OpenCV 教程</a>
+	<a href="../pandas.html">Pandas 教程</a>
+	<a href="../perl.html">Perl 教程</a>
+	<a href="../php.html">PHP 教程</a>
+	<a href="../pi-agent.html">Pi Agent</a>
+	<a href="../pillow.html">Pillow 教程</a>
+	<a href="../playwright.html">Playwright 教程</a>
+	<a href="../postgresql.html">PostgreSQL 教程</a>
+	<a href="../powershell.html">PowerShell</a>
+	<a href="../pycharm.html">Pycharm 教程</a>
+	<a href="../python3.html">Python 3 教程</a>
+	<a href="../python.html">Python 基础教程</a>
+	<a href="../python-design-pattern.html">Python 设计模式</a>
+	<a href="/python-qt.html">Python 量化交易</a>
+	<a href="../pytorch.html">PyTorch 教程</a>
+	<a href="../r.html">R 教程</a>
+	<a href="../rdf.html">RDF 教程</a>
+	<a href="../react.html">React 教程</a>
+	<a href="../redis.html">Redis 教程</a>
+	<a href="/restfulapi.html">RESTful API</a>
+	<a href="../rss.html">RSS 教程</a>
+	<a href="../ruby.html">Ruby 教程</a>
+	<a href="../rust.html">Rust 教程</a>
+	<a href="../sass.html">Sass 教程</a>
+	<a href="../scala.html">Scala 教程</a>
+	<a href="../scipy.html">SciPy 教程</a>
+	<a href="../selenium.html">Selenium 教程</a>
+	<a href="../servlet.html">Servlet 教程</a>
+	<a href="../skills.html">Skills 教程</a>
+	<a href="../sklearn.html">Sklearn 教程</a>
+	<a href="../soap.html">SOAP 教程</a>
+	<a href="../sql.html">SQL 教程</a>
+	<a href="../sqlite.html">SQLite 教程</a>
+	<a href="../svg.html">SVG 教程</a>
+	<a href="../svn.html">SVN 教程</a>
+	<a href="../swagger.html">Swagger 教程</a>
+	<a href="../swift.html">Swift 教程</a>
+	<a href="../tailwindcss.html">Tailwind CSS 教程</a>
+	<a href="../tcpip.html">TCP/IP 教程</a>
+	<a href="../tensorflow.html">TensorFlow 教程</a>
+	<a href="../typescript.html">TypeScript 教程</a>
+	<a href="../uniapp.html">uni-app 教程</a>
+	<a href="../vbscript.html">VBScript 教程</a>
+	<a href="../vibe-coding.html">Vibe Coding 教程</a>
+	<a href="../vscode.html">VSCode 教程</a>
+	<a href="../vue2.html">Vue.js 教程</a>
+	<a href="../vue3.html">Vue3 教程</a>
+	<a href="../w3c.html">W3C 教程</a>
+	<a href="../webservices.html">Web Service 教程</a>
+	<a href="../wsdl.html">WSDL 教程</a>
+	<a href="../xlink.html">XLink 教程</a>
+	<a href="../dom.html">XML DOM 教程</a>
+	<a href="../schema.html">XML Schema 教程</a>
+	<a href="../xml.html">XML 教程</a>
+	<a href="../xpath.html">XPath 教程</a>
+	<a href="../xquery.html">XQuery 教程</a>
+	<a href="../xslfo.html">XSLFO 教程</a>
+	<a href="../xsl.html">XSLT 教程</a>
+	<a href="../zig.html">Zig 教程</a>
+	<a href="../data-structures.html">数据结构</a>
+	<a href="../ml.html">机器学习</a>
+	<a href="../regexp.html">正则表达式</a>
+	<a href="../assembly.html">汇编语言</a>
+	<a href="../quiz.html">测验</a>
+	<a href="../browsers.html">浏览器</a>
+	<a href="../quality.html">网站品质</a>
+	<a href="/web.html">网站建设指南</a>
+	<a href="../hosting.html">网站服务器教程</a>
+	<a href="../np.html">网络协议</a>
+	<a href="../computer-organization.html">计算机组成原理</a>
+	<a href="../design-pattern.html">设计模式</a>
+			
+		</div> 
+		 	 </div>
+</div>
+	</div>
+</div>
+
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="../ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="../for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

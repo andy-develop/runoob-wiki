@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YAML 入门教程 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./yaml-intro.html" />
+<meta name="keywords" content="YAML 入门教程">
+<meta name="description" content="YAML 全称 YAML Ain&#039;t Markup Language（一种递归缩写），是一种人类可读的数据序列化格式。 YAML 常用于配置文件、数据交换以及各种需要以结构化方式存储数据的场景。 YAML 的语法和其他高级语言类似，可以简单表达清单、散列表、标量等数据形态。 它使用空白符号缩进和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种配置文件、倾印调试内容、文件大纲。 YAML 的配置文件后缀为 .yml，如：..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<div class="container navigation">
+    <div class="row">
+        <div class="col nav">
+            
+
+                        <ul class="pc-nav" id="note-nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../w3cnote.html">笔记首页</a></li>
+                <li><a href="./android-tutorial-intro.html" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" title="ES6 教程">ES6 教程</a></li>
+                <li><a href="./ten-sorting-algorithm.html" title="排序算法">排序算法</a></li>
+                <li><a href="./hadoop-tutorial.html" title="Hadoop 教程">Hadoop</a></li>
+                <li><a href="./zookeeper-tutorial.html" title="Zookeeper 教程">Zookeeper</a></li>
+                <li><a href="./verilog-tutorial.html" title="Verilog 教程">Verilog</a></li>
+                <li><a href="../w3cnote_genre/code.html" title="编程技术">编程技术</a></li> 
+                <li><a href="../w3cnote_genre/coderlife.html" title="程序员人生">程序员人生</a></li>
+                
+                <!--<li><a href=".." class="runoob-pop">登录</a></li>
+                
+                
+                        <li>
+                <a style="font-weight:bold;" href="../linux/linux-tutorial.html" target="_blank" onclick="_hmt.push(['_trackEvent', 'aliyun', 'click', 'aliyun'])" title="kkb">云服务器</a>
+                </li>
+                <li><a href="http://gk.link/a/104mQ" target="_blank" style="font-weight: bold;"onclick="_hmt.push(['_trackEvent', '极客时间', 'click', 'jike'])" title="我的圈子">极客时间</a></li>
+            
+                
+                <li><a target="_blank" href="../shoppinglist.html" rel="nofollow">知识店铺</a></li> 
+        -->
+            </ul>
+                        
+              
+            <ul class="mobile-nav">
+                <li><a href="../w3cnote.html">首页</a></li>
+                <li><a href="../w3cnote_genre/android.html" target="_blank" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" target="_blank" title="ES6 教程">ES6</a></li>
+                <li><a href="../w3cnote_genre/joke.html" target="_blank" title="程序员笑话">逗乐</a></li>
+                
+                <a href="void(0).html" class="search-reveal">Search</a> 
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--  内容  -->
+<div class="container main">
+	<div class="row">
+
+		<div class="col middle-column big-middle-column">
+	 			<div class="article">
+			<div class="article-heading">
+				<h2>YAML 入门教程</h2>				<h3><em>分类</em> <a href="../w3cnote_genre/code.html" title="编程技术" >编程技术</a> </h3>
+			</div>
+			<div class="article-body note-body">
+				<div class="article-intro">
+					<!-- ad start-->
+			            <!-- ad end-->
+					<p>YAML 全称 <span class="marked">YAML Ain't Markup Language</span>（一种递归缩写），是一种人类可读的数据序列化格式。</p>
+<p>YAML 常用于配置文件、数据交换以及各种需要以结构化方式存储数据的场景。</p>
+<p>YAML 的语法和其他高级语言类似，可以简单表达清单、散列表、标量等数据形态。</p>
+<p>它使用空白符号缩进和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种配置文件、倾印调试内容、文件大纲。</p>
+<p>YAML 的配置文件后缀为 <span class="marked">.yml</span>，如：<strong>runoob.yml</strong> 。</p>
+<p><img decoding="async" src="../wp-content/uploads/2019/11/123_baurcebaurcebaur.webp"></p>
+<h3>YAML 的特点与优势</h3>
+<p>YAML 的设计目标可读性强，语法简洁，接近自然语言的书写习惯，几乎不需要额外的符号。</p>
+<p>相比 XML 和 JSON，YAML 减少了大量的括号和引号，书写更轻松。</p>
+<p>它支持复杂数据结构，可以表达列表、字典、嵌套结构，甚至支持引用和锚点等高级特性。</p>
+<p>几乎所有主流编程语言都有解析 YAML 的库，语言生态非常成熟。</p>
+
+<h3>YAML 与 JSON、XML 的对比</h3>
+<p>三种格式各有侧重，下表从多个维度进行了对比：</p>
+
+<table class="reference">
+<tr><th>特性</th><th>YAML</th><th>JSON</th><th>XML</th></tr>
+<tr><td>可读性</td><td>高</td><td>中</td><td>低</td></tr>
+<tr><td>注释支持</td><td>支持</td><td>不支持</td><td>支持</td></tr>
+<tr><td>语法复杂度</td><td>低</td><td>中</td><td>高</td></tr>
+<tr><td>常见用途</td><td>配置文件</td><td>数据交换/API</td><td>文档/数据交换</td></tr>
+</table>
+<p><img decoding="async" src="../wp-content/uploads/2019/11/yaml-json-xml.webp"></p>
+<h3>YAML 的常见应用场景</h3>
+<p>YAML 在现代化开发栈中几乎无处不在，以下是最常见的几种场景：</p>
+<p>应用程序的配置文件，如 Spring Boot 的 <span class="tag1">application.yml</span>。</p>
+<p>容器编排工具，如 Docker Compose、Kubernetes 的部署描述文件。</p>
+<p>CI/CD 流水线配置，如 GitHub Actions、GitLab CI、CircleCI 的工作流定义。</p>
+<p>静态站点生成器的 Front Matter，如 Jekyll、Hugo 的页面元数据。</p>
+
+<hr>
+
+<h2>基础语法规则</h2>
+<p>掌握 YAML 最基本的书写规则，包括缩进、注释、文件结构等。</p>
+
+<h3>缩进规则</h3>
+<p>YAML 使用<span class="marked">空格</span>进行缩进来表示层级关系，<span class="marked">不能使用 Tab 键</span>。</p>
+<p>同一层级的元素必须保持相同的缩进量，通常建议使用 2 个空格作为缩进单位。</p>
+
+<pre>
+person:
+  name: 张三
+  age: 25
+</pre>
+
+<h3>基本语法</h3>
+<p>以下是 YAML 最核心的语法规则，需要牢记：</p>
+
+<ul>
+<li>大小写敏感</li>
+<li>使用缩进表示层级关系</li>
+<li>缩进不允许使用 Tab，只允许空格</li>
+<li>缩进的空格数不重要，只要相同层级的元素左对齐即可</li>
+<li><span class="marked">#</span> 表示注释</li>
+<li><span class="marked">:</span> 号后面要加空格</li>
+</ul>
+
+<h3>大小写敏感</h3>
+<p>YAML 中的键名、字符串等都是大小写敏感的。</p>
+<p><span class="tag1">Name</span> 和 <span class="tag1">name</span> 会被视为两个不同的键，编写时需要注意一致性问题。</p>
+
+<h3>注释写法</h3>
+<p>使用 <span class="tag1">#</span> 开头的内容为注释，注释可以独占一行，也可以写在内容后面。</p>
+
+<pre>
+# 这是一行注释
+name: 张三  # 这也是注释
+</pre>
+
+<h3>文件扩展名</h3>
+<p>YAML 文件通常使用 <span class="tag1">.yaml</span> 或 <span class="tag1">.yml</span> 作为扩展名，两者没有本质区别，视项目习惯而定。</p>
+
+<h3>文档分隔符</h3>
+<p><span class="tag1">---</span> 用于标识一个新文档的开始，在多文档文件中尤为重要。</p>
+<p><span class="tag1">...</span> 用于标识文档结束，属于可选标记。</p>
+
+<pre>
+---
+doc: 第一个文档
+---
+doc: 第二个文档
+</pre>
+
+<hr>
+
+<h2>基本数据类型</h2>
+<p>YAML 支持字符串、数字、布尔值、空值等基本数据类型，每种类型都有特定的书写方式。</p>
+
+<h3>数据类型概述</h3>
+<p>YAML 支持以下几种数据类型：</p>
+<ul>
+<li>对象：键值对的集合，又称为映射（mapping）/ 哈希（hashes）/ 字典（dictionary）</li>
+<li>数组：一组按次序排列的值，又称为序列（sequence）/ 列表（list）</li>
+<li>纯量（scalars）：单个的、不可再分的值</li>
+</ul>
+
+<h3>标量（Scalar）</h3>
+<p>标量是 YAML 中最基本的数据单元，分为以下几种类型：</p>
+
+<h4>字符串</h4>
+<p>字符串可以不使用引号，也可以使用双引号或单引号包裹。</p>
+<p>双引号支持转义字符（如 <span class="tag1">\n</span>），单引号则不支持转义。</p>
+
+<pre>
+name: 张三          # 不加引号
+name: "张三"        # 双引号，支持转义字符
+name: '张三'        # 单引号，不支持转义
+</pre>
+
+<h4>数字</h4>
+<p>YAML 会自动识别整数和浮点数，无需额外声明类型。</p>
+
+<pre>
+age: 25          # 整数
+price: 19.99     # 浮点数
+</pre>
+
+<h4>布尔值</h4>
+<p>布尔值使用 <span class="tag1">true</span> 和 <span class="tag1">false</span> 表示。</p>
+
+<pre>
+is_active: true
+is_deleted: false
+</pre>
+
+<h4>空值</h4>
+<p>空值可以用 <span class="tag1">null</span>、<span class="tag1">~</span> 或者什么都不写来表示。</p>
+
+<pre>
+value: null
+value: ~
+value:            # 什么都不写也表示 null
+</pre>
+
+<h4>纯量综合示例</h4>
+<p>以下示例展示了所有纯量类型的使用方式，包括布尔值、浮点数、整数、空值、字符串、日期和时间：</p>
+
+<pre>
+boolean:
+    - TRUE  # true,True 都可以
+    - FALSE  # false,False 都可以
+float:
+    - 3.14
+    - 6.8523015e+5  # 可以使用科学计数法
+int:
+    - 123
+    - 0b1010_0111_0100_1010_1110    # 二进制表示
+null:
+    nodeName: 'node'
+    parent: ~  # 使用 ~ 表示 null
+string:
+    - 哈哈
+    - 'Hello world'  # 可以使用双引号或者单引号包裹特殊字符
+    - newline
+      newline2    # 字符串可以拆成多行，每一行会被转化成一个空格
+date:
+    - 2018-02-17    # 日期必须使用 ISO 8601 格式，即 yyyy-MM-dd
+datetime:
+    - 2018-02-17T15:02:31+08:00    # 时间使用 ISO 8601 格式，时间和日期之间使用 T 连接，最后使用 + 代表时区
+</pre>
+
+<blockquote><p>日期和时间必须使用 ISO 8601 格式。日期格式为 <span class="tag1">yyyy-MM-dd</span>，时间格式为 <span class="tag1">yyyy-MM-ddTHH:mm:ss+时区</span>，中间用 <span class="tag1">T</span> 连接。</p></blockquote>
+
+<h3>多行字符串</h3>
+<p>YAML 提供了两种多行字符串的书写方式，分别适用于不同的场景。</p>
+
+<h4>折叠样式（>）</h4>
+<p>使用 <span class="tag1">></span> 符号将多行文本折叠为一行，换行符会被替换为空格。</p>
+
+<pre>
+description: &gt;
+  这是第一行
+  这是第二行
+  这是第三行
+</pre>
+<p>上面的写法等价于：<span class="tag1">"这是第一行 这是第二行 这是第三行\n"</span></p>
+
+<h4>保留换行样式（|）</h4>
+<p>使用 <span class="tag1">|</span> 符号保留原始换行符，适合书写多行文本（如脚本内容）。</p>
+
+<pre>
+script: |
+  echo "第一行"
+  echo "第二行"
+  echo "第三行"
+</pre>
+
+<h4>| 与 > 对比</h4>
+<p>下面通过同一段内容 <span class="tag1">Foo\nBar</span> 对比两种写法的差异：</p>
+
+<pre>
+this: |
+  Foo
+  Bar
+that: &gt;
+  Foo
+  Bar
+</pre>
+
+<p>转为 JavaScript 代码如下：</p>
+
+<pre>
+{ this: 'Foo\nBar\n', that: 'Foo Bar\n' }
+</pre>
+
+<p>可以看到，<span class="tag1">|</span> 保留了换行符，结果为 <span class="tag1">Foo\nBar\n</span>；而 <span class="tag1">></span> 将换行折叠为空格，结果为 <span class="tag1">Foo Bar\n</span>。</p>
+
+<blockquote><p>选择 <span class="tag1">></span> 还是 <span class="tag1">|</span> 取决于你的需求：如果需要将多行内容合并为一段，使用 <span class="tag1">></span>；如果需要保留原始换行格式（如脚本、诗歌），使用 <span class="tag1">|</span>。</p></blockquote>
+
+<hr>
+
+<h2>复合数据结构</h2>
+<p>YAML 支持映射和序列两种复合结构，二者可以自由嵌套，表达任意复杂的数据关系。</p>
+
+<h3>映射（Mapping / 字典）</h3>
+<p>映射是键值对的集合，是 YAML 中最常用的数据结构。</p>
+
+<h4>基本键值对写法</h4>
+
+<pre>
+name: 张三
+age: 25
+city: 北京
+</pre>
+
+<h4>嵌套映射</h4>
+<p>通过缩进可以在映射中嵌套另一个映射，形成层级结构。</p>
+
+<pre>
+person:
+  name: 张三
+  address:
+    city: 北京
+    zipcode: "100000"
+</pre>
+
+<h4>流式映射写法</h4>
+<p>也可以使用 <span class="tag1">key:{key1: value1, key2: value2, ...}</span> 的流式写法。</p>
+
+<pre>
+key: {child-key: value, child-key2: value2}
+</pre>
+
+<h4>复杂键（Complex Key）</h4>
+<p>使用问号加空格代表一个复杂的 key，配合冒号加空格代表一个 value：</p>
+
+<pre>
+?
+    - complexkey1
+    - complexkey2
+:
+    - complexvalue1
+    - complexvalue2
+</pre>
+<p>意思即对象的属性是一个数组 <span class="tag1">[complexkey1, complexkey2]</span>，对应的值也是一个数组 <span class="tag1">[complexvalue1, complexvalue2]</span>。</p>
+
+<h3>序列（Sequence / 列表）</h3>
+<p>序列使用 <span class="tag1">-</span> 前缀表示，用于存储有序的数据集合。</p>
+
+<h4>基本列表写法</h4>
+
+<pre>
+fruits:
+  - 苹果
+  - 香蕉
+  - 橙子
+</pre>
+
+<h4>嵌套列表</h4>
+
+<pre>
+matrix:
+  - [1, 2, 3]
+  - [4, 5, 6]
+  - [7, 8, 9]
+</pre>
+
+<h4>多维数组</h4>
+<p>YAML 支持多维数组，可以使用行内表示：</p>
+
+<pre>
+key: [value1, value2, ...]
+</pre>
+
+<p>数据结构的子成员是一个数组，则可以在该项下面缩进一个空格：</p>
+
+<pre>
+-
+ - A
+ - B
+ - C
+</pre>
+
+<h4>数组元素为对象的复杂示例</h4>
+<p>一个常见的实际场景：数组中的每个元素是由多个属性构成的对象：</p>
+
+<pre>
+companies:
+    -
+        id: 1
+        name: company1
+        price: 200W
+    -
+        id: 2
+        name: company2
+        price: 500W
+</pre>
+<p>意思是 <span class="tag1">companies</span> 属性是一个数组，每一个数组元素又是由 <span class="tag1">id</span>、<span class="tag1">name</span>、<span class="tag1">price</span> 三个属性构成。</p>
+
+<p>数组也可以使用流式方式表示：</p>
+
+<pre>
+companies: [{id: 1,name: company1,price: 200W},{id: 2,name: company2,price: 500W}]
+</pre>
+
+<h3>映射与序列混合使用</h3>
+<p>映射和序列可以灵活组合，表达复杂的数据结构。</p>
+
+<pre>
+students:
+  - name: 张三
+    age: 20
+    subjects:
+      - 数学
+      - 英语
+  - name: 李四
+    age: 22
+    subjects:
+      - 物理
+      - 化学
+</pre>
+
+<blockquote><p>在上面的例子中，<span class="tag1">students</span> 是一个序列，每个元素是一个映射，映射中的 <span class="tag1">subjects</span> 又是一个序列。这种嵌套组合是 YAML 表达力的核心。</p></blockquote>
+
+<h3>复合结构示例</h3>
+<p>数组和对象可以构成复合结构，以下是一个同时包含列表和映射的示例：</p>
+
+<pre>
+languages:
+  - Ruby
+  - Perl
+  - Python
+websites:
+  YAML: yaml.org
+  Ruby: ruby-lang.org
+  Python: python.org
+  Perl: use.perl.org
+</pre>
+
+<p>转换为 JSON 后为：</p>
+
+<pre>
+{
+  languages: [ 'Ruby', 'Perl', 'Python'],
+  websites: {
+    YAML: 'yaml.org',
+    Ruby: 'ruby-lang.org',
+    Python: 'python.org',
+    Perl: 'use.perl.org'
+  }
+}
+</pre>
+
+<hr>
+
+<h2>流式（Flow）语法</h2>
+<p>除了块式写法，YAML 还支持类似 JSON 的流式写法，适合紧凑场景。</p>
+
+<h3>流式映射</h3>
+<p>使用花括号 <span class="tag1">{}</span> 包裹键值对，用逗号分隔。</p>
+
+<pre>
+person: {name: 张三, age: 25, city: 北京}
+</pre>
+
+<h3>流式列表</h3>
+<p>使用方括号 <span class="tag1">[]</span> 包裹元素，用逗号分隔。</p>
+
+<pre>
+fruits: [苹果, 香蕉, 橙子]
+</pre>
+
+<h3>流式与块式的对比与使用场景</h3>
+
+<table class="reference">
+<tr><th>风格</th><th>特点</th><th>适用场景</th></tr>
+<tr><td>块式（Block）</td><td>可读性更好，层级清晰</td><td>结构复杂、层级较深的数据</td></tr>
+<tr><td>流式（Flow）</td><td>更紧凑，单行表达</td><td>简单数据，或嵌入到块式结构中的小型数据</td></tr>
+</table>
+
+<p>两种风格也可以混合使用：</p>
+
+<pre>
+users:
+  - {name: 张三, age: 25}
+  - {name: 李四, age: 30}
+</pre>
+
+<hr>
+
+<h2>高级特性</h2>
+<p>YAML 提供了锚点、引用、合并键等高级特性，帮助减少重复内容。</p>
+
+<h3>锚点与引用</h3>
+<p>使用 <span class="tag1">&</span> 定义锚点，使用 <span class="tag1">*</span> 引用锚点，可以避免重复书写相同的内容。</p>
+
+<pre>
+default_settings: &amp;defaults
+  adapter: postgres
+  host: localhost
+
+development:
+  &lt;&lt;: *defaults
+  database: dev_db
+
+test:
+  &lt;&lt;: *defaults
+  database: test_db
+</pre>
+
+<p>在上面的例子中，<span class="tag1">&defaults</span> 定义了一个锚点，<span class="tag1">*defaults</span> 引用了该锚点的内容，<span class="tag1"><<</span> 表示合并到当前数据。</p>
+
+<p>上面的配置展开后相当于：</p>
+
+<pre>
+defaults:
+  adapter:  postgres
+  host:     localhost
+
+development:
+  database: myapp_development
+  adapter:  postgres
+  host:     localhost
+
+test:
+  database: myapp_test
+  adapter:  postgres
+  host:     localhost
+</pre>
+
+<h4>列表中的锚点引用</h4>
+<p>锚点也可以用在列表中：</p>
+
+<pre>
+- &amp;showell Steve
+- Clark
+- Brian
+- Oren
+- *showell
+</pre>
+
+<p>转为 JavaScript 数组后为：</p>
+
+<pre>
+[ 'Steve', 'Clark', 'Brian', 'Oren', 'Steve' ]
+</pre>
+
+<h3>合并键</h3>
+<p><span class="tag1"><<</span> 用于将一个映射的内容合并到当前映射中，常与锚点配合使用。</p>
+
+<blockquote><p>合并键 <span class="tag1"><<</span> 是 YAML 1.1 规范中的特性，在大多数 YAML 解析器中都得到支持。它能让配置文件更加简洁，但需要注意它并非 JSON 规范的一部分，转换到 JSON 时会展开为实际内容。</p></blockquote>
+
+<h3>多文档支持</h3>
+<p>一个 YAML 文件中可以通过 <span class="tag1">---</span> 分隔存放多个独立文档，常见于 Kubernetes 的配置文件中。</p>
+
+<pre>
+---
+kind: Pod
+metadata:
+  name: pod-1
+---
+kind: Pod
+metadata:
+  name: pod-2
+</pre>
+
+<h3>标签与类型转换</h3>
+<p>YAML 支持通过标签（Tag）显式指定数据类型，使用 <span class="tag1">!!</span> 前缀声明。</p>
+
+<pre>
+explicit_string: !!str 123
+explicit_int: !!int "123"
+explicit_float: !!float "3.14"
+</pre>
+
+<p>常用标签包括 <span class="tag1">!!str</span>（字符串）、<span class="tag1">!!int</span>（整数）、<span class="tag1">!!float</span>（浮点数）、<span class="tag1">!!bool</span>（布尔值）、<span class="tag1">!!null</span>（空值）等。</p>
+
+<hr>
+
+<h2>常见错误与注意事项</h2>
+<p>YAML 对格式非常敏感，以下是最常见的错误类型和避免方法。</p>
+
+<h3>缩进错误导致的解析失败</h3>
+<p>YAML 对缩进极为敏感，同一层级的缩进量必须完全一致，否则会导致解析报错。</p>
+
+<pre>
+# 错误示例：缩进不一致
+person:
+  name: 张三
+   age: 25   # 缩进多了一个空格，会报错
+</pre>
+
+<h3>Tab 与空格混用问题</h3>
+<p>YAML 规范明确<span class="marked">不允许使用 Tab 进行缩进</span>，必须统一使用空格，否则大多数解析器会报错。</p>
+
+<blockquote><p>建议在编辑器中开启「将 Tab 转换为空格」的设置，避免不小心混入 Tab 字符。大多数现代编辑器都支持对 <span class="tag1">.yaml</span> 和 <span class="tag1">.yml</span> 文件自动启用此设置。</p></blockquote>
+
+<h3>特殊字符转义问题</h3>
+<p>当字符串中包含 <span class="tag1">:</span>、<span class="tag1">#</span>、<span class="tag1">{</span>、<span class="tag1">}</span>、<span class="tag1">[</span>、<span class="tag1">]</span> 等特殊字符时，建议使用引号将字符串包裹起来，避免被解析器误判。</p>
+
+<pre>
+title: "标题: 副标题"   # 冒号需要用引号包裹
+tag: "#重要"           # 井号需要用引号包裹，否则会被当作注释
+</pre>
+
+<h3>字符串是否需要加引号的场景</h3>
+<p>以下情况建议显式加上引号，避免 YAML 解析器做出错误的类型推断：</p>
+
+<table class="reference">
+<tr><th>场景</th><th>示例</th><th>说明</th></tr>
+<tr><td>字符串以数字开头</td><td><span class="tag1">"100000"</span></td><td>不加引号会被解析为数字</td></tr>
+<tr><td>易混淆的布尔词</td><td><span class="tag1">"true"</span>、<span class="tag1">"false"</span>、<span class="tag1">"yes"</span>、<span class="tag1">"no"</span></td><td>不加引号会被解析为布尔值</td></tr>
+<tr><td>空值词</td><td><span class="tag1">"null"</span>、<span class="tag1">"~"</span></td><td>不加引号会被解析为 null</td></tr>
+<tr><td>包含特殊符号</td><td><span class="tag1">"标题: 副标题"</span></td><td>冒号、井号等会被误判为语法标记</td></tr>
+</table>
+
+<hr>
+
+<h2>实践应用</h2>
+<p>通过实际场景中的完整示例，理解 YAML 在真实项目中的用法。</p>
+
+<h3>编写一个简单的配置文件</h3>
+<p>以下是一个典型的应用程序配置文件，展示了 YAML 在实际项目中的常见结构：</p>
+
+<pre>
+# 应用基本配置
+app:
+  name: MyApplication
+  version: 1.0.0
+  debug: false
+
+# 数据库连接配置
+database:
+  host: localhost
+  port: 5432
+  username: admin
+  password: "secret"
+
+# 日志配置
+logging:
+  level: info
+  file: /var/log/app.log
+</pre>
+
+<h3>YAML 在 Docker Compose 中的应用</h3>
+<p>Docker Compose 使用 YAML 定义多容器应用的服务编排：</p>
+
+<pre>
+version: "3"
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+</pre>
+
+<h3>YAML 在 Kubernetes 中的应用</h3>
+<p>Kubernetes 使用 YAML 定义各类资源对象，以下是一个 Pod 的定义示例：</p>
+
+<pre>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+</pre>
+
+<h3>YAML 在 GitHub Actions 中的应用</h3>
+<p>GitHub Actions 使用 YAML 定义 CI/CD 工作流：</p>
+
+<pre>
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: npm test
+</pre>
+
+<hr>
+
+<h2>工具与验证</h2>
+<p>推荐一些实用的 YAML 工具和资源，帮助你更高效地编写和验证 YAML 文件。</p>
+
+<h3>在线 YAML 校验工具</h3>
+<p>YAML Lint 是最常用的在线校验工具，可以搜索 "yamllint online" 查找可用的在线校验网站。</p>
+<p>各类 IDE 也内置了 YAML 语法检查功能，可以在编写时实时提示错误。</p>
+
+<h3>常用编程语言解析 YAML 的库</h3>
+
+<table class="reference">
+<tr><th>语言</th><th>常用库</th><th>特点</th></tr>
+<tr><td>Python</td><td><span class="tag1">PyYAML</span>、<span class="tag1">ruamel.yaml</span></td><td>PyYAML 最流行，ruamel.yaml 支持 YAML 1.2</td></tr>
+<tr><td>JavaScript / Node.js</td><td><span class="tag1">js-yaml</span></td><td>浏览器和 Node.js 环境通用</td></tr>
+<tr><td>Java</td><td><span class="tag1">SnakeYAML</span></td><td>Spring Boot 默认使用的 YAML 解析库</td></tr>
+<tr><td>Go</td><td><span class="tag1">gopkg.in/yaml.v3</span></td><td>Go 生态中最常用的 YAML 库</td></tr>
+<tr><td>Ruby</td><td><span class="tag1">Psych</span></td><td>标准库内置，无需额外安装</td></tr>
+</table>
+
+<h3>编辑器插件推荐</h3>
+
+<table class="reference">
+<tr><th>编辑器</th><th>推荐插件</th><th>功能</th></tr>
+<tr><td>VSCode</td><td>Red Hat 的 YAML 插件</td><td>语法高亮、格式校验、Schema 校验</td></tr>
+<tr><td>IntelliJ IDEA / PyCharm</td><td>内置支持</td><td>无需额外安装，开箱即用</td></tr>
+<tr><td>Sublime Text</td><td>YAML 相关插件</td><td>增强语法高亮和格式化功能</td></tr>
+</table>
+				</div>
+			</div>
+			<div class="previous-next-links">
+			<div class="previous-design-link">← <a href="./python-redis-intro.html" rel="prev"> Python redis 使用介绍</a> </div>
+			<div class="next-design-link"><a href="./c-callback-function.html" rel="next"> C 语言回调函数详解</a> →</div>
+			</div>
+			<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="../tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="./runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=".." class="runoob-pop">登录</a>！</h3>
+		<p><a href="./runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href="..">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='22040' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  22040;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 22040, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":22040},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+			<style>
+@media screen and (max-width: 768px) {
+	#w3cnote-ad728 {
+		display: none;
+	}
+}
+p.note-author {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<script>
+var aid = 22040;
+</script>
+	</div>
+		
+	</div>
+	<div class="listcol last right-column">
+
+
+
+
+<!--
+	<div class="tab tab-light-blue"> 订阅</div>
+	<div class="sidebar-box">
+		<div class="socialicons">
+			<a href="/feed.html" class="rss">RSS 订阅</a>
+		
+			<form action="//list.qq.com/cgi-bin/qf_compose_send" method="post">
+			<input type="hidden" value="qf_booked_feedback" name="t">
+			<input type="hidden" value="4b67b6b6c1f5e792559940cab4aebb8f1126fba880bff1a8" name="id">
+			<input class="placeholder" id="feed_email" name="to" value="输入邮箱 订阅笔记" autocomplete="off">
+			<input type="submit" value="订阅" class="btn btn-primary">
+			</form>
+		
+		</div>
+ 
+	</div>
+-->	
+
+
+
+<!--
+	<div class="sidebar-box cate-list">
+	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">笔记列表</a>
+		</div>
+
+ 
+
+</div>
+-->
+<div class="sidebar-box cate-list" style="display:none;">
+	<div class="sidebar-box recommend-here list-link">
+	<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">热门文章</a>
+	</div>
+	<div class="membership"> 
+		<ul class="membership">
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/ZaP6YNgKTCHYy3r2WPBBaw" title="2024 年 04 月 JavaScript 框架排行榜" >2024 年 04 月 JavaScript 框架排行榜</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/JBR2twC0t6krjjuxqvhsEQ" title="免费、开源、好用的 SQL 客户端合集" >免费、开源、好用的 SQL 客户端合集</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/TwV3YQjA1glyaW7TiHvhlA" title="优雅的代码规范，提升代码质量" >优雅的代码规范，提升代码质量</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/CnUJ-2OHPbBKlnVpjDzavA" title="命令行中的趣味世界，牛也能说话，有趣又好玩" >命令行中的趣味世界，牛也能说话，有趣又好玩</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/7NKl-mD7N8CeSNQlbKDEWA" title="2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？" >2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/yWlSVDKobtDhThnhirVRpw" title="免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端" >免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端</a></li>
+					</ul>
+	</div>
+</div>
+
+	 <div class="sidebar-box cate-list">
+		 		
+		
+	 	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">教程列表</a>
+		</div>
+		
+		<div class="cate-items"> 
+				<a href="../ado.html">ADO 教程</a>
+	<a href="../ai-agent.html">AI Agent 教程</a>
+	<a href="../ai.html">AI 入门教程</a>
+	<a href="../ai-math.html">AI 数学基础</a>
+	<a href="../ajax.html">Ajax 教程</a>
+	<a href="../android.html">Android 教程</a>
+	<a href="../angularjs2.html">Angular2 教程</a>
+	<a href="../angularjs.html">AngularJS 教程</a>
+	<a href="../appml.html">AppML 教程</a>
+	<a href="../asp.html">ASP 教程</a>
+	<a href="../aspnet.html">ASP.NET 教程</a>
+	<a href="../bootstrap.html">Bootstrap 教程</a>
+	<a href="../bootstrap4.html">Bootstrap4 教程</a>
+	<a href="../bootstrap5.html">Bootstrap5 教程</a>
+	<a href="../cprogramming.html">C 教程</a>
+	<a href="../c-dsa.html">C 语言数据结构与算法</a>
+	<a href="../csharp.html">C# 教程</a>
+	<a href="../cplusplus.html">C++ 教程</a>
+	<a href="../chartjs.html">Chart.js 教程</a>
+	<a href="../claude-code.html">Claude Code 教程</a>
+	<a href="../cmake.html">CMake 教程</a>
+	<a href="../codex.html">Codex 教程</a>
+	<a href="../cssref.html">CSS 参考手册</a>
+	<a href="../css.html">CSS 教程</a>
+	<a href="../css3.html">CSS3 教程</a>
+	<a href="../cursor.html">Cursor 教程</a>
+	<a href="../dart.html">Dart 教程</a>
+	<a href="../dash.html">Dash 教程</a>
+	<a href="../deepseek-harness.html">DeepSeek Harness</a>
+	<a href="../django.html">Django 教程</a>
+	<a href="../docker.html">Docker 教程</a>
+	<a href="../dtd.html">DTD 教程</a>
+	<a href="../echarts.html">ECharts 教程</a>
+	<a href="../eclipse.html">Eclipse 教程</a>
+	<a href="../electron.html">Electron 教程</a>
+	<a href="../fastapi.html">FastAPI 教程</a>
+	<a href="../firebug.html">Firebug 教程</a>
+	<a href="../flask.html">Flask 教程</a>
+	<a href="../flutter.html">Flutter 教程</a>
+	<a href="../font-awesome.html">Font Awesome 图标</a>
+	<a href="../foundation.html">Foundation 教程</a>
+	<a href="../git.html">Git 教程</a>
+	<a href="../go.html">Go 语言教程</a>
+	<a href="../googleapi.html">Google 地图 API 教程</a>
+	<a href="../hermes-agent.html">Hermes Agent</a>
+	<a href="../highcharts.html">Highcharts 教程</a>
+	<a href="../htmldom.html">HTML DOM 教程</a>
+	<a href="../tags.html">HTML 参考手册</a>
+	<a href="../charsets.html">HTML 字符集</a>
+	<a href="../html.html">HTML 教程</a>
+	<a href="../http.html">HTTP 教程</a>
+	<a href="../ionic.html">ionic 教程</a>
+	<a href="../ios.html">iOS 教程</a>
+	<a href="../java.html">Java 教程</a>
+	<a href="../jsref.html">JavaScript 参考手册</a>
+	<a href="../js.html">Javascript 教程</a>
+	<a href="../jeasyui.html">jQuery EasyUI 教程</a>
+	<a href="../jquerymobile.html">jQuery Mobile 教程</a>
+	<a href="../jqueryui.html">jQuery UI 教程</a>
+	<a href="../jquery.html">jQuery 教程</a>
+	<a href="../json.html">JSON 教程</a>
+	<a href="../jsp.html">JSP 教程</a>
+	<a href="../julia.html">Julia 教程</a>
+	<a href="../jupyter-notebook.html">Jupyter Notebook 教程</a>
+	<a href="../kotlin.html">Kotlin 教程</a>
+	<a href="../langchain.html">LangChain 教程</a>
+	<a href="../latex.html">LaTeX 教程</a>
+	<a href="../linux.html">Linux 教程</a>
+	<a href="../lua.html">Lua 教程</a>
+	<a href="../markdown.html">Markdown 教程</a>
+	<a href="../matplotlib.html">Matplotlib 教程</a>
+	<a href="../maven.html">Maven 教程</a>
+	<a href="../memcached.html">Memcached 教程</a>
+	<a href="../mongodb.html">MongoDB 教程</a>
+	<a href="../mysql.html">MySQL 教程</a>
+	<a href="../nextjs.html">Next.js 教程</a>
+	<a href="../nlp.html">NLP 教程</a>
+	<a href="../nodejs.html">Node.js 教程</a>
+	<a href="../numpy.html">NumPy 教程</a>
+	<a href="../obsidian.html">Obsidian 教程</a>
+	<a href="../ollama.html">Ollama 教程</a>
+	<a href="../opencode.html">OpenCode 教程</a>
+	<a href="../opencv.html">OpenCV 教程</a>
+	<a href="../pandas.html">Pandas 教程</a>
+	<a href="../perl.html">Perl 教程</a>
+	<a href="../php.html">PHP 教程</a>
+	<a href="../pi-agent.html">Pi Agent</a>
+	<a href="../pillow.html">Pillow 教程</a>
+	<a href="../playwright.html">Playwright 教程</a>
+	<a href="../postgresql.html">PostgreSQL 教程</a>
+	<a href="../powershell.html">PowerShell</a>
+	<a href="../pycharm.html">Pycharm 教程</a>
+	<a href="../python3.html">Python 3 教程</a>
+	<a href="../python.html">Python 基础教程</a>
+	<a href="../python-design-pattern.html">Python 设计模式</a>
+	<a href="/python-qt.html">Python 量化交易</a>
+	<a href="../pytorch.html">PyTorch 教程</a>
+	<a href="../r.html">R 教程</a>
+	<a href="../rdf.html">RDF 教程</a>
+	<a href="../react.html">React 教程</a>
+	<a href="../redis.html">Redis 教程</a>
+	<a href="/restfulapi.html">RESTful API</a>
+	<a href="../rss.html">RSS 教程</a>
+	<a href="../ruby.html">Ruby 教程</a>
+	<a href="../rust.html">Rust 教程</a>
+	<a href="../sass.html">Sass 教程</a>
+	<a href="../scala.html">Scala 教程</a>
+	<a href="../scipy.html">SciPy 教程</a>
+	<a href="../selenium.html">Selenium 教程</a>
+	<a href="../servlet.html">Servlet 教程</a>
+	<a href="../skills.html">Skills 教程</a>
+	<a href="../sklearn.html">Sklearn 教程</a>
+	<a href="../soap.html">SOAP 教程</a>
+	<a href="../sql.html">SQL 教程</a>
+	<a href="../sqlite.html">SQLite 教程</a>
+	<a href="../svg.html">SVG 教程</a>
+	<a href="../svn.html">SVN 教程</a>
+	<a href="../swagger.html">Swagger 教程</a>
+	<a href="../swift.html">Swift 教程</a>
+	<a href="../tailwindcss.html">Tailwind CSS 教程</a>
+	<a href="../tcpip.html">TCP/IP 教程</a>
+	<a href="../tensorflow.html">TensorFlow 教程</a>
+	<a href="../typescript.html">TypeScript 教程</a>
+	<a href="../uniapp.html">uni-app 教程</a>
+	<a href="../vbscript.html">VBScript 教程</a>
+	<a href="../vibe-coding.html">Vibe Coding 教程</a>
+	<a href="../vscode.html">VSCode 教程</a>
+	<a href="../vue2.html">Vue.js 教程</a>
+	<a href="../vue3.html">Vue3 教程</a>
+	<a href="../w3c.html">W3C 教程</a>
+	<a href="../webservices.html">Web Service 教程</a>
+	<a href="../wsdl.html">WSDL 教程</a>
+	<a href="../xlink.html">XLink 教程</a>
+	<a href="../dom.html">XML DOM 教程</a>
+	<a href="../schema.html">XML Schema 教程</a>
+	<a href="../xml.html">XML 教程</a>
+	<a href="../xpath.html">XPath 教程</a>
+	<a href="../xquery.html">XQuery 教程</a>
+	<a href="../xslfo.html">XSLFO 教程</a>
+	<a href="../xsl.html">XSLT 教程</a>
+	<a href="../zig.html">Zig 教程</a>
+	<a href="../data-structures.html">数据结构</a>
+	<a href="../ml.html">机器学习</a>
+	<a href="../regexp.html">正则表达式</a>
+	<a href="../assembly.html">汇编语言</a>
+	<a href="../quiz.html">测验</a>
+	<a href="../browsers.html">浏览器</a>
+	<a href="../quality.html">网站品质</a>
+	<a href="/web.html">网站建设指南</a>
+	<a href="../hosting.html">网站服务器教程</a>
+	<a href="../np.html">网络协议</a>
+	<a href="../computer-organization.html">计算机组成原理</a>
+	<a href="../design-pattern.html">设计模式</a>
+			
+		</div> 
+		 	 </div>
+</div>
+	</div>
+</div>
+
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="../ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="../for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matplotlib 常用函数 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/matplotlib/matplotlib-func.html" />
+<meta name="keywords" content="Matplotlib 常用函数">
+<meta name="description" content="Matplotlib 采用函数 Matplotlib 是 Python 中最广泛使用的数据可视化库，支持创建静态、动态和交互式图表。 本文档完整整理了 Matplotlib 所有公开接口的函数和方法，方便快速查阅对应的功能与用法。   两大编程接口 Matplotlib 提供了两种使用方式，适用于不同场景。      特性   Axes 接口（显式/面向对象）   pyplot 接口（隐式/函数式）     使用方式   先创建 Fig..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>Matplotlib 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="Matplotlib 教程"  href="/matplotlib/matplotlib-tutorial.html" >
+			Matplotlib 教程			</a>
+						<a target="_top" data-p="par" title="Matplotlib 安装"  href="/matplotlib/matplotlib-install.html" >
+			Matplotlib 安装			</a>
+						<a target="_top" data-p="par" title="Matplotlib Pyplot"  href="/matplotlib/matplotlib-pyplot.html" >
+			Matplotlib Pyplot			</a>
+						<a target="_top" data-p="par" title="Matplotlib 绘图标记"  href="/matplotlib/matplotlib-marker.html" >
+			Matplotlib 绘图标记			</a>
+						<a target="_top" data-p="par" title="Matplotlib 绘图线"  href="/matplotlib/matplotlib-line.html" >
+			Matplotlib 绘图线			</a>
+						<a target="_top" data-p="par" title="Matplotlib 轴标签和标题"  href="/matplotlib/matplotlib-label.html" >
+			Matplotlib 轴标签和标题			</a>
+						<a target="_top" data-p="par" title="Matplotlib 网格线"  href="/matplotlib/matplotlib-grid.html" >
+			Matplotlib 网格线			</a>
+						<a target="_top" data-p="par" title="Matplotlib 绘制多图"  href="/matplotlib/matplotlib-subplots.html" >
+			Matplotlib 绘制多图			</a>
+						<a target="_top" data-p="par" title="Matplotlib 散点图"  href="/matplotlib/matplotlib-scatter.html" >
+			Matplotlib 散点图			</a>
+						<a target="_top" data-p="par" title="Matplotlib 柱形图"  href="/matplotlib/matplotlib-bar.html" >
+			Matplotlib 柱形图			</a>
+						<a target="_top" data-p="par" title="Matplotlib 饼图"  href="/matplotlib/matplotlib-pie.html" >
+			Matplotlib 饼图			</a>
+						<a target="_top" data-p="par" title="Matplotlib 直方图"  href="/matplotlib/matplotlib-hist.html" >
+			Matplotlib 直方图			</a>
+						<a target="_top" data-p="par" title="Matplotlib imshow() 方法"  href="/matplotlib/matplotlib-imshow.html" >
+			Matplotlib imshow()			</a>
+						<a target="_top" data-p="par" title="Matplotlib imsave() 方法"  href="/matplotlib/matplotlib-imsave.html" >
+			Matplotlib imsave()			</a>
+						<a target="_top" data-p="par" title="Matplotlib imread() 方法"  href="/matplotlib/matplotlib-imread.html" >
+			Matplotlib imread()			</a>
+						<a target="_top" data-p="par" title="Matplotlib 中文显示"  href="/matplotlib/matplotlib-zh.html" >
+			Matplotlib 中文显示			</a>
+						<a target="_top" data-p="par" title="Seaborn 教程"  href="/matplotlib/seaborn-tutorial.html" >
+			Seaborn 教程			</a>
+						<a target="_top" data-p="par" title="Matplotlib 常用函数"  href="/matplotlib/matplotlib-func.html" >
+			Matplotlib 常用函数			</a>
+						<a target="_top" data-p="par" title="Matplotlib 参考文档"  href="/matplotlib/matplotlib-apiref.html" >
+			Matplotlib 参考文档			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/matplotlib/seaborn-tutorial.html" rel="prev"> Seaborn 教程</a> </div>
+			<div class="next-design-link"><a href="/matplotlib/matplotlib-ref-2d-plots.html" rel="next"> Matplotlib 二维数据与统计图函数</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Matplotlib 采用函数</h1>
+<p>Matplotlib 是 Python 中最广泛使用的数据可视化库，支持创建静态、动态和交互式图表。</p>
+<p>本文档完整整理了 Matplotlib 所有公开接口的函数和方法，方便快速查阅对应的功能与用法。</p>
+<hr>
+
+<h2>两大编程接口</h2>
+<p>Matplotlib 提供了两种使用方式，适用于不同场景。</p>
+
+<table class="reference">
+<tr>
+  <th>特性</th>
+  <th>Axes 接口（显式/面向对象）</th>
+  <th>pyplot 接口（隐式/函数式）</th>
+</tr>
+<tr>
+  <td>使用方式</td>
+  <td>先创建 Figure 和 Axes 对象，再调用对象方法</td>
+  <td>直接调用 pyplot 模块函数，隐式操作当前图表</td>
+</tr>
+<tr>
+  <td>适用场景</td>
+  <td>复杂图表、多子图、需要精细控制</td>
+  <td>快速绘图、交互式探索、简单图表</td>
+</tr>
+<tr>
+  <td>代码示例</td>
+  <td>fig, ax = plt.subplots(); ax.plot(x, y)</td>
+  <td>plt.plot(x, y); plt.title("标题")</td>
+</tr>
+<tr>
+  <td>推荐程度</td>
+  <td><span class="tag1 green">推荐</span>（更清晰、更可控）</td>
+  <td>适合简单场景和快速原型</td>
+</tr>
+</table>
+
+<blockquote><p>Axes 接口是官方推荐的编程方式，代码逻辑更清晰，在处理多子图和复杂图表时不易出错。为了方便速查，下文同时列出 pyplot 函数和对应的 Axes 方法。</p></blockquote>
+
+<hr>
+
+<h2>pyplot 模块 - 全部函数列表</h2>
+<p>pyplot 是 Matplotlib 的顶层接口，提供类似 MATLAB 的绘图体验。以下按官方分类列出所有函数。</p>
+
+<h3>1. Figure 与 Axes 管理</h3>
+<p>创建和管理 Figure（画布）与 Axes（坐标系/子图）的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>figure()</td><td>创建新的 Figure 或激活已有 Figure</td></tr>
+<tr><td>subplots()</td><td><span class="tag1 green">推荐</span> 创建 Figure 和一组 Axes 子图</td></tr>
+<tr><td>subplot()</td><td>添加单个子图到当前 Figure（按行列索引）</td></tr>
+<tr><td>subplot2grid()</td><td>在网格布局的指定位置创建子图</td></tr>
+<tr><td>subplot_mosaic()</td><td>使用标签字符串创建复杂非均匀布局</td></tr>
+<tr><td>axes()</td><td>在当前 Figure 中添加一个 Axes</td></tr>
+<tr><td>gca()</td><td>获取当前 Axes 对象</td></tr>
+<tr><td>gcf()</td><td>获取当前 Figure 对象</td></tr>
+<tr><td>sca()</td><td>设置当前 Axes</td></tr>
+<tr><td>cla()</td><td>清除当前 Axes</td></tr>
+<tr><td>clf()</td><td>清除当前 Figure</td></tr>
+<tr><td>close()</td><td>关闭 Figure 窗口</td></tr>
+<tr><td>delaxes()</td><td>从 Figure 中移除指定的 Axes</td></tr>
+<tr><td>fignum_exists()</td><td>检查指定编号的 Figure 是否存在</td></tr>
+<tr><td>get_figlabels()</td><td>返回所有 Figure 的标签列表</td></tr>
+<tr><td>get_fignums()</td><td>返回所有 Figure 的编号列表</td></tr>
+<tr><td>twinx()</td><td>创建共享 x 轴的双 y 轴</td></tr>
+<tr><td>twiny()</td><td>创建共享 y 轴的双 x 轴</td></tr>
+</table>
+
+<h3>2. 基本绘图</h3>
+<p>最常用的图表类型绘制函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>plot()</td><td>绘制折线图（最常用）</td></tr>
+<tr><td>scatter()</td><td>绘制散点图，支持大小/颜色/透明度映射</td></tr>
+<tr><td>bar()</td><td>绘制垂直柱状图</td></tr>
+<tr><td>barh()</td><td>绘制水平柱状图</td></tr>
+<tr><td>bar_label()</td><td>在柱状图的柱子上添加数值标签</td></tr>
+<tr><td>grouped_bar()</td><td>绘制分组柱状图</td></tr>
+<tr><td>pie()</td><td>绘制饼图</td></tr>
+<tr><td>pie_label()</td><td>在饼图上添加标签</td></tr>
+<tr><td>stem()</td><td>绘制茎叶图（火柴杆图）</td></tr>
+<tr><td>eventplot()</td><td>绘制事件图（多条水平线标记事件位置）</td></tr>
+<tr><td>step()</td><td>绘制阶梯图</td></tr>
+<tr><td>fill()</td><td>绘制填充多边形</td></tr>
+<tr><td>fill_between()</td><td>填充两条水平曲线之间的区域</td></tr>
+<tr><td>fill_betweenx()</td><td>填充两条垂直曲线之间的区域</td></tr>
+<tr><td>stackplot()</td><td>绘制堆叠面积图</td></tr>
+<tr><td>broken_barh()</td><td>绘制水平断条图（甘特图风格）</td></tr>
+<tr><td>vlines()</td><td>绘制垂直参考线</td></tr>
+<tr><td>hlines()</td><td>绘制水平参考线</td></tr>
+<tr><td>errorbar()</td><td>绘制带误差棒的折线图</td></tr>
+<tr><td>loglog()</td><td>双对数坐标折线图</td></tr>
+<tr><td>semilogx()</td><td>x 轴对数坐标折线图</td></tr>
+<tr><td>semilogy()</td><td>y 轴对数坐标折线图</td></tr>
+<tr><td>polar()</td><td>在极坐标系中绘图</td></tr>
+</table>
+
+<h3>3. 跨度线（Spans）</h3>
+<p>绘制水平和垂直的参考线与着色区域。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>axhline()</td><td>添加横跨 Axes 的水平线</td></tr>
+<tr><td>axhspan()</td><td>添加横跨 Axes 的水平着色带</td></tr>
+<tr><td>axvline()</td><td>添加纵跨 Axes 的垂直线</td></tr>
+<tr><td>axvspan()</td><td>添加纵跨 Axes 的垂直着色带</td></tr>
+<tr><td>axline()</td><td>添加通过两点的无限长直线</td></tr>
+</table>
+
+<h3>4. 频谱分析</h3>
+<p>用于信号处理和频谱可视化的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>acorr()</td><td>绘制自相关图</td></tr>
+<tr><td>xcorr()</td><td>绘制互相关图</td></tr>
+<tr><td>angle_spectrum()</td><td>绘制角度频谱</td></tr>
+<tr><td>magnitude_spectrum()</td><td>绘制幅度频谱</td></tr>
+<tr><td>phase_spectrum()</td><td>绘制相位频谱</td></tr>
+<tr><td>psd()</td><td>绘制功率谱密度</td></tr>
+<tr><td>csd()</td><td>绘制互谱密度</td></tr>
+<tr><td>cohere()</td><td>绘制相干性</td></tr>
+<tr><td>specgram()</td><td>绘制频谱图（时频图）</td></tr>
+</table>
+
+<h3>5. 统计图</h3>
+<p>绘制统计分布相关的图表。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>boxplot()</td><td>绘制箱线图</td></tr>
+<tr><td>violinplot()</td><td>绘制小提琴图</td></tr>
+<tr><td>ecdf()</td><td>绘制经验累积分布函数（ECDF）</td></tr>
+</table>
+
+<h3>6. 分箱与直方图</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>hist()</td><td>绘制一维直方图</td></tr>
+<tr><td>hist2d()</td><td>绘制二维直方图</td></tr>
+<tr><td>hexbin()</td><td>绘制六边形分箱图</td></tr>
+<tr><td>stairs()</td><td>绘制阶梯直方图（新版，替代 hist 的 step 模式）</td></tr>
+</table>
+
+<h3>7. 等高线</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>contour()</td><td>绘制等高线</td></tr>
+<tr><td>contourf()</td><td>绘制填充等高线</td></tr>
+<tr><td>clabel()</td><td>给等高线添加标签</td></tr>
+</table>
+
+<h3>8. 二维数组与图像</h3>
+<p>展示二维数据、矩阵和图像的可视化函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>imshow()</td><td>显示图像或二维数组（热力图）</td></tr>
+<tr><td>matshow()</td><td>将矩阵显示为新 Figure 中的图像</td></tr>
+<tr><td>pcolor()</td><td>绘制伪彩色网格图（创建 PolyCollection）</td></tr>
+<tr><td>pcolormesh()</td><td>绘制伪彩色网格图（创建 QuadMesh，性能更好）</td></tr>
+<tr><td>spy()</td><td>绘制稀疏矩阵的非零元素图案</td></tr>
+<tr><td>figimage()</td><td>在 Figure 级别（非 Axes）放置图像</td></tr>
+</table>
+
+<h3>9. 非结构化三角网格</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>triplot()</td><td>绘制非结构化三角网格</td></tr>
+<tr><td>tripcolor()</td><td>绘制三角网格伪彩色图</td></tr>
+<tr><td>tricontour()</td><td>在三角网格上绘制等高线</td></tr>
+<tr><td>tricontourf()</td><td>在三角网格上绘制填充等高线</td></tr>
+</table>
+
+<h3>10. 文本与标注</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>text()</td><td>在 Axes 指定坐标添加文本</td></tr>
+<tr><td>figtext()</td><td>在 Figure 指定位置添加文本</td></tr>
+<tr><td>annotate()</td><td>添加带箭头的标注</td></tr>
+<tr><td>arrow()</td><td>添加箭头</td></tr>
+<tr><td>legend()</td><td>在 Axes 中添加图例</td></tr>
+<tr><td>figlegend()</td><td>在 Figure 级别添加图例</td></tr>
+<tr><td>table()</td><td>在 Axes 中添加表格</td></tr>
+</table>
+
+<h3>11. 矢量场</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>quiver()</td><td>绘制矢量场（箭头图）</td></tr>
+<tr><td>quiverkey()</td><td>给矢量场添加图例标尺</td></tr>
+<tr><td>barbs()</td><td>绘制风羽图（气象学中表示风速和风向）</td></tr>
+<tr><td>streamplot()</td><td>绘制流线图</td></tr>
+</table>
+
+<h3>12. 坐标轴配置</h3>
+<p>设置坐标轴范围、刻度、标签和比例的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>title()</td><td>设置 Axes 标题</td></tr>
+<tr><td>suptitle()</td><td>设置 Figure 总标题</td></tr>
+<tr><td>xlabel()</td><td>设置 x 轴标签</td></tr>
+<tr><td>ylabel()</td><td>设置 y 轴标签</td></tr>
+<tr><td>xlim()</td><td>获取或设置 x 轴范围</td></tr>
+<tr><td>ylim()</td><td>获取或设置 y 轴范围</td></tr>
+<tr><td>xscale()</td><td>设置 x 轴比例（linear/log/symlog/logit...）</td></tr>
+<tr><td>yscale()</td><td>设置 y 轴比例（linear/log/symlog/logit...）</td></tr>
+<tr><td>xticks()</td><td>获取或设置 x 轴刻度位置和标签</td></tr>
+<tr><td>yticks()</td><td>获取或设置 y 轴刻度位置和标签</td></tr>
+<tr><td>tick_params()</td><td>调整刻度外观（方向、颜色、大小、标签旋转等）</td></tr>
+<tr><td>ticklabel_format()</td><td>设置刻度标签的格式（科学计数法等）</td></tr>
+<tr><td>locator_params()</td><td>控制刻度定位器的参数</td></tr>
+<tr><td>minorticks_on()</td><td>显示次要刻度</td></tr>
+<tr><td>minorticks_off()</td><td>隐藏次要刻度</td></tr>
+<tr><td>rgrids()</td><td>获取或设置极坐标图的径向网格线</td></tr>
+<tr><td>thetagrids()</td><td>获取或设置极坐标图的角度网格线</td></tr>
+<tr><td>grid()</td><td>开启或关闭网格线</td></tr>
+<tr><td>axis()</td><td>获取或设置某些轴属性的便捷函数</td></tr>
+<tr><td>box()</td><td>开启或关闭 Axes 的边框线</td></tr>
+<tr><td>autoscale()</td><td>自动缩放坐标轴以适应数据</td></tr>
+</table>
+
+<h3>13. 布局</h3>
+<p>控制子图排列和间距的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>subplots_adjust()</td><td>手动调整子图间距（left/right/top/bottom/wspace/hspace）</td></tr>
+<tr><td>tight_layout()</td><td>自动调整子图参数使之紧凑排列</td></tr>
+<tr><td>margins()</td><td>设置或获取坐标轴的数据边距</td></tr>
+<tr><td>subplot_tool()</td><td>启动交互式子图调整工具窗口</td></tr>
+</table>
+
+<h3>14. 颜色映射</h3>
+<p>与 colormap 和颜色条相关的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>colorbar()</td><td>添加颜色条</td></tr>
+<tr><td>clim()</td><td>设置颜色映射的数据范围</td></tr>
+<tr><td>get_cmap()</td><td>获取指定名称的 colormap 对象</td></tr>
+<tr><td>set_cmap()</td><td>设置默认 colormap</td></tr>
+<tr><td>gci()</td><td>获取当前可映射颜色的图像对象</td></tr>
+<tr><td>sci()</td><td>设置当前可映射颜色的图像对象</td></tr>
+<tr><td>imread()</td><td>从文件读取图像到数组</td></tr>
+<tr><td>imsave()</td><td>将数组保存为图像文件</td></tr>
+<tr><td>colormaps</td><td>colormap 注册表对象</td></tr>
+<tr><td>color_sequences</td><td>颜色序列注册表对象</td></tr>
+</table>
+
+<h3>15. 配置</h3>
+<p>管理 Matplotlib 全局配置参数的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>rc()</td><td>设置 rc 参数（可批量设置）</td></tr>
+<tr><td>rc_context()</td><td>临时设置 rc 参数的上下文管理器</td></tr>
+<tr><td>rcdefaults()</td><td>恢复所有 rc 参数为默认值</td></tr>
+</table>
+
+<h3>16. 输出与交互</h3>
+<p>控制图表显示、保存和交互模式的函数。</p>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>show()</td><td>显示所有打开的 Figure</td></tr>
+<tr><td>savefig()</td><td>保存当前 Figure 到文件</td></tr>
+<tr><td>draw()</td><td>强制重新渲染当前 Figure</td></tr>
+<tr><td>draw_if_interactive()</td><td>如果在交互模式则渲染 Figure</td></tr>
+<tr><td>pause()</td><td>暂停指定的秒数（期间处理事件）</td></tr>
+<tr><td>ion()</td><td>开启交互模式</td></tr>
+<tr><td>ioff()</td><td>关闭交互模式</td></tr>
+<tr><td>isinteractive()</td><td>返回当前是否处于交互模式</td></tr>
+<tr><td>install_repl_displayhook()</td><td>安装 REPL 显示钩子（使 Figure 自动显示）</td></tr>
+<tr><td>uninstall_repl_displayhook()</td><td>卸载 REPL 显示钩子</td></tr>
+<tr><td>switch_backend()</td><td>切换后端</td></tr>
+</table>
+
+<h3>17. 其他工具函数</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>connect()</td><td>绑定事件回调函数</td></tr>
+<tr><td>disconnect()</td><td>解绑事件回调函数</td></tr>
+<tr><td>ginput()</td><td>通过鼠标点击获取坐标点</td></tr>
+<tr><td>waitforbuttonpress()</td><td>等待鼠标或键盘按下，返回事件类型</td></tr>
+<tr><td>findobj()</td><td>查找匹配指定条件的 Artist 对象</td></tr>
+<tr><td>get()</td><td>获取 Artist 对象的属性值</td></tr>
+<tr><td>getp()</td><td>获取 Artist 对象的属性（get 的别名）</td></tr>
+<tr><td>setp()</td><td>设置 Artist 对象的属性</td></tr>
+<tr><td>get_current_fig_manager()</td><td>获取当前 Figure 的窗口管理器</td></tr>
+<tr><td>new_figure_manager()</td><td>为指定 Figure 创建新的 Figure 管理器</td></tr>
+<tr><td>set_loglevel()</td><td>设置 Matplotlib 日志级别</td></tr>
+<tr><td>xkcd()</td><td>切换为 xkcd（手绘漫画）风格</td></tr>
+</table>
+
+<hr>
+
+<h2>Axes 对象 - 全部方法列表</h2>
+<p>Axes（Axes 对象）代表 Figure 中的一个子图，包含数据、刻度、标签、标题等。以下按官方分类完整列出所有方法。</p>
+
+<h3>1. 基本绘图方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.plot()</td><td>折线图</td></tr>
+<tr><td>Axes.scatter()</td><td>散点图</td></tr>
+<tr><td>Axes.bar()</td><td>垂直柱状图</td></tr>
+<tr><td>Axes.barh()</td><td>水平柱状图</td></tr>
+<tr><td>Axes.bar_label()</td><td>在柱子上添加数值标签</td></tr>
+<tr><td>Axes.grouped_bar()</td><td>分组柱状图</td></tr>
+<tr><td>Axes.pie()</td><td>饼图</td></tr>
+<tr><td>Axes.pie_label()</td><td>饼图标签</td></tr>
+<tr><td>Axes.stem()</td><td>茎叶图</td></tr>
+<tr><td>Axes.eventplot()</td><td>事件图</td></tr>
+<tr><td>Axes.step()</td><td>阶梯图</td></tr>
+<tr><td>Axes.fill()</td><td>填充多边形</td></tr>
+<tr><td>Axes.fill_between()</td><td>水平填充区域</td></tr>
+<tr><td>Axes.fill_betweenx()</td><td>垂直填充区域</td></tr>
+<tr><td>Axes.stackplot()</td><td>堆叠面积图</td></tr>
+<tr><td>Axes.broken_barh()</td><td>水平断条图</td></tr>
+<tr><td>Axes.vlines()</td><td>垂直参考线</td></tr>
+<tr><td>Axes.hlines()</td><td>水平参考线</td></tr>
+<tr><td>Axes.errorbar()</td><td>带误差棒折线图</td></tr>
+<tr><td>Axes.loglog()</td><td>双对数坐标</td></tr>
+<tr><td>Axes.semilogx()</td><td>x 轴对数坐标</td></tr>
+<tr><td>Axes.semilogy()</td><td>y 轴对数坐标</td></tr>
+</table>
+
+<h3>2. 跨度线方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.axhline()</td><td>水平参考线</td></tr>
+<tr><td>Axes.axvline()</td><td>垂直参考线</td></tr>
+<tr><td>Axes.axhspan()</td><td>水平着色带</td></tr>
+<tr><td>Axes.axvspan()</td><td>垂直着色带</td></tr>
+<tr><td>Axes.axline()</td><td>通过两点的无限长直线</td></tr>
+</table>
+
+<h3>3. 频谱分析方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.acorr()</td><td>自相关图</td></tr>
+<tr><td>Axes.xcorr()</td><td>互相关图</td></tr>
+<tr><td>Axes.angle_spectrum()</td><td>角度频谱</td></tr>
+<tr><td>Axes.magnitude_spectrum()</td><td>幅度频谱</td></tr>
+<tr><td>Axes.phase_spectrum()</td><td>相位频谱</td></tr>
+<tr><td>Axes.psd()</td><td>功率谱密度</td></tr>
+<tr><td>Axes.csd()</td><td>互谱密度</td></tr>
+<tr><td>Axes.cohere()</td><td>相干性</td></tr>
+<tr><td>Axes.specgram()</td><td>频谱图（时频图）</td></tr>
+</table>
+
+<h3>4. 统计方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.boxplot()</td><td>箱线图</td></tr>
+<tr><td>Axes.bxp()</td><td>从预先计算的统计数据绘制箱线图</td></tr>
+<tr><td>Axes.violinplot()</td><td>小提琴图</td></tr>
+<tr><td>Axes.violin()</td><td>从预先计算的统计数据绘制小提琴图</td></tr>
+<tr><td>Axes.ecdf()</td><td>经验累积分布函数</td></tr>
+</table>
+
+<h3>5. 分箱与直方图方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.hist()</td><td>直方图</td></tr>
+<tr><td>Axes.hist2d()</td><td>二维直方图</td></tr>
+<tr><td>Axes.hexbin()</td><td>六边形分箱图</td></tr>
+<tr><td>Axes.stairs()</td><td>阶梯直方图</td></tr>
+</table>
+
+<h3>6. 等高线方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.contour()</td><td>等高线</td></tr>
+<tr><td>Axes.contourf()</td><td>填充等高线</td></tr>
+<tr><td>Axes.clabel()</td><td>等高线标签</td></tr>
+</table>
+
+<h3>7. 二维数组方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.imshow()</td><td>显示图像/热力图</td></tr>
+<tr><td>Axes.matshow()</td><td>矩阵图像</td></tr>
+<tr><td>Axes.pcolor()</td><td>伪彩色网格（PolyCollection）</td></tr>
+<tr><td>Axes.pcolorfast()</td><td>快速伪彩色（使用 imshow 绘制）</td></tr>
+<tr><td>Axes.pcolormesh()</td><td>伪彩色网格（QuadMesh，推荐）</td></tr>
+<tr><td>Axes.spy()</td><td>稀疏矩阵图案</td></tr>
+</table>
+
+<h3>8. 非结构化三角网格方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.triplot()</td><td>三角网格线</td></tr>
+<tr><td>Axes.tripcolor()</td><td>三角网格伪彩色</td></tr>
+<tr><td>Axes.tricontour()</td><td>三角网格等高线</td></tr>
+<tr><td>Axes.tricontourf()</td><td>三角网格填充等高线</td></tr>
+</table>
+
+<h3>9. 文本与标注方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.text()</td><td>添加文本</td></tr>
+<tr><td>Axes.annotate()</td><td>添加带箭头的标注</td></tr>
+<tr><td>Axes.table()</td><td>添加表格</td></tr>
+<tr><td>Axes.arrow()</td><td>添加箭头</td></tr>
+<tr><td>Axes.inset_axes()</td><td>在 Axes 内创建嵌入子图</td></tr>
+<tr><td>Axes.indicate_inset()</td><td>在父 Axes 上标记嵌入子图区域</td></tr>
+<tr><td>Axes.indicate_inset_zoom()</td><td>标记嵌入子图的放大区域</td></tr>
+<tr><td>Axes.secondary_xaxis()</td><td>添加辅助 x 轴（在另一位置显示相同数据）</td></tr>
+<tr><td>Axes.secondary_yaxis()</td><td>添加辅助 y 轴</td></tr>
+</table>
+
+<h3>10. 矢量场方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.quiver()</td><td>矢量场（箭头图）</td></tr>
+<tr><td>Axes.quiverkey()</td><td>矢量场图例标尺</td></tr>
+<tr><td>Axes.barbs()</td><td>风羽图</td></tr>
+<tr><td>Axes.streamplot()</td><td>流线图</td></tr>
+</table>
+
+<h3>11. 清除方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.cla()</td><td>清除 Axes 中的所有内容</td></tr>
+<tr><td>Axes.clear()</td><td>清除 Axes（与 cla() 相同）</td></tr>
+</table>
+
+<h3>12. 外观方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.axis()</td><td>设置轴可见性或范围</td></tr>
+<tr><td>Axes.set_axis_off()</td><td>隐藏坐标轴</td></tr>
+<tr><td>Axes.set_axis_on()</td><td>显示坐标轴</td></tr>
+<tr><td>Axes.set_frame_on()</td><td>显示 Axes 边框</td></tr>
+<tr><td>Axes.get_frame_on()</td><td>获取边框是否可见</td></tr>
+<tr><td>Axes.set_axisbelow()</td><td>设置网格/刻度是否在数据下方</td></tr>
+<tr><td>Axes.get_axisbelow()</td><td>获取网格/刻度层级</td></tr>
+<tr><td>Axes.grid()</td><td>设置网格线</td></tr>
+<tr><td>Axes.get_facecolor()</td><td>获取 Axes 背景色</td></tr>
+<tr><td>Axes.set_facecolor()</td><td>设置 Axes 背景色</td></tr>
+</table>
+
+<h3>13. 属性循环</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set_prop_cycle()</td><td>设置线条颜色/线型等属性的循环</td></tr>
+</table>
+
+<h3>14. 坐标轴与刻度控制</h3>
+
+<p>坐标轴访问：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.xaxis / Axes.yaxis</td><td>获取 x/y 轴的 Axis 对象（属性）</td></tr>
+<tr><td>Axes.get_xaxis() / get_yaxis()</td><td>获取 x/y 轴的 Axis 对象</td></tr>
+</table>
+
+<p>坐标轴范围与方向：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set_xlim() / get_xlim()</td><td>设置/获取 x 轴范围</td></tr>
+<tr><td>Axes.set_ylim() / get_ylim()</td><td>设置/获取 y 轴范围</td></tr>
+<tr><td>Axes.set_xbound() / get_xbound()</td><td>设置/获取 x 轴的下界和上界</td></tr>
+<tr><td>Axes.set_ybound() / get_ybound()</td><td>设置/获取 y 轴的下界和上界</td></tr>
+<tr><td>Axes.invert_xaxis()</td><td>反转 x 轴方向</td></tr>
+<tr><td>Axes.invert_yaxis()</td><td>反转 y 轴方向</td></tr>
+<tr><td>Axes.xaxis_inverted() / yaxis_inverted()</td><td>查询轴是否反转</td></tr>
+<tr><td>Axes.set_xinverted() / get_xinverted()</td><td>设置/获取 x 轴是否反转</td></tr>
+<tr><td>Axes.set_yinverted() / get_yinverted()</td><td>设置/获取 y 轴是否反转</td></tr>
+<tr><td>Axes.update_datalim()</td><td>用新数据点扩展数据范围</td></tr>
+</table>
+
+<p>坐标轴标签与图例：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set_xlabel() / get_xlabel()</td><td>设置/获取 x 轴标签</td></tr>
+<tr><td>Axes.set_ylabel() / get_ylabel()</td><td>设置/获取 y 轴标签</td></tr>
+<tr><td>Axes.label_outer()</td><td>仅保留最外侧子图的刻度标签</td></tr>
+<tr><td>Axes.set_title() / get_title()</td><td>设置/获取 Axes 标题</td></tr>
+<tr><td>Axes.legend()</td><td>添加图例</td></tr>
+<tr><td>Axes.get_legend()</td><td>获取当前图例对象</td></tr>
+<tr><td>Axes.get_legend_handles_labels()</td><td>获取图例的句柄和标签</td></tr>
+</table>
+
+<p>坐标轴比例：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set_xscale() / get_xscale()</td><td>设置/获取 x 轴比例</td></tr>
+<tr><td>Axes.set_yscale() / get_yscale()</td><td>设置/获取 y 轴比例</td></tr>
+</table>
+
+<p>自动缩放和边距：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.autoscale()</td><td>自动缩放视图以适应数据</td></tr>
+<tr><td>Axes.autoscale_view()</td><td>仅自动缩放视图（不改变边距）</td></tr>
+<tr><td>Axes.margins()</td><td>设置或获取数据边距</td></tr>
+<tr><td>Axes.relim()</td><td>根据当前 Artist 重新计算数据范围</td></tr>
+<tr><td>Axes.use_sticky_edges()</td><td>使用粘性边距</td></tr>
+<tr><td>Axes.set_xmargin() / get_xmargin()</td><td>设置/获取 x 轴边距</td></tr>
+<tr><td>Axes.set_ymargin() / get_ymargin()</td><td>设置/获取 y 轴边距</td></tr>
+<tr><td>Axes.set_autoscale_on() / get_autoscale_on()</td><td>设置/获取是否自动缩放</td></tr>
+<tr><td>Axes.set_autoscalex_on() / get_autoscalex_on()</td><td>设置/获取 x 轴是否自动缩放</td></tr>
+<tr><td>Axes.set_autoscaley_on() / get_autoscaley_on()</td><td>设置/获取 y 轴是否自动缩放</td></tr>
+</table>
+
+<p>宽高比：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set_aspect() / get_aspect()</td><td>设置/获取坐标轴宽高比（'equal'/'auto'/数值）</td></tr>
+<tr><td>Axes.set_box_aspect() / get_box_aspect()</td><td>设置/获取 Axes 盒子宽高比</td></tr>
+<tr><td>Axes.apply_aspect()</td><td>应用当前宽高比设置</td></tr>
+<tr><td>Axes.set_adjustable() / get_adjustable()</td><td>设置/获取可调整的方向（'box'/'datalim'）</td></tr>
+</table>
+
+<p>刻度和刻度标签：</p>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set_xticks() / get_xticks()</td><td>设置/获取 x 轴刻度位置</td></tr>
+<tr><td>Axes.set_yticks() / get_yticks()</td><td>设置/获取 y 轴刻度位置</td></tr>
+<tr><td>Axes.set_xticklabels() / get_xticklabels()</td><td>设置/获取 x 轴刻度标签</td></tr>
+<tr><td>Axes.set_yticklabels() / get_yticklabels()</td><td>设置/获取 y 轴刻度标签</td></tr>
+<tr><td>Axes.get_xmajorticklabels()</td><td>获取 x 轴主刻度标签</td></tr>
+<tr><td>Axes.get_xminorticklabels()</td><td>获取 x 轴次刻度标签</td></tr>
+<tr><td>Axes.get_ymajorticklabels()</td><td>获取 y 轴主刻度标签</td></tr>
+<tr><td>Axes.get_yminorticklabels()</td><td>获取 y 轴次刻度标签</td></tr>
+<tr><td>Axes.get_xgridlines()</td><td>获取 x 轴网格线</td></tr>
+<tr><td>Axes.get_ygridlines()</td><td>获取 y 轴网格线</td></tr>
+<tr><td>Axes.get_xticklines()</td><td>获取 x 轴刻度线</td></tr>
+<tr><td>Axes.get_yticklines()</td><td>获取 y 轴刻度线</td></tr>
+<tr><td>Axes.xaxis_date()</td><td>将 x 轴刻度设置为日期格式</td></tr>
+<tr><td>Axes.yaxis_date()</td><td>将 y 轴刻度设置为日期格式</td></tr>
+<tr><td>Axes.minorticks_on()</td><td>显示次要刻度</td></tr>
+<tr><td>Axes.minorticks_off()</td><td>隐藏次要刻度</td></tr>
+<tr><td>Axes.ticklabel_format()</td><td>设置刻度标签格式</td></tr>
+<tr><td>Axes.tick_params()</td><td>调整刻度外观参数</td></tr>
+<tr><td>Axes.locator_params()</td><td>控制刻度定位器参数</td></tr>
+</table>
+
+<h3>15. 单位</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.convert_xunits()</td><td>使用单位转换器转换 x 值</td></tr>
+<tr><td>Axes.convert_yunits()</td><td>使用单位转换器转换 y 值</td></tr>
+<tr><td>Axes.have_units()</td><td>检查是否有注册的单位转换器</td></tr>
+</table>
+
+<h3>16. 添加 Artist</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.add_artist()</td><td>添加任意 Artist 对象</td></tr>
+<tr><td>Axes.add_child_axes()</td><td>添加子 Axes</td></tr>
+<tr><td>Axes.add_collection()</td><td>添加 Collection 对象</td></tr>
+<tr><td>Axes.add_container()</td><td>添加 Container 对象</td></tr>
+<tr><td>Axes.add_image()</td><td>添加 AxesImage 对象</td></tr>
+<tr><td>Axes.add_line()</td><td>添加 Line2D 对象</td></tr>
+<tr><td>Axes.add_patch()</td><td>添加 Patch 对象</td></tr>
+<tr><td>Axes.add_table()</td><td>添加 Table 对象</td></tr>
+</table>
+
+<h3>17. 双轴与共享轴</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.twinx()</td><td>创建共享 x 轴的双 y 轴</td></tr>
+<tr><td>Axes.twiny()</td><td>创建共享 y 轴的双 x 轴</td></tr>
+<tr><td>Axes.sharex()</td><td>与其他 Axes 共享 x 轴</td></tr>
+<tr><td>Axes.sharey()</td><td>与其他 Axes 共享 y 轴</td></tr>
+<tr><td>Axes.get_shared_x_axes()</td><td>获取共享 x 轴的 Grouper 对象</td></tr>
+<tr><td>Axes.get_shared_y_axes()</td><td>获取共享 y 轴的 Grouper 对象</td></tr>
+</table>
+
+<h3>18. Axes 位置</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.get_position() / set_position()</td><td>获取/设置 Axes 在 Figure 中的位置和大小</td></tr>
+<tr><td>Axes.get_anchor() / set_anchor()</td><td>获取/设置 Axes 的锚点（固定位置）</td></tr>
+<tr><td>Axes.get_axes_locator() / set_axes_locator()</td><td>获取/设置 Axes 定位器回调函数</td></tr>
+<tr><td>Axes.get_subplotspec() / set_subplotspec()</td><td>获取/设置 SubplotSpec 对象</td></tr>
+<tr><td>Axes.reset_position()</td><td>重置 Axes 位置为原始值</td></tr>
+</table>
+
+<h3>19. 异步/事件</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.stale</td><td>标记 Artist 是否需要重新绘制（属性）</td></tr>
+<tr><td>Axes.pchanged()</td><td>标记属性变化事件</td></tr>
+<tr><td>Axes.add_callback()</td><td>添加属性变化回调</td></tr>
+<tr><td>Axes.remove_callback()</td><td>移除属性变化回调</td></tr>
+</table>
+
+<h3>20. 交互</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.can_pan() / can_zoom()</td><td>返回是否可以平移/缩放</td></tr>
+<tr><td>Axes.set_navigate() / get_navigate()</td><td>设置/获取导航工具栏是否激活</td></tr>
+<tr><td>Axes.set_navigate_mode() / get_navigate_mode()</td><td>设置/获取导航模式</td></tr>
+<tr><td>Axes.start_pan() / drag_pan() / end_pan()</td><td>平移操作的开始/拖动/结束</td></tr>
+<tr><td>Axes.format_coord()</td><td>格式化工具栏显示的坐标字符串</td></tr>
+<tr><td>Axes.format_cursor_data()</td><td>格式化光标处的数据值</td></tr>
+<tr><td>Axes.format_xdata() / format_ydata()</td><td>格式化 x/y 数据值</td></tr>
+<tr><td>Axes.mouseover()</td><td>判断鼠标是否在 Axes 上</td></tr>
+<tr><td>Axes.in_axes()</td><td>判断点是否在 Axes 内</td></tr>
+<tr><td>Axes.contains() / contains_point()</td><td>判断 Artist 是否包含点</td></tr>
+<tr><td>Axes.get_cursor_data()</td><td>获取光标位置的数据</td></tr>
+<tr><td>Axes.get_forward_navigation_events() / set_forward_navigation_events()</td><td>获取/设置导航事件转发</td></tr>
+</table>
+
+<h3>21. 子元素查询</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.get_children()</td><td>获取所有子 Artist</td></tr>
+<tr><td>Axes.get_images()</td><td>获取所有图像对象</td></tr>
+<tr><td>Axes.get_lines()</td><td>获取所有折线对象</td></tr>
+<tr><td>Axes.findobj()</td><td>查找匹配条件的子 Artist</td></tr>
+</table>
+
+<h3>22. 绘制</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.draw()</td><td>渲染 Axes</td></tr>
+<tr><td>Axes.draw_artist()</td><td>绘制单个 Artist（底层方法）</td></tr>
+<tr><td>Axes.redraw_in_frame()</td><td>在框架内重绘</td></tr>
+<tr><td>Axes.get_window_extent()</td><td>获取 Axes 在显示窗口中的边界</td></tr>
+<tr><td>Axes.get_tightbbox()</td><td>获取 Axes 的紧凑边界框</td></tr>
+<tr><td>Axes.get_rasterization_zorder() / set_rasterization_zorder()</td><td>获取/设置光栅化的 zorder 阈值</td></tr>
+</table>
+
+<h3>23. 投影（子类需重写）</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.name</td><td>投影名称（如 'rectilinear'、'polar'）</td></tr>
+<tr><td>Axes.get_xaxis_transform() / get_yaxis_transform()</td><td>获取 x/y 轴变换</td></tr>
+<tr><td>Axes.get_data_ratio()</td><td>获取数据宽高比</td></tr>
+<tr><td>Axes.get_xaxis_text1_transform()</td><td>x 轴底部标签变换</td></tr>
+<tr><td>Axes.get_xaxis_text2_transform()</td><td>x 轴顶部标签变换</td></tr>
+<tr><td>Axes.get_yaxis_text1_transform()</td><td>y 轴左侧标签变换</td></tr>
+<tr><td>Axes.get_yaxis_text2_transform()</td><td>y 轴右侧标签变换</td></tr>
+</table>
+
+<h3>24. 其他方法</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Axes.set()</td><td>批量设置属性</td></tr>
+<tr><td>Axes.zorder</td><td>获取/设置 zorder（属性）</td></tr>
+<tr><td>Axes.get_figure()</td><td>获取所属的 Figure 对象</td></tr>
+<tr><td>Axes.figure</td><td>所属 Figure 对象（属性）</td></tr>
+<tr><td>Axes.remove()</td><td>从 Figure 中移除自身</td></tr>
+<tr><td>Axes.has_data()</td><td>检查是否有数据</td></tr>
+<tr><td>Axes.get_default_bbox_extra_artists()</td><td>获取边界框计算需额外包含的 Artist</td></tr>
+<tr><td>Axes.get_transformed_clip_path_and_affine()</td><td>获取变换后的裁剪路径</td></tr>
+<tr><td>Axes.viewLim</td><td>视图范围（属性）</td></tr>
+<tr><td>Axes.dataLim</td><td>数据范围（属性）</td></tr>
+<tr><td>Axes.spines</td><td>边框线字典（属性）</td></tr>
+</table>
+
+<hr>
+
+<h2>Figure 对象 - 全部方法列表</h2>
+<p>Figure 是整个图表的顶层容器，管理所有的 Axes、Artist 和布局。</p>
+
+<h3>1. 添加 Axes 和 SubFigure</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.subplots()</td><td><span class="tag1 green">推荐</span> 创建 Axes 子图网格</td></tr>
+<tr><td>Figure.add_subplot()</td><td>按行列位置添加单个子图</td></tr>
+<tr><td>Figure.add_axes()</td><td>在指定位置和大小添加 Axes</td></tr>
+<tr><td>Figure.subplot_mosaic()</td><td>使用标签布局创建复杂子图排列</td></tr>
+<tr><td>Figure.add_gridspec()</td><td>添加 GridSpec 布局对象</td></tr>
+<tr><td>Figure.subfigures()</td><td>创建嵌套子 Figure</td></tr>
+<tr><td>Figure.add_subfigure()</td><td>添加单个 SubFigure</td></tr>
+<tr><td>Figure.axes</td><td>Axes 列表（属性）</td></tr>
+<tr><td>Figure.get_axes()</td><td>获取所有 Axes</td></tr>
+<tr><td>Figure.delaxes()</td><td>移除指定的 Axes</td></tr>
+</table>
+
+<h3>2. 保存</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.savefig()</td><td>保存 Figure 到文件</td></tr>
+</table>
+
+<h3>3. Figure 级标注</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.suptitle() / get_suptitle()</td><td>设置/获取 Figure 总标题</td></tr>
+<tr><td>Figure.supxlabel() / get_supxlabel()</td><td>设置/获取 Figure 级别 x 标签</td></tr>
+<tr><td>Figure.supylabel() / get_supylabel()</td><td>设置/获取 Figure 级别 y 标签</td></tr>
+<tr><td>Figure.colorbar()</td><td>添加颜色条</td></tr>
+<tr><td>Figure.legend()</td><td>添加全局图例</td></tr>
+<tr><td>Figure.text()</td><td>在 Figure 级别添加文本</td></tr>
+<tr><td>Figure.align_labels()</td><td>对齐所有子图的轴标签</td></tr>
+<tr><td>Figure.align_xlabels()</td><td>对齐所有子图的 x 轴标签</td></tr>
+<tr><td>Figure.align_ylabels()</td><td>对齐所有子图的 y 轴标签</td></tr>
+<tr><td>Figure.align_titles()</td><td>对齐所有子图的标题</td></tr>
+<tr><td>Figure.autofmt_xdate()</td><td>自动旋转日期刻度标签</td></tr>
+</table>
+
+<h3>4. Figure 几何</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.set_size_inches() / get_size_inches()</td><td>设置/获取 Figure 尺寸（英寸）</td></tr>
+<tr><td>Figure.set_figheight() / get_figheight()</td><td>设置/获取 Figure 高度</td></tr>
+<tr><td>Figure.set_figwidth() / get_figwidth()</td><td>设置/获取 Figure 宽度</td></tr>
+<tr><td>Figure.dpi</td><td>DPI 分辨率（属性）</td></tr>
+<tr><td>Figure.set_dpi() / get_dpi()</td><td>设置/获取 DPI</td></tr>
+</table>
+
+<h3>5. 子图布局</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.subplots_adjust()</td><td>手动调整子图间距</td></tr>
+<tr><td>Figure.set_layout_engine()</td><td>设置布局引擎（'constrained'/'compressed'/'none'）</td></tr>
+<tr><td>Figure.get_layout_engine()</td><td>获取当前布局引擎</td></tr>
+<tr><td>Figure.tight_layout()</td><td>自动紧凑布局（已不推荐）</td></tr>
+<tr><td>Figure.set_tight_layout() / get_tight_layout()</td><td>设置/获取 tight_layout（已不推荐）</td></tr>
+<tr><td>Figure.set_constrained_layout() / get_constrained_layout()</td><td>设置/获取 constrained_layout（已不推荐）</td></tr>
+<tr><td>Figure.set_constrained_layout_pads() / get_constrained_layout_pads()</td><td>设置/获取 constrained_layout 边距（已不推荐）</td></tr>
+</table>
+
+<h3>6. 交互</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.ginput()</td><td>通过鼠标点击获取坐标点</td></tr>
+<tr><td>Figure.waitforbuttonpress()</td><td>等待鼠标或键盘按下</td></tr>
+<tr><td>Figure.pick()</td><td>触发 pick 事件</td></tr>
+<tr><td>Figure.add_axobserver()</td><td>添加 Axes 观察者</td></tr>
+</table>
+
+<h3>7. 外观修改</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.set_frameon() / get_frameon()</td><td>设置/获取 Figure 背景是否可见</td></tr>
+<tr><td>Figure.set_linewidth() / get_linewidth()</td><td>设置/获取 Figure 边框线宽</td></tr>
+<tr><td>Figure.set_facecolor() / get_facecolor()</td><td>设置/获取 Figure 背景色</td></tr>
+<tr><td>Figure.set_edgecolor() / get_edgecolor()</td><td>设置/获取 Figure 边框颜色</td></tr>
+</table>
+
+<h3>8. 添加和获取 Artist</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.add_artist()</td><td>添加任意 Artist</td></tr>
+<tr><td>Figure.figimage()</td><td>在 Figure 级别放置图像</td></tr>
+<tr><td>Figure.get_children()</td><td>获取所有子 Artist</td></tr>
+</table>
+
+<h3>9. 状态管理</h3>
+
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>Figure.clear()</td><td>清除 Figure</td></tr>
+<tr><td>Figure.gca()</td><td>获取当前 Axes</td></tr>
+<tr><td>Figure.sca()</td><td>设置当前 Axes</td></tr>
+<tr><td>Figure.show()</td><td>显示 Figure</td></tr>
+<tr><td>Figure.draw()</td><td>渲染 Figure</td></tr>
+<tr><td>Figure.draw_artist()</td><td>绘制单个 Artist</td></tr>
+<tr><td>Figure.draw_without_rendering()</td><td>不渲染地计算布局（用于获取尺寸信息）</td></tr>
+<tr><td>Figure.set_canvas()</td><td>设置画布</td></tr>
+<tr><td>Figure.get_tightbbox()</td><td>获取 Figure 的紧凑边界框</td></tr>
+<tr><td>Figure.get_window_extent()</td><td>获取 Figure 在显示窗口中的边界</td></tr>
+</table>
+
+<h3>10. 辅助函数</h3>
+
+<table class="reference">
+<tr><th>函数</th><th>功能说明</th></tr>
+<tr><td>figaspect()</td><td>根据指定宽高比计算 Figure 尺寸</td></tr>
+</table>
+
+<hr>
+
+<h2>SubFigure 对象 - 方法列表</h2>
+<p>SubFigure 是嵌套在父 Figure 内的逻辑子 Figure，拥有与 Figure 类似的方法。</p>
+
+<h3>添加 Axes</h3>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>SubFigure.subplots()</td><td>创建子图网格</td></tr>
+<tr><td>SubFigure.add_subplot()</td><td>添加单个子图</td></tr>
+<tr><td>SubFigure.add_axes()</td><td>在指定位置添加 Axes</td></tr>
+<tr><td>SubFigure.subplot_mosaic()</td><td>标签布局子图</td></tr>
+<tr><td>SubFigure.add_gridspec()</td><td>添加 GridSpec</td></tr>
+<tr><td>SubFigure.subfigures()</td><td>创建更深层嵌套的 SubFigure</td></tr>
+<tr><td>SubFigure.add_subfigure()</td><td>添加单个 SubFigure</td></tr>
+<tr><td>SubFigure.delaxes()</td><td>移除 Axes</td></tr>
+</table>
+
+<h3>标注</h3>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>SubFigure.suptitle() / get_suptitle()</td><td>SubFigure 总标题</td></tr>
+<tr><td>SubFigure.supxlabel() / get_supxlabel()</td><td>SubFigure x 标签</td></tr>
+<tr><td>SubFigure.supylabel() / get_supylabel()</td><td>SubFigure y 标签</td></tr>
+<tr><td>SubFigure.colorbar()</td><td>颜色条</td></tr>
+<tr><td>SubFigure.legend()</td><td>图例</td></tr>
+<tr><td>SubFigure.text()</td><td>文本</td></tr>
+<tr><td>SubFigure.align_labels()</td><td>对齐标签</td></tr>
+<tr><td>SubFigure.align_xlabels() / align_ylabels()</td><td>对齐 x/y 标签</td></tr>
+<tr><td>SubFigure.align_titles()</td><td>对齐标题</td></tr>
+</table>
+
+<h3>Artist 与外观</h3>
+<table class="reference">
+<tr><th>方法</th><th>功能说明</th></tr>
+<tr><td>SubFigure.add_artist()</td><td>添加 Artist</td></tr>
+<tr><td>SubFigure.get_children()</td><td>获取子 Artist</td></tr>
+<tr><td>SubFigure.set_frameon() / get_frameon()</td><td>设置/获取边框</td></tr>
+<tr><td>SubFigure.set_linewidth() / get_linewidth()</td><td>设置/获取线宽</td></tr>
+<tr><td>SubFigure.set_facecolor() / get_facecolor()</td><td>设置/获取背景色</td></tr>
+<tr><td>SubFigure.set_edgecolor() / get_edgecolor()</td><td>设置/获取边框色</td></tr>
+<tr><td>SubFigure.set_dpi() / get_dpi()</td><td>设置/获取 DPI</td></tr>
+</table>
+
+<hr>
+
+<h2>样式配置速查</h2>
+
+<h3>内置样式表</h3>
+<p>通过 <code>plt.style.use('name')</code> 切换样式。</p>
+
+<table class="reference">
+<tr><th>样式名称</th><th>风格描述</th></tr>
+<tr><td>default</td><td>默认样式，清晰中性</td></tr>
+<tr><td>ggplot</td><td>模拟 R ggplot2 风格，灰色背景加白色网格</td></tr>
+<tr><td>seaborn-v0_8</td><td>类似 seaborn 库的现代化风格</td></tr>
+<tr><td>seaborn-v0_8-bright</td><td>seaborn 亮色调</td></tr>
+<tr><td>seaborn-v0_8-colorblind</td><td>seaborn 色盲友好色调</td></tr>
+<tr><td>seaborn-v0_8-dark</td><td>seaborn 深色风格</td></tr>
+<tr><td>seaborn-v0_8-dark-palette</td><td>seaborn 深色调色板</td></tr>
+<tr><td>seaborn-v0_8-darkgrid</td><td>seaborn 深色带网格</td></tr>
+<tr><td>seaborn-v0_8-deep</td><td>seaborn 深色调</td></tr>
+<tr><td>seaborn-v0_8-muted</td><td>seaborn 柔色调</td></tr>
+<tr><td>seaborn-v0_8-notebook</td><td>seaborn notebook 风格</td></tr>
+<tr><td>seaborn-v0_8-paper</td><td>seaborn 论文风格</td></tr>
+<tr><td>seaborn-v0_8-pastel</td><td>seaborn 粉色调</td></tr>
+<tr><td>seaborn-v0_8-poster</td><td>seaborn 海报风格</td></tr>
+<tr><td>seaborn-v0_8-talk</td><td>seaborn 演讲风格</td></tr>
+<tr><td>seaborn-v0_8-ticks</td><td>seaborn 刻度风格</td></tr>
+<tr><td>seaborn-v0_8-white</td><td>seaborn 白色背景</td></tr>
+<tr><td>seaborn-v0_8-whitegrid</td><td>seaborn 白色带网格</td></tr>
+<tr><td>fivethirtyeight</td><td>模仿 FiveThirtyEight 数据新闻风格</td></tr>
+<tr><td>dark_background</td><td>深色背景，适合演示和夜间使用</td></tr>
+<tr><td>bmh</td><td>Bayesian Methods for Hackers 风格</td></tr>
+<tr><td>grayscale</td><td>灰度风格，适合黑白打印</td></tr>
+<tr><td>classic</td><td>Matplotlib v1.x 经典风格</td></tr>
+<tr><td>fast</td><td>简化样式，渲染速度更快</td></tr>
+<tr><td>Solarize_Light2</td><td>Solarized 浅色主题</td></tr>
+<tr><td>tableau-colorblind10</td><td>Tableau 色盲友好调色板</td></tr>
+</table>
+
+<h3>常用 rcParams 配置</h3>
+
+<table class="reference">
+<tr><th>参数</th><th>说明</th><th>示例值</th></tr>
+<tr><td>figure.figsize</td><td>默认图表尺寸（英寸）</td><td>[8, 6]</td></tr>
+<tr><td>figure.dpi</td><td>默认分辨率</td><td>100</td></tr>
+<tr><td>figure.facecolor</td><td>Figure 背景色</td><td>'white'</td></tr>
+<tr><td>figure.edgecolor</td><td>Figure 边框色</td><td>'white'</td></tr>
+<tr><td>font.size</td><td>全局字体大小</td><td>12</td></tr>
+<tr><td>font.family</td><td>字体族</td><td>'sans-serif'</td></tr>
+<tr><td>font.sans-serif</td><td>无衬线字体列表</td><td>['DejaVu Sans', ...]</td></tr>
+<tr><td>axes.titlesize</td><td>标题字体大小</td><td>'large'</td></tr>
+<tr><td>axes.labelsize</td><td>轴标签字体大小</td><td>'medium'</td></tr>
+<tr><td>axes.grid</td><td>默认是否显示网格</td><td>False</td></tr>
+<tr><td>axes.facecolor</td><td>Axes 背景色</td><td>'white'</td></tr>
+<tr><td>axes.spines.top</td><td>是否显示顶部边框</td><td>True</td></tr>
+<tr><td>axes.spines.right</td><td>是否显示右侧边框</td><td>True</td></tr>
+<tr><td>lines.linewidth</td><td>默认线宽</td><td>1.5</td></tr>
+<tr><td>lines.markersize</td><td>默认标记大小</td><td>6</td></tr>
+<tr><td>lines.linestyle</td><td>默认线型</td><td>'-'</td></tr>
+<tr><td>legend.loc</td><td>图例默认位置</td><td>'best'</td></tr>
+<tr><td>legend.fontsize</td><td>图例字体大小</td><td>'medium'</td></tr>
+<tr><td>xtick.labelsize</td><td>x 轴刻度标签大小</td><td>'medium'</td></tr>
+<tr><td>ytick.labelsize</td><td>y 轴刻度标签大小</td><td>'medium'</td></tr>
+<tr><td>savefig.dpi</td><td>保存图片的默认分辨率</td><td>'figure'</td></tr>
+<tr><td>savefig.bbox</td><td>保存时的边界模式</td><td>None</td></tr>
+<tr><td>image.cmap</td><td>默认 colormap</td><td>'viridis'</td></tr>
+<tr><td>image.interpolation</td><td>图像插值方法</td><td>'antialiased'</td></tr>
+</table>
+
+<hr>
+
+<h2>colormap（颜色映射）速查</h2>
+
+<table class="reference">
+<tr><th>分类</th><th>colormap 名称</th><th>适用场景</th></tr>
+<tr><td>感知均匀（Sequential）</td><td>viridis, plasma, inferno, magma, cividis</td><td>连续数据，色盲友好，推荐首选</td></tr>
+<tr><td>顺序（单色渐变）</td><td>Greys, Purples, Blues, Greens, Oranges, Reds, YlOrBr, YlOrRd, OrRd, PuRd, RdPu, BuPu, GnBu, PuBu, YlGnBu, PuBuGn, BuGn, YlGn</td><td>从低到高的连续数据，单色调</td></tr>
+<tr><td>发散（Diverging）</td><td>PiYG, PRGn, BrBG, PuOr, RdGy, RdBu, RdYlBu, RdYlGn, Spectral, coolwarm, bwr, seismic</td><td>有中心参考点的双向数据</td></tr>
+<tr><td>循环（Cyclic）</td><td>twilight, twilight_shifted, hsv</td><td>周期性数据（如角度、时间）</td></tr>
+<tr><td>定性（Qualitative）</td><td>Pastel1, Pastel2, Paired, Accent, Dark2, Set1, Set2, Set3, tab10, tab20, tab20b, tab20c</td><td>离散分类数据</td></tr>
+<tr><td>杂项</td><td>flag, prism, ocean, gist_earth, terrain, gist_stern, gnuplot, gnuplot2, CMRmap, cubehelix, brg, gist_rainbow, rainbow, jet, turbo, nipy_spectral, gist_ncar</td><td>特殊用途或视觉效果</td></tr>
+</table>
+
+<blockquote><p><code>'viridis'</code> 是 Matplotlib 2.0 以来的默认 colormap，具有优秀的感知均匀性和色盲友好特性，是大多数场景的首选。避免使用 <code>'jet'</code> 和 <code>'rainbow'</code>，它们存在感知失真问题。</p></blockquote>
+
+<hr>
+
+<h2>常用示例</h2>
+
+<h3>示例 1：基本折线图与散点图</h3>
+<p>使用显式 Axes 接口创建包含多条曲线和标注的图表。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># 生成数据：0 到 10 之间取 100 个等间距点</span><br />
+x <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><br />
+y1 <span style="color: Gray;">=</span> np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># 正弦函数</span><br />
+y2 <span style="color: Gray;">=</span> np.<span style="color: #05a;">cos</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># 余弦函数</span><br />
+<br />
+<span style="color: #a50"># 创建 Figure 和 Axes（显式接口，推荐）</span><br />
+fig<span style="color: Gray;">,</span> ax <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplots</span><span style="color: Olive;">&#40;</span>figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> layout<span style="color: Gray;">=</span><span style="color: #a11;">'constrained'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 绘制两条折线，设置颜色、线型和标签</span><br />
+ax.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> y1<span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'sin(x)'</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'blue'</span><span style="color: Gray;">,</span> linewidth<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> y2<span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'cos(x)'</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'red'</span><span style="color: Gray;">,</span> linestyle<span style="color: Gray;">=</span><span style="color: #a11;">'--'</span><span style="color: Gray;">,</span> linewidth<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 在峰值位置添加高亮散点</span><br />
+peak_idx_sin <span style="color: Gray;">=</span> np.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>y1<span style="color: Olive;">&#41;</span><br />
+peak_idx_cos <span style="color: Gray;">=</span> np.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>y2<span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">scatter</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#91;</span>peak_idx_sin<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> y1<span style="color: Olive;">&#91;</span>peak_idx_sin<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color<span style="color: Gray;">=</span><span style="color: #a11;">'blue'</span><span style="color: Gray;">,</span> s<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span> zorder<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">scatter</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#91;</span>peak_idx_cos<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> y2<span style="color: Olive;">&#91;</span>peak_idx_cos<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color<span style="color: Gray;">=</span><span style="color: #a11;">'red'</span><span style="color: Gray;">,</span> s<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span> zorder<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 装饰：标题、轴标签、图例、网格</span><br />
+ax.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Sine and Cosine Functions'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">set_xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'x (radians)'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Amplitude'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">legend</span><span style="color: Olive;">&#40;</span>loc<span style="color: Gray;">=</span><span style="color: #a11;">'upper right'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">grid</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span><br />
+<br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;runoob: plot displayed successfully&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>示例 2：多子图布局（2x2）</h3>
+<p>展示在一个 Figure 中创建不同类型子图的方法。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+x <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span> * np.<span style="color: #05a;">pi</span><span style="color: Gray;">,</span> <span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 创建 2x2 子图（面向对象接口）</span><br />
+fig<span style="color: Gray;">,</span> axes <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplots</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Gray;">,</span> figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> layout<span style="color: Gray;">=</span><span style="color: #a11;">'constrained'</span><span style="color: Olive;">&#41;</span><br />
+fig.<span style="color: #05a;">suptitle</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Multi-panel RUNOOB Demo'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 子图 (0,0)：折线图</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'tab:blue'</span><span style="color: Gray;">,</span> linewidth<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Line Plot'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'sin(x)'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 子图 (0,1)：散点图</span><br />
+np.<span style="color: #05a;">random</span>.<span style="color: #05a;">seed</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">42</span><span style="color: Olive;">&#41;</span><br />
+colors <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">rand</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+sizes <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">rand</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">200</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">scatter</span><span style="color: Olive;">&#40;</span>np.<span style="color: #05a;">random</span>.<span style="color: #05a;">rand</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">rand</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;c<span style="color: Gray;">=</span>colors<span style="color: Gray;">,</span> s<span style="color: Gray;">=</span>sizes<span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span><span style="color: Maroon;">0.6</span><span style="color: Gray;">,</span> cmap<span style="color: Gray;">=</span><span style="color: #a11;">'viridis'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Scatter Plot'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 子图 (1,0)：柱状图（带数值标签）</span><br />
+categories <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">'A'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'B'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'C'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'D'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'E'</span><span style="color: Olive;">&#93;</span><br />
+values <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">23</span><span style="color: Gray;">,</span> <span style="color: Maroon;">45</span><span style="color: Gray;">,</span> <span style="color: Maroon;">56</span><span style="color: Gray;">,</span> <span style="color: Maroon;">78</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#93;</span><br />
+bars <span style="color: Gray;">=</span> axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">bar</span><span style="color: Olive;">&#40;</span>categories<span style="color: Gray;">,</span> values<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color<span style="color: Gray;">=</span><span style="color: #a11;">'tab:green'</span><span style="color: Gray;">,</span> edgecolor<span style="color: Gray;">=</span><span style="color: #a11;">'white'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">bar_label</span><span style="color: Olive;">&#40;</span>bars<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 在柱上显示数值</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Bar Chart'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 子图 (1,1)：直方图</span><br />
+data <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1000</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">hist</span><span style="color: Olive;">&#40;</span>data<span style="color: Gray;">,</span> bins<span style="color: Gray;">=</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'tab:orange'</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; edgecolor<span style="color: Gray;">=</span><span style="color: #a11;">'white'</span><span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span><span style="color: Maroon;">0.8</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">axvline</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">=</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'red'</span><span style="color: Gray;">,</span> linestyle<span style="color: Gray;">=</span><span style="color: #a11;">'--'</span><span style="color: Gray;">,</span> linewidth<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Histogram'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>示例 3：热力图与等高线对比</h3>
+<p>展示在同一 Figure 中使用 imshow 和 contourf 两种方式可视化二维数据。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># 创建二维网格数据</span><br />
+x <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><br />
+y <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><br />
+X<span style="color: Gray;">,</span> Y <span style="color: Gray;">=</span> np.<span style="color: #05a;">meshgrid</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> y<span style="color: Olive;">&#41;</span><br />
+Z <span style="color: Gray;">=</span> np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>X<span style="color: Olive;">&#41;</span> * np.<span style="color: #05a;">cos</span><span style="color: Olive;">&#40;</span>Y<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 二维函数值</span><br />
+<br />
+fig<span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span>ax1<span style="color: Gray;">,</span> ax2<span style="color: Olive;">&#41;</span> <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplots</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Gray;">,</span> figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">12</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; layout<span style="color: Gray;">=</span><span style="color: #a11;">'constrained'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 左图：热力图（imshow）</span><br />
+im <span style="color: Gray;">=</span> ax1.<span style="color: #05a;">imshow</span><span style="color: Olive;">&#40;</span>Z<span style="color: Gray;">,</span> extent<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> origin<span style="color: Gray;">=</span><span style="color: #a11;">'lower'</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cmap<span style="color: Gray;">=</span><span style="color: #a11;">'viridis'</span><span style="color: Gray;">,</span> aspect<span style="color: Gray;">=</span><span style="color: #a11;">'auto'</span><span style="color: Olive;">&#41;</span><br />
+ax1.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Heatmap (imshow)'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><span style="color: Olive;">&#41;</span><br />
+ax1.<span style="color: #05a;">set_xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'X'</span><span style="color: Olive;">&#41;</span><br />
+ax1.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Y'</span><span style="color: Olive;">&#41;</span><br />
+fig.<span style="color: #05a;">colorbar</span><span style="color: Olive;">&#40;</span>im<span style="color: Gray;">,</span> ax<span style="color: Gray;">=</span>ax1<span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'Amplitude'</span><span style="color: Gray;">,</span> shrink<span style="color: Gray;">=</span><span style="color: Maroon;">0.8</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 右图：填充等高线（contourf）</span><br />
+contour <span style="color: Gray;">=</span> ax2.<span style="color: #05a;">contourf</span><span style="color: Olive;">&#40;</span>X<span style="color: Gray;">,</span> Y<span style="color: Gray;">,</span> Z<span style="color: Gray;">,</span> levels<span style="color: Gray;">=</span><span style="color: Maroon;">15</span><span style="color: Gray;">,</span> cmap<span style="color: Gray;">=</span><span style="color: #a11;">'RdYlBu'</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># 叠加等高线边界</span><br />
+ax2.<span style="color: #05a;">contour</span><span style="color: Olive;">&#40;</span>X<span style="color: Gray;">,</span> Y<span style="color: Gray;">,</span> Z<span style="color: Gray;">,</span> levels<span style="color: Gray;">=</span><span style="color: Maroon;">15</span><span style="color: Gray;">,</span> colors<span style="color: Gray;">=</span><span style="color: #a11;">'black'</span><span style="color: Gray;">,</span> linewidths<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><br />
+ax2.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Filled Contour (contourf)'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><span style="color: Olive;">&#41;</span><br />
+ax2.<span style="color: #05a;">set_xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'X'</span><span style="color: Olive;">&#41;</span><br />
+ax2.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Y'</span><span style="color: Olive;">&#41;</span><br />
+fig.<span style="color: #05a;">colorbar</span><span style="color: Olive;">&#40;</span>contour<span style="color: Gray;">,</span> ax<span style="color: Gray;">=</span>ax2<span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'Amplitude'</span><span style="color: Gray;">,</span> shrink<span style="color: Gray;">=</span><span style="color: Maroon;">0.8</span><span style="color: Olive;">&#41;</span><br />
+<br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>示例 4：样式切换与保存图片</h3>
+<p>使用样式表和 rcParams 自定义外观，并保存高质量图片。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># 使用 ggplot 样式，再微调部分参数</span><br />
+plt.<span style="color: #05a;">style</span>.<span style="color: #05a;">use</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'ggplot'</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">rcParams</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'figure.figsize'</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">6</span><span style="color: Olive;">&#93;</span><br />
+plt.<span style="color: #05a;">rcParams</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'font.size'</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">12</span><br />
+<br />
+x <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+y1 <span style="color: Gray;">=</span> np.<span style="color: #05a;">exp</span><span style="color: Olive;">&#40;</span>-x/<span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span> * np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span> * x<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 阻尼正弦波</span><br />
+y2 <span style="color: Gray;">=</span> np.<span style="color: #05a;">exp</span><span style="color: Olive;">&#40;</span>-x/<span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span> * np.<span style="color: #05a;">cos</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span> * x<span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 阻尼余弦波</span><br />
+<br />
+fig<span style="color: Gray;">,</span> ax <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplots</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> y1<span style="color: Gray;">,</span> <span style="color: #a11;">'o-'</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'Damped sin'</span><span style="color: Gray;">,</span> markersize<span style="color: Gray;">=</span><span style="color: Maroon;">6</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> y2<span style="color: Gray;">,</span> <span style="color: #a11;">'s--'</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'Damped cos'</span><span style="color: Gray;">,</span> markersize<span style="color: Gray;">=</span><span style="color: Maroon;">6</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 标注第一个峰值</span><br />
+peak_idx <span style="color: Gray;">=</span> np.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>y1<span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">annotate</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">'Peak: {y1[peak_idx]:.2f}'</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; xy<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#91;</span>peak_idx<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> y1<span style="color: Olive;">&#91;</span>peak_idx<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; xytext<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#91;</span>peak_idx<span style="color: Olive;">&#93;</span> + <span style="color: Maroon;">1.5</span><span style="color: Gray;">,</span> y1<span style="color: Olive;">&#91;</span>peak_idx<span style="color: Olive;">&#93;</span> + <span style="color: Maroon;">0.15</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; arrowprops<span style="color: Gray;">=</span><span style="color: Teal;">dict</span><span style="color: Olive;">&#40;</span>arrowstyle<span style="color: Gray;">=</span><span style="color: #a11;">'-&gt;'</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'gray'</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<br />
+ax.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Damped Oscillation'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">set_xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Time (s)'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Amplitude'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">legend</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">grid</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 保存为 300 DPI 高质量 PNG</span><br />
+fig.<span style="color: #05a;">savefig</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'runoob_damped_oscillation.png'</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dpi<span style="color: Gray;">=</span><span style="color: Maroon;">300</span><span style="color: Gray;">,</span> bbox_inches<span style="color: Gray;">=</span><span style="color: #a11;">'tight'</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;runoob: figure saved successfully&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>示例 5：mosaic 复杂布局</h3>
+<p>使用 subplot_mosaic 创建非均匀子图排列。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># mosaic 字符串定义布局：</span><br />
+<span style="color: #a50"># 'A' 横跨顶部整行，'B'和'C'在左下和左中，'D'纵向占据右下</span><br />
+layout <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+A A A<br />
+B C D<br />
+&quot;&quot;&quot;</span><br />
+<br />
+fig<span style="color: Gray;">,</span> axes <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplot_mosaic</span><span style="color: Olive;">&#40;</span>layout<span style="color: Gray;">,</span> figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">6</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; layout<span style="color: Gray;">=</span><span style="color: #a11;">'constrained'</span><span style="color: Olive;">&#41;</span><br />
+fig.<span style="color: #05a;">suptitle</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Complex Mosaic Layout (RUNOOB)'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 面板 A：折线图（横跨顶部）</span><br />
+x <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'A'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'sin(x)'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'A'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> np.<span style="color: #05a;">cos</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'cos(x)'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'A'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Panel A: Line Plot'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'A'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">legend</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 面板 B：饼图</span><br />
+sizes <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> <span style="color: Maroon;">25</span><span style="color: Gray;">,</span> <span style="color: Maroon;">20</span><span style="color: Gray;">,</span> <span style="color: Maroon;">15</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#93;</span><br />
+labels <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">'Python'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'Java'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'C++'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'Rust'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'Go'</span><span style="color: Olive;">&#93;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'B'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">pie</span><span style="color: Olive;">&#40;</span>sizes<span style="color: Gray;">,</span> labels<span style="color: Gray;">=</span>labels<span style="color: Gray;">,</span> autopct<span style="color: Gray;">=</span><span style="color: #a11;">'%1.1f%%'</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; startangle<span style="color: Gray;">=</span><span style="color: Maroon;">90</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'B'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Panel B: Pie Chart'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 面板 C：柱状图</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'C'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">bar</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'X'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'Y'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'Z'</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">25</span><span style="color: Gray;">,</span> <span style="color: Maroon;">15</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; color<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'#ff6b6b'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'#4ecdc4'</span><span style="color: Gray;">,</span> <span style="color: #a11;">'#45b7d1'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'C'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Panel C: Bar Chart'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 面板 D：热力图</span><br />
+matrix <span style="color: Gray;">=</span> np.<span style="color: #05a;">random</span>.<span style="color: #05a;">rand</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><br />
+im <span style="color: Gray;">=</span> axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'D'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">imshow</span><span style="color: Olive;">&#40;</span>matrix<span style="color: Gray;">,</span> cmap<span style="color: Gray;">=</span><span style="color: #a11;">'Blues'</span><span style="color: Gray;">,</span> aspect<span style="color: Gray;">=</span><span style="color: #a11;">'auto'</span><span style="color: Olive;">&#41;</span><br />
+axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'D'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Panel D: Heatmap'</span><span style="color: Olive;">&#41;</span><br />
+fig.<span style="color: #05a;">colorbar</span><span style="color: Olive;">&#40;</span>im<span style="color: Gray;">,</span> ax<span style="color: Gray;">=</span>axes<span style="color: Olive;">&#91;</span><span style="color: #a11;">'D'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>示例 6：双 y 轴与嵌入子图</h3>
+<p>展示 secondary_axis、twinx 和 inset_axes 的用法。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+fig<span style="color: Gray;">,</span> ax <span style="color: Gray;">=</span> plt.<span style="color: #05a;">subplots</span><span style="color: Olive;">&#40;</span>figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> layout<span style="color: Gray;">=</span><span style="color: #a11;">'constrained'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+x <span style="color: Gray;">=</span> np.<span style="color: #05a;">linspace</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 主图：绘制两条量纲不同的曲线</span><br />
+ax.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'b-'</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'sin(x) [amplitude]'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">set_xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'x (radians)'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'sin(x)'</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'blue'</span><span style="color: Olive;">&#41;</span><br />
+ax.<span style="color: #05a;">tick_params</span><span style="color: Olive;">&#40;</span>axis<span style="color: Gray;">=</span><span style="color: #a11;">'y'</span><span style="color: Gray;">,</span> labelcolor<span style="color: Gray;">=</span><span style="color: #a11;">'blue'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 创建双 y 轴（共享 x 轴）</span><br />
+ax2 <span style="color: Gray;">=</span> ax.<span style="color: #05a;">twinx</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+ax2.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> np.<span style="color: #05a;">exp</span><span style="color: Olive;">&#40;</span>x/<span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'r--'</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span><span style="color: #a11;">'exp(x/5) [growth]'</span><span style="color: Olive;">&#41;</span><br />
+ax2.<span style="color: #05a;">set_ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'exp(x/5)'</span><span style="color: Gray;">,</span> color<span style="color: Gray;">=</span><span style="color: #a11;">'red'</span><span style="color: Olive;">&#41;</span><br />
+ax2.<span style="color: #05a;">tick_params</span><span style="color: Olive;">&#40;</span>axis<span style="color: Gray;">=</span><span style="color: #a11;">'y'</span><span style="color: Gray;">,</span> labelcolor<span style="color: Gray;">=</span><span style="color: #a11;">'red'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 在 ax 中添加嵌入子图（放大局部区域）</span><br />
+axins <span style="color: Gray;">=</span> ax.<span style="color: #05a;">inset_axes</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0.15</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.35</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+axins.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> np.<span style="color: #05a;">sin</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'b-'</span><span style="color: Olive;">&#41;</span><br />
+axins.<span style="color: #05a;">set_xlim</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><br />
+axins.<span style="color: #05a;">set_ylim</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">1.2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1.2</span><span style="color: Olive;">&#41;</span><br />
+axins.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Zoomed Region'</span><span style="color: Olive;">&#41;</span><br />
+axins.<span style="color: #05a;">grid</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 在主图上标记嵌入区域</span><br />
+ax.<span style="color: #05a;">indicate_inset_zoom</span><span style="color: Olive;">&#40;</span>axins<span style="color: Gray;">,</span> edgecolor<span style="color: Gray;">=</span><span style="color: #a11;">'gray'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+ax.<span style="color: #05a;">set_title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Dual Y-Axes with Inset Zoom'</span><span style="color: Gray;">,</span> fontsize<span style="color: Gray;">=</span><span style="color: Maroon;">14</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>常见问题</h2>
+
+<h3>图表不显示</h3>
+<p>确认是否调用了 <code>plt.show()</code>。</p>
+<p>在非交互式后端（如 Agg）下必须显式调用 <code>show()</code>。</p>
+<p>在 Jupyter Notebook 中，使用 <code>%matplotlib inline</code> 魔法命令确保图表内嵌显示。</p>
+
+<h3>刻度太多或顺序错乱</h3>
+<p>常见原因是将字符串列表当作数据传入（而非数值或日期时间）。</p>
+<p>Matplotlib 将字符串列表视为分类变量，每个唯一值一个刻度，且按出现顺序排列。</p>
+<p>解决方法：将字符串转换为数值，如 <code>np.asarray(data, dtype='float')</code> 或 <code>np.asarray(data, dtype='datetime64[s]')</code>。</p>
+
+<h3>中文显示为方框</h3>
+<p>Matplotlib 默认字体（DejaVu Sans）不含中文字形，需指定支持中文的字体。</p>
+<p>设置 <code>plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', ...]</code> 并确保该系统已安装对应字体。</p>
+
+<h3>标签重叠或被截断</h3>
+<p>推荐在创建 Figure 时使用 <code>layout='constrained'</code> 或 <code>layout='compressed'</code> 参数，自动处理标签、标题和图例的重叠问题。</p>
+<p>也可使用 <code>fig.tight_layout()</code> 或 <code>fig.subplots_adjust()</code> 手动调整。</p>
+
+<h3>pcolor 与 pcolormesh 的区别</h3>
+<p><code>pcolor()</code> 创建 PolyCollection，渲染较慢但更精确。</p>
+<p><code>pcolormesh()</code> 创建 QuadMesh，渲染速度更快，是大多数场景的推荐选择。</p>
+<p>对于非常大的网格，<code>pcolorfast()</code> 使用 imshow 方式绘制，速度最快但精度最低。</p>
+
+<hr>
+
+<h2>相关资源</h2>
+<ul>
+<li>Matplotlib 官方网站：matplotlib.org</li>
+<li>官方图库（Gallery）：matplotlib.org/stable/gallery/index.html</li>
+<li>API 完整参考：matplotlib.org/stable/api/index.html</li>
+<li>安装指南：matplotlib.org/stable/install/index.html</li>
+<li>贡献指南：matplotlib.org/stable/devel/index.html</li>
+</ul>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/matplotlib/seaborn-tutorial.html" rel="prev"> Seaborn 教程</a> </div>
+			<div class="next-design-link"><a href="/matplotlib/matplotlib-ref-2d-plots.html" rel="next"> Matplotlib 二维数据与统计图函数</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30819' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30819;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30819, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30819},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30819;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

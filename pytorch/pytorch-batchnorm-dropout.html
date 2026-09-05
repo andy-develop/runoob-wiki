@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch 批归一化与 Dropout | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/pytorch/pytorch-batchnorm-dropout.html" />
+<meta name="keywords" content="PyTorch 批归一化与 Dropout">
+<meta name="description" content="$(function() {     renderMathInElement(document.body, {         delimiters: [             { left: &#039;\\(&#039;, right: &#039;\\)&#039;, display: false },             { left: &#039;\\[&#039;, right: &#039;\\]&#039;, di..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>PyTorch 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="PyTorch 教程"  href="/pytorch/pytorch-tutorial.html" >
+			PyTorch 教程			</a>
+						<a target="_top" data-p="par" title="PyTorch 简介"  href="/pytorch/pytorch-intro.html" >
+			PyTorch 简介			</a>
+						<a target="_top" data-p="par" title="PyTorch 安装"  href="/pytorch/pytorch-install.html" >
+			PyTorch 安装			</a>
+						<a target="_top" data-p="par" title="PyTorch 基础"  href="/pytorch/pytorch-basic.html" >
+			PyTorch 基础			</a>
+			<a target="_top"  title="PyTorch 张量" href="/pytorch/pytorch-tensor.html">PyTorch 张量</a>			<a target="_top" data-p="par" title="PyTorch 神经网络基础"  href="/pytorch/pytorch-neural-network.html" >
+			PyTorch 神经网络基础			</a>
+			<a target="_top"  title="PyTorch 第一个神经网络" href="/pytorch/pytorch-first-neural-network.html">PyTorch 第一个神经网络</a>			<a target="_top" data-p="par" title="PyTorch 数据处理与加载"  href="/pytorch/pytorch-dataset-dataloader.html" >
+			PyTorch 数据处理与加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 线性回归"  href="/pytorch/pytorch-linear-regression.html" >
+			PyTorch 线性回归			</a>
+						<a target="_top" data-p="par" title="PyTorch 卷积神经网络"  href="/pytorch/pytorch-cnn.html" >
+			PyTorch 卷积神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 循环神经网络"  href="/pytorch/pytorch-recurrent-neural-network.html" >
+			PyTorch 循环神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据集"  href="/pytorch/pytorch-datasets.html" >
+			PyTorch 数据集			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据转换"  href="/pytorch/pytorch-transforms.html" >
+			PyTorch 数据转换			</a>
+						<a target="_top" data-p="par" title="Pytorch torch 参考手册"  href="/pytorch/pytorch-torch-ref.html" >
+			Pytorch torch			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.nn 参考手册"  href="/pytorch/pytorch-torch-nn-ref.html" >
+			PyTorch torch.nn			</a>
+						<a target="_top" data-p="par" title="Transformer 模型"  href="/pytorch/transformer-model.html" >
+			Transformer 模型			</a>
+						<a target="_top" data-p="par" title="PyTorch 构建 Transformer 模型"  href="/pytorch/pytorch-transformer-model.html" >
+			PyTorch Transformer			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.optim 优化器模块"  href="/pytorch/pytorch-torch-optim.html" >
+			PyTorch torch.optim			</a>
+						<a target="_top" data-p="par" title="PyTorch torchvision 计算机视觉模块"  href="/pytorch/pytorch-torchvision.html" >
+			PyTorch torchvision			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型部署"  href="/pytorch/pytorch-model-deployment.html" >
+			PyTorch 模型部署			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型保存和加载"  href="/pytorch/pytorch-model-save.html" >
+			PyTorch 模型保存和加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 图像分类项目"  href="/pytorch/pytorch-image-classification.html" >
+			PyTorch 图像分类			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 文本情感分析项目"  href="/pytorch/pytorch-text-classification.html" >
+			PyTorc 文本情感分析			</a>
+						<a target="_top" data-p="par" title="PyTorch Autograd 自动微分"  href="/pytorch/pytorch-autograd.html" >
+			PyTorch Autograd			</a>
+						<a target="_top" data-p="par" title="PyTorch GPU / CUDA 加速"  href="/pytorch/pytorch-gpu-cuda.html" >
+			PyTorch GPU / CUDA 加速			</a>
+						<a target="_top" data-p="par" title="PyTorch 损失函数"  href="/pytorch/pytorch-loss-function.html" >
+			PyTorch 损失函数			</a>
+						<a target="_top" data-p="par" title="PyTorch 学习率调度器"  href="/pytorch/pytorch-lr-scheduler.html" >
+			PyTorch 学习率调度器			</a>
+						<a target="_top" data-p="par" title="PyTorch 迁移学习"  href="/pytorch/pytorch-transfer-learning.html" >
+			PyTorch 迁移学习			</a>
+						<a target="_top" data-p="par" title="PyTorch 批归一化与 Dropout"  href="/pytorch/pytorch-batchnorm-dropout.html" >
+			PyTorch 批归一化			</a>
+						<a target="_top" data-p="par" title="PyTorch LSTM / GRU"  href="/pytorch/pytorch-lstm-gru.html" >
+			PyTorch LSTM / GRU			</a>
+						<a target="_top" data-p="par" title="PyTorch 词嵌入 (Embedding)"  href="/pytorch/pytorch-embedding.html" >
+			PyTorch 词嵌入			</a>
+						<a target="_top" data-p="par" title="PyTorch 生成对抗网络 (GAN)"  href="/pytorch/pytorch-gan.html" >
+			PyTorch 生成对抗网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 自编码器 (Autoencoder)"  href="/pytorch/pytorch-autoencoder.html" >
+			PyTorch 自编码器			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型评估与调试"  href="/pytorch/pytorch-evaluation-debugging.html" >
+			PyTorch 模型评估与调试			</a>
+						<a target="_top" data-p="par" title="PyTorch torchtext"  href="/pytorch/pytorch-torchtext.html" >
+			PyTorch torchtext			</a>
+						<a target="_top" data-p="par" title="PyTorch 混合精度训练 (AMP)"  href="/pytorch/pytorch-amp.html" >
+			PyTorch 混合精度训练			</a>
+						<a target="_top" data-p="par" title="PyTorch TorchScript/ONNX 导出"  href="/pytorch/pytorch-torchscript-onnx-export.html" >
+			PyTorch TorchScript/ONNX 导出			</a>
+						<a target="_top" data-p="par" title="PyTorch 分布式训练"  href="/pytorch/pytorch-distributed.html" >
+			PyTorch 分布式训练			</a>
+						<a target="_top" data-p="par" title="PyTorch 注意力机制"  href="/pytorch/pytorch-attention.html" >
+			PyTorch 注意力机制			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-transfer-learning.html" rel="prev"> PyTorch 迁移学习</a> </div>
+			<div class="next-design-link"><a href="/pytorch/pytorch-lstm-gru.html" rel="next"> PyTorch LSTM / GRU</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<link rel="stylesheet" href="../static.jyshare.com/assets/libs/katex-0.15.2/dist/katex.min.css">
+<script src="../static.jyshare.com/assets/libs/katex-0.15.2/dist/katex.min.js"></script>
+<script src="../static.jyshare.com/assets/libs/katex-0.15.2/dist/contrib/auto-render.min.js"></script>
+<script>
+$(function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+        ]
+    });
+});
+</script>
+
+<h1>PyTorch 批归一化与 Dropout</h1>
+<p>批归一化（Batch Normalization）和 Dropout 是深度神经网络训练中两种最核心的正则化与稳定化技术。前者解决训练过程中的内部协变量偏移问题，让更深的网络变得可训练；后者通过随机丢弃神经元防止过拟合，增强模型泛化能力。两者通常配合使用，是现代神经网络的标配组件。</p>
+<hr>
+
+<h2>1. 批归一化（Batch Normalization）</h2>
+
+<h3 id="11-基础原理">1.1 基础原理</h3>
+<p>深层网络在训练时，前一层参数的微小变化会随层数加深而被不断放大，导致后续层的输入分布持续变化——这一现象称为<strong>内部协变量偏移（Internal Covariate Shift）</strong>。批归一化通过在每一层的输出上做标准化，强制将激活值拉回稳定的分布，从而解决这一问题。</p>
+<p><strong>归一化公式：</strong></p>
+<p class="math">\[\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}\]</p>
+<p class="math">\[y_i = \gamma \hat{x}_i + \beta\]</p>
+<p>其中：</p>
+<ul>
+<li>\(\mu_B\)、\(\sigma_B^2\) 是当前 batch 的均值和方差</li>
+<li>\(\epsilon\) 是防止除零的小常数（默认 <code>1e-5</code>）</li>
+<li>\(\gamma\)、\(\beta\) 是可学习的缩放和平移参数，让网络自行决定最终的分布形态</li>
+</ul>
+<p><strong>批归一化带来的好处：</strong></p>
+<ul>
+<li>允许使用更大的学习率，加快训练速度</li>
+<li>降低初始化的敏感性，训练更稳定</li>
+<li>有一定正则化效果，减轻对 Dropout 的依赖</li>
+<li>缓解梯度消失/爆炸，使更深的网络可训练</li>
+</ul>
+<hr>
+
+<h3 id="12-batchnorm1d--2d--3d">1.2 BatchNorm1d / 2d / 3d</h3>
+<p>PyTorch 根据输入维度提供三个版本，使用方式完全一致，只是处理的数据形状不同。</p>
+
+<h4>BatchNorm1d：用于全连接层 / 序列数据</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: #a50"># 输入形状：(N, C) 或 (N, C, L)</span><br />
+<span style="color: #a50"># N=batch_size, C=特征数/通道数, L=序列长度</span><br />
+bn1d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">BatchNorm1d</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; num_features<span style="color: Gray;">=</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 特征/通道数</span><br />
+&nbsp; &nbsp; eps<span style="color: Gray;">=</span><span style="color: Maroon;">1e-5</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 防止除零的小常数（默认 1e-5）</span><br />
+&nbsp; &nbsp; momentum<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 滑动平均的动量（默认 0.1）</span><br />
+&nbsp; &nbsp; affine<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 是否学习 gamma 和 beta（默认 True）</span><br />
+&nbsp; &nbsp; track_running_stats<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 是否追踪运行时均值/方差（默认 True）</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 全连接层后使用</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># (batch=32, features=128)</span><br />
+out <span style="color: Gray;">=</span> bn1d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># torch.Size([32, 128])</span><br />
+<br />
+<span style="color: #a50"># 序列数据（如 1D 卷积后）</span><br />
+x_seq <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># (batch, channels, seq_len)</span><br />
+out_seq <span style="color: Gray;">=</span> bn1d<span style="color: Olive;">&#40;</span>x_seq<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out_seq.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># torch.Size([32, 128, 50])</span><br />
+
+</div>
+</div>
+
+<h4>BatchNorm2d：用于 CNN 图像特征图</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 输入形状：(N, C, H, W)</span><br />
+<span style="color: #a50"># 对每个通道 C 独立做归一化</span><br />
+bn2d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span>num_features<span style="color: Gray;">=</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 64 个通道</span><br />
+<br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">28</span><span style="color: Gray;">,</span> <span style="color: Maroon;">28</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># (batch, channels, height, width)</span><br />
+out <span style="color: Gray;">=</span> bn2d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># torch.Size([32, 64, 28, 28])</span><br />
+
+</div>
+</div>
+
+<h4>BatchNorm3d：用于 3D 卷积（视频/医学影像）</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 输入形状：(N, C, D, H, W)</span><br />
+bn3d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">BatchNorm3d</span><span style="color: Olive;">&#40;</span>num_features<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+<br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">16</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># (batch, channels, depth, h, w)</span><br />
+out <span style="color: Gray;">=</span> bn3d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># torch.Size([4, 32, 16, 32, 32])</span><br />
+
+</div>
+</div>
+
+<h4>查看可学习参数</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+bn <span style="color: Gray;">=</span> nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;weight (gamma) shape: {bn.weight.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># torch.Size([64])</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;bias &nbsp; (beta) &nbsp;shape: {bn.bias.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># torch.Size([64])</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;running_mean &nbsp; shape: {bn.running_mean.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># torch.Size([64])</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;running_var &nbsp; &nbsp;shape: {bn.running_var.shape}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># torch.Size([64])</span><br />
+<br />
+<span style="color: #a50"># running_mean / running_var 不是可训练参数</span><br />
+<span style="color: #a50"># 它们是推理时使用的滑动平均统计量</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;可训练参数数量: {sum(p.numel() for p in bn.parameters())}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 128（64×2）</span><br />
+
+</div>
+</div>
+
+<h4>momentum 参数的含义</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># PyTorch 的 momentum 与通常理解相反：</span><br />
+<span style="color: #a50"># running_mean = (1 - momentum) × running_mean + momentum × batch_mean</span><br />
+<span style="color: #a50"># 即 momentum 越大，对当前 batch 的统计量权重越大</span><br />
+<br />
+<span style="color: #a50"># 默认 0.1：通常合适</span><br />
+<span style="color: #a50"># 小 batch size 时建议调小：momentum=0.01，避免统计量不稳定</span><br />
+bn <span style="color: Gray;">=</span> nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> momentum<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># momentum=None：使用累积移动平均（CMA），适合非常小的 batch</span><br />
+bn <span style="color: Gray;">=</span> nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> momentum<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h3 id="13-layernorm-层归一化">1.3 LayerNorm 层归一化</h3>
+<p>对<strong>单个样本的所有特征</strong>做归一化，不依赖 batch，适合 batch size 小或可变的场景。<strong>Transformer 的标配归一化方式</strong>。</p>
+<pre>
+BatchNorm：在 batch 维度计算均值/方差（跨样本，同通道）
+LayerNorm：在特征维度计算均值/方差（同样本，跨特征）
+</pre>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: #a50"># ── 用于全连接/Transformer ────────────────────────</span><br />
+<span style="color: #a50"># normalized_shape：对最后几个维度做归一化</span><br />
+ln <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>normalized_shape<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span><br />
+<br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># (batch, seq_len, embed_dim)</span><br />
+out <span style="color: Gray;">=</span> ln<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># torch.Size([32, 10, 512])</span><br />
+<br />
+<span style="color: #a50"># ── 对多个维度归一化 ───────────────────────────────</span><br />
+ln_2d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">28</span><span style="color: Gray;">,</span> <span style="color: Maroon;">28</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># 对 C, H, W 三个维度归一化</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">28</span><span style="color: Gray;">,</span> <span style="color: Maroon;">28</span><span style="color: Olive;">&#41;</span><br />
+out <span style="color: Gray;">=</span> ln_2d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── Transformer 中的典型用法 ──────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">class</span> TransformerBlock<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> embed_dim<span style="color: Gray;">,</span> num_heads<span style="color: Gray;">,</span> ff_dim<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">attn</span> &nbsp;<span style="color: Gray;">=</span> nn.<span style="color: #05a;">MultiheadAttention</span><span style="color: Olive;">&#40;</span>embed_dim<span style="color: Gray;">,</span> num_heads<span style="color: Gray;">,</span> batch_first<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">ff</span> &nbsp; &nbsp;<span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>embed_dim<span style="color: Gray;">,</span> ff_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">GELU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>ff_dim<span style="color: Gray;">,</span> embed_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">norm1</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>embed_dim<span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># ← 每个子层后归一化</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">norm2</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span>embed_dim<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; attn_out<span style="color: Gray;">,</span> _ <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">attn</span><span style="color: Olive;">&#40;</span>x<span style="color: Gray;">,</span> x<span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">norm1</span><span style="color: Olive;">&#40;</span>x + attn_out<span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 残差 + 归一化</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; x <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">norm2</span><span style="color: Olive;">&#40;</span>x + <span style="color: Teal;">self</span>.<span style="color: #05a;">ff</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> x<br />
+
+</div>
+</div>
+<hr>
+
+<h3 id="14-groupnorm-组归一化">1.4 GroupNorm 组归一化</h3>
+<p>将通道分成若干<strong>组</strong>，在每组内做归一化。不依赖 batch size，在小 batch 场景（如目标检测、医学影像分割）效果优于 BatchNorm。</p>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># num_groups：将通道分成多少组（必须能整除 num_channels）</span><br />
+<span style="color: #a50"># 特殊情况：num_groups=1 等价于 LayerNorm</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; num_groups=num_channels 等价于 InstanceNorm</span><br />
+gn <span style="color: Gray;">=</span> nn.<span style="color: #05a;">GroupNorm</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; num_groups<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 分组数（常用：8, 16, 32）</span><br />
+&nbsp; &nbsp; num_channels<span style="color: Gray;">=</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 通道数</span><br />
+&nbsp; &nbsp; eps<span style="color: Gray;">=</span><span style="color: Maroon;">1e-5</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; affine<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">56</span><span style="color: Gray;">,</span> <span style="color: Maroon;">56</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 小 batch（4 张图），256 通道</span><br />
+out <span style="color: Gray;">=</span> gn<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># torch.Size([4, 256, 56, 56])</span><br />
+<br />
+<span style="color: #a50"># GroupNorm 在 batch=1 时（如推理单张图）效果完全不受影响</span><br />
+x_single <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">56</span><span style="color: Gray;">,</span> <span style="color: Maroon;">56</span><span style="color: Olive;">&#41;</span><br />
+out_single <span style="color: Gray;">=</span> gn<span style="color: Olive;">&#40;</span>x_single<span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 完全正常工作</span><br />
+
+</div>
+</div>
+<hr>
+
+<h3 id="15-instancenorm-实例归一化">1.5 InstanceNorm 实例归一化</h3>
+<p>对<strong>每个样本的每个通道</strong>独立归一化，不涉及 batch 维度。常用于<strong>图像风格迁移</strong>——保留每张图自身的风格信息，不让 batch 内其他图像的统计量干扰。</p>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># InstanceNorm2d：对每个 (N, C) 上的 H×W 做归一化</span><br />
+in2d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">InstanceNorm2d</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; num_features<span style="color: Gray;">=</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; affine<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 默认 False（不学习 gamma/beta）</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><br />
+out <span style="color: Gray;">=</span> in2d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># torch.Size([8, 64, 128, 128])</span><br />
+
+</div>
+</div>
+<hr>
+
+<h3 id="16-各归一化方法对比">1.6 各归一化方法对比</h3>
+<table class="reference">
+<thead>
+<tr>
+<th>方法</th>
+<th>归一化维度</th>
+<th>batch 依赖</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BatchNorm</code></td>
+<td>跨 batch（同通道）</td>
+<td>强依赖</td>
+<td>CNN 图像分类（大 batch）</td>
+</tr>
+<tr>
+<td><code>LayerNorm</code></td>
+<td>跨特征（同样本）</td>
+<td>无依赖</td>
+<td>Transformer、NLP、RNN</td>
+</tr>
+<tr>
+<td><code>GroupNorm</code></td>
+<td>组内通道（同样本）</td>
+<td>无依赖</td>
+<td>小 batch 目标检测、分割</td>
+</tr>
+<tr>
+<td><code>InstanceNorm</code></td>
+<td>空间维度（同样本同通道）</td>
+<td>无依赖</td>
+<td>图像风格迁移、生成模型</td>
+</tr>
+</tbody>
+</table>
+<div class="example">
+<h2 class="example">选择建议速查</h2>
+<div class="example_code">
+
+<span style="color: #a50"># batch_size &gt;= 16，CNN 图像任务 &nbsp; &nbsp; &nbsp; → BatchNorm2d</span><br />
+<span style="color: #a50"># Transformer / BERT / GPT &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;→ LayerNorm</span><br />
+<span style="color: #a50"># batch_size &lt; 8，目标检测/分割 &nbsp; &nbsp; &nbsp; &nbsp;→ GroupNorm(num_groups=32)</span><br />
+<span style="color: #a50"># 图像风格迁移 / CycleGAN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; → InstanceNorm2d</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>2. Dropout</h2>
+
+<h3 id="21-基础原理">2.1 基础原理</h3>
+<p>Dropout 在训练时随机将某些神经元的输出置为 0（概率为 <code>p</code>），强迫网络不能依赖任何单一神经元，从而学习更鲁棒、分散的特征表示，有效防止过拟合。</p>
+<p><strong>训练时：</strong></p>
+<p class="math">\[y_i = \begin{cases} 0 & \text{以概率 } p \\ \dfrac{x_i}{1-p} & \text{以概率 } 1-p \end{cases}\]</p>
+<p>保留的神经元会被放大 \(\frac{1}{1-p}\) 倍，以保持期望值不变（即 Inverted Dropout）。</p>
+<p><strong>推理时：</strong> Dropout <strong>自动关闭</strong>，所有神经元正常参与计算，相当于多个子网络的集成平均。</p>
+<pre>
+训练时示意（p=0.5）：
+输入:  [1.0,  2.0,  3.0,  4.0,  5.0]
+掩码:  [ 1,    0,    1,    0,    1 ]   &larr; 随机生成
+输出:  [2.0,  0.0,  6.0,  0.0, 10.0]  &larr; 保留的值乘以 1/(1-0.5)=2
+
+推理时：
+输出:  [1.0,  2.0,  3.0,  4.0,  5.0]  &larr; 原样输出
+</pre>
+<hr>
+
+<h3 id="22-dropout--dropout2d--dropout3d">2.2 Dropout / Dropout2d / Dropout3d</h3>
+
+<h4>Dropout：用于全连接层</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+dropout <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># p：置零的概率</span><br />
+<br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">ones</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;训练模式:&quot;</span><span style="color: Olive;">&#41;</span><br />
+dropout.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 约 50% 的值为 0，保留的值为 2.0</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>评估模式:&quot;</span><span style="color: Olive;">&#41;</span><br />
+dropout.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 全为 1.0，Dropout 关闭</span><br />
+
+</div>
+</div>
+<p>输出示例：</p>
+<pre>
+训练模式:
+tensor([[2., 0., 2., 0., 2., 0., 0., 2., 2., 0.],
+        [0., 2., 0., 2., 0., 2., 2., 0., 0., 2.]])
+
+评估模式:
+tensor([[1., 1., 1., 1., 1., 1., 1., 1., 1., 1.],
+        [1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]])
+</pre>
+
+<h4>Dropout2d：用于 CNN 特征图（整通道丢弃）</h4>
+<p><code>Dropout2d</code> 以通道为单位随机丢弃，即整个通道的所有空间位置一起被置零。这比逐点 Dropout 更适合卷积特征，因为相邻像素的激活值高度相关，逐点丢弃效果较弱。</p>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+dropout2d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout2d</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 输入：(N, C, H, W)</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">ones</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">16</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 4 张图，16 通道</span><br />
+out <span style="color: Gray;">=</span> dropout2d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># torch.Size([4, 16, 8, 8])</span><br />
+<br />
+<span style="color: #a50"># 验证：整通道丢弃</span><br />
+<span style="color: #a50"># 第 0 张图的通道丢弃情况（非零 = 保留通道，全零 = 被丢弃通道）</span><br />
+kept_channels <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>out<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span>dim<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">!=</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span>.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;第 0 张图保留了 {kept_channels}/16 个通道&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h4>Dropout3d：用于 3D 卷积</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 输入：(N, C, D, H, W)，整个 (D, H, W) 特征体被丢弃</span><br />
+dropout3d <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout3d</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.2</span><span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">ones</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">16</span><span style="color: Gray;">,</span> <span style="color: Maroon;">16</span><span style="color: Gray;">,</span> <span style="color: Maroon;">16</span><span style="color: Olive;">&#41;</span><br />
+out <span style="color: Gray;">=</span> dropout3d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>out.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># torch.Size([2, 8, 16, 16, 16])</span><br />
+
+</div>
+</div>
+
+<h4>p 值的选择建议</h4>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 全连接层（隐藏层较宽）：较高 Dropout</span><br />
+nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># 经典值，隐藏层标配</span><br />
+<br />
+<span style="color: #a50"># 全连接层（隐藏层较窄）或小网络：较低 Dropout</span><br />
+nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.2</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># 避免欠拟合</span><br />
+<br />
+<span style="color: #a50"># 卷积层 Dropout2d：一般较低</span><br />
+nn.<span style="color: #05a;">Dropout2d</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># 卷积层本身已有一定正则效果</span><br />
+<br />
+<span style="color: #a50"># 分类头前的 Dropout（如 EfficientNet / ViT）</span><br />
+nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># 通常在 0.2~0.5 之间</span><br />
+<br />
+<span style="color: #a50"># Transformer 的注意力 / FFN Dropout</span><br />
+nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># BERT 默认值，Transformer 通常较小</span><br />
+
+</div>
+</div>
+<hr>
+
+<h3 id="23-alphadropout">2.3 AlphaDropout</h3>
+<p>专为 <strong>SELU 激活函数</strong>设计的 Dropout 变体，在丢弃神经元后会自动调整均值和方差，保持自归一化（self-normalizing）属性。</p>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 配合 SELU 使用（自归一化网络 SELU + AlphaDropout）</span><br />
+<span style="color: Green;font-weight:bold;">class</span> SelfNormalizingNet<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> in_dim<span style="color: Gray;">,</span> hidden_dim<span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">net</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>in_dim<span style="color: Gray;">,</span> hidden_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">SELU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AlphaDropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># ← 配合 SELU 使用</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>hidden_dim<span style="color: Gray;">,</span> hidden_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">SELU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AlphaDropout</span><span style="color: Olive;">&#40;</span>p<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>hidden_dim<span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">net</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<blockquote><p><strong>注意：</strong> AlphaDropout 仅在使用 SELU 激活函数时有意义，配合其他激活函数时直接用普通 Dropout。</p></blockquote>
+<hr>
+
+<h2>3. 训练模式与评估模式</h2>
+<p>BatchNorm 和 Dropout 的行为在训练和评估时<strong>完全不同</strong>，必须正确切换，这是初学者最常见的错误之一。</p>
+
+<h3>行为差异对比</h3>
+<table class="reference">
+<thead>
+<tr>
+<th>组件</th>
+<th><code>model.train()</code></th>
+<th><code>model.eval()</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BatchNorm</td>
+<td>用当前 batch 的均值/方差归一化；<strong>更新</strong> running_mean/var</td>
+<td>用 running_mean/var 归一化；<strong>不更新</strong></td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td>随机置零（按概率 p）</td>
+<td>关闭，所有神经元正常输出</td>
+</tr>
+</tbody>
+</table>
+
+<h3>正确使用方式</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+model <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm1d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── 训练阶段 ──────────────────────────────────────</span><br />
+model.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># ← 切换到训练模式（默认状态）</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">for</span> inputs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> train_loader:<br />
+&nbsp; &nbsp; optimizer.<span style="color: #05a;">zero_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>inputs<span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># BN 用 batch 统计，Dropout 随机丢弃</span><br />
+&nbsp; &nbsp; loss <span style="color: Gray;">=</span> criterion<span style="color: Olive;">&#40;</span>outputs<span style="color: Gray;">,</span> labels<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; loss.<span style="color: #05a;">backward</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── 评估/验证阶段 ─────────────────────────────────</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># ← 切换到评估模式（非常重要！）</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 同时关闭梯度计算</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> inputs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> val_loader:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>inputs<span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># BN 用运行统计，Dropout 关闭</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># ...</span><br />
+<br />
+<span style="color: #a50"># ── 推理单张图片 ──────────────────────────────────</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">inference_mode</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>: &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 比 no_grad 更快，推理专用</span><br />
+&nbsp; &nbsp; output <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>single_input.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; pred &nbsp; <span style="color: Gray;">=</span> output.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>验证模式切换是否正确</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 用这段代码验证 BN 和 Dropout 是否在正确模式下工作</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><br />
+<br />
+model.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+out_train_1 <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+out_train_2 <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;训练模式两次输出相同?&quot;</span><span style="color: Gray;">,</span> torch.<span style="color: #05a;">allclose</span><span style="color: Olive;">&#40;</span>out_train_1<span style="color: Gray;">,</span> out_train_2<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># False ← 每次 Dropout 掩码不同，输出不同（正常现象）</span><br />
+<br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+out_eval_1 <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+out_eval_2 <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;评估模式两次输出相同?&quot;</span><span style="color: Gray;">,</span> torch.<span style="color: #05a;">allclose</span><span style="color: Olive;">&#40;</span>out_eval_1<span style="color: Gray;">,</span> out_eval_2<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># True ← Dropout 关闭，BN 使用固定统计量，输出确定（正常现象）</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>4. 在网络中的使用位置</h2>
+
+<h3>BatchNorm 的放置位置</h3>
+<p>BatchNorm 的位置存在两种流派，目前均有实践：</p>
+<div class="example">
+<h2 class="example">流派一：激活函数之前（原始论文）</h2>
+<div class="example_code">
+
+<span style="color: #a50"># Conv → BN → ReLU</span><br />
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># BN 在激活前</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">流派二：激活函数之后（部分研究认为效果更好）</h2>
+<div class="example_code">
+
+<span style="color: #a50"># Conv → ReLU → BN</span><br />
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># BN 在激活后</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<blockquote><p><strong>实际建议：</strong> 遵循你所参考论文的设计；没有特殊要求时，Conv → BN → ReLU 更为主流</p></blockquote>
+
+<h3>Dropout 的放置位置</h3>
+<div class="example">
+<h2 class="example">全连接网络：放在激活函数之后</h2>
+<div class="example_code">
+
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">512</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 在 ReLU 后</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 输出层前通常不加 Dropout</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">CNN：放在 BN 之后（如有 BN 则 Dropout 可省略）</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 注意：BN 本身有正则效果，CNN 中若已有 BN，卷积层不必加 Dropout</span><br />
+<span style="color: #a50"># Dropout 通常只加在全连接层或分类头前</span><br />
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 通常不在这里加 Dropout（BN 已提供正则效果）</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">Transformer：放在 FFN 和注意力层内部</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">class</span> FeedForward<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">,</span> d_ff<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">net</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_model<span style="color: Gray;">,</span> d_ff<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">GELU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># FFN 内部加 Dropout</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>d_ff<span style="color: Gray;">,</span> d_model<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 输出前再加一次</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">net</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>BN 与 Dropout 是否同时使用？</h3>
+<div class="example">
+<h2 class="example">全连接网络：可以同时使用</h2>
+<div class="example_code">
+
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">512</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm1d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># BN + Dropout 共存，常见且有效</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<p>卷积网络：通常二选一或仅在头部用 Dropout。</p>
+<p>原因：BN 的归一化操作与 Dropout 可能产生"方差偏移"问题。即训练时 Dropout 改变了激活值的方差，而推理时 Dropout 关闭，导致 BN 推理时看到的统计量与训练时不一致。</p>
+<p><strong>推荐做法：</strong></p>
+<p>方案 A：卷积层只用 BN，全连接/分类头只用 Dropout</p>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">class</span> ConvNet<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">features</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 卷积部分：只用 BN</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AdaptiveAvgPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Flatten</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 全连接部分：只用 Dropout</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">features</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>5. 完整网络实例</h2>
+
+<h3>实例一：全连接分类网络（BN + Dropout）</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> MLPClassifier<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 带 BatchNorm1d 和 Dropout 的全连接分类器<br />
+&nbsp; &nbsp; 适用于表格数据分类任务<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> in_dim<span style="color: Gray;">,</span> hidden_dims<span style="color: Gray;">,</span> num_classes<span style="color: Gray;">,</span> dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; layers <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prev_dim <span style="color: Gray;">=</span> in_dim<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> hidden_dim <span style="color: Green;font-weight:bold;">in</span> hidden_dims:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; layers +<span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>prev_dim<span style="color: Gray;">,</span> hidden_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm1d</span><span style="color: Olive;">&#40;</span>hidden_dim<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>dropout<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; prev_dim <span style="color: Gray;">=</span> hidden_dim<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; layers.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>prev_dim<span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">net</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span>*layers<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">net</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+model <span style="color: Gray;">=</span> MLPClassifier<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; in_dim<span style="color: Gray;">=</span><span style="color: Maroon;">784</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; hidden_dims<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">512</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; num_classes<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.4</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 验证输出形状</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">784</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># torch.Size([32, 10])</span><br />
+
+</div>
+</div>
+
+<h3>实例二：CNN 图像分类（BN 为主）</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">class</span> ConvBNBlock<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;标准卷积块：Conv → BN → ReLU&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> in_ch<span style="color: Gray;">,</span> out_ch<span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">block</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span>in_ch<span style="color: Gray;">,</span> out_ch<span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span>stride<span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span>out_ch<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># bias=False：BN 的 beta 已起偏置作用</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span>inplace<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">block</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> SmallCNN<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;用于 CIFAR-10 的小型 CNN&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> num_classes<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">features</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ConvBNBlock<span style="color: Olive;">&#40;</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 32×32 → 32×32</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ConvBNBlock<span style="color: Olive;">&#40;</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 32×32 → 16×16</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ConvBNBlock<span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 16×16 → 8×8</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ConvBNBlock<span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">256</span><span style="color: Gray;">,</span> stride<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 8×8 → 4×4</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">AdaptiveAvgPool2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 4×4 → 1×1</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Flatten</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 只在全连接层用 Dropout</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> num_classes<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">classifier</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">features</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+model <span style="color: Gray;">=</span> SmallCNN<span style="color: Olive;">&#40;</span>num_classes<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># torch.Size([16, 10])</span><br />
+
+</div>
+</div>
+
+<h3>实例三：完整训练循环</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">optim</span> <span style="color: Green;font-weight:bold;">as</span> optim<br />
+<span style="color: Green;font-weight:bold;">from</span> torch.<span style="color: #05a;">optim</span>.<span style="color: #05a;">lr_scheduler</span> <span style="color: Green;font-weight:bold;">import</span> CosineAnnealingLR<br />
+<br />
+<span style="color: #05a;">DEVICE</span> <span style="color: Gray;">=</span> torch.<span style="color: #05a;">device</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'cuda'</span> <span style="color: Green;font-weight:bold;">if</span> torch.<span style="color: #05a;">cuda</span>.<span style="color: #05a;">is_available</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">else</span> <span style="color: #a11;">'cpu'</span><span style="color: Olive;">&#41;</span><br />
+EPOCHS <span style="color: Gray;">=</span> <span style="color: Maroon;">50</span><br />
+<br />
+model &nbsp; &nbsp; <span style="color: Gray;">=</span> SmallCNN<span style="color: Olive;">&#40;</span>num_classes<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">DEVICE</span><span style="color: Olive;">&#41;</span><br />
+criterion <span style="color: Gray;">=</span> nn.<span style="color: #05a;">CrossEntropyLoss</span><span style="color: Olive;">&#40;</span>label_smoothing<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">AdamW</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">1e-3</span><span style="color: Gray;">,</span> weight_decay<span style="color: Gray;">=</span><span style="color: Maroon;">1e-4</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> CosineAnnealingLR<span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> T_max<span style="color: Gray;">=</span>EPOCHS<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> run_epoch<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> loader<span style="color: Gray;">,</span> optimizer<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Gray;">,</span> train<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> train:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; model.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># ← BN 用 batch 统计，Dropout 激活</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># ← BN 用 running 统计，Dropout 关闭</span><br />
+<br />
+&nbsp; &nbsp; total_loss<span style="color: Gray;">,</span> correct <span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><br />
+<br />
+&nbsp; &nbsp; ctx <span style="color: Gray;">=</span> torch.<span style="color: #05a;">enable_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">if</span> train <span style="color: Green;font-weight:bold;">else</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> ctx:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> imgs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> loader:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; imgs<span style="color: Gray;">,</span> labels <span style="color: Gray;">=</span> imgs.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">DEVICE</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> labels.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">DEVICE</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> train:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">zero_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>imgs<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loss &nbsp; &nbsp;<span style="color: Gray;">=</span> criterion<span style="color: Olive;">&#40;</span>outputs<span style="color: Gray;">,</span> labels<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> train:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loss.<span style="color: #05a;">backward</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; total_loss +<span style="color: Gray;">=</span> loss.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> * imgs.<span style="color: #05a;">size</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; correct &nbsp; &nbsp;+<span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>outputs.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">==</span> labels<span style="color: Olive;">&#41;</span>.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; n <span style="color: Gray;">=</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>loader.<span style="color: #05a;">dataset</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> total_loss / n<span style="color: Gray;">,</span> correct / n<br />
+<br />
+<br />
+best_acc <span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> EPOCHS + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; train_loss<span style="color: Gray;">,</span> train_acc <span style="color: Gray;">=</span> run_epoch<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> train_loader<span style="color: Gray;">,</span> optimizer<span style="color: Gray;">,</span> train<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; val_loss<span style="color: Gray;">,</span> &nbsp; val_acc &nbsp; <span style="color: Gray;">=</span> run_epoch<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> val_loader<span style="color: Gray;">,</span> &nbsp; train<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Epoch {epoch:2d}/{EPOCHS} | &quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;Train {train_loss:.4f}/{train_acc:.4f} | &quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;Val {val_loss:.4f}/{val_acc:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> val_acc <span style="color: Gray;">&gt;</span> best_acc:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; best_acc <span style="color: Gray;">=</span> val_acc<br />
+&nbsp; &nbsp; &nbsp; &nbsp; torch.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'best.pth'</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>6. 超参数调优指南</h2>
+
+<h3>BatchNorm 参数调优</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ── momentum（最常需要调整的参数）─────────────────</span><br />
+<span style="color: #a50"># 默认值 0.1 在大多数情况下有效</span><br />
+<br />
+<span style="color: #a50"># batch_size 很小（&lt; 8）→ 统计量不稳定 → 减小 momentum</span><br />
+nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> momentum<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 训练步数很多、数据分布平稳 → 可以适当增大 momentum</span><br />
+nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> momentum<span style="color: Gray;">=</span><span style="color: Maroon;">0.2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── affine=False（不学习 gamma/beta）──────────────</span><br />
+<span style="color: #a50"># 极少使用，通常保持默认 True</span><br />
+<span style="color: #a50"># 除非明确不希望 BN 改变特征的缩放和偏移</span><br />
+nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> affine<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ── track_running_stats=False ──────────────────────</span><br />
+<span style="color: #a50"># 每次推理也用当前 batch 统计（训练和推理行为一致）</span><br />
+<span style="color: #a50"># 适合在线学习、流数据等特殊场景</span><br />
+nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> track_running_stats<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>Dropout 调优策略</h3>
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ── 根据过拟合程度调整 p ───────────────────────────</span><br />
+<span style="color: #a50"># 训练 acc 远高于验证 acc（严重过拟合） → 增大 p</span><br />
+<span style="color: #a50"># 训练 acc 与验证 acc 接近但都偏低（欠拟合） → 减小 p 或去掉 Dropout</span><br />
+<br />
+<span style="color: #a50"># ── 推荐的 p 值参考 ───────────────────────────────</span><br />
+p_values <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'大型全连接隐藏层（&gt; 1024）'</span>: <span style="color: Maroon;">0.5</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'中型全连接隐藏层（256~1024）'</span>: <span style="color: Maroon;">0.3</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'小型全连接隐藏层（&lt; 256）'</span>: <span style="color: Maroon;">0.2</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'CNN 卷积层（Dropout2d）'</span>: <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'分类头前'</span>: <span style="color: Maroon;">0.3</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'Transformer FFN'</span>: <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'Transformer 注意力'</span>: <span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># ── 动态 Dropout（随训练进程调整）──────────────────</span><br />
+<span style="color: #a50"># 某些实践中，训练初期 p 较小，后期增大（模型越来越复杂时加强正则）</span><br />
+<span style="color: Green;font-weight:bold;">class</span> DynamicDropoutNet<span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">Module</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> initial_p<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Dropout</span><span style="color: Olive;">&#40;</span>initial_p<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">fc</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">256</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> set_dropout<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> p<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span>.<span style="color: #05a;">p</span> <span style="color: Gray;">=</span> p<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> forward<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> x<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">fc</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">dropout</span><span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+model <span style="color: Gray;">=</span> DynamicDropoutNet<span style="color: Olive;">&#40;</span>initial_p<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># 训练到中期，增大 Dropout</span><br />
+model.<span style="color: #05a;">set_dropout</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.4</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>7. 常见错误与注意事项</h2>
+
+<h3>错误一：忘记切换 eval() 模式</h3>
+<div class="example">
+<h2 class="example">错误写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 错误：评估时没有调用 model.eval()</span><br />
+model.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># 默认状态</span><br />
+<span style="color: Green;font-weight:bold;">for</span> imgs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> val_loader:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>imgs<span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># Dropout 仍然随机丢弃！BN 仍在更新！</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 结果不确定，准确率虚低，且污染了 running_mean/var</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">正确写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 正确：评估前明确切换模式</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>imgs<span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 确定性输出</span><br />
+
+</div>
+</div>
+
+<h3>错误二：Conv 层加了 bias 又接 BN</h3>
+<div class="example">
+<h2 class="example">错误写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 多余：Conv 的 bias 会被 BN 的 beta 抵消，浪费参数</span><br />
+nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 默认 True</span><br />
+nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">正确写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 正确：Conv 接 BN 时，关闭 bias</span><br />
+nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> bias<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># ← bias=False</span><br />
+nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+
+</div>
+</div>
+
+<h3>错误三：batch size=1 时使用 BatchNorm</h3>
+<div class="example">
+<h2 class="example">错误写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 错误：batch=1 时 BN 无法计算方差，训练时会出现 NaN 或 inf</span><br />
+<span style="color: #a50"># 单样本推理没问题（使用 running stats），但单样本训练会崩溃</span><br />
+model.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+x <span style="color: Gray;">=</span> torch.<span style="color: #05a;">randn</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+out <span style="color: Gray;">=</span> bn2d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># ← 训练模式下 batch=1 会报错或产生 NaN</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">解决方案</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 解决方案一：使用 GroupNorm 替代</span><br />
+nn.<span style="color: #05a;">GroupNorm</span><span style="color: Olive;">&#40;</span>num_groups<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> num_channels<span style="color: Gray;">=</span><span style="color: Maroon;">64</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 解决方案二：使用 LayerNorm</span><br />
+nn.<span style="color: #05a;">LayerNorm</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Gray;">,</span> <span style="color: Maroon;">32</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 解决方案三：推理时切换 eval()，不影响 BN</span><br />
+model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+out <span style="color: Gray;">=</span> bn2d<span style="color: Olive;">&#40;</span>x<span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 推理模式下 batch=1 完全正常</span><br />
+
+</div>
+</div>
+
+<h3>错误四：Dropout 导致 BN 的方差偏移</h3>
+<div class="example">
+<h2 class="example">问题</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 问题：Dropout 在训练时改变激活值的方差</span><br />
+<span style="color: #a50"># 推理时 Dropout 关闭，BN 用训练时的 running_var（含 Dropout 影响）</span><br />
+<span style="color: #a50"># 统计量不匹配，推理结果有偏差</span><br />
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Dropout2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># ← 在卷积层用 Dropout</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># ← BN 看到的方差被 Dropout 改变了</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">解决方案</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 方案一：BN 在前，Dropout 在后</span><br />
+nn.<span style="color: #05a;">Sequential</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Conv2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">64</span><span style="color: Gray;">,</span> <span style="color: Maroon;">128</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">128</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 先 BN（不受 Dropout 影响）</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">ReLU</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; nn.<span style="color: #05a;">Dropout2d</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 后 Dropout</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 方案二：卷积层只用 BN，全连接层只用 Dropout（最推荐）</span><br />
+
+</div>
+</div>
+
+<h3>错误五：在冻结的 BN 层忘记改为 eval 模式</h3>
+<div class="example">
+<h2 class="example">错误写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 迁移学习中，冻结主干时，预训练 BN 的 running stats 不应被更新</span><br />
+<span style="color: #a50"># 否则新数据分布会污染预训练的统计量</span><br />
+<br />
+<span style="color: #a50"># 错误：冻结参数，但 BN 的 running_mean/var 仍在更新</span><br />
+model <span style="color: Gray;">=</span> models.<span style="color: #05a;">resnet50</span><span style="color: Olive;">&#40;</span>weights<span style="color: Gray;">=</span><span style="color: #a11;">'IMAGENET1K_V2'</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> param <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; param.<span style="color: #05a;">requires_grad</span> <span style="color: Gray;">=</span> <span style="color: Teal;">False</span> &nbsp; <span style="color: #a50"># 仅冻结可学习参数，BN 统计量仍更新</span><br />
+
+</div>
+</div>
+<div class="example">
+<h2 class="example">正确写法</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 正确方案：将主干的 BN 层也切换为 eval 模式</span><br />
+<span style="color: Green;font-weight:bold;">def</span> freeze_bn<span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> module <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">modules</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">isinstance</span><span style="color: Olive;">&#40;</span>module<span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span>nn.<span style="color: #05a;">BatchNorm1d</span><span style="color: Gray;">,</span> nn.<span style="color: #05a;">BatchNorm2d</span><span style="color: Gray;">,</span> nn.<span style="color: #05a;">BatchNorm3d</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; module.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 固定 running_mean/var</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> param <span style="color: Green;font-weight:bold;">in</span> module.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; param.<span style="color: #05a;">requires_grad</span> <span style="color: Gray;">=</span> <span style="color: Teal;">False</span><br />
+<br />
+model <span style="color: Gray;">=</span> models.<span style="color: #05a;">resnet50</span><span style="color: Olive;">&#40;</span>weights<span style="color: Gray;">=</span><span style="color: #a11;">'IMAGENET1K_V2'</span><span style="color: Olive;">&#41;</span><br />
+freeze_bn<span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 冻结所有 BN</span><br />
+model.<span style="color: #05a;">fc</span> <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">fc</span>.<span style="color: #05a;">in_features</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 只有新 FC 层可训练</span><br />
+
+</div>
+</div>
+
+<h3>快速诊断清单</h3>
+<table class="reference">
+<thead>
+<tr>
+<th>现象</th>
+<th>可能原因</th>
+<th>检查项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>验证 loss 忽高忽低</td>
+<td>忘记 <code>model.eval()</code></td>
+<td>确认评估前调用 <code>eval()</code></td>
+</tr>
+<tr>
+<td>训练/验证 acc 差距极大</td>
+<td>Dropout <code>p</code> 过大</td>
+<td>尝试减小 <code>p</code> 或去掉 Dropout</td>
+</tr>
+<tr>
+<td>训练 NaN/inf</td>
+<td>batch=1 用了 BatchNorm</td>
+<td>换 GroupNorm 或 LayerNorm</td>
+</tr>
+<tr>
+<td>迁移学习效果差</td>
+<td>BN running stats 被污染</td>
+<td>主干 BN 层调用 <code>eval()</code></td>
+</tr>
+<tr>
+<td>模型推理结果不稳定</td>
+<td>推理时没切 <code>eval()</code></td>
+<td>推理前必须 <code>model.eval()</code></td>
+</tr>
+<tr>
+<td>Conv 参数量偏多</td>
+<td>Conv+BN 未关 bias</td>
+<td>设置 <code>bias=False</code></td>
+</tr>
+</tbody>
+</table>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-transfer-learning.html" rel="prev"> PyTorch 迁移学习</a> </div>
+			<div class="next-design-link"><a href="/pytorch/pytorch-lstm-gru.html" rel="next"> PyTorch LSTM / GRU</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30661' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30661;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30661, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30661},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30661;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>本地模型部署 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-local-model-deployment.html" />
+<meta name="keywords" content="本地模型部署">
+<meta name="description" content="本地模型部署    很多人以为 AI 只能在云端使用，用 ChatGPT 时，数据要传到 OpenAI 的服务器，用 Claude 时，请求要发送到 Anthropic 的数据中心。  其实，AI 模型完全可以在你自己的电脑上运行。  想象一下：没有网络也能用 AI，敏感数据不会离开你的电脑，不需要为每次调用付费，想怎么定制就怎么定制。  这就是本地模型部署的价值。  本模块将带你从零开始，在自己的电脑上跑起第一个本地 AI 模型。  ..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-product-design.html" rel="prev"> AI 产品设计</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-security.html" rel="next"> AI 安全进阶</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>本地模型部署</h1>
+
+
+
+<p>很多人以为 AI 只能在云端使用，用 ChatGPT 时，数据要传到 OpenAI 的服务器，用 Claude 时，请求要发送到 Anthropic 的数据中心。</p>
+
+<p>其实，<span class="marked">AI 模型完全可以在你自己的电脑上运行</span>。</p>
+
+<p>想象一下：没有网络也能用 AI，敏感数据不会离开你的电脑，不需要为每次调用付费，想怎么定制就怎么定制。</p>
+
+<p>这就是本地模型部署的价值。</p>
+
+<p>本模块将带你从零开始，在自己的电脑上跑起第一个本地 AI 模型。</p>
+
+
+<hr>
+
+<h2>为什么需要本地 AI</h2>
+
+<p>云端 AI 很方便，但本地 AI 有不可替代的优势。</p>
+
+<h3>数据隐私保护</h3>
+
+<p>这是很多人选择本地部署的首要原因。</p>
+
+<p>如果你要处理的是合同、病历、财务数据、内部文档，把这些数据传到第三方服务器是有风险的。</p>
+
+<p>本地运行时，<span class="marked">所有数据都在你自己的电脑上处理，不会离开你的设备</span>。</p>
+
+<h3>无网络环境使用</h3>
+
+<p>飞机上、火车上、网络不稳定的地方，云端 AI 用不了。</p>
+
+<p>本地模型下载一次后，永久可用，不需要网络连接。</p>
+
+<h3>成本控制</h3>
+
+<p>云端 AI 按调用次数或 Token 收费，用得多了也是一笔不小的开支。</p>
+
+<p>本地模型一次性下载，之后随便用，不需要额外付费。</p>
+
+<h3>定制化可能</h3>
+
+<p>云端模型你没法改，只能用人家提供的功能。</p>
+
+<p>本地模型你可以微调、可以量化、可以修改提示词模板，可以完全按照自己的需求定制。</p>
+
+<p>这些优势对比：</p>
+
+<table class="reference">
+<tr><th>特性</th><th>云端 AI</th><th>本地 AI</th></tr>
+<tr><td>数据隐私</td><td>数据需上传</td><td><span class="tag1 green">数据完全本地化</span></td></tr>
+<tr><td>网络依赖</td><td>必须联网</td><td><span class="tag1 green">无需网络</span></td></tr>
+<tr><td>使用成本</td><td>按次收费</td><td><span class="tag1 green">一次下载，无限使用</span></td></tr>
+<tr><td>定制能力</td><td>受限</td><td><span class="tag1 green">完全可控</span></td></tr>
+<tr><td>使用便利性</td><td><span class="tag1 green">开箱即用</span></td><td>需要配置</td></tr>
+<tr><td>响应速度</td><td><span class="tag1 green">取决于网络</span></td><td>取决于硬件</td></tr>
+</table>
+
+<blockquote>
+<p>不是说云端 AI 不好，而是说<strong>两者各有适用场景</strong>。日常闲聊用云端，处理敏感数据用本地；简单任务用云端，特殊定制用本地。</p>
+</blockquote>
+
+<hr>
+
+<h2>硬件需求评估</h2>
+
+<p>本地模型能不能跑、跑得多快，主要看你的硬件配置。</p>
+
+<h3>CPU 推理 vs GPU 推理</h3>
+
+<p>模型运行有两种方式：CPU 推理和 GPU 推理。</p>
+
+<p>CPU 推理就是用电脑的主处理器跑模型，优点是兼容性好，几乎所有电脑都能跑；缺点是速度慢，大模型可能要等很久。</p>
+
+<p>GPU 推理用显卡跑，核心优势是<span class="marked">并行计算能力强，跑模型速度快几十倍</span>。</p>
+
+<p>对于 NVIDIA 显卡，需要安装 CUDA 工具包；对于 AMD 显卡，可以用 ROCm；对于 Intel 显卡，可以用 OpenVINO。</p>
+
+<h3>显存需求与模型大小的关系</h3>
+
+<p>显存（VRAM）决定了你能跑多大的模型。</p>
+
+<p>模型参数越多，需要的显存越大。但通过量化技术，可以用更小的显存跑更大的模型。</p>
+
+<table class="reference">
+<tr><th>显存大小</th><th>可运行的模型（FP16）</th><th>可运行的模型（量化后）</th><th>推荐场景</th></tr>
+<tr><td>8 GB</td><td>7B 模型较勉强</td><td>7B（Q4）、13B（Q4）勉强</td><td><span class="tag1">简单对话、轻量任务</span></td></tr>
+<tr><td>16 GB</td><td>7B、13B 模型</td><td>7B、13B（Q4/Q8）、33B（Q4）</td><td><span class="tag1 green">日常使用、性价比最高</span></td></tr>
+<tr><td>24 GB</td><td>7B、13B、33B 模型</td><td>7B、13B、33B（Q4/Q8）、70B（Q4）</td><td><span class="tag1 blue">专业用途、流畅体验</span></td></tr>
+<tr><td>48 GB+</td><td>33B、70B 模型</td><td>所有主流模型</td><td><span class="tag1 purple">研究、生产环境</span></td></tr>
+</table>
+
+<h3>Mac M 系列的优势</h3>
+
+<p>苹果 Silicon（M1、M2、M3 系列芯片）在本地 AI 方面有独特优势。</p>
+
+<p>Apple 的 Metal 框架和统一内存架构，让 Mac 跑本地模型效率很高。</p>
+
+<p>统一内存意味着<span class="marked">CPU 和 GPU 共享内存</span>，显存不够时可以自动借用内存。</p>
+
+<p>一台 16GB 统一内存的 MacBook Pro，就能流畅跑 7B、13B 的量化模型。</p>
+
+<h3>推荐配置方案</h3>
+
+<p>根据不同的预算和需求，这里有几个配置方案：</p>
+
+<table class="reference">
+<tr><th>方案</th><th>配置</th><th>适合人群</th><th>预期体验</th></tr>
+<tr><td>入门方案</td><td>任意电脑（8GB 内存以上）</td><td>想体验本地 AI 的新手</td><td>能跑小模型，速度较慢</td></tr>
+<tr><td>性价比方案</td><td>16GB 内存 + 6GB 以上显存</td><td>个人日常使用</td><td>7B/13B 模型流畅运行</td></tr>
+<tr><td>专业方案</td><td>32GB 内存 + 12GB 以上显存</td><td>开发者、研究人员</td><td>33B 模型流畅运行</td></tr>
+<tr><td>Mac 方案</td><td>M1/M2/M3 + 16GB 统一内存</td><td>Mac 用户首选</td><td>7B/13B 模型流畅运行</td></tr>
+</table>
+
+<blockquote>
+<p>不要被大模型这个词吓倒。今天的量化技术已经能让 7B 模型在普通电脑上流畅运行，而 7B 模型的能力对于大多数日常任务已经足够。</p>
+</blockquote>
+
+<hr>
+
+<h2>Ollama：最简单的本地 AI 工具</h2>
+	<ul>
+<li>Ollama 官网：<a href="https://ollama.com/" target="_blank">https://ollama.com/</a></li>
+	<li>
+Ollama 支持模型列表：<a href="https://ollama.com/search" target="_blank">https://ollama.com/search</a></li>
+
+
+	<li>
+Ollama 教程：<a href="/ollama/ollama-tutorial.html" target="_blank">https://www.runoob.com/ollama/ollama-tutorial.html</a></li></ul>
+
+
+
+<p>Ollama 是目前最流行的本地模型工具，一句话概括：<span class="marked">像安装 App 一样安装模型，像用命令行一样用 AI</span>。</p>
+
+<h3>安装与配置</h3>
+
+<p>Ollama 支持 macOS、Linux、Windows，安装过程非常简单。</p><p>
+安装包下载地址：<a href="https://ollama.com/download" target="_blank">https://ollama.com/download</a></p>
+
+<p>一条命令安装：</p>
+<pre>
+curl -fsSL https://ollama.com/install.sh | sh</pre>
+<p>macOS 用户可以直接下载安装包，或者用 Homebrew 安装：</p>
+<pre>
+# macOS 使用 Homebrew 安装
+brew install ollama
+
+# 或者下载安装包：https://ollama.com/download</pre>
+
+<p>Windows 用户直接从官网下载安装包运行即可。</p>
+
+
+
+<p>安装完成后，启动 Ollama 服务：</p>
+<pre>
+ollama serve</pre>
+
+<p>看到服务启动成功后，就可以开始用了。</p>
+
+<h3>下载模型</h3>
+
+<p>Ollama 的模型库非常丰富，包括 Llama、Qwen、Gemma、Mistral 等主流模型。</p>
+
+<p>下载模型只用一条命令：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 下载 Llama 3（8B 参数）</span><br />
+ollama pull llama3<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 下载 Qwen（通义千问，中文友好）</span><br />
+ollama pull qwen<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 下载 Gemma（Google 出品）</span><br />
+ollama pull gemma<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 下载 Mistral</span><br />
+ollama pull mistral<br />
+
+</div>
+</div><p>
+也可以使用 <span class="marked">ollama run + 模型名</span> 命令，如果没有指定的模型会主动下载：</p>
+<pre>
+ollama run qwen</pre><p>
+运行 qwen 模型，如果没有会下载。</p>
+<p>每个模型有不同的版本，比如 8B、70B，或者不同的量化版本。</p>
+
+<p>你可以用 <code>ollama list</code> 查看已经下载的模型：</p>
+<pre>
+ollama list</pre>
+<p>输出类似：</p>
+
+<pre>
+NAME              ID              SIZE      MODIFIED
+qwen3.5:latest    6488c96fa5fa    6.6 GB    3 months ago
+</pre>
+<h3>命令行使用</h3>
+
+<p>模型下载后，直接运行就可以开始对话：</p>
+
+<pre>
+# 运行 Llama 3，没有会下载
+ollama run llama3
+
+# 运行 Qwen，没有会下载
+ollama run qwen3.5</pre>
+<p>
+qwen3.5 用来做普通任务还是绰绰有余的：</p>
+<p><img decoding="async" src="../wp-content/uploads/2026/06/1782050331856.png"></p>
+<p>然后你就可以直接和模型对话了：</p>
+
+<pre>
+&gt;&gt;&gt; 你好，请介绍一下你自己
+你好！我是 Llama 3，由 Meta 开发的 AI 助手。我可以帮你回答问题、
+写作、编程、分析数据等。有什么我可以帮你的吗？
+
+&gt;&gt;&gt; 用 Python 写一个 Hello World 程序
+好的，这是一个简单的 Python Hello World 程序：
+
+print("Hello, World!")
+
+&gt;&gt;&gt; /bye  # 输入 /bye 退出
+</pre>
+
+<p>常用命令：</p>
+
+<table class="reference">
+<tr><th>命令</th><th>功能</th><th>示例</th></tr>
+<tr><td>ollama pull &lt;model&gt;</td><td>下载模型</td><td>ollama pull llama3</td></tr>
+<tr><td>ollama run &lt;model&gt;</td><td>运行模型</td><td>ollama run llama3</td></tr>
+<tr><td>ollama list</td><td>列出已安装模型</td><td>ollama list</td></tr>
+<tr><td>ollama rm &lt;model&gt;</td><td>删除模型</td><td>ollama rm llama3</td></tr>
+<tr><td>ollama show &lt;model&gt;</td><td>查看模型信息</td><td>ollama show llama3</td></tr>
+</table>
+
+<h3>API 接口调用</h3>
+
+<p>Ollama 自带 HTTP API，你可以用代码调用，而不只是在命令行用。</p>
+
+<p>默认情况下，Ollama 在 <code>http://localhost:11434</code> 提供 API 服务。</p>
+
+<p>用 Python 调用 Ollama API：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：/Users/runoob/ollama_test.py</span><br />
+<span style="color: #a50"># 用 Python 调用 Ollama API</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> requests<br />
+<span style="color: Green;font-weight:bold;">import</span> json<br />
+<br />
+<span style="color: #a50"># Ollama API 地址</span><br />
+OLLAMA_URL <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;http://localhost:11434/api/generate&quot;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> ask_ollama<span style="color: Olive;">&#40;</span>prompt: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> model: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;llama3&quot;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 向 Ollama 发送请求，获取模型回复<br />
+<br />
+&nbsp; &nbsp; Args:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt: 用户输入的提示词<br />
+&nbsp; &nbsp; &nbsp; &nbsp; model: 使用的模型名称，默认为 llama3<br />
+<br />
+&nbsp; &nbsp; Returns:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 模型的回复文本<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 构造请求数据</span><br />
+&nbsp; &nbsp; payload <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: model<span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 使用的模型</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;prompt&quot;</span>: prompt<span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 用户输入</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;stream&quot;</span>: <span style="color: Teal;">False</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 不使用流式输出，一次性返回</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 发送 POST 请求</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span>OLLAMA_URL<span style="color: Gray;">,</span> json<span style="color: Gray;">=</span>payload<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; response.<span style="color: #05a;">raise_for_status</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 检查请求是否成功</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 解析返回的 JSON</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> result.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;response&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> requests.<span style="color: #05a;">exceptions</span>.<span style="color: #05a;">ConnectionError</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #a11;">&quot;错误：无法连接到 Ollama 服务，请确认 Ollama 已启动&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> requests.<span style="color: #05a;">exceptions</span>.<span style="color: #05a;">RequestException</span> <span style="color: Green;font-weight:bold;">as</span> e:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;请求错误：{str(e)}&quot;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 测试一下</span><br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试问题 1</span><br />
+&nbsp; &nbsp; question1 <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;请用一句话介绍 RUNOOB 教程&quot;</span><br />
+&nbsp; &nbsp; answer1 <span style="color: Gray;">=</span> ask_ollama<span style="color: Olive;">&#40;</span>question1<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;问：{question1}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;答：{answer1}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试问题 2</span><br />
+&nbsp; &nbsp; question2 <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;写一个 Python 函数，计算斐波那契数列&quot;</span><br />
+&nbsp; &nbsp; answer2 <span style="color: Gray;">=</span> ask_ollama<span style="color: Olive;">&#40;</span>question2<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;问：{question2}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;答：{answer2}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>运行这个脚本：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 先安装 requests 库（如果还没装）</span><br />
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> requests<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 运行脚本</span><br />
+python ollama_test.py<br />
+
+</div>
+</div>
+
+<p>如果你想用更高级的封装，可以使用 Ollama 的官方 Python 库：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：/Users/runoob/ollama_advanced.py</span><br />
+<span style="color: #a50"># 使用 Ollama Python 库</span><br />
+<br />
+<span style="color: #a50"># 先安装：pip install ollama</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> ollama<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> chat_with_runoob<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 使用 Ollama Python 库进行多轮对话<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 消息历史</span><br />
+&nbsp; &nbsp; messages <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;system&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;你是一个友好的编程助手，名叫 RunoobBot。你的回答要简洁、实用，多用代码示例。&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RunoobBot 已启动！输入 'quit' 退出。&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">while</span> <span style="color: Teal;">True</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 获取用户输入</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; user_input <span style="color: Gray;">=</span> <span style="color: Teal;">input</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;你：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> user_input.<span style="color: #05a;">lower</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">in</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;quit&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;exit&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;退出&quot;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;再见！&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">break</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 添加用户消息到历史</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; messages.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;content&quot;</span>: user_input<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 调用模型</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; response <span style="color: Gray;">=</span> ollama.<span style="color: #05a;">chat</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;llama3&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; messages<span style="color: Gray;">=</span>messages<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 获取回复</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; assistant_message <span style="color: Gray;">=</span> response<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;message&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;content&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;RunoobBot：{assistant_message}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 添加助手回复到历史</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; messages.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;assistant&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;content&quot;</span>: assistant_message<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; chat_with_runoob<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>与 Open WebUI 集成</h3>
+
+<p>命令行虽然方便，但图形界面更友好。</p>
+
+<p>Open WebUI 是一个非常漂亮的 Web 界面，可以连接 Ollama，让你像用 ChatGPT 一样用本地模型。</p>
+
+<p>安装 Open WebUI：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 使用 Docker 安装 Open WebUI</span><br />
+docker run <span style="color: #660033;">-d</span> <span style="color: #660033;">-p</span> <span style="color: #000000;">3000</span>:<span style="color: #000000;">8080</span> <span style="color: #660033;">--add-host</span>=host.docker.internal:host-gateway <span style="color: #660033;">-v</span> open-webui:<span style="color: #000000; font-weight: bold;">/</span>app<span style="color: #000000; font-weight: bold;">/</span>backend<span style="color: #000000; font-weight: bold;">/</span>data <span style="color: #660033;">--name</span> open-webui <span style="color: #660033;">--restart</span> always ghcr.io<span style="color: #000000; font-weight: bold;">/</span>open-webui<span style="color: #000000; font-weight: bold;">/</span>open-webui:main<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 如果不用 Docker，也可以用 pip 安装</span><br />
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> open-webui<br />
+open-webui serve<br />
+
+</div>
+</div>
+
+<p>安装完成后，在浏览器打开 <code>http://localhost:3000</code>，你就能看到一个和 ChatGPT 很像的界面了。</p>
+
+<blockquote>
+<p>Ollama + Open WebUI 是目前最推荐的本地 AI 组合——安装简单、界面友好、功能强大，适合绝大多数用户。</p>
+</blockquote>
+
+<hr>
+
+<h2>LM Studio：图形界面操作</h2>
+
+<p>如果你不喜欢命令行，LM Studio 是一个很好的选择——<span class="marked">纯图形界面，下载模型、运行模型都在窗口里完成</span>。</p>
+
+<h3>安装 LM Studio</h3>
+
+<p>LM Studio 支持 Windows、macOS、Linux。</p>
+
+<p>从官网 <code>https://lmstudio.ai</code> 下载安装包，直接安装即可。</p>
+
+<h3>模型下载与管理</h3>
+
+<p>打开 LM Studio，左侧就是模型库。</p>
+
+<p>你可以按模型名称搜索，比如搜 "llama"、"qwen"、"mistral"，找到想要的模型，点击下载。</p>
+
+<p>LM Studio 会自动列出同一个模型的不同版本：</p>
+
+<table class="reference">
+<tr><th>版本</th><th>说明</th><th>推荐场景</th></tr>
+<tr><td>Q4_K_M</td><td>4-bit 量化，质量损失小</td><td><span class="tag1 green">大多数人的选择</span></td></tr>
+<tr><td>Q5_K_M</td><td>5-bit 量化，质量更好，体积稍大</td><td><span class="tag1">显存充足时选这个</span></td></tr>
+<tr><td>Q8_0</td><td>8-bit 量化，接近原生质量</td><td><span class="tag1 blue">追求质量，显存够大</span></td></tr>
+<tr><td>FP16</td><td>全精度，体积最大</td><td><span class="tag1 purple">研究用途</span></td></tr>
+</table>
+
+<p>下载好的模型会出现在 "My Models" 列表里。</p>
+
+<h3>本地 API 服务</h3>
+
+<p>LM Studio 也可以提供 API 服务，兼容 OpenAI 的 API 格式。</p>
+
+<p>这意味着你写的 OpenAI 代码，只需改一下 API 地址和 Key，就能用本地模型了。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：/Users/runoob/lmstudio_openai.py</span><br />
+<span style="color: #a50"># LM Studio 兼容 OpenAI API 格式</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">from</span> openai <span style="color: Green;font-weight:bold;">import</span> OpenAI<br />
+<br />
+<span style="color: #a50"># 连接到 LM Studio 本地服务器</span><br />
+<span style="color: #a50"># 注意：需要先在 LM Studio 中开启服务器</span><br />
+client <span style="color: Gray;">=</span> OpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;http://localhost:1234/v1&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #a11;">&quot;lm-studio&quot;</span> &nbsp;<span style="color: #a50"># LM Studio 用这个占位就行</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> ask_local_model<span style="color: Olive;">&#40;</span>prompt: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> system_prompt: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;你是一个有用的助手。&quot;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 通过 OpenAI 兼容接口调用 LM Studio 本地模型<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> client.<span style="color: #05a;">chat</span>.<span style="color: #05a;">completions</span>.<span style="color: #05a;">create</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;local-model&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 这个字段会被 LM Studio 忽略</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; messages<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;system&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: system_prompt<span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: prompt<span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; temperature<span style="color: Gray;">=</span><span style="color: Maroon;">0.7</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> response.<span style="color: #05a;">choices</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">message</span>.<span style="color: #05a;">content</span><br />
+<br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; question <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;介绍一下 RUNOOB 教程的特色&quot;</span><br />
+&nbsp; &nbsp; answer <span style="color: Gray;">=</span> ask_local_model<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt<span style="color: Gray;">=</span>question<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span><span style="color: #a11;">&quot;你是 Runoob 的专属客服，专业回答关于编程学习的问题。&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;问：{question}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;答：{answer}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>这个特性非常有用——你可以用同一套代码，根据需要在云端模型和本地模型之间切换。</p>
+
+<blockquote>
+<p>对于刚接触本地 AI 的用户，我推荐：先用 LM Studio 上手，了解基本概念和操作；熟悉后再用 Ollama 做自动化和集成。</p>
+</blockquote>
+
+<hr>
+
+<h2>模型量化入门</h2>
+
+<p>量化是让大模型在普通电脑上跑起来的关键技术——<span class="marked">用更少的显存跑更大的模型，同时保持大部分能力</span>。</p>
+
+<h3>什么是量化</h3>
+
+<p>简单说，量化就是降低模型参数的精度。</p>
+
+<p>原生模型通常用 16 位浮点数（FP16）或 32 位浮点数（FP32）存储每个参数。</p>
+
+<p>量化后，我们用 8 位整数（INT8）甚至 4 位整数（INT4）来存储。</p>
+
+<p>精度降低了，但体积和显存需求也大大降低了。</p>
+
+<p>举个例子：</p>
+
+<table class="reference">
+<tr><th>精度</th><th>7B 模型大小</th><th>13B 模型大小</th><th>显存需求</th><th>质量损失</th></tr>
+<tr><td>FP16</td><td>13 GB</td><td>26 GB</td><td>高</td><td><span class="tag1 green">无</span></td></tr>
+<tr><td>Q8_0</td><td>7 GB</td><td>13 GB</td><td>中</td><td><span class="tag1">很小</span></td></tr>
+<tr><td>Q5_K_M</td><td>5 GB</td><td>9 GB</td><td>低</td><td><span class="tag1">可接受</span></td></tr>
+<tr><td>Q4_K_M</td><td>4 GB</td><td>7 GB</td><td><span class="tag1 green">很低</span></td><td><span class="tag1 blue">轻微</span></td></tr>
+<tr><td>Q3_K_M</td><td>3 GB</td><td>5 GB</td><td><span class="tag1 green">极低</span></td><td><span class="tag1 purple">明显</span></td></tr>
+</table>
+
+<p>经验是：Q8 量化几乎感觉不到质量下降，Q4 量化在大多数任务上也够用。</p>
+
+<h3>GGUF 格式详解</h3>
+
+<p>GGUF 是目前最流行的量化模型格式。</p>
+
+<p>GGUF 的前身是 GGML，由 llama.cpp 项目开发。</p>
+
+<p>这个格式的优势：</p>
+	<ul>
+<li>
+<p>第一，<span class="marked">跨平台兼容性好</span>——Windows、macOS、Linux 都能用，CPU、GPU 都能跑。</p></li>
+	<li>
+
+<p>第二，<span class="marked">支持多种量化级别</span>——从 FP16 到 Q3 都有，按需选择。</p></li>
+	<li>
+
+<p>第三，<span class="marked">推理速度快</span>——针对 CPU 和 GPU 做了大量优化。</p></li></ul>
+
+
+
+
+<p>现在大多数本地模型工具（Ollama、LM Studio、llama.cpp）都支持 GGUF 格式。</p>
+
+<h3>Q4/Q8 量化的区别</h3>
+
+<p>Q4 和 Q8 是最常用的两个量化级别。</p>
+
+	<ul>
+<li><p>Q8 量化是 8 位，每个参数用 8 位整数存储，Q8 的优点是<span class="marked">质量损失极小，几乎与原模型一致</span>，缺点是体积还不够小。</p></li>
+	<li>
+
+<p>Q4 量化是 4 位，每个参数用 4 位整数存储，Q4 的优点是<span class="marked">体积小、速度快</span>，缺点是在复杂任务上质量下降比较明显。</p></li></ul>
+
+
+
+
+<p>怎么选择：</p>
+
+<table class="reference">
+<tr><th>场景</th><th>推荐量化级别</th><th>理由</th></tr>
+<tr><td>显存非常有限（8GB 以下）</td><td>Q4_K_M</td><td><span class="tag1">能用是第一位的</span></td></tr>
+<tr><td>日常对话、简单任务</td><td>Q4_K_M</td><td><span class="tag1 green">性价比最高</span></td></tr>
+<tr><td>写作、编程、分析</td><td>Q5_K_M 或 Q6_K</td><td><span class="tag1 blue">质量和速度平衡</span></td></tr>
+<tr><td>追求最佳质量</td><td>Q8_0</td><td><span class="tag1 purple">接近原生质量</span></td></tr>
+</table>
+
+<h3>AWQ/GPTQ 量化方案</h3>
+
+<p>除了 GGUF 的量化方式，还有两种常用的量化方案：AWQ 和 GPTQ。</p>
+
+<p>AWQ（Activation-aware Weight Quantization）的特点是<span class="marked">保留对结果影响大的权重</span>，量化后质量损失更小。</p>
+
+<p>GPTQ（Gradient-based Post-Training Quantization）的特点是<span class="marked">用梯度信息优化量化</span>，适合有 GPU 的场景。</p>
+
+<p>这两种方案主要用在支持 CUDA 的 NVIDIA 显卡上。</p>
+
+<p>简单对比：</p>
+
+<table class="reference">
+<tr><th>量化方案</th><th>适用硬件</th><th>速度</th><th>质量</th><th>推荐工具</th></tr>
+<tr><td>GGUF</td><td>CPU + 各种 GPU</td><td>快</td><td>好</td><td>Ollama、LM Studio</td></tr>
+<tr><td>AWQ</td><td>NVIDIA GPU</td><td>很快</td><td>很好</td><td>vLLM、Text Generation WebUI</td></tr>
+<tr><td>GPTQ</td><td>NVIDIA GPU</td><td>很快</td><td>很好</td><td>AutoGPTQ、ExLlama</td></tr>
+</table>
+
+<blockquote>
+<p>对于初学者，不用纠结这些技术细节——直接用 Ollama 或 LM Studio 里推荐的 Q4_K_M 版本就行，这是经过大量验证的最佳平衡点。</p>
+</blockquote>
+
+<hr>
+
+<h2>模型选择指南</h2>
+
+<p>现在开源模型成百上千，选择适合自己的模型很重要。</p>
+
+<h3>7B/13B/70B 模型对比</h3>
+
+<p>模型的参数量是一个重要指标——7B、13B、70B 是最常见的规格。</p>
+
+<table class="reference">
+<tr><th>规格</th><th>显存需求（Q4）</th><th>推理速度</th><th>能力水平</th><th>适用场景</th></tr>
+<tr><td>7B</td><td>4-6 GB</td><td><span class="tag1 green">很快</span></td><td>够用</td><td><span class="tag1">日常对话、简单任务</span></td></tr>
+<tr><td>13B</td><td>7-10 GB</td><td><span class="tag1">快</span></td><td><span class="tag1 green">良好</span></td><td><span class="tag1 green">写作、编程、分析</span></td></tr>
+<tr><td>33B</td><td>15-20 GB</td><td><span class="tag1 blue">中等</span></td><td><span class="tag1 blue">优秀</span></td><td><span class="tag1 blue">复杂推理、专业领域</span></td></tr>
+<tr><td>70B</td><td>30-40 GB</td><td><span class="tag1 purple">较慢</span></td><td><span class="tag1 purple">接近 GPT-3.5</span></td><td><span class="tag1 purple">研究、生产环境</span></td></tr>
+</table>
+
+<p>大多数人的 sweet spot（最佳平衡点）是 13B Q4 量化版本——能力不错，速度也可以接受。</p>
+
+<h3>中文支持较好的模型推荐</h3>
+
+<p>很多国外模型中文能力一般，这里推荐几个对中文友好的模型：</p>
+
+<table class="reference">
+<tr><th>模型名称</th><th>出品方</th><th>特点</th><th>Ollama 命令</th></tr>
+<tr><td>Qwen（通义千问）</td><td>阿里巴巴</td><td>中文能力强，综合能力均衡</td><td>ollama pull qwen</td></tr>
+<tr><td>Yi（零一万物）</td><td>零一万物</td><td>中文理解好，推理能力强</td><td>ollama pull yi</td></tr>
+<tr><td>DeepSeek</td><td>深度求索</td><td>代码能力强，中文不错</td><td>ollama pull deepseek-coder</td></tr>
+<tr><td>Llama 3</td><td>Meta</td><td>综合能力强，中文需要调教</td><td>ollama pull llama3</td></tr>
+<tr><td>Gemma</td><td>Google</td><td>基础扎实，代码能力好</td><td>ollama pull gemma</td></tr>
+</table>
+
+<p>中文任务首选 Qwen，它的中文理解和生成能力在开源模型中属于第一梯队。</p>
+
+<h3>任务特定模型选择</h3>
+
+<p>不同模型有不同的专长，根据任务选模型：</p>
+
+<table class="reference">
+<tr><th>任务类型</th><th>推荐模型</th><th>理由</th></tr>
+<tr><td>日常对话、问答</td><td>Llama 3、Qwen、Mistral</td><td><span class="tag1">综合能力均衡</span></td></tr>
+<tr><td>写作、文案</td><td>Yi、Llama 3、Claude（云端）</td><td><span class="tag1 green">文采好，表达流畅</span></td></tr>
+<tr><td>编程、代码</td><td>DeepSeek-Coder、CodeLlama、StarCoder</td><td><span class="tag1 blue">代码理解和生成能力强</span></td></tr>
+<tr><td>数学、推理</td><td>Llama 3、Qwen、WizardMath</td><td><span class="tag1 purple">逻辑推理能力好</span></td></tr>
+<tr><td>专业领域（医疗、法律）</td><td>根据领域微调的模型</td><td>在专业数据上训练过</td></tr>
+</table>
+
+<blockquote>
+<p>模型不是越大越好，也不是越新越好——<strong>适合自己硬件、适合自己任务</strong>的才是最好的。建议先下几个 7B 模型试试，找到感觉再升级。</p>
+</blockquote>
+
+<hr>
+
+<h2>实战：搭建完全离线的本地知识库</h2>
+
+<p>本地模型最实用的应用场景之一，是建立自己的私有知识库——<span class="marked">把本地文档喂给模型，让模型基于这些文档回答问题</span>。</p>
+
+<p>整个系统完全离线运行，数据不会离开你的电脑。</p>
+
+<h3>技术方案</h3>
+
+<p>我们用 RAG（检索增强生成）技术：</p>
+
+<p>1. 把文档切分成小块</p>
+<p>2. 用嵌入模型把每个块转换成向量</p>
+<p>3. 向量存入向量数据库</p>
+<p>4. 提问时，把问题也转换成向量</p>
+<p>5. 在向量数据库中找到最相关的文档块</p>
+<p>6. 把相关文档和问题一起送给本地大模型</p>
+<p>7. 大模型基于文档内容回答</p>
+
+<p>这个过程听起来复杂，但用现成的工具做起来很简单。</p>
+
+<h3>用 Ollama + LangChain 实现</h3>
+
+<p>我们用 Python 来实现一个简单版本：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：/Users/runoob/local_knowledge_base.py</span><br />
+<span style="color: #a50"># 完全离线的本地知识库 RAG 系统</span><br />
+<br />
+<span style="color: #a50"># 先安装依赖：</span><br />
+<span style="color: #a50"># pip install langchain langchain-ollama chromadb pypdf</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_ollama <span style="color: Green;font-weight:bold;">import</span> OllamaLLM<span style="color: Gray;">,</span> OllamaEmbeddings<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_community.<span style="color: #05a;">document_loaders</span> <span style="color: Green;font-weight:bold;">import</span> PyPDFLoader<span style="color: Gray;">,</span> TextLoader<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain.<span style="color: #05a;">text_splitter</span> <span style="color: Green;font-weight:bold;">import</span> RecursiveCharacterTextSplitter<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_community.<span style="color: #05a;">vectorstores</span> <span style="color: Green;font-weight:bold;">import</span> Chroma<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain.<span style="color: #05a;">chains</span> <span style="color: Green;font-weight:bold;">import</span> RetrievalQA<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> LocalKnowledgeBase:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;本地知识库类，实现完全离线的 RAG 功能&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> model_name: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;llama3&quot;</span><span style="color: Gray;">,</span> persist_dir: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;./chroma_db&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 初始化知识库<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Args:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; model_name: 使用的 Ollama 模型名称<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; persist_dir: 向量数据库持久化目录<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">model_name</span> <span style="color: Gray;">=</span> model_name<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">persist_dir</span> <span style="color: Gray;">=</span> persist_dir<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 1. 初始化 LLM（本地模型）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">llm</span> <span style="color: Gray;">=</span> OllamaLLM<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">=</span>model_name<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 2. 初始化嵌入模型（本地嵌入）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 使用 nomic-embed-text，这个模型对中英文都不错</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">embeddings</span> <span style="color: Gray;">=</span> OllamaEmbeddings<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;nomic-embed-text&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 3. 向量数据库占位</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">vector_store</span> <span style="color: Gray;">=</span> <span style="color: Teal;">None</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">qa_chain</span> <span style="color: Gray;">=</span> <span style="color: Teal;">None</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> load_documents<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> document_paths: <span style="color: Teal;">list</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 加载文档并构建向量数据库<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Args:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; document_paths: 文档路径列表<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; documents <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> path <span style="color: Green;font-weight:bold;">in</span> document_paths:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>path<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;警告：文件 {path} 不存在，跳过&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 根据文件扩展名选择加载器</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> path.<span style="color: #05a;">lower</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">endswith</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;.pdf&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loader <span style="color: Gray;">=</span> PyPDFLoader<span style="color: Olive;">&#40;</span>path<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">elif</span> path.<span style="color: #05a;">lower</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">endswith</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;.txt&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loader <span style="color: Gray;">=</span> TextLoader<span style="color: Olive;">&#40;</span>path<span style="color: Gray;">,</span> encoding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;警告：不支持的文件类型 {path}，跳过&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; documents.<span style="color: #05a;">extend</span><span style="color: Olive;">&#40;</span>loader.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;已加载：{path}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> documents:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;没有成功加载任何文档&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;总共加载了 {len(documents)} 个文档片段&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 4. 切分文档</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; text_splitter <span style="color: Gray;">=</span> RecursiveCharacterTextSplitter<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; chunk_size<span style="color: Gray;">=</span><span style="color: Maroon;">500</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 每个块 500 个字符</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; chunk_overlap<span style="color: Gray;">=</span><span style="color: Maroon;">100</span> &nbsp; &nbsp;<span style="color: #a50"># 块之间重叠 100 个字符</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; split_docs <span style="color: Gray;">=</span> text_splitter.<span style="color: #05a;">split_documents</span><span style="color: Olive;">&#40;</span>documents<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;切分成 {len(split_docs)} 个片段&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 5. 构建向量数据库</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;正在构建向量数据库...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">vector_store</span> <span style="color: Gray;">=</span> Chroma.<span style="color: #05a;">from_documents</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; documents<span style="color: Gray;">=</span>split_docs<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; embedding<span style="color: Gray;">=</span><span style="color: Teal;">self</span>.<span style="color: #05a;">embeddings</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; persist_directory<span style="color: Gray;">=</span><span style="color: Teal;">self</span>.<span style="color: #05a;">persist_dir</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;向量数据库构建完成！&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 6. 构建问答链</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>._build_qa_chain<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> _build_qa_chain<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;构建 RAG 问答链&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">vector_store</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;请先加载文档！&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 构建检索器</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; retriever <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">vector_store</span>.<span style="color: #05a;">as_retriever</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; search_type<span style="color: Gray;">=</span><span style="color: #a11;">&quot;similarity&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; search_kwargs<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;k&quot;</span>: <span style="color: Maroon;">3</span><span style="color: Olive;">&#125;</span> &nbsp;<span style="color: #a50"># 返回最相关的 3 个片段</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 构建 RAG 链</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">qa_chain</span> <span style="color: Gray;">=</span> RetrievalQA.<span style="color: #05a;">from_chain_type</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; llm<span style="color: Gray;">=</span><span style="color: Teal;">self</span>.<span style="color: #05a;">llm</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; chain_type<span style="color: Gray;">=</span><span style="color: #a11;">&quot;stuff&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retriever<span style="color: Gray;">=</span>retriever<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return_source_documents<span style="color: Gray;">=</span><span style="color: Teal;">True</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> load_existing_db<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;加载已有的向量数据库&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span>.<span style="color: #05a;">persist_dir</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">vector_store</span> <span style="color: Gray;">=</span> Chroma<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; persist_directory<span style="color: Gray;">=</span><span style="color: Teal;">self</span>.<span style="color: #05a;">persist_dir</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; embedding_function<span style="color: Gray;">=</span><span style="color: Teal;">self</span>.<span style="color: #05a;">embeddings</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>._build_qa_chain<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;已加载现有的向量数据库&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">True</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;没有找到现有的向量数据库&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">False</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> ask<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> question: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 向知识库提问<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Args:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; question: 问题<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; Returns:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 包含答案和参考来源的字典<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">qa_chain</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: <span style="color: #a11;">&quot;请先加载文档或现有数据库！&quot;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 构造提示词模板，鼓励中文回答</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">qa_chain</span>.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;query&quot;</span>: f<span style="color: #a11;">&quot;&quot;&quot;请用中文回答以下问题。如果答案在上下文中，请明确指出。<br />
+如果上下文中没有答案，请诚实说&quot;根据提供的资料无法回答&quot;。<br />
+<br />
+问题：{question}<br />
+&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;question&quot;</span>: question<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;answer&quot;</span>: result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;result&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;sources&quot;</span>: <span style="color: Olive;">&#91;</span>doc.<span style="color: #05a;">page_content</span> <span style="color: Green;font-weight:bold;">for</span> doc <span style="color: Green;font-weight:bold;">in</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;source_documents&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 使用示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 1. 创建知识库实例</span><br />
+&nbsp; &nbsp; kb <span style="color: Gray;">=</span> LocalKnowledgeBase<span style="color: Olive;">&#40;</span>model_name<span style="color: Gray;">=</span><span style="color: #a11;">&quot;qwen&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 用 Qwen，中文更好</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 2. 尝试加载已有数据库，否则加载文档</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> kb.<span style="color: #05a;">load_existing_db</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 准备一些文档，比如把一些 RUNOOB 教程存为 txt</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; sample_docs <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;/Users/runoob/documents/runoob_python_tutorial.txt&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;/Users/runoob/documents/company_handbook.pdf&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; kb.<span style="color: #05a;">load_documents</span><span style="color: Olive;">&#40;</span>sample_docs<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 3. 交互式问答</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Runoob 本地知识库已启动！&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;输入你的问题，或输入 'quit' 退出&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">while</span> <span style="color: Teal;">True</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; user_input <span style="color: Gray;">=</span> <span style="color: Teal;">input</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>你的问题：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> user_input.<span style="color: #05a;">lower</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">in</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;quit&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;exit&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;退出&quot;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;再见！&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">break</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> user_input.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 提问</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> kb.<span style="color: #05a;">ask</span><span style="color: Olive;">&#40;</span>user_input<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;error&quot;</span> <span style="color: Green;font-weight:bold;">in</span> result:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;错误：{result['error']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>回答：{result['answer']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>参考来源：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> source <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;sources&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>[{i}] {source[:200]}...&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>使用这个系统前，需要先下载嵌入模型：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 下载嵌入模型</span><br />
+ollama pull nomic-embed-text<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 下载主模型（如果还没下）</span><br />
+ollama pull qwen<br />
+
+</div>
+</div>
+
+<p>这样，你就有了一个完全在本地运行的私有知识库系统。</p>
+
+<p>你可以把自己的笔记、文档、电子书放进去，让 AI 帮你检索和问答。</p>
+
+<blockquote>
+<p>这个系统的所有数据都在你本地——文档在你硬盘上，向量数据库在你目录里，模型在你电脑上，完全不用担心数据泄露。</p>
+</blockquote>
+
+<hr>
+
+<h2>性能优化技巧</h2>
+
+<p>本地模型跑起来了，但怎么让它跑得更快？这里有一些实用技巧。</p>
+
+<h3>选择合适的量化级别</h3>
+
+<p>这是最简单有效的优化——量化级别越低，速度越快。</p>
+
+<p>如果 Q4 能用，就不要用 Q8；如果 Q8 能用，就不要用 FP16。</p>
+
+<h3>调整上下文窗口大小</h3>
+
+<p>上下文窗口越大，需要的计算越多。</p>
+
+<p>如果不需要很长的上下文，可以在 Ollama 的 Modelfile 里设置：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 创建一个自定义模型，限制上下文窗口</span><br />
+<span style="color: #666666; font-style: italic;"># 新建文件 Modelfile</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">echo</span> <span style="color: #a10;">&quot;FROM llama3<br />
+PARAMETER num_ctx 2048&quot;</span> <span style="color: #000000; font-weight: bold;">&gt;</span> Modelfile<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 创建自定义模型</span><br />
+ollama create llama3-fast <span style="color: #660033;">-f</span> Modelfile<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 运行</span><br />
+ollama run llama3-fast<br />
+
+</div>
+</div>
+
+<p>把上下文从默认的 8192 降到 2048，速度会快不少。</p>
+
+<h3>使用 GPU 加速</h3>
+
+<p>如果你有 NVIDIA 显卡或 Mac 的 Apple Silicon，确保 Ollama 在使用 GPU 而不是 CPU。</p>
+
+<p>Ollama 会自动检测并使用 GPU，但有时候需要确认一下。</p>
+
+<p>在 Ollama 启动日志里，你应该能看到类似 "Metal GPU activated" 或 "CUDA activated" 的信息。</p>
+
+<h3>使用更快的采样参数</h3>
+
+<p>有些采样参数会影响速度：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 创建一个速度优化的 Modelfile</span><br />
+<span style="color: #666666; font-style: italic;"># 文件：Modelfile.fast</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">echo</span> <span style="color: #a10;">&quot;FROM llama3<br />
+PARAMETER temperature 0.7<br />
+PARAMETER top_k 20<br />
+PARAMETER top_p 0.9<br />
+PARAMETER num_predict 256&quot;</span> <span style="color: #000000; font-weight: bold;">&gt;</span> Modelfile.fast<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 创建并运行</span><br />
+ollama create llama3-optimized <span style="color: #660033;">-f</span> Modelfile.fast<br />
+ollama run llama3-optimized<br />
+
+</div>
+</div>
+
+<p>参数说明：</p>
+
+<table class="reference">
+<tr><th>参数</th><th>作用</th><th>优化建议</th></tr>
+<tr><td>temperature</td><td>控制随机性</td><td>适中就行，不影响速度</td></tr>
+<tr><td>top_k</td><td>限制候选词数量</td><td>设小一点（20-40）可提速</td></tr>
+<tr><td>top_p</td><td>累积概率阈值</td><td>默认 0.9 就好</td></tr>
+<tr><td>num_predict</td><td>最大生成 Token 数</td><td><span class="tag1">根据需要限制</span></td></tr>
+<tr><td>num_ctx</td><td>上下文窗口大小</td><td><span class="tag1 green">够用就行，越小越快</span></td></tr>
+</table>
+
+<h3>关闭不必要的功能</h3>
+
+<p>如果你是用 API 调用，不需要流式输出的话，可以把 stream 设为 false。</p>
+
+<p>这样虽然不会让推理变快，但能减少网络传输开销。</p>
+
+<blockquote>
+<p>性能优化是一个平衡的艺术——速度、质量、显存，三者不可兼得。根据你的需求，找到适合自己的平衡点就行。</p>
+</blockquote>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-product-design.html" rel="prev"> AI 产品设计</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-security.html" rel="next"> AI 安全进阶</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31514' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31514;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31514, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31514},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31514;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

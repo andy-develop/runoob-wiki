@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>负数怎么表示 &#8212; 原码、反码、补码 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/computer-organization/negative-numbers-complement.html" />
+<meta name="keywords" content="负数怎么表示 &#8212; 原码、反码、补码">
+<meta name="description" content="负数怎么表示 -- 原码、反码、补码 本讲你将理解：为什么计算机里表示负数不像「加个负号」那么简单，以及补码是如何巧妙地解决了所有问题。    生活化类比：旅馆的楼层编号  想象一栋有 256 层的旅馆。 如果用自然数编号，只能用 0 到 255。 但如果我们想把「地下 128 层」到「地上 127 层」都编进去呢？ 一个巧妙的做法：把编号 128~255 重新解释为 -128~-1。 编号 128 就成了 -128，编号 255 就成..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>计算机组成原理</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="计算机组成原理"  href="/computer-organization/computer-organization-tutorial.html" >
+			计算机组成原理			</a>
+						<a target="_top" data-p="par" title="为什么计算机只认识 0 和 1"  href="/computer-organization/why-computer-only-knows-0-and-1.html" >
+			计算机只认识 0 和 1			</a>
+						<a target="_top" data-p="par" title="进制转换 &#8212; 二进制、十进制、十六进制"  href="/computer-organization/number-system-conversion.html" >
+			进制转换			</a>
+						<a target="_top" data-p="par" title="负数怎么表示 &#8212; 原码、反码、补码"  href="/computer-organization/negative-numbers-complement.html" >
+			负数怎么表示			</a>
+						<a target="_top" data-p="par" title="小数怎么表示 &#8212; 浮点数与 IEEE 754"  href="/computer-organization/floating-point-ieee754.html" >
+			小数怎么表示			</a>
+						<a target="_top" data-p="par" title="字符怎么表示 &#8212; ASCII 与 Unicode"  href="/computer-organization/character-encoding.html" >
+			字符怎么表示			</a>
+						<a target="_top" data-p="par" title="布尔代数基础 &#8212; AND / OR / NOT / XOR"  href="/computer-organization/boolean-algebra-logic-gates.html" >
+			布尔代数基础			</a>
+						<a target="_top" data-p="par" title="逻辑门电路搭建"  href="/computer-organization/building-logic-circuits.html" >
+			逻辑门电路搭建			</a>
+						<a target="_top" data-p="par" title="从逻辑门到加法器"  href="/computer-organization/from-gates-to-adder.html" >
+			从逻辑门到加法器			</a>
+						<a target="_top" data-p="par" title="触发器与寄存器 &#8212; 计算机如何「记住」数据"  href="/computer-organization/flip-flops-and-registers.html" >
+			触发器与寄存器			</a>
+						<a target="_top" data-p="par" title="一台计算机的整体骨架"  href="/computer-organization/computer-architecture-overview.html" >
+			一台计算机的整体骨架			</a>
+						<a target="_top" data-p="par" title="程序和数据为什么能放在同一块内存里"  href="/computer-organization/stored-program-concept.html" >
+			程序和数据			</a>
+						<a target="_top" data-p="par" title="指令周期 &#8212; 取指、译码、执行、写回"  href="/computer-organization/instruction-cycle.html" >
+			指令周期			</a>
+						<a target="_top" data-p="par" title="时钟频率是什么意思"  href="/computer-organization/clock-frequency.html" >
+			时钟频率			</a>
+						<a target="_top" data-p="par" title="流水线 &#8212; 如何让 CPU 更快"  href="/computer-organization/cpu-pipeline.html" >
+			流水线			</a>
+						<a target="_top" data-p="par" title="多核心是怎么回事"  href="/computer-organization/multi-core-processors.html" >
+			多核心是怎么回事			</a>
+						<a target="_top" data-p="par" title="存储金字塔 &#8212; 为什么要分这么多层"  href="/computer-organization/memory-hierarchy.html" >
+			存储金字塔			</a>
+						<a target="_top" data-p="par" title="缓存命中与缓存未命中"  href="/computer-organization/cache-hits-and-misses.html" >
+			缓存命中与缓存未命中			</a>
+						<a target="_top" data-p="par" title="内存地址与寻址"  href="/computer-organization/memory-addressing.html" >
+			内存地址与寻址			</a>
+						<a target="_top" data-p="par" title="总线 &#8212; 计算机内部的「公路系统」"  href="/computer-organization/computer-bus-system.html" >
+			总线			</a>
+						<a target="_top" data-p="par" title="I/O 的三种方式 &#8212; 轮询、中断、DMA"  href="/computer-organization/io-polling-interrupt-dma.html" >
+			I/O 的三种方式			</a>
+						<a target="_top" data-p="par" title="一条指令的完整旅程"  href="/computer-organization/instruction-journey-summary.html" >
+			一条指令的完整旅程			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/computer-organization/number-system-conversion.html" rel="prev"> 进制转换 &#8212; 二进制、十进制、十六进制</a> </div>
+			<div class="next-design-link"><a href="/computer-organization/floating-point-ieee754.html" rel="next"> 小数怎么表示 &#8212; 浮点数与 IEEE 754</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>负数怎么表示 -- 原码、反码、补码</h1>
+<p>本讲你将理解：为什么计算机里表示负数不像「加个负号」那么简单，以及补码是如何巧妙地解决了所有问题。</p>
+
+<hr>
+
+<h2>生活化类比：旅馆的楼层编号</h2>
+
+<p>想象一栋有 256 层的旅馆。</p>
+<p>如果用自然数编号，只能用 0 到 255。</p>
+<p>但如果我们想把「地下 128 层」到「地上 127 层」都编进去呢？</p>
+<p>一个巧妙的做法：把编号 128~255 重新解释为 -128~-1。</p>
+<p>编号 128 就成了 -128，编号 255 就成了 -1，编号 0 还是 0。</p>
+
+<p>这就是<span class="marked">补码的核心思想</span>——在有限的 bit 范围里，把数值空间的「后半段」重新解读为负数。</p>
+
+<hr>
+
+<h2>最朴素的想法：原码</h2>
+
+<p>表示负数最直接的想法：用最高位当<span class="tag1 red">符号位</span>。</p>
+<ul>
+<li>最高位 0 = 正数</li>
+<li>最高位 1 = 负数</li>
+<li>剩下的位表示绝对值</li>
+</ul>
+
+<p>以 8 位为例：</p>
+
+<div class="bit-display">
+  <span style="font-size:14px;color:#888;">+5 = </span>
+  <div class="bit-cell sign" style="background:#c8e6c9;color:#2e7d32;">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">1</div>
+  <div class="bit-cell high">0</div>
+  <div class="bit-cell high">1</div>
+  <span style="font-size:12px;color:#aaa;margin-left:4px;">符号位 0=正</span>
+</div>
+
+<div class="bit-display">
+  <span style="font-size:14px;color:#888;">-5 = </span>
+  <div class="bit-cell sign">1</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">0</div>
+  <div class="bit-cell">1</div>
+  <div class="bit-cell high">0</div>
+  <div class="bit-cell high">1</div>
+  <span style="font-size:12px;color:#aaa;margin-left:4px;">符号位 1=负</span>
+</div>
+
+<p>看起来很合理，对吧？但原码有两个致命问题。</p>
+
+<h3>问题一：+0 和 -0 同时存在</h3>
+
+<p>正 0 是 <code>00000000</code>，负 0 是 <code>10000000</code>。</p>
+<p>同一个数值有两种表示方法。</p>
+<p>这意味着每次做比较操作（判断两个数是否相等），硬件都要额外处理这个特殊情况。</p>
+
+<h3>问题二：加法器不能做减法</h3>
+
+<p>用原码计算 <code>5 + (-3)</code>：</p>
+
+<div class="steps-visual">
+  <div class="step-box">
+    <div class="step-title">5 (原码)</div>
+    <div class="step-value">00000101</div>
+  </div>
+  <div class="step-arrow">+</div>
+  <div class="step-box">
+    <div class="step-title">-3 (原码)</div>
+    <div class="step-value">10000011</div>
+  </div>
+  <div class="step-arrow">=</div>
+  <div class="step-box">
+    <div class="step-title">直接相加</div>
+    <div class="step-value" style="color:#c62828;">10001000</div>
+  </div>
+  <div class="step-arrow">=</div>
+  <div class="step-box">
+    <div class="step-title">结果</div>
+    <div class="step-value" style="color:#c62828;">-8</div>
+  </div>
+</div>
+
+<p>5 + (-3) 应该等于 2，但用原码直接加出来却是 -8。</p>
+<p>这意味着 CPU 必须单独设计一套减法电路，而不能复用已有的加法电路。</p>
+
+<blockquote><p>原码的问题可以概括为：直观但不实用。它适合人类阅读，但不适合电路实现。</p></blockquote>
+
+<hr>
+
+<h2>时钟的启示：模运算</h2>
+
+<p>在继续之前，我们需要理解一个关键概念——<span class="marked">模运算</span>。</p>
+
+<p>看一个时钟：钟面上只有 12 个刻度。</p>
+<p>从 10 点出发，你想调到 7 点，有两种走法：</p>
+
+<div style="text-align:center; margin: 20px 0; background:#f5f5f5; border-radius:8px; padding:16px;">
+<p style="font-size:18px; font-family:monospace;">
+  方法一（逆时针）：10 - 3 = <span class="tag1 green">7</span>（减法）
+</p>
+<p style="font-size:18px; font-family:monospace;">
+  方法二（顺时针）：10 + 9 = 19，19 mod 12 = <span class="tag1 green">7</span>（加法）
+</p>
+</div>
+
+<p>在「模 12」的系统中，-3 和 +9 是等价的（因为 -3 + 12 = 9）。</p>
+<p>更一般地说：<span class="marked">在模 M 的系统中，减一个数等于加 (M - 该数)</span>。</p>
+
+<p>补码就是把这个思想应用到了二进制上。对 8 位二进制来说，模是 2^8 = 256。</p>
+<p>-3 的补码 = 256 - 3 = 253 = 二进制 <code>11111101</code>。</p>
+
+<p>于是 <code>5 + (-3)</code> 可以变成 <code>5 + 253 = 258</code>。</p>
+<p>但在 8 位系统中，258 超过了 255 的表示上限，最高位的进位「溢出」被丢弃，剩下 <code>258 mod 256 = 2</code>。</p>
+<p><span class="marked">加法得到了减法的正确结果。</span></p>
+
+<hr>
+
+<h2>补码环形图（交互演示）</h2>
+
+<p>下面这个环形图直观展示了 4 位补码系统。</p>
+<p>4 位可以表示 16 个值（0~15），补码将其重新解读为 -8~+7。</p>
+<p>拖动滑块改变数值，观察指针在圆环上的位置。</p>
+
+<style>
+/* ========== 补码环形图演示样式 ========== */
+.demo-panel {
+  background: #1a1a2e;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  color: #e0e0e0;
+}
+.demo-panel .demo-panel h3 {
+  color: #66bb6a;
+  margin-top: 0;
+}
+/* 圆环容器 - 用于 Canvas 和 Plotly 图 */
+.circle-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.circle-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+.circle-controls input[type="range"] {
+  width: 200px;
+  accent-color: #ffb74d;
+}
+.dec-val {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffb74d;
+  font-family: monospace;
+  min-width: 40px;
+  text-align: center;
+}
+/* Plotly 环形图容器 */
+#plotlyCircle {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+/* 图例样式 */
+.circle-legend {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 13px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+/* 位显示（原码/反码/补码可视化） */
+.bit-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+  font-family: monospace;
+  font-size: 18px;
+}
+.bit-cell {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e0e0;
+  border-radius: 4px;
+  color: #333;
+  font-weight: bold;
+}
+.bit-cell.sign {
+  background: #c62828;
+  color: #fff;
+}
+.bit-cell.high {
+  background: #37474f;
+  color: #e0e0e0;
+}
+/* 步骤演示流程 */
+.steps-visual {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.step-box {
+  background: #263238;
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: center;
+  min-width: 90px;
+}
+.step-title {
+  font-size: 12px;
+  color: #90a4ae;
+  margin-bottom: 4px;
+}
+.step-value {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #e0e0e0;
+}
+.step-arrow {
+  font-size: 20px;
+  color: #66bb6a;
+  font-weight: bold;
+}
+/* 补码计算器输入行 */
+.demo-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  color: #90a4ae;
+  font-size: 14px;
+}
+.demo-input {
+  padding: 8px 12px;
+  border: 2px solid #444;
+  border-radius: 6px;
+  background: #12122a;
+  color: #e0e0e0;
+  font-size: 16px;
+  font-family: monospace;
+  width: 120px;
+}
+.demo-input:focus {
+  outline: none;
+  border-color: #64b5f6;
+}
+.demo-btn {
+  padding: 8px 16px;
+  border: 2px solid #555;
+  border-radius: 6px;
+  background: transparent;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.demo-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+.demo-btn.calc {
+  border-color: #66bb6a;
+  color: #66bb6a;
+}
+.demo-btn.reset {
+  border-color: #ffb74d;
+  color: #ffb74d;
+}
+/* 补码位显示行 */
+.demo-bit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-family: monospace;
+  font-size: 14px;
+  color: #e0e0e0;
+}
+.demo-bit-row .label {
+  min-width: 60px;
+  color: #90a4ae;
+}
+.bits {
+  display: flex;
+  gap: 2px;
+}
+.bit {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #263238;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #90a4ae;
+}
+.bit.one {
+  background: #2e7d32;
+  color: #fff;
+}
+.bit.sign-bit {
+  background: #c62828;
+  color: #fff;
+}
+</style>
+
+<div class="demo-panel">
+<h3>补码环形图（4 位系统，范围 -8 ~ +7）</h3>
+<div class="circle-demo">
+  <canvas id="circleCanvas" width="320" height="320" style="background:#1a1a2e;border-radius:50%;"></canvas>
+  <div class="circle-controls" style="color:#ccc;margin-top:12px;">
+    <label for="valSlider">数值：</label>
+    <input type="range" id="valSlider" min="-8" max="7" value="0" step="1" oninput="updateCircle()">
+    <span id="circleDecVal" class="dec-val">0</span>
+  </div>
+  <p style="color:#90a4ae; font-size:13px;">
+    二进制表示：<span id="circleBinVal" style="font-family:monospace;color:#ffb74d;font-size:16px;">0000</span>
+    &nbsp;|&nbsp;
+    无符号解读：<span id="circleUnsig" style="font-family:monospace;color:#90a4ae;">0</span>
+  </p>
+</div>
+</div>
+
+<!-- 加载 Plotly.js 库，用于绘制极坐标圆环图 -->
+<script src="../static.jyshare.com/assets/libs/plotly-2.32.0.min.js"></script>
+
+<script>
+const canvas = document.getElementById('circleCanvas');
+const ctx = canvas.getContext('2d');
+const cx = 160, cy = 160, r = 140;
+
+function updateCircle() {
+  const slider = document.getElementById('valSlider');
+  const val = parseInt(slider.value);
+
+  // 4-bit two's complement: -8 to 7
+  // Unsigned representation: (val + 16) % 16
+  const unsig = (val + 16) % 16;
+  const binStr = unsig.toString(2).padStart(4, '0');
+
+  document.getElementById('circleDecVal').textContent = val;
+  document.getElementById('circleBinVal').textContent = binStr;
+  document.getElementById('circleUnsig').textContent = `(无符号 = ${unsig})`;
+
+  ctx.clearRect(0, 0, 320, 320);
+
+  // Draw circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Draw inner circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, r - 20, 0, Math.PI * 2);
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Draw tick marks and labels
+  for (let i = 0; i < 16; i++) {
+    // Clock-wise, starting from 12 o'clock position
+    // 0 is at top (12 o'clock), increasing clockwise
+    const angle = ((i / 16) * 2 * Math.PI) - Math.PI / 2;
+    const tickVal = i <= 7 ? i : i - 16;
+
+    // Tick mark
+    const x1 = cx + (r - 8) * Math.cos(angle);
+    const y1 = cy + (r - 8) * Math.sin(angle);
+    const x2 = cx + r * Math.cos(angle);
+    const y2 = cy + r * Math.sin(angle);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = tickVal === 0 ? '#66bb6a' : (tickVal < 0 ? '#ef5350' : '#42a5f5');
+    ctx.lineWidth = tickVal === 0 ? 3 : 1.5;
+    ctx.stroke();
+
+    // Label
+    const lx = cx + (r + 16) * Math.cos(angle);
+    const ly = cy + (r + 16) * Math.sin(angle);
+    ctx.font = tickVal === 0 ? 'bold 11px monospace' : '10px monospace';
+    ctx.fillStyle = tickVal === 0 ? '#66bb6a' : (tickVal < 0 ? '#ef5350' : '#90a4ae');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(tickVal, lx, ly);
+
+    // Unsigned label (inner)
+    const ulx = cx + (r - 26) * Math.cos(angle);
+    const uly = cy + (r - 26) * Math.sin(angle);
+    ctx.font = '9px monospace';
+    ctx.fillStyle = '#616161';
+    ctx.fillText(i, ulx, uly);
+  }
+
+  // Draw pointer
+  const pointerAngle = ((unsig / 16) * 2 * Math.PI) - Math.PI / 2;
+  const px = cx + (r - 30) * Math.cos(pointerAngle);
+  const py = cy + (r - 30) * Math.sin(pointerAngle);
+
+  // Pointer line
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(px, py);
+  ctx.strokeStyle = '#ffeb3b';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Pointer dot
+  ctx.beginPath();
+  ctx.arc(px, py, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#ffeb3b';
+  ctx.fill();
+
+  // Center dot
+  ctx.beginPath();
+  ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+
+  // Title
+  ctx.font = '12px sans-serif';
+  ctx.fillStyle = '#90a4ae';
+  ctx.textAlign = 'center';
+  ctx.fillText('补码环形图 (内圈=无符号值)', cx, 300);
+
+  // Legend
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ef5350';
+  ctx.fillRect(10, 10, 10, 10);
+  ctx.fillStyle = '#ccc';
+  ctx.fillText('负数', 24, 20);
+  ctx.fillStyle = '#42a5f5';
+  ctx.fillRect(10, 26, 10, 10);
+  ctx.fillStyle = '#ccc';
+  ctx.fillText('正数', 24, 36);
+  ctx.fillStyle = '#66bb6a';
+  ctx.fillRect(10, 42, 10, 10);
+  ctx.fillStyle = '#ccc';
+  ctx.fillText('0', 24, 52);
+}
+
+updateCircle();
+</script>
+
+<h3 style="color:#66bb6a;margin-top:24px;">Plotly 补码环形图（scatterpolar 极坐标）</h3>
+<p style="color:#90a4ae;font-size:13px;">下图用 Plotly.js 的极坐标展示 4 位补码的 16 个刻度。蓝色=正数区域，红色=负数区域，绿色=零点。</p>
+<div id="plotlyCircle" style="width:100%;max-width:500px;margin:0 auto;"></div>
+<div class="circle-legend" style="margin-bottom:16px;">
+  <div class="legend-item"><div class="legend-dot" style="background:#42a5f5;"></div> 正数区域 (0 ~ +7)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef5350;"></div> 负数区域 (-8 ~ -1)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#66bb6a;"></div> 零点</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff9800;"></div> 溢出点 (+7→-8)</div>
+</div>
+
+<script>
+/* ===================================================
+ * Plotly.js 补码环形图 - scatterpolar 极坐标演示
+ * 技术：Plotly.js 极坐标图
+ * 测试字符串：runoob
+ * 展示 4 位补码系统的 16 刻度圆环，标出正数/负数/溢出点
+ * =================================================== */
+
+(function() {
+  /* ---------- 数据准备 ---------- */
+  // 4 位系统的 16 个值：无符号 0~15，补码解读为 -8~+7
+  var tickCount = 16;
+  var rValues = [];     // 半径（统一为 1，形成圆环）
+  var thetaValues = []; // 角度（度数）
+  var labels = [];      // 刻度标签
+  var colors = [];      // 每个刻度的颜色
+  var hoverTexts = [];  // 悬停提示文本
+
+  for (var i = 0; i < tickCount; i++) {
+    // 补码解读：0~7 为正数，8~15 为负数（-8~-1）
+    var signedVal = i <= 7 ? i : i - 16;
+    // 无符号值
+    var unsignedVal = i;
+    // 二进制表示（4位补零）
+    var binStr = unsignedVal.toString(2).padStart(4, '0');
+
+    // 角度：从顶部（12点钟方向）开始，顺时针排列
+    // Plotly scatterpolar 的 theta 用度数，0°=右侧，90°=顶部
+    // 我们需要第一个点(i=0, 即补码0)在顶部
+    var angleDeg = (i / tickCount) * 360; // 从顶部顺时针
+
+    rValues.push(1);                        // 所有点在同一半径上
+    thetaValues.push(angleDeg);
+    labels.push(signedVal.toString());      // 补码值标签
+
+    // 颜色编码：正数=蓝，负数=红，零=绿
+    if (signedVal === 0) {
+      colors.push('#66bb6a');               // 零点绿色
+    } else if (signedVal > 0) {
+      colors.push('#42a5f5');               // 正数蓝色
+    } else {
+      colors.push('#ef5350');               // 负数红色
+    }
+
+    hoverTexts.push(
+      '补码值: ' + signedVal +
+      '<br>无符号: ' + unsignedVal +
+      '<br>二进制: ' + binStr
+    );
+  }
+
+  /* ---------- 构建 scatterpolar trace ---------- */
+  var trace = {
+    type: 'scatterpolar',
+    mode: 'markers+text',
+    r: rValues,
+    theta: thetaValues,
+    text: labels,
+    textfont: {
+      size: 12,
+      color: '#ffffff',
+      family: 'monospace'
+    },
+    textposition: 'top center',
+    marker: {
+      size: 20,
+      color: colors,
+      line: {
+        color: '#1a1a2e',
+        width: 2
+      },
+      symbol: 'circle'
+    },
+    hovertext: hoverTexts,
+    hoverinfo: 'text',
+    hoverlabel: {
+      bgcolor: '#263238',
+      font: { color: '#e0e0e0', size: 12, family: 'monospace' }
+    }
+  };
+
+  /* ---------- 构建 layout ---------- */
+  var layout = {
+    title: {
+      text: '4 位补码环形图（范围 -8 ~ +7）',
+      font: { color: '#e0e0e0', size: 16 }
+    },
+    paper_bgcolor: '#1a1a2e',
+    plot_bgcolor: '#1a1a2e',
+    polar: {
+      radialaxis: {
+        range: [0, 1.5],
+        showticklabels: false,
+        showgrid: true,
+        gridcolor: '#333',
+        visible: false
+      },
+      angularaxis: {
+        rotation: 90,        // 将 0° 旋转到顶部（12点钟方向）
+        direction: 'clockwise',
+        tickmode: 'array',
+        tickvals: thetaValues,
+        ticktext: labels,
+        tickfont: { color: '#90a4ae', size: 10, family: 'monospace' },
+        showgrid: true,
+        gridcolor: '#444'
+      }
+    },
+    showlegend: false,
+    margin: { t: 50, b: 20, l: 20, r: 20 },
+    // 添加标注箭头
+    annotations: [
+      // 溢出点标注：+7 → -8 的边界
+      {
+        x: 0.5, y: -0.15,
+        xref: 'paper', yref: 'paper',
+        text: '溢出点：+7 + 1 = -8',
+        showarrow: false,
+        font: { color: '#ff9800', size: 12, family: 'monospace' }
+      }
+    ]
+  };
+
+  /* ---------- 渲染 ---------- */
+  // runoob 演示：Plotly 极坐标补码环形图
+  Plotly.newPlot('plotlyCircle', [trace], layout, {
+    displayModeBar: false,        // 隐藏工具栏，保持简洁
+    responsive: true              // 响应式布局
+  });
+})();
+</script>
+
+<p>环形的含义：</p>
+<ul>
+<li>顺时针方向 = 数值增加</li>
+<li>绕一圈（超过最大值）= 回到起点（模运算的「溢出」效果）</li>
+<li>红色区域 = 负数（补码解读），蓝色区域 = 正数</li>
+<li>内圈标注的是无符号解读（对应 0~15），外圈标注的是补码解读（-8~+7）</li>
+</ul>
+
+<p>从图中可以看到，<span class="marked">补码本质上是把数值空间折叠成了一个环</span>。</p>
+<p>正数走到尽头（+7 之后）自然地变成了负数（-8），减法和加法在环上是同一个方向。</p>
+
+<hr>
+
+<h2>补码的计算规则</h2>
+
+<p>手工计算一个数的补码，有两个等价的快方法：</p>
+
+<h3>方法一：取反+1法（标准方法）</h3>
+<ol>
+<li>写出绝对值对应的二进制</li>
+<li>每一位取反（0变1，1变0），得到反码</li>
+<li>反码加 1，得到补码</li>
+</ol>
+
+<h3>方法二：从右往左法（速算方法）</h3>
+<ol>
+<li>从右往左找到第一个 1</li>
+<li>这个 1 左边所有的位取反</li>
+<li>这个 1 及其右边所有的位保持不变</li>
+</ol>
+
+<p>以 -20 为例（8 位系统），两种方法验证：</p>
+
+<div class="steps-visual">
+  <div class="step-box">
+    <div class="step-title">20 的二进制</div>
+    <div class="step-value">00010100</div>
+  </div>
+  <div class="step-arrow">&rarr;</div>
+  <div class="step-box">
+    <div class="step-title">取反（反码）</div>
+    <div class="step-value">11101011</div>
+  </div>
+  <div class="step-arrow">&rarr;</div>
+  <div class="step-box">
+    <div class="step-title">加 1（补码）</div>
+    <div class="step-value" style="color:#2e7d32;">11101100</div>
+  </div>
+</div>
+
+<p>验证：-20 的补码 11101100，按无符号解读 = 236。</p>
+<p>236 + 20 = 256，正好是一个模。这说明计算正确。</p>
+
+<hr>
+
+<h2>三种表示法的对比</h2>
+
+<table class="reference">
+<tr><th>数值</th><th>原码</th><th>反码</th><th>补码</th></tr>
+<tr><td>+5</td><td>00000101</td><td>00000101</td><td>00000101</td></tr>
+<tr><td>-5</td><td>10000101</td><td>11111010</td><td>11111011</td></tr>
+<tr><td>+0</td><td>00000000</td><td>00000000</td><td>00000000</td></tr>
+<tr><td>-0</td><td style="color:#c62828;">10000000</td><td style="color:#c62828;">11111111</td><td style="color:#2e7d32;">不存在</td></tr>
+<tr><td>+127</td><td>01111111</td><td>01111111</td><td>01111111</td></tr>
+<tr><td>-127</td><td>11111111</td><td>10000000</td><td>10000001</td></tr>
+<tr><td>-128</td><td style="color:#888;">无法表示</td><td style="color:#888;">无法表示</td><td style="color:#2e7d32;">10000000</td></tr>
+</table>
+
+<p>注意三个关键差异：</p>
+<ol>
+<li><span class="tag1 green">补码没有 -0</span>：全 1 不再浪费在 -0 上，而是表示 -1。</li>
+<li><span class="tag1 green">补码多一个负数</span>：8 位补码范围是 -128 ~ +127，比原码的 -127~+127 多了一个 -128。</li>
+<li><span class="tag1 green">补码让加法统一</span>：加正数和加负数用同一套电路。</li>
+</ol>
+
+<blockquote><p>这就是为什么 Java 的 <code>byte</code> 类型范围是 -128~127，C 语言的 <code>signed char</code> 也是 -128~127。它们使用的都是 8 位补码。</p></blockquote>
+
+<hr>
+
+<h2>交互演示：补码计算器</h2>
+
+<p>在下面输入一个 8 位范围内的整数（-128 ~ 127），查看它的原码、反码和补码。</p>
+
+<div class="demo-panel">
+<h3>补码计算器 (8 位)</h3>
+<div class="demo-input-row">
+  <span>输入整数：</span>
+  <input type="number" class="demo-input" id="twosInput" value="-20" min="-128" max="127" oninput="calcTwos()">
+  <button class="demo-btn calc" onclick="calcTwos()">计算</button>
+  <button class="demo-btn reset" onclick="document.getElementById('twosInput').value=20;calcTwos();">+20</button>
+  <button class="demo-btn reset" onclick="document.getElementById('twosInput').value=-128;calcTwos();">-128</button>
+</div>
+<div id="twosOutput" style="margin-top:12px;"></div>
+</div>
+
+<script>
+function calcTwos() {
+  const input = document.getElementById('twosInput');
+  let val = parseInt(input.value);
+  if (isNaN(val)) val = 0;
+  if (val > 127) { val = 127; input.value = 127; }
+  if (val < -128) { val = -128; input.value = -128; }
+
+  const bits = 8;
+  let origBin, inverted, twosComp;
+
+  if (val >= 0) {
+    origBin = val.toString(2).padStart(bits, '0');
+    inverted = origBin; // 正数的反码和补码与原码相同
+    twosComp = origBin;
+  } else {
+    const abs = Math.abs(val);
+    origBin = '1' + abs.toString(2).padStart(bits - 1, '0'); // 原码
+    // 反码：符号位保持1，其余位取反
+    inverted = '1' + abs.toString(2).padStart(bits - 1, '0')
+      .split('').map(b => b === '0' ? '1' : '0').join('');
+    // 补码：计算方法
+    const unsig = ((val % 256) + 256) % 256; // 无符号对应值
+    twosComp = unsig.toString(2).padStart(bits, '0');
+  }
+
+  const unsig = ((val % 256) + 256) % 256;
+
+  let html = `
+    <p style="font-size:20px;color:#66bb6a;">数值：${val}</p>
+    <p style="color:#90a4ae;">无符号对应值：${unsig}（${val} + 256 = ${val + 256} 取模 = ${unsig}）</p>
+    <div class="demo-bit-row">
+      <span class="label">原码：</span>
+      <div class="bits">${renderBits(origBin, bits)}</div>
+    </div>
+    <div class="demo-bit-row">
+      <span class="label">反码：</span>
+      <div class="bits">${renderBits(inverted, bits)}</div>
+    </div>
+    <div class="demo-bit-row">
+      <span class="label" style="color:#66bb6a;">补码：</span>
+      <div class="bits">${renderBits(twosComp, bits)}</div>
+    </div>
+    <p style="color:#90a4ae;font-size:13px;margin-top:12px;">
+      验证：补码的无符号值 = ${parseInt(twosComp, 2)}，
+      ${parseInt(twosComp, 2)} + ${Math.abs(val)} = ${parseInt(twosComp, 2) + Math.abs(val)}
+      ${val < 0 ? ' = 256 (1个模)' : ''}
+    </p>
+  `;
+  document.getElementById('twosOutput').innerHTML = html;
+}
+
+function renderBits(binStr, bits) {
+  let html = '';
+  for (let i = 0; i < bits; i++) {
+    let cls = 'bit';
+    if (i === 0 && binStr[i] === '1') cls += ' sign-bit';
+    else if (binStr[i] === '1') cls += ' one';
+    html += `<div class="${cls}">${binStr[i]}</div>`;
+  }
+  return html;
+}
+
+calcTwos();
+</script>
+
+<p>特别注意：输入 -128 时，补码是 <code>10000000</code>。</p>
+<p>这个数的绝对值是 128，但 128 在 8 位正数范围（0~127）之外。</p>
+<p>所以 -128 没有对应的正数表示——这是补码系统的一个有趣特性。</p>
+
+<hr>
+
+<h2>补码的溢出</h2>
+
+<p>8 位补码范围是 -128~127。</p>
+<p>如果计算结果超出这个范围，就会发生<span class="marked">溢出</span>。</p>
+
+<div class="steps-visual">
+  <div class="step-box">
+    <div class="step-title">127 + 1</div>
+    <div class="step-value" style="color:#c62828;">-128</div>
+    <div class="step-title">(正溢出，负数结果)</div>
+  </div>
+  <div class="step-arrow">|</div>
+  <div class="step-box">
+    <div class="step-title">-128 - 1</div>
+    <div class="step-value" style="color:#c62828;">+127</div>
+    <div class="step-title">(负溢出，正数结果)</div>
+  </div>
+</div>
+
+<p>这再次呼应了前面的环形图——走到尽头后，数值会「绕回来」。</p>
+<p>在 C/C++ 中，有符号整数的溢出是<span class="marked">未定义行为</span>（编译器可以假设它不会发生），这是很多奇怪 bug 的根源。</p>
+
+<hr>
+
+<h2>代码演示：补码的完整实现</h2>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 补码的完整实现与验证（runoob 演示）</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> to_twos_complement<span style="color: Olive;">&#40;</span>n<span style="color: Gray;">,</span> bits<span style="color: Gray;">=</span><span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;将整数 n 转换为指定位宽的补码字符串&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> n <span style="color: Gray;">&lt;</span> -<span style="color: Maroon;">2</span>**<span style="color: Olive;">&#40;</span>bits-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">or</span> n <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">2</span>**<span style="color: Olive;">&#40;</span>bits-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> - <span style="color: Maroon;">1</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">raise</span> <span style="color: Teal;">ValueError</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;数值 {n} 超出 {bits} 位补码范围 [-{2**(bits-1)}, {2**(bits-1)-1}]&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 利用模运算：负数 n 的无符号对应值 = n + 2^bits</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># Python 中直接用位掩码</span><br />
+&nbsp; &nbsp; mask <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> <span style="color: Gray;">&lt;&lt;</span> bits<span style="color: Olive;">&#41;</span> - <span style="color: Maroon;">1</span> &nbsp;<span style="color: #a50"># 比如 8 位: 0xFF = 255</span><br />
+&nbsp; &nbsp; unsigned_val <span style="color: Gray;">=</span> n &amp; mask<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> format<span style="color: Olive;">&#40;</span>unsigned_val<span style="color: Gray;">,</span> f<span style="color: #a11;">'0{bits}b'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> from_twos_complement<span style="color: Olive;">&#40;</span>bin_str<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;将补码字符串转换回十进制整数&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; bits <span style="color: Gray;">=</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>bin_str<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; unsigned_val <span style="color: Gray;">=</span> <span style="color: Teal;">int</span><span style="color: Olive;">&#40;</span>bin_str<span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 如果最高位是 1（负数），减去 2^bits</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> bin_str<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">==</span> <span style="color: #a11;">'1'</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> unsigned_val - <span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> <span style="color: Gray;">&lt;&lt;</span> bits<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> unsigned_val<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> show_conversion_steps<span style="color: Olive;">&#40;</span>n<span style="color: Gray;">,</span> bits<span style="color: Gray;">=</span><span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;展示从 n 到补码的详细步骤&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; abs_bin <span style="color: Gray;">=</span> format<span style="color: Olive;">&#40;</span><span style="color: Teal;">abs</span><span style="color: Olive;">&#40;</span>n<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> f<span style="color: #a11;">'0{bits}b'</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;数值: {n}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;Step 1: 绝对值 |{n}| = {abs(n)} → 二进制 = {abs_bin}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> n <span style="color: Gray;">&gt;=</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;Step 2: 正数的补码 = 原码 = {abs_bin}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 取反</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; inverted <span style="color: Gray;">=</span> <span style="color: #a11;">''</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'1'</span> <span style="color: Green;font-weight:bold;">if</span> b <span style="color: Gray;">==</span> <span style="color: #a11;">'0'</span> <span style="color: Green;font-weight:bold;">else</span> <span style="color: #a11;">'0'</span> <span style="color: Green;font-weight:bold;">for</span> b <span style="color: Green;font-weight:bold;">in</span> abs_bin<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;Step 2: 取反（反码）= {inverted}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 加 1</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; carry <span style="color: Gray;">=</span> <span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result_list <span style="color: Gray;">=</span> <span style="color: Teal;">list</span><span style="color: Olive;">&#40;</span>inverted<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>bits - <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> carry <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">break</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; total <span style="color: Gray;">=</span> <span style="color: Teal;">int</span><span style="color: Olive;">&#40;</span>result_list<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> + carry<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; result_list<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">str</span><span style="color: Olive;">&#40;</span>total % <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; carry <span style="color: Gray;">=</span> total // <span style="color: Maroon;">2</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> <span style="color: #a11;">''</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>result_list<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;Step 3: 反码 + 1 &nbsp; = {result}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; comp <span style="color: Gray;">=</span> to_twos_complement<span style="color: Olive;">&#40;</span>n<span style="color: Gray;">,</span> bits<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;→ 最终补码: {comp}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 验证</span><br />
+&nbsp; &nbsp; recovered <span style="color: Gray;">=</span> from_twos_complement<span style="color: Olive;">&#40;</span>comp<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;验证: 补码 {comp} → 解读为 {recovered}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 测试</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;补码转换演示 (8位系统)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">for</span> val <span style="color: Green;font-weight:bold;">in</span> <span style="color: Olive;">&#91;</span><span style="color: Maroon;">5</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">127</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">128</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; show_conversion_steps<span style="color: Olive;">&#40;</span>val<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 验证补码加法</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;补码加法验证：减法变加法&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> twos_add<span style="color: Olive;">&#40;</span>a<span style="color: Gray;">,</span> b<span style="color: Gray;">,</span> bits<span style="color: Gray;">=</span><span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;补码加法（包含溢出处理）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; mask <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> <span style="color: Gray;">&lt;&lt;</span> bits<span style="color: Olive;">&#41;</span> - <span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; result_unsigned <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>a + b<span style="color: Olive;">&#41;</span> &amp; mask<br />
+&nbsp; &nbsp; <span style="color: #a50"># 解读有符号结果</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> result_unsigned <span style="color: Gray;">&gt;=</span> <span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> <span style="color: Gray;">&lt;&lt;</span> <span style="color: Olive;">&#40;</span>bits - <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; signed_result <span style="color: Gray;">=</span> result_unsigned - <span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> <span style="color: Gray;">&lt;&lt;</span> bits<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; signed_result <span style="color: Gray;">=</span> result_unsigned<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> signed_result<br />
+<br />
+<span style="color: #a50"># 5 - 3 = 2</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;5 + (-3) = {twos_add(5, -3)} &nbsp; (期望: 2)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 127 + 1 = -128 (溢出)</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;127 + 1 = {twos_add(127, 1)} &nbsp;(期望: -128，发生了溢出)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># -128 - 1 = 127 (溢出)</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;-128 + (-1) = {twos_add(-128, -1)} &nbsp; (期望: 127，发生了溢出)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 零相加</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;0 + 0 = {twos_add(0, 0)} &nbsp; (期望: 0)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 用 RUNOOB 字符验证：R=82, U=85 → 82 + (-85) = -3</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>RUNOOB 测试：R(82) + (-U(85)) = {twos_add(82, -85)} &nbsp; (期望: -3)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 展示补码的循环特性</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>补码环形（4位简化版，范围 -8~+7）：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;数值 &nbsp;| 补码 &nbsp; | 无符号&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">30</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> n <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">8</span><span style="color: Gray;">,</span> <span style="color: Maroon;">8</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; comp <span style="color: Gray;">=</span> to_twos_complement<span style="color: Olive;">&#40;</span>n<span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; unsig <span style="color: Gray;">=</span> <span style="color: Teal;">int</span><span style="color: Olive;">&#40;</span>comp<span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; {n:3d} &nbsp;| {comp} &nbsp; | {unsig:2d}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/computer-organization/number-system-conversion.html" rel="prev"> 进制转换 &#8212; 二进制、十进制、十六进制</a> </div>
+			<div class="next-design-link"><a href="/computer-organization/floating-point-ieee754.html" rel="next"> 小数怎么表示 &#8212; 浮点数与 IEEE 754</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31873' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31873;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31873, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31873},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31873;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

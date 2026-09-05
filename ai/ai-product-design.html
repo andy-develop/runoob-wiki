@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 产品设计 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-product-design.html" />
+<meta name="keywords" content="AI 产品设计">
+<meta name="description" content="AI 产品设计   如果你把 AI 功能当成普通软件功能来设计，结果很可能会让用户失望。 	  普通软件是确定的——你点保存，它就保存，每次都一样。  	 AI 产品是概率的——你让它写文案，它这次写得很好，下次可能就不行。     普通软件出错时，会报错提示，AI 产品出错时，可能会一本正经地胡说八道，让你以为它是对的。  这种本质差异，决定了 AI 产品设计需要一套全新的思路。   传统产品设计追求零缺陷，用户每次都得到相同的结果。..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-workflow-auto.html" rel="prev"> AI 工作流自动化</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-local-model-deployment.html" rel="next"> 本地模型部署</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>AI 产品设计</h1>
+
+
+<p>如果你把 AI 功能当成普通软件功能来设计，结果很可能会让用户失望。</p>
+	<ul>
+<li>
+<p>普通软件是确定的——你点保存，它就保存，每次都一样。</p></li>
+
+	<li>
+<p>AI 产品是概率的——你让它写文案，它这次写得很好，下次可能就不行。</p></li></ul>
+
+
+
+
+<p>普通软件出错时，会报错提示，AI 产品出错时，可能会一本正经地胡说八道，让你以为它是对的。</p>
+
+<p>这种本质差异，决定了 AI 产品设计需要一套全新的思路。</p>
+
+<blockquote>
+<p>传统产品设计追求零缺陷，用户每次都得到相同的结果。AI 产品设计要接受<span class="marked">概率输出</span>，帮助用户理解和应对结果的不确定性。</p>
+</blockquote>
+
+<hr>
+
+<h2>AI 产品思维</h2>
+
+<p>要设计好 AI 产品，先得理解 AI 的独特性，以及它会给用户带来怎样的心理变化。</p>
+
+<h3>概率性输出</h3>
+
+<p>大模型的输出本质上是概率抽样，同样的问题，每次问可能得到不同的答案，有时好，有时坏，有时平庸，这不是 bug，是 AI 的特性。</p>
+
+<p>对设计师来说，这意味着几个关键原则：</p>
+
+<table class="reference">
+<tr><th>设计原则</th><th>具体做法</th><th>为什么重要</th></tr>
+<tr><td>提供重试机制</td><td>让用户可以"再生成一次"</td><td>不满意时，给用户第二次机会</td></tr>
+<tr><td>展示多个选项</td><td>同时生成 3-5 个版本供选择</td><td>增加用户找到满意结果的概率</td></tr>
+<tr><td>允许编辑修改</td><td>AI 生成的内容要易于编辑</td><td>用户可以修正不完美的地方</td></tr>
+<tr><td>设置质量预期</td><td>告诉用户"结果可能需要调整"</td><td>避免用户期望过高</td></tr>
+</table>
+
+<p>优秀的 AI 产品不会试图掩盖这种不确定性，而是把它转化为一种优势。</p>
+
+<h3>用户心理：期望管理</h3>
+
+<p>用户对 AI 的期望经常在两个极端之间摇摆：要么期待太高，要么完全不信。</p>
+
+<p>第一次用 ChatGPT 的人，常常会惊呼太神奇了，觉得 AI 无所不能。</p>
+
+<p>等到 AI 犯了一个低级错误，又可能立刻转向 AI 也就那样。</p>
+
+<p>产品设计师的任务，是<span class="marked">把用户的期望引导到一个合理的区间</span>。</p>
+
+<p>怎么做？</p>
+	<ul>
+<li>
+<p>第一，明确告诉用户 AI 能做什么、不能做什么。</p></li><li>
+
+
+<p>第二，当 AI 犯错时，不要试图隐瞒，而是坦诚面对。</p></li><li>
+
+<p>第三，给用户控制权——让用户可以调整、编辑、否决 AI 的输出。</p></li></ul>
+
+
+
+<blockquote>
+<p>好的 AI 产品会让用户觉得：AI 是我的助手，不是我的老板。</p>
+</blockquote>
+
+<h3>AI 产品的失败模式</h3>
+
+<p>AI 产品的失败方式和传统软件很不一样。</p>
+
+<p>传统软件要么能用，要么不能用——崩溃了、报错了、功能不工作了。</p>
+
+<p>AI 产品的失败更微妙：</p>
+
+<table class="reference">
+<tr><th>失败模式</th><th>表现</th><th>应对策略</th></tr>
+<tr><td>幻觉</td><td>编造不存在的事实、引用、数据</td><td>增加事实核查、提供来源标注、允许用户验证</td></tr>
+<tr><td>对齐失败</td><td>回答的内容与用户意图不符</td><td>提供澄清问题、让用户确认意图、多轮对话优化</td></tr>
+<tr><td>输出质量不稳定</td><td>有时很好，有时很差</td><td>提供多个选项、允许重试、让用户评分反馈</td></tr>
+<tr><td>过度自信</td><td>用肯定的语气说错话</td><td>添加置信度显示、用更谨慎的表述、鼓励质疑</td></tr>
+<tr><td>上下文丢失</td><td>忘记之前对话的关键信息</td><td>显示上下文摘要、允许引用历史、提供对话记忆管理</td></tr>
+</table>
+
+<p>理解这些失败模式，是设计好 AI 产品的第一步。</p>
+
+<hr>
+
+<h2>AI 功能设计原则</h2>
+
+<p>三个核心原则：渐进式披露、用户可控、透明告知。</p>
+
+<h3>渐进式披露</h3>
+
+<p>不要把所有功能都堆在用户面前。</p>
+
+<p>理想的流程是：先给用户一个简单的起点，然后根据需要逐步展示更多选项。</p>
+
+<p>比如，用户写邮件：</p>
+	<ul>
+<li>
+<p>第一步：输入主题或关键词，AI 生成初稿。</p></li>
+	<li>
+
+<p>第二步：用户看了初稿，可以调整语气、长度、风格。</p></li>
+	<li>
+
+<p>第三步：如果需要，可以进一步修改特定段落，或者让 AI 提供几个不同版本。</p></li></ul>
+
+
+
+
+<p>这种设计的好处是：</p>
+
+<p>新手不会被复杂的选项吓倒，专家又能找到足够的控制能力。</p>
+
+<table class="reference">
+<tr><th>阶段</th><th>用户看到</th><th>用户操作</th></tr>
+<tr><td>初始界面</td><td>简洁输入框</td><td>输入基本需求</td></tr>
+<tr><td>生成后</td><td>结果 + 基础调整选项</td><td>选择"更正式"、"更简洁"等</td></tr>
+<tr><td>展开高级选项</td><td>详细参数控制</td><td>调整温度、角色、格式等</td></tr>
+</table>
+
+<h3>可控性：让用户调整 AI 输出</h3>
+
+<p>用户需要感觉到，他们是最终的决策者。</p>
+
+<p>提供控制旋钮，而不是"要么接受要么离开"的一次性结果。</p>
+
+<p>常见的控制维度：</p>
+
+<table class="reference">
+<tr><th>控制维度</th><th>典型选项</th><th>适用场景</th></tr>
+<tr><td>风格/语气</td><td>正式、随意、幽默、专业</td><td>写作、邮件、文案</td></tr>
+<tr><td>长度</td><td>简短、中等、详细、长篇</td><td>摘要、文章、报告</td></tr>
+<tr><td>复杂度</td><td>简单易懂、中等、专业深度</td><td>解释、教程、技术文档</td></tr>
+<tr><td>创造性</td><td>保守、平衡、大胆创新</td><td>头脑风暴、创意写作</td></tr>
+<tr><td>格式</td><td>列表、段落、表格、大纲</td><td>笔记、规划、文档</td></tr>
+</table>
+
+<p>更高级的控制：让用户直接编辑 AI 的提示词，或者保存自己常用的提示词模板。</p>
+
+<h3>透明度：告知用户这是 AI 生成</h3>
+
+<p>让用户知道他们在和 AI 交互，这不仅是伦理问题，也是产品体验问题。</p>
+
+<p>用户如果以为是真人写的，发现是 AI 后会有被欺骗的感觉。</p>
+
+<p>如果一开始就说明是 AI 生成，用户反而会更宽容，也更愿意参与改进。</p>
+
+<p>透明度的几种做法：</p>
+<ul>
+
+	<li><p>第一，明确标识——用视觉元素区分 AI 内容和用户内容。</p></li>
+	<li>
+
+<p>第二，展示过程——让用户看到 AI 是如何生成结果的（比如显示思考过程、检索到的来源）。</p></li>
+	<li>
+
+<p>第三，解释局限——告诉用户 AI 可能会犯什么类型的错误，以及如何识别。</p></li></ul>
+
+
+
+
+<blockquote>
+<p>透明度建立信任。用户知道这是 AI，就会用正确的方式使用它——参考而非盲目信任。</p>
+</blockquote>
+
+<hr>
+
+<h2>用户体验设计</h2>
+
+<p>AI 产品有几个关键的体验节点：加载状态、错误处理、反馈机制。</p>
+
+<h3>Loading 状态设计：流式输出</h3>
+
+<p>大模型生成内容需要时间。让用户干等 10 秒，体验会很差。</p>
+
+<p>最好的做法是<span class="marked">流式输出</span>——内容一个字一个字地出现在屏幕上。</p>
+
+<p>为什么好？</p>
+	<ul>
+<li>
+<p>第一，用户感觉系统在工作，没有死机。</p></li>
+	<li>
+
+<p>第二，用户可以提前开始阅读，看到一半就知道是不是想要的方向。</p></li>
+	<li>
+
+<p>第三，如果方向错了，可以随时打断，不用等全部生成完。</p></li></ul>
+
+
+
+
+<p>除了流式输出，还可以：</p>
+	<ul>
+<li>
+<p>显示进度指示器——"正在思考"、"正在检索"、"正在生成"。</p></li>
+
+	<li>
+<p>给出预估时间——"大约需要 10 秒"。</p></li>
+
+	<li>
+<p>提供取消按钮——让用户可以随时停止。</p></li></ul>
+
+
+
+
+<h3>错误处理与降级方案</h3>
+
+<p>AI 一定会犯错。好的产品设计让错误不那么可怕。</p>
+
+<p>当 AI 输出明显有问题时：</p>
+	<ul>
+<li>
+<p>第一，给用户一个简单的"不满意"或"重试"按钮。</p></li>
+	<li>
+
+<p>第二，提供替代方案——"要不试试这个角度？"。</p></li>
+	<li>
+
+<p>第三，允许用户轻松回滚到之前的状态。</p></li></ul>
+
+
+
+
+<p>更严重的错误（比如模型完全不工作）：</p>
+
+<p>要有降级方案。比如，当 AI 不可用时，提供一个模板库让用户手动选择。</p>
+
+<table class="reference">
+<tr><th>错误程度</th><th>用户表现</th><th>产品应对</th></tr>
+<tr><td>轻微问题</td><td>结果有点瑕疵，但能用</td><td>提供编辑功能，让用户微调</td></tr>
+<tr><td>中等问题</td><td>结果不对，需要重生成</td><td>提供重试按钮，或建议调整输入</td></tr>
+<tr><td>严重问题</td><td>AI 完全不工作</td><td>提供降级方案，比如模板库</td></tr>
+</table>
+
+<h3>反馈机制</h3>
+
+<p>用户的反馈是改进 AI 产品的宝贵资源。</p>
+
+<p>但反馈功能不能做得太复杂，否则用户不愿用。</p>
+
+<p>简单有效的反馈设计：</p>
+	<ul>
+<li>
+<p>第一，点赞/点踩——一键表达满意或不满意。</p></li>
+	<li>
+
+<p>第二，简短的多选——"哪里不好？"（太长、太短、跑题、事实错误……）。</p></li>
+	<li>
+
+<p>第三，可选的文本框——让用户可以详细说明问题，但不是必填。</p></li>
+	<li>
+
+<p>第四，告诉用户反馈有什么用——"你的反馈会帮助我们改进"。</p></li></ul>
+
+
+
+
+<p>反馈收集后，最好在界面上给用户一个确认——"感谢你的反馈，我们收到了"。</p>
+
+<hr>
+
+<h2>Prompt 产品化</h2>
+
+<p>好的提示词是 AI 产品的核心竞争力。把提示词从"魔法"变成可管理的产品功能。</p>
+
+<h3>将 Prompt 封装为产品功能</h3>
+
+<p>普通用户不需要知道什么是"系统提示词"。</p>
+
+<p>他们只需要知道：点击这个按钮，就能得到正式邮件的草稿。</p>
+
+<p>所以，设计师的工作是把复杂的提示词封装成简单的功能按钮。</p>
+
+<p>举个例子：</p>
+
+<p>原始提示词可能很长：</p>
+
+<pre>
+你是一个专业的邮件写作助手。请帮用户写一封正式、礼貌、简洁的商务邮件。
+要求：1. 开头要有合适的称呼；2. 正文表达清晰；3. 结尾要有礼貌的结束语。
+语气要专业但不生硬，友好但不过分随意。
+</pre>
+
+<p>产品化后，用户看到的只是：</p>
+	<ul>
+<li>
+<p>一个按钮——"写商务邮件"。</p></li>
+
+	<li>
+<p>几个简单选项——"正式/中性/友好"、"简短/详细"。</p></li></ul>
+
+
+
+
+<p>这就是提示词产品化的核心：<span class="marked">复杂留给自己，简单留给用户</span>。</p>
+
+<h3>System Prompt 的版本管理</h3>
+
+<p>提示词不是写好就完事了，它需要持续迭代。</p>
+
+<p>你可能发现：新版本的提示词对场景 A 更好，但对场景 B 变差了。</p>
+
+<p>所以，提示词需要像代码一样做版本管理。</p>
+
+<p>关键做法：</p>
+	<ul>
+<li>
+<p>第一，给每个版本一个编号或名称——"v1.0"、"v1.1"、"实验版-更友好"。</p></li>
+	<li>
+
+<p>第二，记录每个版本的变更——"改了什么、为什么改、预期效果"。</p></li>
+	<li>
+
+<p>第三，可以同时运行多个版本做 A/B 测试。</p></li>
+	<li>
+
+<p>第四，可以快速回滚到之前的版本。</p></li></ul>
+
+
+
+
+<blockquote>
+<p>提示词迭代时，永远保留回滚的能力。新版本可能带来意想不到的问题。</p>
+</blockquote>
+
+<h3>A/B 测试 Prompt</h3>
+
+<p>两个版本的提示词，哪个更好？不要猜，用数据说话。</p>
+
+<p>A/B 测试的思路：</p>
+	<ul>
+<li>
+<p>一部分用户用版本 A，一部分用户用版本 B。</p></li>
+
+	<li>
+<p>看哪个版本的用户满意度更高、重试率更低、完成率更好。</p></li></ul>
+
+
+
+
+<p>下面是一个简单的 Python 脚本，演示如何做 Prompt 的 A/B 测试分析：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># Prompt A/B 测试分析脚本</span><br />
+<span style="color: #a50"># 用于比较两个版本提示词的效果</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">from</span> dataclasses <span style="color: Green;font-weight:bold;">import</span> dataclass<br />
+<span style="color: Green;font-weight:bold;">from</span> typing <span style="color: Green;font-weight:bold;">import</span> List<span style="color: Gray;">,</span> Dict<span style="color: Gray;">,</span> Optional<br />
+<span style="color: Green;font-weight:bold;">import</span> statistics<br />
+<br />
+<br />
+<span style="color: Gray;">@</span>dataclass<br />
+<span style="color: Green;font-weight:bold;">class</span> TestResult:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;单个测试结果的数据结构&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt_version: <span style="color: Teal;">str</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># &quot;A&quot; 或 &quot;B&quot;</span><br />
+&nbsp; &nbsp; user_satisfaction: <span style="color: Teal;">int</span> &nbsp; <span style="color: #a50"># 用户满意度 1-5</span><br />
+&nbsp; &nbsp; retry_count: <span style="color: Teal;">int</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 用户重试次数</span><br />
+&nbsp; &nbsp; task_completed: <span style="color: Teal;">bool</span> &nbsp; &nbsp; <span style="color: #a50"># 任务是否完成</span><br />
+&nbsp; &nbsp; time_spent_seconds: <span style="color: Teal;">int</span> &nbsp;<span style="color: #a50"># 花费时间</span><br />
+&nbsp; &nbsp; test_case_id: <span style="color: Teal;">str</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 测试用例标识（比如不同的查询类型）</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> analyze_ab_test<span style="color: Olive;">&#40;</span>results: List<span style="color: Olive;">&#91;</span>TestResult<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Dict:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;分析 A/B 测试结果，返回对比统计&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 按版本分组</span><br />
+&nbsp; &nbsp; group_a <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> results <span style="color: Green;font-weight:bold;">if</span> r.<span style="color: #05a;">prompt_version</span> <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;A&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; group_b <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> results <span style="color: Green;font-weight:bold;">if</span> r.<span style="color: #05a;">prompt_version</span> <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;B&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> group_a <span style="color: Green;font-weight:bold;">or</span> <span style="color: Green;font-weight:bold;">not</span> group_b:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: <span style="color: #a11;">&quot;需要至少两个版本的测试数据&quot;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> calc_stats<span style="color: Olive;">&#40;</span>group: List<span style="color: Olive;">&#91;</span>TestResult<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Dict:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算单个组的统计数据&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; satisfaction_scores <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r.<span style="color: #05a;">user_satisfaction</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> group<span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;sample_size&quot;</span>: <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>group<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;avg_satisfaction&quot;</span>: statistics.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span>satisfaction_scores<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;median_satisfaction&quot;</span>: statistics.<span style="color: #05a;">median</span><span style="color: Olive;">&#40;</span>satisfaction_scores<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;avg_retry&quot;</span>: statistics.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>r.<span style="color: #05a;">retry_count</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> group<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;completion_rate&quot;</span>: <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> group <span style="color: Green;font-weight:bold;">if</span> r.<span style="color: #05a;">task_completed</span><span style="color: Olive;">&#41;</span> / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>group<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;avg_time&quot;</span>: statistics.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>r.<span style="color: #05a;">time_spent_seconds</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> group<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; stats_a <span style="color: Gray;">=</span> calc_stats<span style="color: Olive;">&#40;</span>group_a<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; stats_b <span style="color: Gray;">=</span> calc_stats<span style="color: Olive;">&#40;</span>group_b<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 比较关键指标</span><br />
+&nbsp; &nbsp; comparison <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;satisfaction_diff&quot;</span>: stats_b<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_satisfaction&quot;</span><span style="color: Olive;">&#93;</span> - stats_a<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_satisfaction&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;retry_diff&quot;</span>: stats_b<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_retry&quot;</span><span style="color: Olive;">&#93;</span> - stats_a<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_retry&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;completion_diff&quot;</span>: stats_b<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;completion_rate&quot;</span><span style="color: Olive;">&#93;</span> - stats_a<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;completion_rate&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 也可以按测试用例细分（比如不同类型的查询）</span><br />
+&nbsp; &nbsp; by_test_case <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; test_case_ids <span style="color: Gray;">=</span> <span style="color: Teal;">set</span><span style="color: Olive;">&#40;</span>r.<span style="color: #05a;">test_case_id</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> results<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> case_id <span style="color: Green;font-weight:bold;">in</span> test_case_ids:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; case_results <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> results <span style="color: Green;font-weight:bold;">if</span> r.<span style="color: #05a;">test_case_id</span> <span style="color: Gray;">==</span> case_id<span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; case_a <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> case_results <span style="color: Green;font-weight:bold;">if</span> r.<span style="color: #05a;">prompt_version</span> <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;A&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; case_b <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>r <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> case_results <span style="color: Green;font-weight:bold;">if</span> r.<span style="color: #05a;">prompt_version</span> <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;B&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> case_a <span style="color: Green;font-weight:bold;">and</span> case_b:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; by_test_case<span style="color: Olive;">&#91;</span>case_id<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;a_score&quot;</span>: statistics.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span>r.<span style="color: #05a;">user_satisfaction</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> case_a<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;b_score&quot;</span>: statistics.<span style="color: #05a;">mean</span><span style="color: Olive;">&#40;</span>r.<span style="color: #05a;">user_satisfaction</span> <span style="color: Green;font-weight:bold;">for</span> r <span style="color: Green;font-weight:bold;">in</span> case_b<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;version_a&quot;</span>: stats_a<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;version_b&quot;</span>: stats_b<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;comparison&quot;</span>: comparison<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;by_test_case&quot;</span>: by_test_case<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;winner&quot;</span>: _determine_winner<span style="color: Olive;">&#40;</span>stats_a<span style="color: Gray;">,</span> stats_b<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> _determine_winner<span style="color: Olive;">&#40;</span>stats_a: Dict<span style="color: Gray;">,</span> stats_b: Dict<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;根据统计数据判断哪个版本更好&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 综合考虑满意度、完成率、重试次数</span><br />
+&nbsp; &nbsp; a_score <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; stats_a<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_satisfaction&quot;</span><span style="color: Olive;">&#93;</span> * <span style="color: Maroon;">0.5</span> +<br />
+&nbsp; &nbsp; &nbsp; &nbsp; stats_a<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;completion_rate&quot;</span><span style="color: Olive;">&#93;</span> * <span style="color: Maroon;">10</span> * <span style="color: Maroon;">0.3</span> +<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: Maroon;">5</span> - stats_a<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_retry&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">0.2</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; b_score <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; stats_b<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_satisfaction&quot;</span><span style="color: Olive;">&#93;</span> * <span style="color: Maroon;">0.5</span> +<br />
+&nbsp; &nbsp; &nbsp; &nbsp; stats_b<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;completion_rate&quot;</span><span style="color: Olive;">&#93;</span> * <span style="color: Maroon;">10</span> * <span style="color: Maroon;">0.3</span> +<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: Maroon;">5</span> - stats_b<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;avg_retry&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> * <span style="color: Maroon;">0.2</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 差异太小则不确定</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">abs</span><span style="color: Olive;">&#40;</span>a_score - b_score<span style="color: Olive;">&#41;</span> <span style="color: Gray;">&lt;</span> <span style="color: Maroon;">0.1</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #a11;">&quot;tie&quot;</span> &nbsp;<span style="color: #a50"># 平手</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #a11;">&quot;A&quot;</span> <span style="color: Green;font-weight:bold;">if</span> a_score <span style="color: Gray;">&gt;</span> b_score <span style="color: Green;font-weight:bold;">else</span> <span style="color: #a11;">&quot;B&quot;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> print_report<span style="color: Olive;">&#40;</span>analysis: Dict<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;打印可读的 A/B 测试报告&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB Prompt A/B 测试报告&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;error&quot;</span> <span style="color: Green;font-weight:bold;">in</span> analysis:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;错误: {analysis['error']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>版本 A (基准):&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;样本量: {analysis['version_a']['sample_size']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;平均满意度: {analysis['version_a']['avg_satisfaction']:.2f}/5&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;完成率: {analysis['version_a']['completion_rate']:.1%}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;平均重试次数: {analysis['version_a']['avg_retry']:.2f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>版本 B (新方案):&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;样本量: {analysis['version_b']['sample_size']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;平均满意度: {analysis['version_b']['avg_satisfaction']:.2f}/5&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;完成率: {analysis['version_b']['completion_rate']:.1%}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;平均重试次数: {analysis['version_b']['avg_retry']:.2f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>对比结果:&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; diff <span style="color: Gray;">=</span> analysis<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;comparison&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;满意度变化: {diff['satisfaction_diff']:+.2f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;完成率变化: {diff['completion_diff']:+.1%}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;重试次数变化: {diff['retry_diff']:+.2f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; winner <span style="color: Gray;">=</span> analysis<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;winner&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> winner <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;tie&quot;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>结论: 两个版本效果相当，需要更多数据或调整&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>结论: 版本 {winner} 表现更好&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> analysis.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;by_test_case&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>按测试用例细分:&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> case_id<span style="color: Gray;">,</span> scores <span style="color: Green;font-weight:bold;">in</span> analysis<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;by_test_case&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; better <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;A&quot;</span> <span style="color: Green;font-weight:bold;">if</span> scores<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;a_score&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">&gt;</span> scores<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;b_score&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Green;font-weight:bold;">else</span> <span style="color: #a11;">&quot;B&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;{case_id}: A={scores['a_score']:.2f}, B={scores['b_score']:.2f} ({better}更好)&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 使用示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 模拟一些测试数据</span><br />
+&nbsp; &nbsp; test_data <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 版本 A 的测试结果</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;A&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">15</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;邮件写作&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;A&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">25</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;邮件写作&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;A&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">12</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;摘要生成&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;A&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">40</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;摘要生成&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;A&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">18</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;代码解释&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;A&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">False</span><span style="color: Gray;">,</span> <span style="color: Maroon;">35</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;代码解释&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 版本 B 的测试结果</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;B&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">12</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;邮件写作&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;B&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">18</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;邮件写作&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;B&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;摘要生成&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;B&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">3</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">25</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;摘要生成&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;B&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">15</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;代码解释&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; TestResult<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;B&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Teal;">True</span><span style="color: Gray;">,</span> <span style="color: Maroon;">20</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;代码解释&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 分析并打印报告</span><br />
+&nbsp; &nbsp; analysis_result <span style="color: Gray;">=</span> analyze_ab_test<span style="color: Olive;">&#40;</span>test_data<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; print_report<span style="color: Olive;">&#40;</span>analysis_result<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>运行这个脚本，你会得到一个清晰的 A/B 测试报告，知道哪个版本的提示词效果更好。</p>
+
+<pre>
+============================================================
+RUNOOB Prompt A/B 测试报告
+============================================================
+
+版本 A (基准):
+  样本量: 6
+  平均满意度: 3.50/5
+  完成率: 83.3%
+  平均重试次数: 0.67
+
+版本 B (新方案):
+  样本量: 6
+  平均满意度: 4.17/5
+  完成率: 100.0%
+  平均重试次数: 0.17
+
+对比结果:
+  满意度变化: +0.67
+  完成率变化: +16.7%
+  重试次数变化: -0.50
+
+结论: 版本 B 表现更好
+
+按测试用例细分:
+  邮件写作: A=3.50, B=4.50 (B更好)
+  摘要生成: A=3.50, B=3.50 (A更好)
+  代码解释: A=3.50, B=4.50 (B更好)
+</pre>
+
+<hr>
+
+<h2>AI 功能原型设计</h2>
+
+<p>在投入大量开发资源前，先用低成本方式验证 AI 功能是否真的有用。</p>
+
+<h3>用 Claude/ChatGPT 快速原型</h3>
+
+<p>最简单的原型：直接用大模型聊天界面模拟产品功能。</p>
+
+<p>比如你想做一个面试问题生成器：<strong>写一个提示词，描述你想要的功能，然后输入一些测试用例，看看输出质量。</strong></p>
+
+<p>这个阶段的目标是验证：</p>
+	<ul>
+<li>
+<p>第一，AI 能不能做这件事？</p></li>
+
+	<li>
+<p>第二，输出质量够不够好？</p></li>
+
+	<li>
+<p>第三，用户会觉得这个功能有用吗？</p></li></ul>
+
+
+
+
+<p>不需要写代码，不需要设计界面，就用纯文本对话测试核心价值。</p>
+
+<p>如果这个阶段效果不好，要么改进提示词，要么重新考虑这个功能是否值得做。</p>
+
+<h3>Figma 中的 AI 原型组件</h3>
+
+<p>确定核心功能有价值后，下一步可以做高保真原型。</p>
+
+<p>Figma 是做这个的好工具。</p>
+
+<p>你可以设计：</p>
+	<ul>
+<li>
+<p>用户如何输入？</p></li>
+
+	<li>
+<p>AI 输出如何展示？</p></li>
+	<li>
+
+<p>用户如何调整和编辑？</p></li></ul>
+
+
+
+
+<p>关键是<span class="marked">模拟真实的交互流程</span>，而不只是画静态界面。</p>
+
+<p>可以用 Figma 的交互功能，让用户点击按钮时"生成"不同的内容（你提前准备几个示例结果）。</p>
+
+<p>这样用户可以感受到：哦，原来这个产品是这样用的。</p>
+
+<h3>低代码 AI 应用工具</h3>
+
+<p>如果需要更真实的体验，可以用低代码工具快速搭建可工作的原型。</p>
+
+<p>这类工具可以让你不用写后端代码，就能把大模型接入到一个真正的网页应用里。</p>
+
+<p>好处是：</p>
+
+<p>用户可以真实操作，而不只是看演示。</p>
+
+<p>你可以收集真实的使用数据和反馈。</p>
+
+<p>验证成功后，可以把这个原型作为开发的参考。</p>
+
+<blockquote>
+<p>原型的目标是学习，不是完美。用最快的速度验证想法，发现问题，然后迭代。</p>
+</blockquote>
+
+<hr>
+
+<h2>评估 AI 输出质量</h2>
+
+<p>如何判断 AI 输出好不好？需要定性和定量结合的评估体系。</p>
+
+<h3>定性评估：人工 Review</h3>
+
+<p>有些东西只能靠人来判断。</p>
+
+<p>比如：回答有没有帮助？语气是否合适？逻辑是否通顺？</p>
+
+<p>人工 Review 的做法：</p>
+	<ul>
+<li>
+<p>第一，设计一个评分维度表——比如相关性、准确性、有用性、安全性。</p></li>
+	<li>
+
+<p>第二，让多个评审者独立打分，减少个人偏见。</p></li>
+
+	<li>
+<p>第三，把评分和评语整理成可操作的改进建议。</p></li></ul>
+
+
+
+
+<p>人工 Review 很重要，但它慢、贵、难以规模化。所以需要结合自动化评估。</p>
+
+<h3>定量评估：自动化评测</h3>
+
+<p>用程序来评估 AI 的输出。</p>
+
+<p>常见的自动化评估方法：</p>
+
+<table class="reference">
+<tr><th>方法</th><th>做法</th><th>适用场景</th></tr>
+<tr><td>基于规则的检查</td><td>检查关键词、格式、长度、是否包含敏感内容</td><td>基础质量控制</td></tr>
+<tr><td>LLM 自评</td><td>用另一个大模型来评估输出质量</td><td>开放式任务</td></tr>
+<tr><td>语义相似度</td><td>比较输出和参考答案的语义接近程度</td><td>有标准答案的任务</td></tr>
+<tr><td>用户行为指标</td><td>统计重试率、完成率、满意度评分</td><td>上线后的持续监控</td></tr>
+</table>
+
+<p>自动化评估不能完全替代人，但它可以：</p>
+	<ul>
+<li>
+<p>第一，快速过滤明显有问题的输出。</p></li>
+
+	<li>
+<p>第二，在版本迭代时做回归测试——"这次修改有没有让某些场景变差？"。</p></li>
+
+	<li>
+<p>第三，监控线上服务质量，及时发现问题。</p></li></ul>
+
+
+
+
+<h3>黄金测试集构建</h3>
+
+<p>收集一组高质量的测试用例，每次修改提示词或模型时都在这个集合上跑一遍。</p>
+
+<p>这就是<span class="marked">黄金测试集</span>。</p>
+
+<p>好的测试集应该：</p>
+	<ul>
+<li>
+<p>第一，覆盖典型使用场景——常见的用户请求类型。</p></li>
+
+	<li>
+<p>第二，包含边界情况——极端的、容易出错的输入。</p></li>
+
+	<li>
+<p>第三，有标准答案或评分标准——知道什么是"好"的输出。</p></li>
+
+	<li>
+<p>第四，规模适中——几十到几百个，足够有代表性，但又不会跑得太慢。</p></li></ul>
+
+
+
+
+<p>黄金测试集就像一张安全网：你可以放心地迭代，不用担心意外破坏了重要场景的效果。</p>
+
+<hr>
+
+<h2>AI 产品的商业化路径</h2>
+
+<p>有了好产品，如何让它产生收入？AI 产品有几种常见的商业化模式。</p>
+
+<table class="reference">
+<tr><th>模式</th><th>做法</th><th>典型例子</th><th>优势</th><th>挑战</th></tr>
+<tr><td>订阅制</td><td>按月/按年付费使用</td><td>ChatGPT Plus</td><td>收入稳定，可预测</td><td>需要持续提供价值</td></tr>
+<tr><td>按量计费</td><td>按使用量付费（每次调用或 token）</td><td>OpenAI API</td><td>用户门槛低，可按需使用</td><td>用户可能担心成本</td></tr>
+<tr><td>免费+增值</td><td>基础功能免费，高级功能付费</td><td>Notion AI</td><td>容易获取用户</td><td>把握好免费与付费的边界</td></tr>
+<tr><td>嵌入企业产品</td><td>把 AI 能力卖给企业客户</td><td>客服机器人、文档助手</td><td>客单价高，决策周期长</td><td>需要销售和客户成功团队</td></tr>
+</table>
+
+<p>选择哪种模式，取决于你的产品定位和目标用户。</p>
+
+<p>对普通消费者，免费+增值或订阅制比较常见。</p>
+
+<p>对企业客户，按用量付费或定制化方案更合适。</p>
+
+<p>但无论哪种模式，核心都是：<span class="marked">用户要能实实在在地感受到价值</span>。</p>
+
+<hr>
+
+<h2>案例分析：优秀 AI 产品拆解</h2>
+
+<p>让我们看看几个做得好的 AI 产品，学习它们的设计思路。</p>
+
+<h3>ChatGPT：对话式交互的典范</h3>
+
+<p>ChatGPT 的成功不仅仅是技术的成功，也是设计的成功。</p>
+
+<p>它的核心设计决策：</p>
+	<ul>
+<li>
+<p>第一，用对话形式——用户不需要学习新的交互方式，就像和人聊天一样。</p></li>
+
+	<li>
+<p>第二，流式输出——字一个一个蹦出来，用户感觉 AI 在思考。</p></li>
+	<li>
+
+<p>第三，上下文记忆——你可以说"把刚才那段改得更短一点"，它记得"刚才那段"是什么。</p></li>
+	<li>
+
+<p>第四，简单的重试——不满意？点"重新生成"就好。</p></li>
+	<li>
+
+<p>第五，对话历史管理——你可以回去看之前的对话，继续之前的话题。</p></li></ul>
+
+
+
+
+<p>这些设计看起来简单，但组合起来创造了流畅的体验。</p>
+
+<h3>GitHub Copilot：把 AI 嵌入工作流</h3>
+
+<p>Copilot 没有试图"替代程序员"，而是"增强程序员"。</p>
+
+<p>它的设计智慧：</p>
+	<ul>
+<li>
+<p>第一，不打断——AI 在后台工作，你写代码时它主动提供建议，不干扰你的思路。</p></li><li>
+
+
+<p>第二，低承诺——你可以看 AI 的建议，觉得好就按 Tab 接受，不好就继续打字。</p></li><li>
+
+<p>第三，上下文感知——它看你写的代码、注释、文件名，理解你想做什么。</p></li><li>
+
+<p>第四，多选项——它会给几个建议，你可以挑一个最符合你意图的。</p></li></ul>
+
+
+
+<p>Copilot 的成功说明：<span class="marked">最好的 AI 产品是让用户感觉不到 AI 的存在，只感觉自己变厉害了</span>。</p>
+
+<h3>Notion AI：AI 作为写作副驾</h3>
+
+<p>Notion AI 没有做一个独立产品，而是把 AI 能力嵌入到已有的笔记工具里。</p>
+
+<p>它的设计亮点：</p>
+<ul>
+<li>
+<p>第一，上下文就是你的文档——你不需要复制粘贴，AI 就在你写的地方工作。</p></li><li>
+
+<p>第二，预设模板——"继续写"、"总结"、"改得更正式"，常用操作一键触发。</p></li><li>
+
+<p>第三，可以混合编辑——AI 生成的内容，你可以随时修改，AI 也能接着你的修改继续写。</p></li></ul>
+
+
+
+<p>这种设计让 AI 成为创作过程的一部分，而不是一个独立的工具。</p>
+
+<blockquote>
+<p>从这三个案例可以看出：好的 AI 产品不是炫技，而是真正解决问题，让用户的工作更容易。</p>
+</blockquote>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-workflow-auto.html" rel="prev"> AI 工作流自动化</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-local-model-deployment.html" rel="next"> 本地模型部署</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31513' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31513;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31513, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31513},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31513;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

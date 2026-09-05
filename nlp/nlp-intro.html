@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLP 简介 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/nlp/nlp-intro.html" />
+<meta name="keywords" content="NLP 简介">
+<meta name="description" content="NLP 简介  自然语言处理（Natural Language Processing, NLP）是计算机科学、人工智能和语言学的交叉领域，致力于让计算机能够理解、处理和生成人类的自然语言。 核心目标：      理解：让计算机能够理解人类语言的含义     处理：对文本和语音进行分析、转换和操作     生成：让计算机能够产生自然、流畅的人类语言    自然语言的特点 人类语言具有以下独特特征，这些特征使得NLP成为一个极具挑战性的领域..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>NLP 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="NLP  教程"  href="/nlp/nlp-tutorial.html" >
+			NLP  教程			</a>
+						<a target="_top" data-p="par" title="NLP 简介"  href="/nlp/nlp-intro.html" >
+			NLP 简介			</a>
+						<a target="_top" data-p="par" title="语言学基础"  href="/nlp/nlp-linguistics-basics.html" >
+			语言学基础			</a>
+						<a target="_top" data-p="par" title="文本预处理"  href="/nlp/text-preprocessing.html" >
+			文本预处理			</a>
+						<a target="_top" data-p="par" title="文本表示方法"  href="/nlp/text-representation.html" >
+			文本表示方法			</a>
+						<a target="_top" data-p="par" title="文本分类"  href="/nlp/text-classification.html" >
+			文本分类			</a>
+						<a target="_top" data-p="par" title="情感分析"  href="/nlp/sentiment-analysis.html" >
+			情感分析			</a>
+						<a target="_top" data-p="par" title="命名实体识别（NER）"  href="/nlp/named-entity-recognition.html" >
+			命名实体识别（NER）			</a>
+						<a target="_top" data-p="par" title="关系抽取"  href="/nlp/relation-extraction.html" >
+			关系抽取			</a>
+						<a target="_top" data-p="par" title="文本相似度计算"  href="/nlp/text-similarity.html" >
+			文本相似度计算			</a>
+						<a target="_top" data-p="par" title="循环神经网络（RNN）"  href="/nlp/recurrent-neural-network.html" >
+			循环神经网络（RNN）			</a>
+						<a target="_top" data-p="par" title="注意力机制"  href="/nlp/attention-mechanism.html" >
+			注意力机制			</a>
+						<a target="_top" data-p="par" title="Transformer 架构"  href="/nlp/transformer-architecture.html" >
+			Transformer 架构			</a>
+						<a target="_top" data-p="par" title="序列到序列模型"  href="/nlp/sequence-to-sequence.html" >
+			序列到序列模型			</a>
+						<a target="_top" data-p="par" title="预训练模型"  href="/nlp/pre-trained-models.html" >
+			预训练模型			</a>
+						<a target="_top" data-p="par" title="BERT 系列模型"  href="/nlp/bert-encoder.html" >
+			BERT 系列模型			</a>
+						<a target="_top" data-p="par" title="生成式预训练模型"  href="/nlp/generative-pre-trained-transformer.html" >
+			生成式预训练模型			</a>
+						<a target="_top" data-p="par" title="多模态预训练模型"  href="/nlp/multimodal-pre-trained-models.html" >
+			多模态预训练模型			</a>
+						<a target="_top" data-p="par" title="Python NLP 生态"  href="/nlp/python-nlp.html" >
+			Python NLP 生态			</a>
+						<a target="_top" data-p="par" title="深度学习框架"  href="/nlp/deep-learning-frameworks.html" >
+			深度学习框架			</a>
+						<a target="_top" data-p="par" title="数据处理工具"  href="/nlp/data-processing-tools.html" >
+			数据处理工具			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/nlp/nlp-tutorial.html" rel="prev"> NLP  教程</a> </div>
+			<div class="next-design-link"><a href="/nlp/nlp-linguistics-basics.html" rel="next"> 语言学基础</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>NLP 简介</h1>
+
+<p><strong>自然语言处理（Natural Language Processing, NLP）</strong>是计算机科学、人工智能和语言学的交叉领域，致力于让计算机能够理解、处理和生成人类的自然语言。</p>
+<p><strong>核心目标：</strong></p>
+<ul>
+    <li><strong>理解</strong>：让计算机能够理解人类语言的含义</li>
+    <li><strong>处理</strong>：对文本和语音进行分析、转换和操作</li>
+    <li><strong>生成</strong>：让计算机能够产生自然、流畅的人类语言</li>
+</ul>
+<p><img decoding="async" src="../wp-content/uploads/2025/06/nlp.jpg"></p>
+<hr>
+<h2>自然语言的特点</h2>
+<p>人类语言具有以下独特特征，这些特征使得NLP成为一个极具挑战性的领域：</p>
+<p><strong>1. 歧义性（Ambiguity）</strong></p>
+<ul>
+    <li><strong>词汇歧义</strong>：一个词有多种含义<ul>
+            <li>例："bank" 可以指金融机构，也可以指河岸</li>
+        </ul>
+    </li>
+    <li><strong>句法歧义</strong>：句子的语法结构可以有多种解释<ul>
+            <li>例："我看见了那个拿着望远镜的人"（是人拿着望远镜，还是我用望远镜看见人？）</li>
+        </ul>
+    </li>
+    <li><strong>语义歧义</strong>：句子的整体含义不明确<ul>
+            <li>例："他们买了苹果"（是水果还是苹果公司的产品？）</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>2. 上下文依赖性（Context Dependency）</strong></p>
+<ul>
+    <li>同一个词或句子在不同语境中含义不同</li>
+    <li>例："这个想法很cool"中的"cool"表示很棒，而"今天很cool"表示凉爽</li>
+</ul>
+<p><strong>3. 创新性与变化性</strong></p>
+<ul>
+    <li>语言不断发展，新词汇、新表达方式层出不穷</li>
+    <li>网络用语、流行语的快速传播</li>
+    <li>例：从"给力"到"yyds"（永远的神）</li>
+</ul>
+<p><strong>4. 文化和社会背景</strong></p>
+<ul>
+    <li>语言承载着深厚的文化内涵</li>
+    <li>同一语言在不同地区有方言差异</li>
+    <li>例：中文的"吃了吗？"不仅是询问，更是一种问候方式</li>
+</ul>
+<p><strong>5. 非标准化</strong></p>
+<ul>
+    <li>口语化表达、缩写、错别字</li>
+    <li>语法不规范、句子不完整</li>
+    <li>例：微博、聊天记录中的非正式表达</li>
+</ul><hr>
+<h3>NLP的核心任务</h3>
+<p><strong>1. 基础任务</strong></p>
+<ul>
+    <li><strong>分词（Tokenization）</strong>：将文本分解为有意义的单元</li>
+    <li><strong>词性标注（POS Tagging）</strong>：标识每个词的语法类别</li>
+    <li><strong>句法分析（Parsing）</strong>：分析句子的语法结构</li>
+    <li><strong>命名实体识别（NER）</strong>：识别人名、地名、机构名等</li>
+</ul>
+<p><strong>2. 理解任务</strong></p>
+<ul>
+    <li><strong>语义角色标注</strong>：识别句子中的语义关系</li>
+    <li><strong>共指消解</strong>：确定文本中指向同一实体的不同表达</li>
+    <li><strong>关系抽取</strong>：识别实体间的语义关系</li>
+    <li><strong>事件抽取</strong>：从文本中抽取事件信息</li>
+</ul>
+<p><strong>3. 应用任务</strong></p>
+<ul>
+    <li><strong>文本分类</strong>：将文本归类到预定义类别</li>
+    <li><strong>情感分析</strong>：判断文本的情感倾向</li>
+    <li><strong>机器翻译</strong>：将一种语言翻译成另一种语言</li>
+    <li><strong>文本摘要</strong>：生成文本的简洁总结</li>
+    <li><strong>问答系统</strong>：根据问题检索或生成答案</li>
+</ul>
+<p><img decoding="async" src="../wp-content/uploads/2025/06/blog-NLP-pic1.png"></p>
+<hr>
+<h2>NLP 的发展历程</h2>
+<h3>第一阶段：规则基础方法时代（1950s-1980s）</h3>
+<p><strong>特点：</strong></p>
+<ul>
+    <li>基于人工制定的语法规则和知识库</li>
+    <li>专家系统方法占主导地位</li>
+    <li>处理能力有限，但在特定领域表现较好</li>
+</ul>
+<p><strong>代表性工作：</strong></p>
+<ul>
+    <li><strong>1950年</strong> - 图灵测试提出，为机器智能评估奠定基础</li>
+    <li><strong>1954年</strong> - Georgetown-IBM实验，首次机器翻译尝试</li>
+    <li><strong>1960s</strong> - ELIZA聊天机器人，使用模式匹配技术</li>
+    <li><strong>1970s</strong> - 语法分析器的发展，如ATN（增强转移网络）</li>
+</ul>
+<p><strong>典型系统：</strong></p>
+<ul>
+    <li><strong>SHRDLU（1970）</strong>：在积木世界中理解和执行自然语言指令</li>
+    <li><strong>LUNAR（1972）</strong>：回答关于月球岩石的问题</li>
+</ul>
+<p><strong>局限性：</strong></p>
+<ul>
+    <li>规则覆盖面有限，难以处理语言的复杂性</li>
+    <li>维护成本高，扩展性差</li>
+    <li>无法很好处理歧义和异常情况</li>
+</ul>
+<h3><a name="第二阶段：统计方法时代（1980s-2010s）"></a><span></span>第二阶段：统计方法时代（1980s-2010s）</h3>
+<p><strong>特点：</strong></p>
+<ul>
+    <li>基于大规模语料库的统计学习方法</li>
+    <li>机器学习算法的广泛应用</li>
+    <li>数据驱动的方法论</li>
+</ul>
+<p><strong>关键技术发展：</strong></p>
+<p><strong>1980s-1990s：统计方法兴起</strong></p>
+<ul>
+    <li><strong>隐马尔可夫模型（HMM）</strong>：用于词性标注、语音识别</li>
+    <li><strong>概率上下文无关文法（PCFG）</strong>：用于句法分析</li>
+    <li><strong>统计机器翻译</strong>：基于短语和句子对齐</li>
+</ul>
+<p><strong>2000s：机器学习方法成熟</strong></p>
+<ul>
+    <li><strong>支持向量机（SVM）</strong>：在文本分类中表现优异</li>
+    <li><strong>条件随机场（CRF）</strong>：用于序列标注任务</li>
+    <li><strong>朴素贝叶斯</strong>：简单有效的分类方法</li>
+    <li><strong>最大熵模型</strong>：处理多特征问题</li>
+</ul>
+<p><strong>重要里程碑：</strong></p>
+<ul>
+    <li><strong>1988年</strong> - Brown语料库发布，推动统计NLP发展</li>
+    <li><strong>1993年</strong> - Penn Treebank发布，为句法分析提供标准数据</li>
+    <li><strong>2000年</strong> - WordNet发布，提供大规模词汇语义网络</li>
+    <li><strong>2005年</strong> - Google发布统计机器翻译系统</li>
+</ul>
+<p><strong>优势：</strong></p>
+<ul>
+    <li>能够处理大规模真实文本</li>
+    <li>具有一定的泛化能力</li>
+    <li>可以自动从数据中学习模式</li>
+</ul>
+<p><strong>局限性：</strong></p>
+<ul>
+    <li>需要大量标注数据</li>
+    <li>特征工程工作量大</li>
+    <li>难以捕捉深层语义信息</li>
+</ul>
+<h3><a name="第三阶段：深度学习时代（2010s-2020s）"></a><span></span>第三阶段：深度学习时代（2010s-2020s）</h3>
+<p><strong>特点：</strong></p>
+<ul>
+    <li>神经网络模型的复兴和发展</li>
+    <li>端到端的学习方法</li>
+    <li>表示学习的突破</li>
+</ul>
+<p><strong>关键技术发展：</strong></p>
+<p><strong>2010s初期：神经网络复兴</strong></p>
+<ul>
+    <li><strong>2010年</strong> - 循环神经网络（RNN）在语言建模中的应用</li>
+    <li><strong>2013年</strong> - Word2Vec发布，词向量表示的突破</li>
+    <li><strong>2014年</strong> - Sequence-to-Sequence模型，机器翻译的革命</li>
+</ul>
+<p><strong>2010s中期：注意力机制</strong></p>
+<ul>
+    <li><strong>2015年</strong> - 注意力机制的提出和应用</li>
+    <li><strong>2016年</strong> - 神经机器翻译达到实用水平</li>
+    <li><strong>2017年</strong> - Transformer架构发布，"Attention is All You Need"</li>
+</ul>
+<p><strong>2010s后期：预训练模型</strong></p>
+<ul>
+    <li><strong>2018年</strong> - BERT发布，双向预训练的突破</li>
+    <li><strong>2019年</strong> - GPT-2发布，大规模生成模型</li>
+    <li><strong>2020年</strong> - GPT-3发布，展现惊人的语言能力</li>
+</ul>
+<p><strong>重要突破：</strong></p>
+<ul>
+    <li><strong>词向量技术</strong>：Word2Vec, GloVe, FastText</li>
+    <li><strong>序列模型</strong>：LSTM, GRU, 双向RNN</li>
+    <li><strong>注意力机制</strong>：解决长序列依赖问题</li>
+    <li><strong>Transformer架构</strong>：并行化训练，效果显著提升</li>
+    <li><strong>预训练模型</strong>：BERT, GPT系列，通用语言理解</li>
+</ul>
+<h3><a name="第四阶段：大语言模型时代（2020s至今）"></a><span></span>第四阶段：大语言模型时代（2020s至今）</h3>
+<p><strong>特点：</strong></p>
+<ul>
+    <li>模型规模急剧增长</li>
+    <li>通用人工智能的曙光</li>
+    <li>少样本和零样本学习能力</li>
+</ul>
+<p><strong>关键发展：</strong></p>
+<ul>
+    <li><strong>2020年</strong> - GPT-3（1750亿参数）展现强大的few-shot学习能力</li>
+    <li><strong>2021年</strong> - PaLM（5400亿参数）在多项任务上达到新高度</li>
+    <li><strong>2022年</strong> - ChatGPT发布，引发AI应用热潮</li>
+    <li><strong>2023年</strong> - GPT-4发布，多模态能力显著提升</li>
+    <li><strong>2024年至今</strong> - Claude, Gemini等竞争对手崛起</li>
+</ul>
+<p><strong>技术特点：</strong></p>
+<ul>
+    <li><strong>规模效应</strong>：模型参数量从亿级增长到万亿级</li>
+    <li><strong>涌现能力</strong>：模型在达到某个规模后表现出意想不到的能力</li>
+    <li><strong>多模态融合</strong>：文本、图像、音频的统一处理</li>
+    <li><strong>指令跟随</strong>：通过指令微调提升模型的可控性</li>
+</ul><hr>
+<h2>NLP的主要应用领域</h2>
+<p><img decoding="async" src="../wp-content/uploads/2025/06/nlp-icon-illustration-nlo-neurological-process-language-experience-personal-development-coaching-goal-infographic-template-presentation-concept-banner-icon-set-icons-vector.jpg"></p>
+<h3>机器翻译（Machine Translation）</h3>
+<p><strong>发展历程：</strong></p>
+<ul>
+    <li><strong>统计机器翻译（SMT）</strong>：基于短语对齐和统计模型</li>
+    <li><strong>神经机器翻译（NMT）</strong>：端到端的神经网络方法</li>
+    <li><strong>大模型翻译</strong>：GPT-3/4等大模型展现的翻译能力</li>
+</ul>
+<p><strong>技术挑战：</strong></p>
+<ul>
+    <li>语言对之间的差异性</li>
+    <li>上下文理解和保持</li>
+    <li>专业领域术语翻译</li>
+    <li>语言风格和文化适应</li>
+</ul>
+<p><strong>应用实例：</strong></p>
+<ul>
+    <li>Google Translate、百度翻译</li>
+    <li>实时语音翻译</li>
+    <li>文档翻译服务</li>
+    <li>跨语言信息检索</li>
+</ul>
+<h3>搜索引擎与信息检索</h3>
+<p><strong>核心技术：</strong></p>
+<ul>
+    <li><strong>查询理解</strong>：理解用户搜索意图</li>
+    <li><strong>文档排序</strong>：根据相关性排序搜索结果</li>
+    <li><strong>语义匹配</strong>：超越关键词的语义相似度计算</li>
+    <li><strong>个性化推荐</strong>：基于用户历史和偏好</li>
+</ul>
+<p><strong>技术发展：</strong></p>
+<ul>
+    <li>从关键词匹配到语义理解</li>
+    <li>从静态排序到动态个性化</li>
+    <li>从文本搜索到多模态搜索</li>
+</ul>
+<p><strong>代表系统：</strong></p>
+<ul>
+    <li>Google搜索的RankBrain算法</li>
+    <li>百度的ERNIE在搜索中的应用</li>
+    <li>Bing Chat的对话式搜索</li>
+</ul>
+<h3><a name="智能客服与对话系统"></a><span></span>智能客服与对话系统</h3>
+<p><strong>系统类型：</strong></p>
+<ul>
+    <li><strong>任务导向型</strong>：完成特定任务（订票、查询等）</li>
+    <li><strong>闲聊型</strong>：进行开放域对话</li>
+    <li><strong>混合型</strong>：结合任务完成和闲聊功能</li>
+</ul>
+<p><strong>关键技术：</strong></p>
+<ul>
+    <li><strong>意图识别</strong>：理解用户的真实意图</li>
+    <li><strong>槽位填充</strong>：提取任务相关的关键信息</li>
+    <li><strong>对话管理</strong>：控制对话流程和状态</li>
+    <li><strong>回复生成</strong>：生成自然、相关的回复</li>
+</ul>
+<p><strong>应用场景：</strong></p>
+<ul>
+    <li>银行、电商的智能客服</li>
+    <li>智能音箱（Alexa, Siri）</li>
+    <li>聊天机器人</li>
+    <li>虚拟助手</li>
+</ul>
+<h3>文本分析与情感分析</h3>
+<p><strong>文本分析任务：</strong></p>
+<ul>
+    <li><strong>主题分类</strong>：将文档归类到主题类别</li>
+    <li><strong>关键词提取</strong>：识别文档的核心词汇</li>
+    <li><strong>文本聚类</strong>：将相似文档分组</li>
+    <li><strong>趋势分析</strong>：分析文本内容的时间变化</li>
+</ul>
+<p><strong>情感分析层次：</strong></p>
+<ul>
+    <li><strong>文档级</strong>：整个文档的总体情感</li>
+    <li><strong>句子级</strong>：每个句子的情感倾向</li>
+    <li><strong>方面级</strong>：针对特定方面的情感</li>
+    <li><strong>细粒度</strong>：情感的强度和复杂性</li>
+</ul>
+<p><strong>商业应用：</strong></p>
+<ul>
+    <li>社交媒体监控</li>
+    <li>产品评论分析</li>
+    <li>品牌声誉管理</li>
+    <li>股票市场情感指标</li>
+</ul>
+<h3>信息抽取</h3>
+<p><strong>抽取任务：</strong></p>
+<ul>
+    <li><strong>命名实体识别</strong>：人名、地名、机构名等</li>
+    <li><strong>关系抽取</strong>：实体间的语义关系</li>
+    <li><strong>事件抽取</strong>：事件的参与者、时间、地点等</li>
+    <li><strong>属性抽取</strong>：实体的特征属性</li>
+</ul>
+<p><strong>技术方法：</strong></p>
+<ul>
+    <li>基于规则的模式匹配</li>
+    <li>监督学习方法</li>
+    <li>远程监督和弱监督</li>
+    <li>预训练模型微调</li>
+</ul>
+<p><strong>应用价值：</strong></p>
+<ul>
+    <li>知识图谱构建</li>
+    <li>智能问答系统</li>
+    <li>新闻事件监控</li>
+    <li>金融风险分析</li>
+</ul>
+<h3>自动摘要</h3>
+<p><strong>摘要类型：</strong></p>
+<ul>
+    <li><strong>抽取式摘要</strong>：从原文中选择重要句子</li>
+    <li><strong>生成式摘要</strong>：生成新的概括性文本</li>
+    <li><strong>混合式摘要</strong>：结合抽取和生成方法</li>
+</ul>
+<p><strong>技术挑战：</strong></p>
+<ul>
+    <li>重要信息的识别</li>
+    <li>摘要的连贯性和可读性</li>
+    <li>多文档摘要的一致性</li>
+    <li>摘要长度的控制</li>
+</ul>
+<p><strong>应用场景：</strong></p>
+<ul>
+    <li>新闻摘要</li>
+    <li>学术论文摘要</li>
+    <li>法律文档摘要</li>
+    <li>会议纪要生成</li>
+</ul><hr>
+<h2>NLP 面临的主要挑战</h2>
+<h3><a name="语言的歧义性"></a><span></span>语言的歧义性</h3>
+<p><strong>词汇歧义（Lexical Ambiguity）</strong></p>
+<ul>
+    <li><strong>一词多义</strong>：<ul>
+            <li>"打"：击打、购买、开启等</li>
+            <li>"行"：可以/银行/行走等</li>
+        </ul>
+    </li>
+    <li><strong>同音异义</strong>：<ul>
+            <li>中文："的、地、得"的使用</li>
+            <li>英文："there, their, they're"</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>句法歧义（Syntactic Ambiguity）</strong></p>
+<ul>
+    <li><strong>修饰关系不明</strong>：<ul>
+            <li>"美丽的花儿的香味"（是花儿美丽还是香味美丽？）</li>
+        </ul>
+    </li>
+    <li><strong>结构分析多样</strong>：<ul>
+            <li>"我看见了拿着雨伞的女孩"</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>语义歧义（Semantic Ambiguity）</strong></p>
+<ul>
+    <li><strong>指代不明</strong>：<ul>
+            <li>"李明对张华说他很聪明"（谁聪明？）</li>
+        </ul>
+    </li>
+    <li><strong>范围歧义</strong>：<ul>
+            <li>"所有学生都不喜欢这个老师"</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>解决方法：</strong></p>
+<ul>
+    <li>上下文信息的利用</li>
+    <li>语言模型的概率判断</li>
+    <li>知识库的辅助</li>
+    <li>多任务学习</li>
+</ul>
+<h3>上下文理解</h3>
+<p><strong>局部上下文</strong></p>
+<ul>
+    <li>句子内部的语义依赖</li>
+    <li>短语和从句的理解</li>
+    <li>词汇之间的语义关系</li>
+</ul>
+<p><strong>全局上下文</strong></p>
+<ul>
+    <li>段落和文档级别的语义连贯</li>
+    <li>话题的连续性</li>
+    <li>长距离的语义依赖</li>
+</ul>
+<p><strong>对话上下文</strong></p>
+<ul>
+    <li>多轮对话的历史信息</li>
+    <li>隐含信息的推理</li>
+    <li>对话意图的演变</li>
+</ul>
+<p><strong>技术挑战：</strong></p>
+<ul>
+    <li><strong>长距离依赖</strong>：传统RNN难以处理长序列</li>
+    <li><strong>语义连贯性</strong>：保持生成文本的逻辑一致性</li>
+    <li><strong>常识推理</strong>：需要大量背景知识</li>
+</ul>
+<p><strong>解决方案：</strong></p>
+<ul>
+    <li>注意力机制和Transformer</li>
+    <li>预训练语言模型</li>
+    <li>知识增强的模型</li>
+    <li>多模态信息融合</li>
+</ul>
+<h3>文化和语言差异</h3>
+<p><strong>跨语言挑战</strong></p>
+<ul>
+    <li><strong>语言系谱差异</strong>：<ul>
+            <li>汉藏语系 vs 印欧语系</li>
+            <li>形态变化丰富 vs 语序重要</li>
+        </ul>
+    </li>
+    <li><strong>书写系统差异</strong>：<ul>
+            <li>字符集大小不同</li>
+            <li>分词方式不同</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>文化背景</strong></p>
+<ul>
+    <li><strong>习语和俗语</strong>：<ul>
+            <li>"画蛇添足" vs "don't count your chickens before they hatch"</li>
+        </ul>
+    </li>
+    <li><strong>文化特有表达</strong>：<ul>
+            <li>中文的"面子"概念</li>
+            <li>日语的敬语系统</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>社会语言学因素</strong></p>
+<ul>
+    <li><strong>方言差异</strong>：<ul>
+            <li>普通话 vs 各地方言</li>
+            <li>标准英语 vs 方言英语</li>
+        </ul>
+    </li>
+    <li><strong>语域变化</strong>：<ul>
+            <li>正式 vs 非正式语体</li>
+            <li>口语 vs 书面语</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>解决策略：</strong></p>
+<ul>
+    <li>多语言预训练模型</li>
+    <li>跨语言迁移学习</li>
+    <li>文化适应性调整</li>
+    <li>本地化数据收集</li>
+</ul>
+<h3>数据稀缺问题</h3>
+<p><strong>低资源语言</strong></p>
+<ul>
+    <li>全球7000多种语言，但只有少数拥有丰富的数字资源</li>
+    <li>濒危语言的保护和研究</li>
+    <li>方言和少数民族语言</li>
+</ul>
+<p><strong>专业领域</strong></p>
+<ul>
+    <li>医学、法律等专业领域的术语</li>
+    <li>行业特定的表达方式</li>
+    <li>标注数据获取困难</li>
+</ul>
+<p><strong>新兴领域</strong></p>
+<ul>
+    <li>新技术产生的新词汇</li>
+    <li>社交媒体的新表达</li>
+    <li>跨文化交流的新形式</li>
+</ul>
+<p><strong>时间演变</strong></p>
+<ul>
+    <li>语言的历史变迁</li>
+    <li>新词汇的快速涌现</li>
+    <li>语义的渐进变化</li>
+</ul>
+<p><strong>解决方案：</strong></p>
+<ul>
+    <li><strong>迁移学习</strong>：从高资源语言迁移到低资源语言</li>
+    <li><strong>数据增强</strong>：通过各种技术扩充训练数据</li>
+    <li><strong>少样本学习</strong>：在少量样本下快速适应</li>
+    <li><strong>无监督和自监督学习</strong>：减少对标注数据的依赖</li>
+    <li><strong>众包标注</strong>：利用群体智慧收集数据</li>
+    <li><strong>合成数据</strong>：通过规则或模型生成训练数据</li>
+</ul>
+<h3>计算复杂性</h3>
+<p><strong>模型规模挑战</strong></p>
+<ul>
+    <li>参数量爆炸式增长（GPT-3: 1750亿参数）</li>
+    <li>训练成本急剧上升</li>
+    <li>推理延迟和资源消耗</li>
+</ul>
+<p><strong>实时性要求</strong></p>
+<ul>
+    <li>搜索引擎的毫秒级响应</li>
+    <li>对话系统的实时交互</li>
+    <li>移动设备的资源限制</li>
+</ul>
+<p><strong>可扩展性问题</strong></p>
+<ul>
+    <li>处理海量用户请求</li>
+    <li>多语言、多任务的统一处理</li>
+    <li>个性化服务的计算需求</li>
+</ul>
+<h3><a name="评估和量化难题"></a><span></span>评估和量化难题</h3>
+<p><strong>主观性问题</strong></p>
+<ul>
+    <li>文本质量的主观判断</li>
+    <li>翻译质量的文化差异</li>
+    <li>创意写作的评价标准</li>
+</ul>
+<p><strong>评估指标局限</strong></p>
+<ul>
+    <li>BLEU、ROUGE等指标的不完善</li>
+    <li>自动评估与人工评估的差异</li>
+    <li>多维度评估的复杂性</li>
+</ul>
+<p><strong>基准数据集</strong></p>
+<ul>
+    <li>数据集的代表性问题</li>
+    <li>评估任务与实际应用的差距</li>
+    <li>数据集的时效性和更新</li>
+</ul><hr>
+<h2>总结与展望</h2>
+<p>自然语言处理作为人工智能的核心分支，经历了从规则驱动到数据驱动，再到大模型引领的发展历程。每个阶段都有其独特的技术特点和历史贡献。</p>
+<p><strong>当前状态：</strong></p>
+<ul>
+    <li>大语言模型展现出令人惊叹的语言理解和生成能力</li>
+    <li>多模态融合成为新的发展方向</li>
+    <li>应用领域不断扩展，商业价值日益凸显</li>
+</ul>
+<p><strong>未来趋势：</strong></p>
+<ul>
+    <li><strong>通用人工智能</strong>：向更通用、更智能的AI系统发展</li>
+    <li><strong>多模态融合</strong>：文本、视觉、听觉的全面整合</li>
+    <li><strong>个性化服务</strong>：更精准的个性化语言理解和生成</li>
+    <li><strong>可解释性</strong>：提高模型决策过程的透明度</li>
+    <li><strong>效率优化</strong>：在保持性能的同时降低计算成本</li>
+    <li><strong>伦理和安全</strong>：确保AI系统的公平、安全和可控</li>
+</ul>
+<p><strong>学习建议：</strong><br>对于NLP的学习者，建议：</p>
+<ol>
+    <li><strong>扎实基础</strong>：深入理解语言学和计算机科学基础</li>
+    <li><strong>实践导向</strong>：通过项目实践加深理解</li>
+    <li><strong>跟踪前沿</strong>：关注最新技术发展和研究动态</li>
+    <li><strong>跨学科思维</strong>：结合语言学、心理学、社会学等多学科知识</li>
+    <li><strong>工程能力</strong>：培养将研究成果转化为实际应用的能力</li>
+</ol>
+<p>自然语言处理的未来充满机遇和挑战，随着技术的不断进步，我们有理由相信机器理解和生成人类语言的能力将继续提升，为人类社会带来更多便利和价值。</p>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/nlp/nlp-tutorial.html" rel="prev"> NLP  教程</a> </div>
+			<div class="next-design-link"><a href="/nlp/nlp-linguistics-basics.html" rel="next"> 语言学基础</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='28607' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  28607;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 28607, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":28607},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 28607;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

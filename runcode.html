@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML/CSS/Javascript 在线代码运行工具 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="./static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="./static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="./wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="./static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="./static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./runcode.html" />
+<meta name="keywords" content="HTML/CSS/Javascript 在线代码运行工具">
+<meta name="description" content="HTML/CSS/JS 在线代码运行工具，主打代码快速测试，粘贴代码、一键运行，实时预览渲染效果，高效验证代码逻辑与页面样式。            .wce-wrap *, .wce-wrap *::before, .wce-wrap *::after { box-sizing: border-box; }  .wce-wrap {   border: 1px solid rgba(0,0,0,.12);   border-radiu..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="./index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="./index.html">首页</a></li>
+        <li><a href="./html/html-tutorial.html">HTML</a></li>
+        <li><a href="./js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="./css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="./react/react-tutorial.html">React</a></li>
+        <li><a href="./python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="./java/java-tutorial.html">Java</a></li>
+        <li><a href="./cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="./cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="./csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="./go/go-tutorial.html">Go</a></li>
+        <li><a href="./sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="./linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="./vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="./git/git-tutorial.html">Git</a></li>
+        <li><a href="./browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="./index.html">首页</a></li>
+        <li><a href="./html/html-tutorial.html">HTML</a></li>
+        <li><a href="./css/css-tutorial.html">CSS</a></li>
+        <li><a href="./js/js-tutorial.html">JS</a></li>
+        <li><a href="./browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="./vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="./bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="./ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="./claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	<div class="big-middle-column">
+			
+		<div class="article">
+
+			<div class="article-heading">
+					<h2>HTML/CSS/Javascript 在线代码运行工具</h2>
+				</div>
+			<div class="article-body">
+
+													
+					<p>HTML/CSS/JS 在线代码运行工具，主打代码快速测试，粘贴代码、一键运行，实时预览渲染效果，高效验证代码逻辑与页面样式。</p>
+
+
+
+
+
+
+
+<script src="./static.jyshare.com/assets/js/ace/ace.js"></script>
+<script src="https://static.jyshare.com/assets/js/ace/ext-language_tools.min.js"></script>
+
+<style>
+.wce-wrap *, .wce-wrap *::before, .wce-wrap *::after { box-sizing: border-box; }
+
+.wce-wrap {
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+  font-size: 14px;
+}
+
+/* 顶部栏 */
+.wce-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.wce-topbar-left  { display: flex; align-items: center; gap: 10px; }
+.wce-topbar-right { display: flex; align-items: center; gap: 8px; }
+
+.wce-dots { display: flex; gap: 6px; }
+.wce-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+.wce-dots span:nth-child(1) { background: #ff5f57; }
+.wce-dots span:nth-child(2) { background: #febc2e; }
+.wce-dots span:nth-child(3) { background: #28c840; }
+
+.wce-title { font-weight: 600; letter-spacing: .02em; display: flex; align-items: center; gap: 6px; opacity: .75; }
+
+/* 字号控制 */
+.wce-fontsize { display: flex; align-items: center; border: 1px solid rgba(0,0,0,.15); border-radius: 6px; overflow: hidden; }
+.wce-fontsize button { background: none; border: none; padding: 3px 9px; cursor: pointer; font-size: 15px; font-weight: 700; line-height: 1; opacity: .55; transition: opacity .15s; }
+.wce-fontsize button:hover { opacity: 1; }
+.wce-fontsize-val { font-size: 11px; padding: 0 5px; min-width: 30px; text-align: center; opacity: .45; }
+
+/* 快捷键提示 */
+.wce-kbd-hint { font-size: 11px; opacity: .4; border: 1px solid rgba(0,0,0,.15); border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+
+/* Ace 编辑器容器 */
+#wceAce {
+  width: 100%;
+  height: 520px;
+}
+
+/* 状态栏 */
+.wce-statusbar { display: flex; align-items: center; justify-content: space-between; padding: 4px 13px; border-top: 1px solid rgba(0,0,0,.08); font-size: 11px; opacity: .5; flex-wrap: wrap; gap: 8px; }
+.wce-statusbar-left, .wce-statusbar-right { display: flex; align-items: center; gap: 12px; }
+.wce-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #28c840; flex-shrink: 0; }
+
+/* 底部工具栏 */
+.wce-footer { display: flex; align-items: center; justify-content: space-between; padding: 9px 13px; border-top: 1px solid rgba(0,0,0,.1); flex-wrap: wrap; gap: 8px; }
+.wce-footer-left { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.wce-btn { display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(0,0,0,.15); border-radius: 6px; padding: 5px 11px; cursor: pointer; font-size: 12px; font-weight: 500; background: none; transition: border-color .15s, opacity .15s; white-space: nowrap; opacity: .65; }
+.wce-btn:hover { opacity: 1; border-color: rgba(0,0,0,.35); }
+
+.wce-btn-primary { background: #8ca86d; color: #fff !important; border-color: transparent; opacity: 1; box-shadow: 0 2px 8px rgba(192,120,74,.3);padding: 8px 20px; font-size: 14px; }
+.wce-btn-primary:hover { opacity: .9; border-color: transparent; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(192,120,74,.4); }
+
+/* Toast */
+.wce-toast { position: fixed; bottom: 22px; right: 22px; padding: 9px 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,.12); font-size: 13px; font-weight: 500; box-shadow: 0 6px 20px rgba(0,0,0,.15); opacity: 0; transform: translateY(6px); transition: opacity .22s ease, transform .22s ease; z-index: 99999; pointer-events: none; display: flex; align-items: center; gap: 7px; background: #fff; color: #222; }
+.wce-toast.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 600px) {
+  .wce-fontsize, .wce-kbd-hint { display: none; }
+  #wceAce { height: 300px; }
+}
+</style>
+
+<div class="wce-wrap" id="wceRoot">
+
+  <div class="wce-topbar">
+    <div class="wce-topbar-left">
+      <div class="wce-dots"><span></span><span></span><span></span></div>
+      <span class="wce-title"><i class="fa fa-code"></i> 在线代码运行工具</span>
+    </div>
+    <div class="wce-topbar-right">
+      <span class="wce-kbd-hint">Ctrl+Enter 运行 &nbsp;|&nbsp; Ctrl+Space 补全 &nbsp;|&nbsp; Ctrl+/ 注释</span>
+      <div class="wce-fontsize">
+        <button id="wceFontDec" title="减小字号">−</button>
+        <span class="wce-fontsize-val" id="wceFontVal">14px</span>
+        <button id="wceFontInc" title="增大字号">＋</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="wceAce"></div>
+
+  <div class="wce-statusbar">
+    <div class="wce-statusbar-left">
+      <span style="display:flex;align-items:center;gap:4px;font-weight:600;">
+        <span class="wce-status-dot"></span> HTML
+      </span>
+      <span id="wceCursorPos">行 1，列 1</span>
+      <span id="wceCharCount">0 字符</span>
+    </div>
+    <div class="wce-statusbar-right">
+      <span>UTF-8</span>
+      <span>RUNOOB Editor</span>
+    </div>
+  </div>
+
+  <div class="wce-footer">
+    <div class="wce-footer-left">
+      <button class="wce-btn" id="wceFmtBtn"><i class="fa fa-indent"></i> 格式化</button>
+      <button class="wce-btn" id="wceCopyBtn"><i class="fa fa-files-o"></i> 复制代码</button>
+      <button class="wce-btn" id="wceClearBtn"><i class="fa fa-trash-o"></i> 清空</button>
+      <button class="wce-btn" id="wceExampleBtn"><i class="fa fa-lightbulb-o"></i> 加载示例</button>
+    </div>
+    <button class="wce-btn wce-btn-primary" id="wceRunBtn">
+      <i class="fa fa-external-link"></i> 在新窗口运行
+    </button>
+  </div>
+</div>
+
+<div class="wce-toast" id="wceToast">
+  <i class="fa" id="wceToastIcon"></i>
+  <span id="wceToastMsg"></span>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var EXAMPLE = '<!DOCTYPE html>\n'
+    + '<html>\n'
+    + '<head>\n'
+    + '<style>\n'
+    + '  body {\n'
+    + '    background: #f0f2f5;\n'
+    + '    display: flex;\n'
+    + '    justify-content: center;\n'
+    + '    align-items: center;\n'
+    + '    height: 100vh;\n'
+    + '    margin: 0;\n'
+    + '    font-family: sans-serif;\n'
+    + '  }\n'
+    + '  .card {\n'
+    + '    background: white;\n'
+    + '    padding: 40px;\n'
+    + '    border-radius: 10px;\n'
+    + '    box-shadow: 0 4px 6px rgba(0,0,0,0.1);\n'
+    + '    text-align: center;\n'
+    + '  }\n'
+    + '  h1 { color: #333; margin-bottom: 10px; }\n'
+    + '  p { color: #666; }\n'
+    + '</style>\n'
+    + '</head>\n'
+    + '<body>\n'
+    + '  <div class="card">\n'
+    + '    <h1>在新标签页打开成功！&#x1f389;</h1>\n'
+    + '    <p>这是一个全屏预览的示例。</p>\n'
+    + '  </div>\n'
+    + '</body>\n'
+    + '</html>';
+
+  /* ── 初始化 Ace ── */
+  ace.require('ace/ext/language_tools');
+
+  var editor = ace.edit('wceAce', {
+    mode:                'ace/mode/html',
+    theme:               'ace/theme/dracula',
+    fontSize:            14,
+    tabSize:             2,
+    useSoftTabs:         true,
+    wrap:                false,
+    showPrintMargin:     false,
+    enableBasicAutocompletion:  true,
+    enableLiveAutocompletion:   true,
+    enableSnippets:             true,
+    scrollPastEnd:       0.3
+  });
+
+  editor.setValue(EXAMPLE, -1); // -1 = 光标置于开头
+
+  /* ── 状态栏 ── */
+  editor.session.selection.on('changeCursor', updateStatus);
+  editor.session.on('change', updateStatus);
+
+  function updateStatus () {
+    var cur = editor.getCursorPosition();
+    document.getElementById('wceCursorPos').textContent =
+      '行 ' + (cur.row + 1) + '，列 ' + (cur.column + 1);
+    document.getElementById('wceCharCount').textContent =
+      editor.getValue().length + ' \u5b57\u7b26';
+  }
+  updateStatus();
+
+  /* ── Ctrl+Enter 运行 ── */
+  editor.commands.addCommand({
+    name: 'runCode',
+    bindKey: { win: 'Ctrl-Enter', mac: 'Cmd-Enter' },
+    exec: run
+  });
+
+  /* ── 运行 ── */
+  function run () {
+    var win = window.open('', '_blank');
+    if (win) {
+      win.document.open();
+      win.document.write(editor.getValue());
+      win.document.close();
+    } else {
+      showToast('fa-exclamation-triangle', '\u5f39\u7a97\u88ab\u62e6\u622a\uff0c\u8bf7\u5141\u8bb8\u672c\u7ad9\u5f39\u51fa\u7a97\u53e3');
+    }
+  }
+  document.getElementById('wceRunBtn').addEventListener('click', run);
+
+  /* ── 格式化 ── */
+  document.getElementById('wceFmtBtn').addEventListener('click', function () {
+    editor.session.setValue(
+      editor.getValue()
+        .replace(/>\s*</g, '>\n<')   // 标签间换行
+        .replace(/^\s+|\s+$/g, '')   // 去首尾空白
+    );
+    showToast('fa-check', '\u5df2\u6574\u7406\u7f29\u8fdb');
+  });
+
+  /* ── 复制 ── */
+  document.getElementById('wceCopyBtn').addEventListener('click', function () {
+    var code = editor.getValue();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(function () {
+        showToast('fa-clipboard', '\u5df2\u590d\u5236\u5230\u526a\u8d34\u677f');
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('fa-clipboard', '\u5df2\u590d\u5236\u5230\u526a\u8d34\u677f');
+    }
+  });
+
+  /* ── 清空 ── */
+  document.getElementById('wceClearBtn').addEventListener('click', function () {
+    if (confirm('\u786e\u8ba4\u6e05\u7a7a\u7f16\u8f91\u5668\u5185\u5bb9\uff1f')) {
+      editor.setValue('', -1);
+      showToast('fa-trash-o', '\u5df2\u6e05\u7a7a');
+    }
+  });
+
+  /* ── 加载示例 ── */
+  document.getElementById('wceExampleBtn').addEventListener('click', function () {
+    editor.setValue(EXAMPLE, -1);
+    showToast('fa-lightbulb-o', '\u5df2\u52a0\u8f7d\u793a\u4f8b\u4ee3\u7801');
+  });
+
+  /* ── 字号 ── */
+  var fontSize = 14;
+  function applyFontSize (n) {
+    fontSize = Math.min(22, Math.max(10, n));
+    editor.setFontSize(fontSize);
+    document.getElementById('wceFontVal').textContent = fontSize + 'px';
+  }
+  document.getElementById('wceFontInc').addEventListener('click', function () { applyFontSize(fontSize + 1); });
+  document.getElementById('wceFontDec').addEventListener('click', function () { applyFontSize(fontSize - 1); });
+
+  /* ── Toast ── */
+  var toastTimer;
+  function showToast (icon, msg) {
+    document.getElementById('wceToastIcon').className  = 'fa ' + icon;
+    document.getElementById('wceToastMsg').textContent = msg;
+    var el = document.getElementById('wceToast');
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2200);
+  }
+
+})();
+</script>
+<blockquote><p>本页面只供测试，更多高级功能可以使用 AI IDE：</p>
+<ul>
+<li><strong>阿里 Qoder：</strong><a href="https://qoder.cn/referral?utm_source=paid&utm_medium=affiliate&utm_campaign=cainiaojiaocheng" target="_blank">https://qoder.com/</a></li>
+
+<li>
+<strong>字节 Trae：</strong><a href="https://www.trae.cn/sem/?utm_source=advertising&utm_medium=runoob_ug_cpa&utm_term=hw_trae_runoob" target="_blank">https://www.trae.cn/</a></p></li>
+	
+</ul></blockquote>				
+				
+			</div>
+
+		</div>
+
+	</div>
+		
+	
+</div>
+</div>
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="./html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="./jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="./java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="./charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="./tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="./tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="./ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="./ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="./disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="./aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="./for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="./archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="./wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="./index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="./index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="./static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="./static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="./wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="./wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="./static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

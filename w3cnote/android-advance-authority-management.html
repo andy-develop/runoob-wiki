@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.4 Android6.0权限管理-开源框架源码分析 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./android-advance-authority-management.html" />
+<meta name="keywords" content="1.4 Android6.0权限管理-开源框架源码分析">
+<meta name="description" content="1.4 Android6.0权限管理-开源框架源码分析 引言 Android6.0这个系统中迎来的最大的特征莫过于就是它的权限管理，因为小猪在写教程的时候应该6.0还没出，但是我感觉随着Android6.0的普及，对于它的权限管理是开发中必备的技能，同时也是基础。 乱入一些话 对于这种开发中所必备的技能，已经系统对此的简化操作，很多博主已经写了类似的博客。这里感觉我再废话一篇文章依旧是废话。   Android 6.0 运行时权限处理完..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<div class="container navigation">
+    <div class="row">
+        <div class="col nav">
+            
+
+                        <ul class="pc-nav" id="note-nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../w3cnote.html">笔记首页</a></li>
+                <li><a href="./android-tutorial-intro.html" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" title="ES6 教程">ES6 教程</a></li>
+                <li><a href="./ten-sorting-algorithm.html" title="排序算法">排序算法</a></li>
+                <li><a href="./hadoop-tutorial.html" title="Hadoop 教程">Hadoop</a></li>
+                <li><a href="./zookeeper-tutorial.html" title="Zookeeper 教程">Zookeeper</a></li>
+                <li><a href="./verilog-tutorial.html" title="Verilog 教程">Verilog</a></li>
+                <li><a href="../w3cnote_genre/code.html" title="编程技术">编程技术</a></li> 
+                <li><a href="../w3cnote_genre/coderlife.html" title="程序员人生">程序员人生</a></li>
+                
+                <!--<li><a href=".." class="runoob-pop">登录</a></li>
+                
+                
+                        <li>
+                <a style="font-weight:bold;" href="../linux/linux-tutorial.html" target="_blank" onclick="_hmt.push(['_trackEvent', 'aliyun', 'click', 'aliyun'])" title="kkb">云服务器</a>
+                </li>
+                <li><a href="http://gk.link/a/104mQ" target="_blank" style="font-weight: bold;"onclick="_hmt.push(['_trackEvent', '极客时间', 'click', 'jike'])" title="我的圈子">极客时间</a></li>
+            
+                
+                <li><a target="_blank" href="../shoppinglist.html" rel="nofollow">知识店铺</a></li> 
+        -->
+            </ul>
+                        
+              
+            <ul class="mobile-nav">
+                <li><a href="../w3cnote.html">首页</a></li>
+                <li><a href="../w3cnote_genre/android.html" target="_blank" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" target="_blank" title="ES6 教程">ES6</a></li>
+                <li><a href="../w3cnote_genre/joke.html" target="_blank" title="程序员笑话">逗乐</a></li>
+                
+                <a href="void(0).html" class="search-reveal">Search</a> 
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--  内容  -->
+<div class="container main">
+	<div class="row">
+
+		<div class="col middle-column big-middle-column">
+	 			<div class="article">
+			<div class="article-heading">
+				<h2>1.4 Android6.0权限管理-开源框架源码分析</h2>				<h3><em>分类</em> <a href="../w3cnote_genre/android-advance.html" title="Android 扩展教程" >Android 扩展教程</a> </h3>
+			</div>
+			<div class="article-body note-body">
+				<div class="article-intro">
+					<!-- ad start-->
+			            <!-- ad end-->
+					<h1>1.4 Android6.0权限管理-开源框架源码分析</h1>
+<h2>引言</h2>
+<p>Android6.0这个系统中迎来的最大的特征莫过于就是它的权限管理，因为小猪在写教程的时候应该6.0还没出，但是我感觉随着Android6.0的普及，对于它的权限管理是开发中必备的技能，同时也是基础。</p>
+<h3>乱入一些话</h3>
+<p>对于这种开发中所必备的技能，已经系统对此的简化操作，很多博主已经写了类似的博客。这里感觉我再废话一篇文章依旧是废话。</p>
+<blockquote>
+<ul>
+<li><p><a target="_blank" href="http://blog.csdn.net/lmj623565791/article/details/50709663">Android 6.0 运行时权限处理完全解析</a></p></li>
+<li><p><a target="_blank" href="http://blog.csdn.net/caroline_wendy/article/details/50587230">Android 6.0: 动态权限管理的解决方案</a></p>
+
+<p>...</p></li>
+</ul>
+</blockquote>
+<p>但是同样是基础，同样大家面临着Android6.0的权限管理，不同人对此的解决方案会有不同，所以这篇文章不妨带大家分析几个github上的开源框架上是如何解决(封装)这个权限管理的。</p>
+<hr>
+<h2>PermissionGen</h2>
+<p>在鸿神一篇中提到一篇相对基础的权限管理框架，那么接下来我们就围绕着这个框架去探索，学习别人是如何解决权限管理问题的。 </p>
+<p><a target="_balnk" href="https://github.com/lovedise/PermissionGen">github传送门</a></p>
+<h3>使用方式</h3>
+<p><strong>1. 使用下面的一种方式去获取需要的权限</strong></p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-identifier">PermissionGen</span><span class="hl-code">.</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-identifier">MainActivity</span><span class="hl-code">.</span><span class="hl-reserved">this</span><span class="hl-brackets">)</span><span class="hl-code">
+    .</span><span class="hl-identifier">addRequestCode</span><span class="hl-brackets">(</span><span class="hl-number">100</span><span class="hl-brackets">)</span><span class="hl-code">
+    .</span><span class="hl-identifier">permissions</span><span class="hl-brackets">(</span><span class="hl-code">
+        </span><span class="hl-identifier">Manifest</span><span class="hl-code">.</span><span class="hl-identifier">permission</span><span class="hl-code">.</span><span class="hl-identifier">READ_CONTACTS</span><span class="hl-code">,
+        </span><span class="hl-identifier">Manifest</span><span class="hl-code">.</span><span class="hl-identifier">permission</span><span class="hl-code">.</span><span class="hl-identifier">RECEIVE_SMS</span><span class="hl-code">,
+        </span><span class="hl-identifier">Manifest</span><span class="hl-code">.</span><span class="hl-identifier">permission</span><span class="hl-code">.</span><span class="hl-identifier">WRITE_CONTACTS</span><span class="hl-brackets">)</span><span class="hl-code">
+    .</span><span class="hl-identifier">request</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></div>
+</div>
+</div><p>or</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-identifier">PermissionGen</span><span class="hl-code">.</span><span class="hl-identifier">needPermission</span><span class="hl-brackets">(</span><span class="hl-identifier">ContactFragment</span><span class="hl-code">.</span><span class="hl-reserved">this</span><span class="hl-code">, </span><span class="hl-number">100</span><span class="hl-code">, 
+    </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">Manifest</span><span class="hl-code">.</span><span class="hl-identifier">permission</span><span class="hl-code">.</span><span class="hl-identifier">READ_CONTACTS</span><span class="hl-code">, 
+        </span><span class="hl-identifier">Manifest</span><span class="hl-code">.</span><span class="hl-identifier">permission</span><span class="hl-code">.</span><span class="hl-identifier">RECEIVE_SMS</span><span class="hl-code">,
+        </span><span class="hl-identifier">Manifest</span><span class="hl-code">.</span><span class="hl-identifier">permission</span><span class="hl-code">.</span><span class="hl-identifier">WRITE_CONTACTS</span><span class="hl-code">
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></div>
+</div>
+</div>
+<p><strong>2.重写 <b>onRequestPermissionsResult</b> 方法</strong></p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">Override</span><span class="hl-code"> </span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">onRequestPermissionsResult</span><span class="hl-brackets">(</span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">permissions</span><span class="hl-code">,
+      </span><span class="hl-types">int</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">PermissionGen</span><span class="hl-code">.</span><span class="hl-identifier">onRequestPermissionsResult</span><span class="hl-brackets">(</span><span class="hl-reserved">this</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">permissions</span><span class="hl-code">, </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p><strong>3.回调</strong></p>
+<p>正确：</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">PermissionSuccess</span><span class="hl-brackets">(</span><span class="hl-identifier">requestCode</span><span class="hl-code"> = </span><span class="hl-number">100</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">doSomething</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">Toast</span><span class="hl-code">.</span><span class="hl-identifier">makeText</span><span class="hl-brackets">(</span><span class="hl-reserved">this</span><span class="hl-code">, </span><span class="hl-quotes">&quot;</span><span class="hl-string">Contact permission is granted</span><span class="hl-quotes">&quot;</span><span class="hl-code">, </span><span class="hl-identifier">Toast</span><span class="hl-code">.</span><span class="hl-identifier">LENGTH_SHORT</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">show</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<p>错误：</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">PermissionFail</span><span class="hl-brackets">(</span><span class="hl-identifier">requestCode</span><span class="hl-code"> = </span><span class="hl-number">100</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">doFailSomething</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">Toast</span><span class="hl-code">.</span><span class="hl-identifier">makeText</span><span class="hl-brackets">(</span><span class="hl-reserved">this</span><span class="hl-code">, </span><span class="hl-quotes">&quot;</span><span class="hl-string">Contact permission is not granted</span><span class="hl-quotes">&quot;</span><span class="hl-code">, </span><span class="hl-identifier">t</span><span class="hl-code">.</span><span class="hl-identifier">LENGTH_SHORT</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">show</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<p>往往一个框架，简单的使用方式，背后大多数是非常复杂的架构或者设计模式，这个架构的代码量以及难度不是非常大，配合源码食用更佳。</p>
+
+<h3>基本分析</h3><p><strong>成员变量</strong></p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-comment">//</span><span class="hl-comment">保存需要的权限</span><span class="hl-comment"></span><span class="hl-code">
+</span><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">mPermissions</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment">请求码</span><span class="hl-comment"></span><span class="hl-code">
+</span><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">mRequestCode</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment">保存Activity or Fragment</span><span class="hl-comment"></span><span class="hl-code">
+</span><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-code">;</span></div>
+</div>
+</div><p><strong>构造方法</strong></p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-comment">//</span><span class="hl-comment">私有化了构造方法</span><span class="hl-comment"></span><span class="hl-code">
+</span><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">this</span><span class="hl-code">.</span><span class="hl-identifier">object</span><span class="hl-code"> = </span><span class="hl-identifier">object</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<p><strong>with方法</strong></p><p>很多开源库惯用的手法，既传入Activity or Fragment的方法，并且调用构造方法，我想这个大家应该不能理解。</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-code"> </span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-identifier">Activity</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span><span class="hl-code">
+ 
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-code"> </span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-identifier">Fragment</span><span class="hl-code"> </span><span class="hl-identifier">fragment</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-brackets">(</span><span class="hl-identifier">fragment</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<p><strong>赋值</strong></p>
+
+<p>既然有了对象，接下来就是对对象的成员变量进行赋值了。</p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-comment">//</span><span class="hl-comment">当然还有另外一种方式去添加 permissions 就是 needPermission 留个大家自己去思考咯</span><span class="hl-comment"></span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-code"> </span><span class="hl-identifier">permissions</span><span class="hl-brackets">(</span><span class="hl-identifier">String</span><span class="hl-code">... </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">this</span><span class="hl-code">.</span><span class="hl-identifier">mPermissions</span><span class="hl-code"> = </span><span class="hl-identifier">permissions</span><span class="hl-code">;
+    </span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-reserved">this</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span><span class="hl-code">
+ 
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGen</span><span class="hl-code"> </span><span class="hl-identifier">addRequestCode</span><span class="hl-brackets">(</span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">this</span><span class="hl-code">.</span><span class="hl-identifier">mRequestCode</span><span class="hl-code"> = </span><span class="hl-identifier">requestCode</span><span class="hl-code">;
+    </span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-reserved">this</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><blockquote>
+<p>上述几个流程是非常简单的，如果你经常拆轮子，对于这些手法已经见怪不怪了，接下来就说说他是如果通过注解反射来进行权限申请已经回调的吧。</p>
+</blockquote>
+<h3>核心分析</h3><p><strong>requestResult</strong></p><p>在使用方式的第二步调用了 <b>PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);</b> ，这是一个重载的方法，主要是第一个参数会不同，this可以是指向的对象可以是Fragment or Activity，但是最终都回调到一个方法。</p>
+
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">onRequestPermissionsResult</span><span class="hl-brackets">(</span><span class="hl-identifier">Activity</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">permissions</span><span class="hl-code">,</span><span class="hl-types">int</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">requestResult</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">permissions</span><span class="hl-code">, </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span><span class="hl-code">
+ 
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">onRequestPermissionsResult</span><span class="hl-brackets">(</span><span class="hl-identifier">Fragment</span><span class="hl-code"> </span><span class="hl-identifier">fragment</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">permissions</span><span class="hl-code">,</span><span class="hl-types">int</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">requestResult</span><span class="hl-brackets">(</span><span class="hl-identifier">fragment</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">permissions</span><span class="hl-code">, </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p>最终都调用以下方法：</p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">requestResult</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">obj</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">permissions</span><span class="hl-code">,</span><span class="hl-types">int</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">List</span><span class="hl-code">&lt;</span><span class="hl-identifier">String</span><span class="hl-code">&gt; </span><span class="hl-identifier">deniedPermissions</span><span class="hl-code"> = </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">ArrayList</span><span class="hl-code">&lt;&gt;</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-reserved">for</span><span class="hl-brackets">(</span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">i</span><span class="hl-code">=</span><span class="hl-number">0</span><span class="hl-code">; </span><span class="hl-identifier">i</span><span class="hl-code">&lt;</span><span class="hl-identifier">grantResults</span><span class="hl-code">.</span><span class="hl-identifier">length</span><span class="hl-code">; </span><span class="hl-identifier">i</span><span class="hl-code">++</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-comment">//</span><span class="hl-comment">每一天通过的权限</span><span class="hl-comment"></span><span class="hl-code">
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">grantResults</span><span class="hl-brackets">[</span><span class="hl-identifier">i</span><span class="hl-brackets">]</span><span class="hl-code"> != </span><span class="hl-identifier">PackageManager</span><span class="hl-code">.</span><span class="hl-identifier">PERMISSION_GRANTED</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">add</span><span class="hl-brackets">(</span><span class="hl-identifier">permissions</span><span class="hl-brackets">[</span><span class="hl-identifier">i</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-comment">//</span><span class="hl-comment">如果有没通过的权限就失败</span><span class="hl-comment"></span><span class="hl-code">
+    </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">size</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> &gt; </span><span class="hl-number">0</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">doExecuteFail</span><span class="hl-brackets">(</span><span class="hl-identifier">obj</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">else</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">doExecuteSuccess</span><span class="hl-brackets">(</span><span class="hl-identifier">obj</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<h3>使用注解的方式回调</h3><p><strong>正确时的回调的放阿飞</strong></p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">doExecuteFail</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-comment">//</span><span class="hl-comment">方法一</span><span class="hl-comment"></span><span class="hl-code">
+    </span><span class="hl-identifier">Method</span><span class="hl-code"> </span><span class="hl-identifier">executeMethod</span><span class="hl-code"> = </span><span class="hl-identifier">Utils</span><span class="hl-code">.</span><span class="hl-identifier">findMethodWithRequestCode</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-code">.</span><span class="hl-identifier">getClass</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">,</span><span class="hl-identifier">PermissionFail</span><span class="hl-code">.</span><span class="hl-reserved">class</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-comment">//</span><span class="hl-comment">方法二</span><span class="hl-comment"></span><span class="hl-code">
+    </span><span class="hl-identifier">executeMethod</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-identifier">executeMethod</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p><strong>方法一：</strong></p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> &lt;</span><span class="hl-identifier">A</span><span class="hl-code"> </span><span class="hl-reserved">extends</span><span class="hl-code"> </span><span class="hl-identifier">Annotation</span><span class="hl-code">&gt; </span><span class="hl-identifier">Method</span><span class="hl-code"> </span><span class="hl-identifier">findMethodWithRequestCode</span><span class="hl-brackets">(</span><span class="hl-identifier">Class</span><span class="hl-code"> </span><span class="hl-identifier">clazz</span><span class="hl-code">,</span><span class="hl-identifier">Class</span><span class="hl-code">&lt;</span><span class="hl-identifier">A</span><span class="hl-code">&gt; </span><span class="hl-identifier">annotation</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-comment">//</span><span class="hl-comment">循环这个对象中的方法</span><span class="hl-comment"></span><span class="hl-code">
+    </span><span class="hl-reserved">for</span><span class="hl-brackets">(</span><span class="hl-identifier">Method</span><span class="hl-code"> </span><span class="hl-identifier">method</span><span class="hl-code"> : </span><span class="hl-identifier">clazz</span><span class="hl-code">.</span><span class="hl-identifier">getDeclaredMethods</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-comment">//</span><span class="hl-comment">判断每个方法的注解是不是符合 annotation（PermissionSuccess or PermissionFail）</span><span class="hl-comment"></span><span class="hl-code">
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">method</span><span class="hl-code">.</span><span class="hl-identifier">isAnnotationPresent</span><span class="hl-brackets">(</span><span class="hl-identifier">annotation</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-comment">//</span><span class="hl-comment">最后调用了这个方法，就不copy了，非常简单，判断他的 requestCode </span><span class="hl-comment"></span><span class="hl-code">
+            </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">isEqualRequestCodeFromAnntation</span><span class="hl-brackets">(</span><span class="hl-identifier">method</span><span class="hl-code">, </span><span class="hl-identifier">annotation</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+                </span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-identifier">method</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span><span class="hl-code">
+        </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+</span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-reserved">null</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<p><strong>方法二:</strong></p>
+<p>通过反射我们拿到了需要的方法，接下来就是运行这个方法了</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">executeMethod</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-identifier">Method</span><span class="hl-code"> </span><span class="hl-identifier">executeMethod</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">executeMethod</span><span class="hl-code"> != </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-reserved">try</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-identifier">executeMethod</span><span class="hl-code">.</span><span class="hl-identifier">isAccessible</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-identifier">executeMethod</span><span class="hl-code">.</span><span class="hl-identifier">setAccessible</span><span class="hl-brackets">(</span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-comment">//</span><span class="hl-comment">运行这个方法</span><span class="hl-comment"></span><span class="hl-code">
+            </span><span class="hl-identifier">executeMethod</span><span class="hl-code">.</span><span class="hl-identifier">invoke</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">catch</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">IllegalAccessException</span><span class="hl-code"> </span><span class="hl-identifier">e</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-identifier">e</span><span class="hl-code">.</span><span class="hl-identifier">printStackTrace</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">catch</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">InvocationTargetException</span><span class="hl-code"> </span><span class="hl-identifier">e</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-identifier">e</span><span class="hl-code">.</span><span class="hl-identifier">printStackTrace</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p>是不是非常简单，简单明了的几步流程，然后我们再睡觉描一眼  <b>PermisstionSuccess</b> 与 <b>PermisstionFail</b> 两个类</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">Target</span><span class="hl-brackets">(</span><span class="hl-identifier">ElementType</span><span class="hl-code">.</span><span class="hl-identifier">METHOD</span><span class="hl-brackets">)</span><span class="hl-code">
+@</span><span class="hl-identifier">Retention</span><span class="hl-brackets">(</span><span class="hl-identifier">RetentionPolicy</span><span class="hl-code">.</span><span class="hl-identifier">RUNTIME</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> @</span><span class="hl-reserved">interface</span><span class="hl-code"> </span><span class="hl-identifier">PermissionFail</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p>与</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">Retention</span><span class="hl-brackets">(</span><span class="hl-identifier">RetentionPolicy</span><span class="hl-code">.</span><span class="hl-identifier">RUNTIME</span><span class="hl-brackets">)</span><span class="hl-code">
+@</span><span class="hl-identifier">Target</span><span class="hl-brackets">(</span><span class="hl-identifier">ElementType</span><span class="hl-code">.</span><span class="hl-identifier">METHOD</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> @</span><span class="hl-reserved">interface</span><span class="hl-code"> </span><span class="hl-identifier">PermissionSuccess</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><blockquote>
+<p>无非就是两个运行注解，参数为 int 类型。到这里 PermisstionGen框架解说完毕，接下来我们再来聊聊鸿神的框架。 <a target="_blank" href="https://github.com/hongyangAndroid/MPermissions">github传送门</a></p>
+</blockquote>
+<hr><h2>MPermissions</h2><p>思路无非大同小异，最大的后者使用了编译注解，这个特点非常多的开源框架会选择使用，基于这点，就不存在反射损失效率的问题了。</p>
+<h3>使用方式</h3>
+<p>所有 <b>Permisstion</b> 相关的框架使用方式都是相同的，无非就是需要的权限，<b>onRequestPermissionsResult</b> 中去调用静态方法，最后回调，所以这里就不copy别人的代码来凑字数了，我们直接切入主题吧。</p>
+<h3>分析</h3><p><strong>依赖</strong>
+因为使用了编译时注解，所以就会有依赖关系。</p>
+<p><img decoding="async" src="../wp-content/uploads/2016/12/15.png"></p>
+<blockquote>
+<p>permission-sample 依赖  permission-api(也就是lib)
+ permission-lib 依赖 permission-annotation
+ compile 依赖 permission-annotation</p>
+</blockquote>
+<p><strong>注解类</strong></p><p>在 <b>permission-annotation</b> 下有三个注解类</p>
+
+
+
+<ul>
+<li><p>授权成功  <b>PermissionGrant</b></p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">Target</span><span class="hl-brackets">(</span><span class="hl-identifier">ElementType</span><span class="hl-code">.</span><span class="hl-identifier">METHOD</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> @</span><span class="hl-reserved">interface</span><span class="hl-code"> </span><span class="hl-identifier">PermissionGrant</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">value</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div></li>
+<li><p>授权失败 <b>PermissionDenied</b></p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">Target</span><span class="hl-brackets">(</span><span class="hl-identifier">ElementType</span><span class="hl-code">.</span><span class="hl-identifier">METHOD</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> @</span><span class="hl-reserved">interface</span><span class="hl-code"> </span><span class="hl-identifier">PermissionDenied</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">value</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div></li>
+<li><p>如果拒接了就提醒</p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-code">@</span><span class="hl-identifier">Target</span><span class="hl-brackets">(</span><span class="hl-identifier">ElementType</span><span class="hl-code">.</span><span class="hl-identifier">METHOD</span><span class="hl-brackets">)</span><span class="hl-code">
+@</span><span class="hl-identifier">Retention</span><span class="hl-brackets">(</span><span class="hl-identifier">RetentionPolicy</span><span class="hl-code">.</span><span class="hl-identifier">CLASS</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-reserved">public</span><span class="hl-code"> @</span><span class="hl-reserved">interface</span><span class="hl-code"> </span><span class="hl-identifier">ShowRequestPermissionRationale</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">value</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div></li>
+</ul>
+
+<blockquote>
+<p>完成了上个注解处理器，接下来就是给 <b>permission-lib</b> 添加依赖，添加依赖后，我们来看看 <b>permission-lib</b> 中的主类。 【注：考虑到compile没做解说，因为有点复杂，后面我后另开一篇文章详细说明编译注解】</p>
+</blockquote><p><strong>requestPermissions</strong></p><p>和上一个框架非常类似的方法，但是直接抛弃了链式编程，直接把3个参数一坨放进去了。</p>
+
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">Activity</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-code">... </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">_requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span><span class="hl-code">
+ 
+</span><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">Fragment</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-code">... </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">_requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<blockquote>
+<p>同样属于重载，来区分Activity与Fragment，最后调用下面的方法。</p>
+</blockquote>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">_requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-code">... </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">if</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-identifier">Utils</span><span class="hl-code">.</span><span class="hl-identifier">isOverMarshmallow</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">doExecuteSuccess</span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">return</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-identifier">List</span><span class="hl-code">&lt;</span><span class="hl-identifier">String</span><span class="hl-code">&gt; </span><span class="hl-identifier">deniedPermissions</span><span class="hl-code"> = </span><span class="hl-identifier">Utils</span><span class="hl-code">.</span><span class="hl-identifier">findDeniedPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">Utils</span><span class="hl-code">.</span><span class="hl-identifier">getActivity</span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-identifier">permissions</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-reserved">if</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">size</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> &gt; </span><span class="hl-number">0</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-reserved">if</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code"> </span><span class="hl-reserved">instanceof</span><span class="hl-code"> </span><span class="hl-identifier">Activity</span><span class="hl-brackets">)</span><span class="hl-code">
+        </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-brackets">(</span><span class="hl-brackets">(</span><span class="hl-identifier">Activity</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">toArray</span><span class="hl-brackets">(</span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">size</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">else</span><span class="hl-code"> </span><span class="hl-reserved">if</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code"> </span><span class="hl-reserved">instanceof</span><span class="hl-code"> </span><span class="hl-identifier">Fragment</span><span class="hl-brackets">)</span><span class="hl-code">
+        </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-brackets">(</span><span class="hl-brackets">(</span><span class="hl-identifier">Fragment</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-identifier">object</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">requestPermissions</span><span class="hl-brackets">(</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">toArray</span><span class="hl-brackets">(</span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">size</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">else</span><span class="hl-code">
+        </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-reserved">throw</span><span class="hl-code"> </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">IllegalArgumentException</span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code">.</span><span class="hl-identifier">getClass</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">getName</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> + </span><span class="hl-quotes">&quot;</span><span class="hl-string"> is not supported!</span><span class="hl-quotes">&quot;</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">else</span><span class="hl-code"> </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">doExecuteSuccess</span><span class="hl-brackets">(</span><span class="hl-identifier">object</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<p>代码无非是几个判断，就不做过多的解释，但是这里要和大家说点题外话，在外人看人，都是程序员，大家都能实现一个功能（任务），但是优秀的程序员会对代码逻辑判断做更多的处理。</p>
+<p>去申请权限之后，当然就要在Activity中去重写这个方法 ，同样是最后去调用 <b>onRequestPermissionsResult</b> 。然后走到 <b>MPermissions.requestResult</b> 这个方法，接着就是 回调。 这里就概括下，因为与上个框架差不多。</p>
+
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">requestResult</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">obj</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-code">, </span><span class="hl-identifier">String</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">permissions</span><span class="hl-code">,
+                                  </span><span class="hl-types">int</span><span class="hl-brackets">[</span><span class="hl-brackets">]</span><span class="hl-code"> </span><span class="hl-identifier">grantResults</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">List</span><span class="hl-code">&lt;</span><span class="hl-identifier">String</span><span class="hl-code">&gt; </span><span class="hl-identifier">deniedPermissions</span><span class="hl-code"> = </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">ArrayList</span><span class="hl-code">&lt;&gt;</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-reserved">for</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">i</span><span class="hl-code"> = </span><span class="hl-number">0</span><span class="hl-code">; </span><span class="hl-identifier">i</span><span class="hl-code"> &lt; </span><span class="hl-identifier">grantResults</span><span class="hl-code">.</span><span class="hl-identifier">length</span><span class="hl-code">; </span><span class="hl-identifier">i</span><span class="hl-code">++</span><span class="hl-brackets">)</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-reserved">if</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">grantResults</span><span class="hl-brackets">[</span><span class="hl-identifier">i</span><span class="hl-brackets">]</span><span class="hl-code"> != </span><span class="hl-identifier">PackageManager</span><span class="hl-code">.</span><span class="hl-identifier">PERMISSION_GRANTED</span><span class="hl-brackets">)</span><span class="hl-code">
+        </span><span class="hl-brackets">{</span><span class="hl-code">
+            </span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">add</span><span class="hl-brackets">(</span><span class="hl-identifier">permissions</span><span class="hl-brackets">[</span><span class="hl-identifier">i</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-reserved">if</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">deniedPermissions</span><span class="hl-code">.</span><span class="hl-identifier">size</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> &gt; </span><span class="hl-number">0</span><span class="hl-brackets">)</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">doExecuteFail</span><span class="hl-brackets">(</span><span class="hl-identifier">obj</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">else</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">doExecuteSuccess</span><span class="hl-brackets">(</span><span class="hl-identifier">obj</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p><strong>doExecuteFail 与 doExecuteSuccess</strong></p>
+<p>回调成功失败与否，框架是不会在乎的，他们只会通过得到的对象强转，然后去调用。</p>
+
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">doExecuteSuccess</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">findPermissionProxy</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">grant</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-brackets">}</span><span class="hl-code">
+ 
+</span><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">doExecuteFail</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-identifier">findPermissionProxy</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">denied</span><span class="hl-brackets">(</span><span class="hl-identifier">activity</span><span class="hl-code">, </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p><strong>findPermissionProxy</strong></p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">private</span><span class="hl-code"> </span><span class="hl-types">static</span><span class="hl-code"> </span><span class="hl-identifier">PermissionProxy</span><span class="hl-code"> </span><span class="hl-identifier">findPermissionProxy</span><span class="hl-brackets">(</span><span class="hl-identifier">Object</span><span class="hl-code"> </span><span class="hl-identifier">activity</span><span class="hl-brackets">)</span><span class="hl-code">
+</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-reserved">try</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">Class</span><span class="hl-code"> </span><span class="hl-identifier">clazz</span><span class="hl-code"> = </span><span class="hl-identifier">activity</span><span class="hl-code">.</span><span class="hl-identifier">getClass</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-identifier">Class</span><span class="hl-code"> </span><span class="hl-identifier">injectorClazz</span><span class="hl-code"> = </span><span class="hl-identifier">Class</span><span class="hl-code">.</span><span class="hl-identifier">forName</span><span class="hl-brackets">(</span><span class="hl-identifier">clazz</span><span class="hl-code">.</span><span class="hl-identifier">getName</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> + </span><span class="hl-identifier">SUFFIX</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">return</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">PermissionProxy</span><span class="hl-brackets">)</span><span class="hl-code"> </span><span class="hl-identifier">injectorClazz</span><span class="hl-code">.</span><span class="hl-identifier">newInstance</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">catch</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">ClassNotFoundException</span><span class="hl-code"> </span><span class="hl-identifier">e</span><span class="hl-brackets">)</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">e</span><span class="hl-code">.</span><span class="hl-identifier">printStackTrace</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">catch</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">InstantiationException</span><span class="hl-code"> </span><span class="hl-identifier">e</span><span class="hl-brackets">)</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">e</span><span class="hl-code">.</span><span class="hl-identifier">printStackTrace</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code"> </span><span class="hl-reserved">catch</span><span class="hl-code"> </span><span class="hl-brackets">(</span><span class="hl-identifier">IllegalAccessException</span><span class="hl-code"> </span><span class="hl-identifier">e</span><span class="hl-brackets">)</span><span class="hl-code">
+    </span><span class="hl-brackets">{</span><span class="hl-code">
+        </span><span class="hl-identifier">e</span><span class="hl-code">.</span><span class="hl-identifier">printStackTrace</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+    </span><span class="hl-reserved">throw</span><span class="hl-code"> </span><span class="hl-reserved">new</span><span class="hl-code"> </span><span class="hl-identifier">RuntimeException</span><span class="hl-brackets">(</span><span class="hl-identifier">String</span><span class="hl-code">.</span><span class="hl-identifier">format</span><span class="hl-brackets">(</span><span class="hl-quotes">&quot;</span><span class="hl-string">can not find %s , something when compiler.</span><span class="hl-quotes">&quot;</span><span class="hl-code">, </span><span class="hl-identifier">activity</span><span class="hl-code">.</span><span class="hl-identifier">getClass</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">getSimpleName</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> + </span><span class="hl-identifier">SUFFIX</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div><p>与</p>
+<div class="example">
+<div class="example_code">
+<div class="hl-main"><span class="hl-reserved">public</span><span class="hl-code"> </span><span class="hl-reserved">interface</span><span class="hl-code"> </span><span class="hl-identifier">PermissionProxy</span><span class="hl-code">&lt;</span><span class="hl-identifier">T</span><span class="hl-code">&gt;
+</span><span class="hl-brackets">{</span><span class="hl-code">
+    </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">grant</span><span class="hl-brackets">(</span><span class="hl-identifier">T</span><span class="hl-code"> </span><span class="hl-identifier">source</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">denied</span><span class="hl-brackets">(</span><span class="hl-identifier">T</span><span class="hl-code"> </span><span class="hl-identifier">source</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-types">void</span><span class="hl-code"> </span><span class="hl-identifier">rationale</span><span class="hl-brackets">(</span><span class="hl-identifier">T</span><span class="hl-code"> </span><span class="hl-identifier">source</span><span class="hl-code">, </span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-types">boolean</span><span class="hl-code"> </span><span class="hl-identifier">needShowRationale</span><span class="hl-brackets">(</span><span class="hl-types">int</span><span class="hl-code"> </span><span class="hl-identifier">requestCode</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></div>
+</div>
+</div>
+<hr>h2>尾声</h2>
+<p>就这样，我们已经写好两个的框架的源码分析（因为很多关于权限管理的博客），解决以及封装思路大同小异，在项目中我们可以主动去使用它们的框架，当然，如果你有一种莫名其妙的激情你也可以自己封装一个简化版的。</p><p>
+同时，提醒大家多去拆别人的轮子，慢慢的，你的功力就会提升了。</p><p>
+<img decoding="async" src="../wp-content/uploads/2016/12/16.jpg" alt="" style="max-width:100%;"></p>
+
+
+				</div>
+			</div>
+			<div class="previous-next-links">
+			<div class="previous-design-link">← <a href="./android-advance-viewgrouphtml.html" rel="prev"> 1.3 自定义 ViewGroup</a> </div>
+			<div class="next-design-link"><a href="./android-advance-plug-in-development.html" rel="next"> 2.0 Android 插件式开发</a> →</div>
+			</div>
+						<style>
+@media screen and (max-width: 768px) {
+	#w3cnote-ad728 {
+		display: none;
+	}
+}
+p.note-author {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<script>
+var aid = 17090;
+</script>
+	</div>
+		
+	</div>
+	<div class="listcol last right-column">
+
+	<script type="text/javascript">
+jQuery(document).ready(function ($){
+	var total = $(".membership li").length;
+	var left_list = '';
+	href = window.location.href;
+	
+	$(".membership li").each(function(index, value){
+
+		left_list += $(this).html();
+
+		cur_href = $(this).find("a").attr("href");
+		cur_obj = $(this);
+		
+		if(href.match(cur_href) != null) {
+			if(index==0) {
+				$(".previous-design-link").hide();
+			}
+			if(index==(total-1)) {
+				$(".next-design-link").hide();
+			}
+			prev_href = cur_obj.prev("li").find("a").attr("href");
+			prev_title = cur_obj.prev("li").find("a").attr("title");
+
+			next_href = cur_obj.next("li").find("a").attr("href");
+			next_title = cur_obj.next("li").find("a").attr("title");
+			if(prev_title) {
+				$(".previous-design-link a").attr("href", prev_href);
+				$(".previous-design-link a").attr("title", prev_title);
+				$(".previous-design-link a").text(prev_title);
+			} else {
+				$(".previous-design-link").html("");
+			}
+
+			if(next_title) {
+				$(".next-design-link a").attr("href", next_href);
+				$(".next-design-link a").attr("title", next_title);
+				$(".next-design-link a").text(next_title);
+			} else {
+				$(".next-design-link").html("");
+			}
+		}
+	});
+
+	$("#leftcolumn").html(left_list);
+});
+	</script>
+	<div class="sidebar-box cate-list">
+	<div class="sidebar-box recommend-here list-link">
+	<a href="void(0);.html">Android 进阶教程</a>	</div>
+	
+	<ul class="membership">
+		
+	<li><a target="_top" data-id="17013" title="1.1 Android 中喜闻乐见的屏幕适配" href="./android-advance-screen-adaptation.html" >1.1 Android 中喜闻乐见的屏幕适配</a></li>
+	
+		
+	<li><a target="_top" data-id="17036" title="1.2 自定义 View" href="./android-advance-custom-view.html" >1.2 自定义 View</a></li>
+	
+		
+	<li><a target="_top" data-id="17085" title="1.3 自定义 ViewGroup" href="./android-advance-viewgrouphtml.html" >1.3 自定义 ViewGroup</a></li>
+	
+		<li>
+	1.4 Android6.0权限管理-开源框架源码分析	</li>
+	
+		
+	<li><a target="_top" data-id="18227" title="2.0 Android 插件式开发" href="./android-advance-plug-in-development.html" >2.0 Android 插件式开发</a></li>
+	
+		
+	<li><a target="_top" data-id="18230" title="2.1 带你全方位学习Picasso（一）" href="./android-advance-picasso1.html" >2.1 带你全方位学习Picasso（一）</a></li>
+	
+		
+	<li><a target="_top" data-id="18234" title="2.2 带你全方位学习Picasso（二）" href="./android-advance-picasso2.html" >2.2 带你全方位学习Picasso（二）</a></li>
+	
+	</ul></div>	</div>
+</div>
+
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="../ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="../for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

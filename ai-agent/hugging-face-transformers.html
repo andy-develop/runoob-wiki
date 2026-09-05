@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hugging Face Transformers | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai-agent/hugging-face-transformers.html" />
+<meta name="keywords" content="Hugging Face Transformers">
+<meta name="description" content="Hugging Face Transformers  Hugging Face Transformers 是目前最流行的开源 NLP / AI 库，提供数千个预训练模型，覆盖文本、图像、音频、多模态等几乎所有 AI 任务。 它的核心价值：把复杂的模型加载、推理、训练流程封装成几行代码。        Hugging Face 生态系统全景       Hub   40万+ 模型   10万+ 数据集       Transformers..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI Agent 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI Agent(智能体) 教程"  href="/ai-agent/ai-agent-tutorial.html" >
+			AI Agent(智能体) 教程			</a>
+						<a target="_top" data-p="par" title="AI Agent 简介"  href="/ai-agent/ai-agent-intro.html" >
+			AI Agent 简介			</a>
+						<a target="_top" data-p="par" title="AI Agent  核心组件"  href="/ai-agent/ai-agent-core.html" >
+			AI Agent  核心组件			</a>
+			<a target="_top" title="AI Agent 术语" href="/ai-agent/ai-terminology.html">AI Agent 术语</a>
+<a target="_top" title="AI Agent 工作原理" href="/ai-agent/ai-agent-working-principle.html">AI Agent 工作原理</a>
+<a target="_top" title="AI 底层架构" href="/ai-agent/ai-architecture.html">AI 底层架构</a>
+<a target="_top" title="大语言模型基础" href="/ai-agent/ai-agent-llm.html">大语言模型基础</a>
+<a target="_top" title="大模型多模态" href="/ai-agent/llm-multimodal.html">大模型多模态</a>
+<a target="_top" title="提示词工程" href="/ai-agent/prompt-engineering.html">提示词工程</a>
+<a target="_top" title="Token (词元)" href="/ai-agent/token-intro.html">Token (词元)</a>
+<a target="_top" title="推理与规划" href="/ai-agent/reasoning-planning.html">推理与规划</a>
+<a target="_top" title="向量数据库" href="/ai-agent/vector-database.html">向量数据库</a>
+<a target="_top" title="RAG 与知识检索" href="/ai-agent/retrieval-augmented-generation.html">RAG 与知识检索</a>
+<a target="_top" title="Agent 上下文工程" href="/ai-agent/agent-context-engineering.html">Agent 上下文工程</a>
+
+<a target="_top" title="Agent 架构" href="/ai-agent/agent-architecture.html">Agent 架构</a>
+
+<br>
+<h2 class="left"> <span class="left_h2">智能体工具</span></h2>			<a target="_top" data-p="par" title="第一个 AI Agent"  href="/ai-agent/first-ai-agent.html" >
+			第一个 AI Agent			</a>
+			<a target="_top" title="AI 开发平台" href="/ai-agent/ai-monkeycode.html"> AI 开发平台</a>
+<a target="_top" title="OpenClaw (Clawdbot) 教程" href="/ai-agent/openclaw-clawdbot-tutorial.html"> OpenClaw (Clawdbot) 教程</a>
+<a target="_top" title="OpenClaw 快速上手" href="/ai-agent/openclaw-quickstart.html"> OpenClaw 快速上手</a>
+<a target="_top" title="QoderWork 教程" href="/ai-agent/qoderwork.html"> QoderWork 教程</a>
+<a target="_top" title="QoderWake 教程" href="/ai-agent/qoderwake-usage.html"> QoderWake 教程</a>
+<a target="_top" title="WorkBuddy 入门教程" href="/ai-agent/workbuddy-usage.html"> WorkBuddy 入门教程</a>
+<a target="_top" title="AI 工作流" href="/ai-agent/ai-workflow.html"> AI 工作流</a>
+			<a target="_top" data-p="par" title="CrewAI 构建智能体"  href="/ai-agent/crewai-agent.html" >
+			CrewAI 构建智能体			</a>
+						<a target="_top" data-p="par" title="LangChain 制作智能体"  href="/ai-agent/langchain-agent.html" >
+			LangChain 制作智能体			</a>
+			<a target="_top" title="LangGraph 入门教程" href="/ai-agent/langgraph-quick-start.html">LangGraph 入门教程</a>
+<a target="_top" title="Deep Agents 入门教程" href="/ai-agent/deep-agents-usage.html">Deep Agents 入门教程</a>
+<a target="_top" title="GraphRAG 入门教程" href="/ai-agent/graphrag-usage.html">GraphRAG 入门教程</a>
+<a target="_top"title="Harness Engineering" href="/ai-agent/harness-engineering.html">Harness Engineering</a>
+<a target="_top" title="Hermes Agent" href="/ai-agent/hermes-agent.html">Hermes Agent</a>
+<a target="_top" title="Loop Engineering" href="/ai-agent/loop-engineering.html">Loop Engineering</a>
+<a target="_top" title="Vibe Coding 入门教程" href="/ai-agent/vibe-coding-start.html">Vibe Coding</a>
+<a href="/ai-agent/dify-usage.html" title="Dify 入门教程">Dify 入门教程</a>
+<a href="/ai-agent/n8n-usage.html" title="n8n 入门教程">n8n 入门教程 </a>
+<a href="/ai-agent/pi-coding-agent.html" title="Pi Coding Agent">Pi Coding Agent </a>
+
+<br><h2 class="left"> <span class="left_h2">Python 实现智能体</span></h2>
+<a target="_top" title="Python 实现 AI Agent" href="/ai-agent/python-ai-agent.html">Python 实现 AI Agent</a>
+<a target="_top" title="工具调用" href="/ai-agent/ai-agent-function-calling.html">工具调用</a>
+<a target="_top"  title="记忆系统" href="/ai-agent/ai-agent-memory-system-design.html">记忆系统</a>
+
+			<a target="_top" data-p="par" title="Python 智能体环境配置"  href="/ai-agent/ai-agent-python-setup.html" >
+			Python 智能体环境配置			</a>
+						<a target="_top" data-p="par" title="AI Agent 问答实例"  href="/ai-agent/ai-agent-answer-demo.html" >
+			AI Agent 问答实例			</a>
+						<a target="_top" data-p="par" title="Python 实现推理与规划"  href="/ai-agent/python-reasoning-planning.html" >
+			推理与规划			</a>
+						<a target="_top" data-p="par" title="Python 实现 RAG 与知识检索"  href="/ai-agent/python-rag.html" >
+			RAG 与知识检索			</a>
+						<a target="_top" data-p="par" title="多智能体系统（Multi-Agent System）"  href="/ai-agent/multi-agent-system.html" >
+			多智能体系统			</a>
+						<a target="_top" data-p="par" title="AI Agent 工具与外部集成"  href="/ai-agent/tools-integration.html" >
+			工具与外部集成			</a>
+						<a target="_top" data-p="par" title="多模态 Agent"  href="/ai-agent/multimodal-agent.html" >
+			多模态 Agent			</a>
+						<a target="_top" data-p="par" title="Agent 评估、安全与对齐"  href="/ai-agent/evaluation-safety-alignment.html" >
+			评估、安全与对齐			</a>
+						<a target="_top" data-p="par" title="AI Agent 生产部署与工程化"  href="/ai-agent/production-deployment.html" >
+			生产部署与工程化			</a>
+						<a target="_top" data-p="par" title="AI Agent 垂直应用场景"  href="/ai-agent/vertical-applications.html" >
+			垂直应用场景			</a>
+						<a target="_top" data-p="par" title="Hugging Face Transformers"  href="/ai-agent/hugging-face-transformers.html" >
+			Hugging Face Transformers			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai-agent/ai-workflow.html" rel="prev"> AI Workflow（AI 工作流）</a> </div>
+			<div class="next-design-link"><a href="/ai-agent/ai-architecture.html" rel="next"> AI 底层架构</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Hugging Face Transformers</h1>
+
+<p>Hugging Face Transformers 是目前最流行的开源 NLP / AI 库，提供数千个预训练模型，覆盖文本、图像、音频、多模态等几乎所有 AI 任务。</p>
+<p>它的核心价值：把复杂的模型加载、推理、训练流程封装成几行代码。</p>
+
+<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="280" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Hugging Face 生态系统全景</text>
+
+  <ellipse cx="360" cy="148" rx="72" ry="50" fill="#f5a623" opacity="0.95"/>
+  <text x="360" y="142" text-anchor="middle" font-size="13" fill="#fff" font-weight="bold">Hub</text>
+  <text x="360" y="158" text-anchor="middle" font-size="10" fill="#fff">40万+ 模型</text>
+  <text x="360" y="172" text-anchor="middle" font-size="10" fill="#fff">10万+ 数据集</text>
+
+  <rect x="30"  y="50"  width="135" height="60" rx="9" fill="#fff" stroke="#e74c3c" stroke-width="2"/>
+  <text x="97"  y="74"  text-anchor="middle" font-size="12" font-weight="bold" fill="#c0392b">Transformers</text>
+  <text x="97"  y="90"  text-anchor="middle" font-size="9"  fill="#555">预训练模型推理</text>
+  <text x="97"  y="103" text-anchor="middle" font-size="9"  fill="#555">与微调框架</text>
+  <line x1="165" y1="80"  x2="292" y2="128" stroke="#e74c3c" stroke-width="1.5"/>
+
+  <rect x="30"  y="165" width="135" height="60" rx="9" fill="#fff" stroke="#3498db" stroke-width="2"/>
+  <text x="97"  y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#2980b9">Datasets</text>
+  <text x="97"  y="205" text-anchor="middle" font-size="9"  fill="#555">海量数据集</text>
+  <text x="97"  y="218" text-anchor="middle" font-size="9"  fill="#555">高效加载处理</text>
+  <line x1="165" y1="195" x2="292" y2="162" stroke="#3498db" stroke-width="1.5"/>
+
+  <rect x="555" y="50"  width="135" height="60" rx="9" fill="#fff" stroke="#2ecc71" stroke-width="2"/>
+  <text x="622" y="74"  text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">PEFT</text>
+  <text x="622" y="90"  text-anchor="middle" font-size="9"  fill="#555">参数高效微调</text>
+  <text x="622" y="103" text-anchor="middle" font-size="9"  fill="#555">LoRA / QLoRA</text>
+  <line x1="555" y1="80"  x2="428" y2="128" stroke="#2ecc71" stroke-width="1.5"/>
+
+  <rect x="555" y="165" width="135" height="60" rx="9" fill="#fff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="622" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#8e44ad">Accelerate</text>
+  <text x="622" y="205" text-anchor="middle" font-size="9"  fill="#555">多GPU/TPU训练</text>
+  <text x="622" y="218" text-anchor="middle" font-size="9"  fill="#555">分布式加速</text>
+  <line x1="555" y1="195" x2="428" y2="162" stroke="#9b59b6" stroke-width="1.5"/>
+
+  <rect x="290" y="38"  width="140" height="45" rx="9" fill="#fff" stroke="#f39c12" stroke-width="2"/>
+  <text x="360" y="57"  text-anchor="middle" font-size="12" font-weight="bold" fill="#e67e22">Tokenizers</text>
+  <text x="360" y="73"  text-anchor="middle" font-size="9"  fill="#555">高性能分词器（Rust实现）</text>
+  <line x1="360" y1="83"  x2="360" y2="98" stroke="#f39c12" stroke-width="1.5"/>
+
+  <rect x="290" y="222" width="140" height="45" rx="9" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <text x="360" y="241" text-anchor="middle" font-size="12" font-weight="bold" fill="#d35400">Evaluate</text>
+  <text x="360" y="257" text-anchor="middle" font-size="9"  fill="#555">模型评估指标（BLEU/F1等）</text>
+  <line x1="360" y1="198" x2="360" y2="222" stroke="#e67e22" stroke-width="1.5"/>
+</svg>
+
+<h3>支持的任务类型</h3>
+
+<svg viewBox="0 0 720 210" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="210" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Transformers 支持的任务分类</text>
+
+  <rect x="15"  y="40" width="210" height="155" rx="9" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+  <rect x="15"  y="40" width="210" height="6"   rx="9" fill="#e74c3c"/>
+  <text x="120" y="63"  text-anchor="middle" font-size="12" font-weight="bold" fill="#c0392b">NLP 自然语言处理</text>
+  <text x="28"  y="82"  font-size="9.5" fill="#555">文本分类（情感分析）</text>
+  <text x="28"  y="97"  font-size="9.5" fill="#555">命名实体识别（NER）</text>
+  <text x="28"  y="112" font-size="9.5" fill="#555">问答系统（QA）</text>
+  <text x="28"  y="127" font-size="9.5" fill="#555">文本摘要生成</text>
+  <text x="28"  y="142" font-size="9.5" fill="#555">机器翻译</text>
+  <text x="28"  y="157" font-size="9.5" fill="#555">文本生成（对话）</text>
+  <text x="28"  y="172" font-size="9.5" fill="#555">填空/语言模型</text>
+
+  <rect x="255" y="40" width="210" height="155" rx="9" fill="#fff" stroke="#3498db" stroke-width="1.5"/>
+  <rect x="255" y="40" width="210" height="6"   rx="9" fill="#3498db"/>
+  <text x="360" y="63"  text-anchor="middle" font-size="12" font-weight="bold" fill="#2980b9">CV 计算机视觉</text>
+  <text x="268" y="82"  font-size="9.5" fill="#555">图像分类</text>
+  <text x="268" y="97"  font-size="9.5" fill="#555">目标检测</text>
+  <text x="268" y="112" font-size="9.5" fill="#555">图像分割</text>
+  <text x="268" y="127" font-size="9.5" fill="#555">深度估计</text>
+  <text x="268" y="142" font-size="9.5" fill="#555">图像生成</text>
+  <text x="268" y="157" font-size="9.5" fill="#555">视频分类</text>
+  <text x="268" y="172" font-size="9.5" fill="#555">关键点检测</text>
+
+  <rect x="495" y="40" width="210" height="155" rx="9" fill="#fff" stroke="#9b59b6" stroke-width="1.5"/>
+  <rect x="495" y="40" width="210" height="6"   rx="9" fill="#9b59b6"/>
+  <text x="600" y="63"  text-anchor="middle" font-size="12" font-weight="bold" fill="#8e44ad">音频 &amp; 多模态</text>
+  <text x="508" y="82"  font-size="9.5" fill="#555">语音识别（ASR）</text>
+  <text x="508" y="97"  font-size="9.5" fill="#555">音频分类</text>
+  <text x="508" y="112" font-size="9.5" fill="#555">文本转语音（TTS）</text>
+  <text x="508" y="127" font-size="9.5" fill="#555">图文匹配（VQA）</text>
+  <text x="508" y="142" font-size="9.5" fill="#555">图像描述生成</text>
+  <text x="508" y="157" font-size="9.5" fill="#555">文档问答（DOC QA）</text>
+  <text x="508" y="172" font-size="9.5" fill="#555">零样本分类</text>
+</svg>
+
+<hr>
+
+<h2>Transformer 架构核心原理</h2>
+<p>在使用库之前，理解底层架构会让你知道为什么这样调参。</p>
+
+<h3>整体架构：Encoder-Decoder</h3>
+<p><img decoding="async" src="../wp-content/uploads/2026/05/runoob-cf08ae6f-a6fc-4a1b-8977-364df.png"></p>
+
+<h3>三大模型家族</h3>
+
+<svg viewBox="0 0 720 175" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="175" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">三大模型家族：架构 x 适用场景 x 代表模型</text>
+
+  <rect x="15"  y="38" width="220" height="125" rx="9" fill="#fff" stroke="#e74c3c" stroke-width="1.8"/>
+  <rect x="15"  y="38" width="220" height="6" rx="9" fill="#e74c3c"/>
+  <text x="125" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#c0392b">仅 Encoder 模型</text>
+  <text x="125" y="76" text-anchor="middle" font-size="10" fill="#555">双向注意力，理解全局上下文</text>
+  <text x="28"  y="96" font-size="9.5" fill="#555">适合：分类、NER、问答（理解类）</text>
+  <text x="28"  y="111" font-size="9.5" fill="#555">代表：BERT、RoBERTa、ALBERT</text>
+  <text x="28"  y="126" font-size="9.5" fill="#555">中文：BERT-wwm、MacBERT</text>
+  <text x="28"  y="141" font-size="9.5" fill="#555">特点：可同时看到全部输入</text>
+  <rect x="28" y="148" width="193" height="10" rx="3" fill="#fdecea"/>
+  <text x="124" y="157" text-anchor="middle" font-size="8" fill="#c0392b">输入 -> [CLS] 表示全局，[MASK] 做预训练</text>
+
+  <rect x="250" y="38" width="220" height="125" rx="9" fill="#fff" stroke="#3498db" stroke-width="1.8"/>
+  <rect x="250" y="38" width="220" height="6" rx="9" fill="#3498db"/>
+  <text x="360" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#2980b9">仅 Decoder 模型</text>
+  <text x="360" y="76" text-anchor="middle" font-size="10" fill="#555">因果注意力（只看左侧），自回归生成</text>
+  <text x="263" y="96" font-size="9.5" fill="#555">适合：文本生成、对话、代码生成</text>
+  <text x="263" y="111" font-size="9.5" fill="#555">代表：GPT 系列、LLaMA、Qwen</text>
+  <text x="263" y="126" font-size="9.5" fill="#555">中文：ChatGLM、Baichuan</text>
+  <text x="263" y="141" font-size="9.5" fill="#555">特点：逐词预测下一个词</text>
+  <rect x="263" y="148" width="193" height="10" rx="3" fill="#eaf4fb"/>
+  <text x="359" y="157" text-anchor="middle" font-size="8" fill="#2980b9">输入 -> 预测下一词 -> 拼接再预测 -> 循环</text>
+
+  <rect x="485" y="38" width="220" height="125" rx="9" fill="#fff" stroke="#2ecc71" stroke-width="1.8"/>
+  <rect x="485" y="38" width="220" height="6" rx="9" fill="#2ecc71"/>
+  <text x="595" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">Encoder-Decoder 模型</text>
+  <text x="595" y="76" text-anchor="middle" font-size="10" fill="#555">序列到序列（Seq2Seq）任务</text>
+  <text x="498" y="96" font-size="9.5" fill="#555">适合：翻译、摘要、问答生成</text>
+  <text x="498" y="111" font-size="9.5" fill="#555">代表：T5、BART、mT5</text>
+  <text x="498" y="126" font-size="9.5" fill="#555">中文：mT5、PEGASUS-Chinese</text>
+  <text x="498" y="141" font-size="9.5" fill="#555">特点：编码输入，解码生成输出</text>
+  <rect x="498" y="148" width="193" height="10" rx="3" fill="#eafaf1"/>
+  <text x="594" y="157" text-anchor="middle" font-size="8" fill="#27ae60">源序列 -> Encoder -> Decoder -> 目标序列</text>
+</svg>
+
+<hr>
+
+<h2>安装与环境配置</h2>
+
+<h3>安装</h3>
+
+<pre>
+# 基础安装
+pip install transformers
+
+# 完整安装（包含训练依赖）
+pip install transformers[torch]       # PyTorch 后端（推荐）
+pip install transformers[tf-cpu]      # TensorFlow 后端
+pip install transformers[flax]        # JAX/Flax 后端
+
+# 常用配套库
+pip install datasets          # HuggingFace 数据集库
+pip install evaluate          # 模型评估指标
+pip install accelerate        # 多GPU/混合精度训练
+pip install peft              # 参数高效微调（LoRA等）
+pip install tokenizers        # 高性能分词器
+pip install sentencepiece     # 部分模型（T5/LLaMA）需要
+
+# 验证安装
+python -c "import transformers; print(transformers.__version__)"</pre>
+
+<h3>环境变量配置</h3>
+
+<pre>
+# 设置模型缓存目录（模型下载后缓存到此路径，默认 ~/.cache/huggingface）
+export HF_HOME=/data/huggingface_cache
+
+# 国内用户：使用镜像站加速下载（推荐 hf-mirror.com）
+export HF_ENDPOINT=https://hf-mirror.com
+
+# 离线模式（网络不可用时，只使用已缓存的模型）
+export TRANSFORMERS_OFFLINE=1
+
+# 禁用进度条（CI/CD 环境）
+export DISABLE_TQDM=1</pre>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 也可以在代码中设置</span><br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;HF_ENDPOINT&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;https://hf-mirror.com&quot;</span><br />
+<br />
+<span style="color: #a50"># 查看当前缓存目录</span><br />
+<span style="color: Green;font-weight:bold;">from</span> transformers.<span style="color: #05a;">utils</span> <span style="color: Green;font-weight:bold;">import</span> TRANSFORMERS_CACHE<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>TRANSFORMERS_CACHE<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>Pipeline：五行代码跑 AI</h2>
+<p>Pipeline 是 Transformers 最高级别的抽象，把模型加载、预处理、推理、后处理全部封装好，三到五行代码即可完成推理。</p>
+
+<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="200" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Pipeline 内部工作流程</text>
+
+  <rect x="18"  y="50" width="118" height="115" rx="9" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1.5"/>
+  <text x="77"  y="74"  text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">原始输入</text>
+  <text x="77"  y="95"  text-anchor="middle" font-size="9"  fill="#888">文本 / 图像</text>
+  <text x="77"  y="110" text-anchor="middle" font-size="9"  fill="#888">音频 / 等数据</text>
+
+  <polygon points="140,107 156,100 156,114" fill="#bbb"/>
+
+  <rect x="160" y="50" width="130" height="115" rx="9" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="225" y="74"  text-anchor="middle" font-size="12" fill="#c0392b" font-weight="bold">预处理</text>
+  <text x="225" y="95"  text-anchor="middle" font-size="9"  fill="#888">Tokenizer 分词</text>
+  <text x="225" y="110" text-anchor="middle" font-size="9"  fill="#888">转为 token IDs</text>
+  <text x="225" y="125" text-anchor="middle" font-size="9"  fill="#888">Padding/Truncation</text>
+
+  <polygon points="293,107 309,100 309,114" fill="#bbb"/>
+
+  <rect x="312" y="50" width="130" height="115" rx="9" fill="#eaf4fb" stroke="#3498db" stroke-width="1.5"/>
+  <text x="377" y="74"  text-anchor="middle" font-size="12" fill="#2980b9" font-weight="bold">模型推理</text>
+  <text x="377" y="95"  text-anchor="middle" font-size="9"  fill="#888">前向传播</text>
+  <text x="377" y="110" text-anchor="middle" font-size="9"  fill="#888">输出 logits</text>
+  <text x="377" y="125" text-anchor="middle" font-size="9"  fill="#888">或隐藏层向量</text>
+
+  <polygon points="444,107 460,100 460,114" fill="#bbb"/>
+
+  <rect x="463" y="50" width="130" height="115" rx="9" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="528" y="74"  text-anchor="middle" font-size="12" fill="#27ae60" font-weight="bold">后处理</text>
+  <text x="528" y="95"  text-anchor="middle" font-size="9"  fill="#888">Softmax/Argmax</text>
+  <text x="528" y="110" text-anchor="middle" font-size="9"  fill="#888">解码 token->文字</text>
+  <text x="528" y="125" text-anchor="middle" font-size="9"  fill="#888">格式化输出</text>
+
+  <polygon points="595,107 611,100 611,114" fill="#bbb"/>
+
+  <rect x="614" y="50" width="90" height="115" rx="9" fill="#f5eafb" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="659" y="74"  text-anchor="middle" font-size="12" fill="#8e44ad" font-weight="bold">结果</text>
+  <text x="659" y="95"  text-anchor="middle" font-size="9"  fill="#888">标签/分数</text>
+  <text x="659" y="110" text-anchor="middle" font-size="9"  fill="#888">生成文本</text>
+
+  <text x="360" y="185" text-anchor="middle" font-size="10" fill="#888">Pipeline 自动完成全部步骤，用户只需传入原始输入，拿到格式化结果</text>
+</svg>
+
+<h3>Pipeline 快速示例大全</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+<span style="color: #a50"># 1. 情感分析（文本分类）</span><br />
+classifier <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;sentiment-analysis&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> classifier<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;I love using Hugging Face Transformers!&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; [{'label': 'POSITIVE', 'score': 0.9998}]</span><br />
+<br />
+<span style="color: #a50"># 2. 文本生成</span><br />
+generator <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;text-generation&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;gpt2&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> generator<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Once upon a time in a land far away,&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; max_new_tokens<span style="color: Gray;">=</span><span style="color: Maroon;">50</span><span style="color: Gray;">,</span> num_return_sequences<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> temperature<span style="color: Gray;">=</span><span style="color: Maroon;">0.8</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 3. 填空（掩码语言模型）</span><br />
+unmasker <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;fill-mask&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;bert-base-uncased&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> unmasker<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;The capital of France is [MASK].&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; [{'token_str': 'paris', 'score': 0.9823}, ...]</span><br />
+<br />
+<span style="color: #a50"># 4. 命名实体识别（NER）</span><br />
+ner <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ner&quot;</span><span style="color: Gray;">,</span> aggregation_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;simple&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> ner<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;My name is John and I work at Google in New York.&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; [{'entity_group': 'PER', 'word': 'John', 'score': 0.998}, ...]</span><br />
+<br />
+<span style="color: #a50"># 5. 抽取式问答</span><br />
+qa <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;question-answering&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> qa<span style="color: Olive;">&#40;</span>question<span style="color: Gray;">=</span><span style="color: #a11;">&quot;Who invented Python?&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; context<span style="color: Gray;">=</span><span style="color: #a11;">&quot;Python was created by Guido van Rossum in 1991.&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; {'answer': 'Guido van Rossum', 'score': 0.9887}</span><br />
+<br />
+<span style="color: #a50"># 6. 文本摘要</span><br />
+summarizer <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;summarization&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;facebook/bart-large-cnn&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> summarizer<span style="color: Olive;">&#40;</span>article<span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">60</span><span style="color: Gray;">,</span> min_length<span style="color: Gray;">=</span><span style="color: Maroon;">20</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 7. 机器翻译</span><br />
+translator <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;translation&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;Helsinki-NLP/opus-mt-en-zh&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> translator<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Hello, how are you today?&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; [{'translation_text': '你好，你今天怎么样？'}]</span><br />
+<br />
+<span style="color: #a50"># 8. 零样本分类（不需要专门训练）</span><br />
+zero_shot <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;zero-shot-classification&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> zero_shot<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;I love playing football&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; candidate_labels<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;sports&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;politics&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;technology&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; {'labels': ['sports', ...], 'scores': [0.972, ...]}</span><br />
+
+</div>
+</div>
+
+<h3>Pipeline 进阶配置</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+<span style="color: #a50"># 指定 GPU</span><br />
+pipe <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;text-generation&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;gpt2&quot;</span><span style="color: Gray;">,</span> device<span style="color: Gray;">=</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 指定精度（省显存）</span><br />
+pipe <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;text-generation&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;meta-llama/Llama-2-7b-hf&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; torch_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">float16</span><span style="color: Gray;">,</span> device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 批量处理（提升吞吐量）</span><br />
+pipe <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;sentiment-analysis&quot;</span><span style="color: Gray;">,</span> batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Olive;">&#41;</span><br />
+results <span style="color: Gray;">=</span> pipe<span style="color: Olive;">&#40;</span>large_text_list<span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 自动分批推理</span><br />
+<br />
+<span style="color: #a50"># 大文本分块处理</span><br />
+asr <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;automatic-speech-recognition&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;openai/whisper-large-v2&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; chunk_length_s<span style="color: Gray;">=</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> stride_length_s<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> asr<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;long_audio.wav&quot;</span><span style="color: Gray;">,</span> return_timestamps<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>Tokenizer 深度解析</h2>
+<p>Tokenizer 是 NLP 的第一步：把原始文本转换成模型能理解的数字序列。</p>
+
+<h3>Tokenization 完整流程</h3>
+
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="320" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Tokenization 完整过程：文本 -> 模型输入</text>
+
+  <rect x="18" y="50" width="680" height="40" rx="7" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1.5"/>
+  <text x="35" y="68" font-size="10" fill="#555" font-weight="bold">Step 1 原始文本：</text>
+  <text x="160" y="68" font-size="11" fill="#1a1a2e" font-family="monospace">"Hello, I'm learning Transformers! It's great."</text>
+
+  <line x1="360" y1="90" x2="360" y2="108" stroke="#bbb" stroke-width="1.5"/>
+  <polygon points="355,108 360,118 365,108" fill="#bbb"/>
+
+  <rect x="18" y="120" width="680" height="52" rx="7" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="35" y="140" font-size="10" fill="#c0392b" font-weight="bold">Step 2 分词（Tokenize）：</text>
+  <text x="35" y="158" font-size="10" fill="#1a1a2e" font-family="monospace">["Hello", ",", "I", "'m", "learning", "Transform", "##ers", "!", ...]</text>
+  <text x="35" y="168" font-size="9" fill="#888">WordPiece/BPE 子词分词：罕见词被拆分（Transformers -> Transform + ##ers）</text>
+
+  <line x1="360" y1="172" x2="360" y2="188" stroke="#bbb" stroke-width="1.5"/>
+  <polygon points="355,188 360,198 365,188" fill="#bbb"/>
+
+  <rect x="18" y="200" width="680" height="50" rx="7" fill="#fef9ec" stroke="#f39c12" stroke-width="1.5"/>
+  <text x="35" y="220" font-size="10" fill="#e67e22" font-weight="bold">Step 3 添加特殊标记：</text>
+  <text x="35" y="238" font-size="10" fill="#1a1a2e" font-family="monospace">["[CLS]", "Hello", ",", "I", "'m", "learning", "Transform", "##ers", ... "[SEP]"]</text>
+  <text x="35" y="246" font-size="9" fill="#888">[CLS]分类标记 [SEP]分隔符 [PAD]填充；不同模型特殊标记不同</text>
+
+  <line x1="360" y1="250" x2="360" y2="266" stroke="#bbb" stroke-width="1.5"/>
+  <polygon points="355,266 360,276 365,266" fill="#bbb"/>
+
+  <rect x="18" y="278" width="680" height="34" rx="7" fill="#eaf4fb" stroke="#3498db" stroke-width="1.5"/>
+  <text x="35" y="294" font-size="10" fill="#2980b9" font-weight="bold">Step 4 转换为 Token IDs：</text>
+  <text x="195" y="294" font-size="10" fill="#1a1a2e" font-family="monospace">[101, 7592, 1010, 1045, 1005, 1049, 4083, 19081, 2121, ... 102]</text>
+  <text x="35" y="308" font-size="9" fill="#888">每个 token 映射到词表中的整数索引，送入模型 Embedding 层</text>
+</svg>
+
+<h3>Tokenizer 核心用法</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoTokenizer<br />
+<br />
+<span style="color: #a50"># 加载 Tokenizer</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;bert-base-uncased&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 一步完成编码</span><br />
+encoding <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;Hello, I'm learning Transformers!&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 返回 PyTorch tensor</span><br />
+&nbsp; &nbsp; padding<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 填充到最长序列</span><br />
+&nbsp; &nbsp; truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 超出长度时截断</span><br />
+&nbsp; &nbsp; max_length<span style="color: Gray;">=</span><span style="color: Maroon;">128</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 最大长度</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>encoding.<span style="color: #05a;">keys</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; dict_keys(['input_ids', 'token_type_ids', 'attention_mask'])</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>encoding<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;input_ids&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>:<span style="color: Maroon;">8</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; tensor([101, 7592, 1010, 1045, 1005, 1049, 4083, 19081])</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>encoding<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;attention_mask&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>:<span style="color: Maroon;">8</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; tensor([1, 1, 1, 1, 1, 1, 1, 1]) &nbsp; &nbsp;# 1=真实token, 0=填充</span><br />
+<br />
+<span style="color: #a50"># 解码（ID -&gt; 文本）</span><br />
+decoded <span style="color: Gray;">=</span> tokenizer.<span style="color: #05a;">decode</span><span style="color: Olive;">&#40;</span>encoding<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;input_ids&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> skip_special_tokens<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>decoded<span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># -&gt; &quot;hello, i'm learning transformers!&quot;</span><br />
+<br />
+<span style="color: #a50"># 批量编码（自动 padding 对齐）</span><br />
+texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;Short.&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;This is a much longer sentence for testing.&quot;</span><span style="color: Olive;">&#93;</span><br />
+batch <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>texts<span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>batch<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;input_ids&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># -&gt; torch.Size([2, 10])</span><br />
+<br />
+<span style="color: #a50"># 词表信息</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;词表大小: {tokenizer.vocab_size}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># -&gt; 30522</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;[CLS] ID: {tokenizer.cls_token_id}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># -&gt; 101</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;[SEP] ID: {tokenizer.sep_token_id}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp; <span style="color: #a50"># -&gt; 102</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;最大长度: {tokenizer.model_max_length}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># -&gt; 512</span><br />
+
+</div>
+</div>
+
+<h3>常见 Tokenizer 类型对比</h3>
+
+<svg viewBox="0 0 720 185" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="185" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="24" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">三种主流分词算法对比</text>
+
+  <rect x="15" y="36" width="690" height="28" fill="#1a1a2e" rx="6"/>
+  <text x="105" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">算法</text>
+  <text x="270" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">原理</text>
+  <text x="460" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">示例分词</text>
+  <text x="635" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">代表模型</text>
+
+  <rect x="15" y="66" width="690" height="36" fill="#fff" rx="3"/>
+  <text x="105" y="85" text-anchor="middle" font-size="11" fill="#e74c3c" font-weight="bold">BPE</text>
+  <text x="105" y="98" text-anchor="middle" font-size="9"  fill="#888">Byte Pair Encoding</text>
+  <text x="270" y="80" text-anchor="middle" font-size="9.5" fill="#555">统计高频字符对合并</text>
+  <text x="270" y="94" text-anchor="middle" font-size="9.5" fill="#555">学习最优子词词表</text>
+  <text x="460" y="80" text-anchor="middle" font-size="9" fill="#555" font-family="monospace">"transformers" -></text>
+  <text x="460" y="95" text-anchor="middle" font-size="9" fill="#555" font-family="monospace">["transform", "ers"]</text>
+  <text x="635" y="88" text-anchor="middle" font-size="9.5" fill="#e74c3c">GPT / RoBERTa</text>
+
+  <rect x="15" y="104" width="690" height="36" fill="#fafafa" rx="3"/>
+  <text x="105" y="123" text-anchor="middle" font-size="11" fill="#3498db" font-weight="bold">WordPiece</text>
+  <text x="270" y="118" text-anchor="middle" font-size="9.5" fill="#555">最大化语言模型概率</text>
+  <text x="270" y="132" text-anchor="middle" font-size="9.5" fill="#555">## 前缀标记子词</text>
+  <text x="460" y="118" text-anchor="middle" font-size="9" fill="#555" font-family="monospace">"transformers" -></text>
+  <text x="460" y="133" text-anchor="middle" font-size="9" fill="#555" font-family="monospace">["transform", "##ers"]</text>
+  <text x="635" y="126" text-anchor="middle" font-size="9.5" fill="#3498db">BERT / DistilBERT</text>
+
+  <rect x="15" y="142" width="690" height="36" fill="#fff" rx="3"/>
+  <text x="105" y="158" text-anchor="middle" font-size="11" fill="#2ecc71" font-weight="bold">SentencePiece</text>
+  <text x="105" y="170" text-anchor="middle" font-size="9"  fill="#888">Unigram / BPE 变体</text>
+  <text x="270" y="156" text-anchor="middle" font-size="9.5" fill="#555">语言无关，直接处理</text>
+  <text x="270" y="170" text-anchor="middle" font-size="9.5" fill="#555">原始字节，开头标记词首</text>
+  <text x="460" y="156" text-anchor="middle" font-size="9" fill="#555" font-family="monospace">"transformers" -></text>
+  <text x="460" y="170" text-anchor="middle" font-size="9" fill="#555" font-family="monospace">["_transform", "ers"]</text>
+  <text x="635" y="162" text-anchor="middle" font-size="9.5" fill="#2ecc71">T5 / LLaMA / Qwen</text>
+</svg>
+
+<hr>
+
+<h2>模型加载与推理</h2>
+
+<h3>AutoClass：自动选择正确的模型类</h3>
+
+<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="200" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">AutoClass 工作原理：自动匹配正确的模型架构</text>
+
+  <rect x="18" y="50" width="180" height="55" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1.5"/>
+  <text x="108" y="72" text-anchor="middle" font-size="11" fill="#2c3e50" font-weight="bold">模型名称</text>
+  <text x="108" y="90" text-anchor="middle" font-size="10" fill="#555" font-family="monospace">"bert-base-uncased"</text>
+  <text x="108" y="104" text-anchor="middle" font-size="9"  fill="#888">或本地路径</text>
+
+  <polygon points="202,78 218,71 218,85" fill="#bbb"/>
+
+  <rect x="222" y="42" width="200" height="70" rx="8" fill="#1a1a2e"/>
+  <text x="322" y="63" text-anchor="middle" font-size="11" fill="#f5a623" font-weight="bold">AutoClass</text>
+  <text x="322" y="80" text-anchor="middle" font-size="9"  fill="#aaa">读取 config.json</text>
+  <text x="322" y="95" text-anchor="middle" font-size="9"  fill="#aaa">匹配架构类型</text>
+  <text x="322" y="108" text-anchor="middle" font-size="8" fill="#7f8c8d">AutoModel / AutoTokenizer / ...</text>
+
+  <polygon points="426,77 442,70 442,84" fill="#bbb"/>
+
+  <rect x="446" y="42" width="260" height="70" rx="8" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="576" y="63" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">自动返回正确的类</text>
+  <text x="576" y="80" text-anchor="middle" font-size="9"  fill="#555">BertForSequenceClassification</text>
+  <text x="576" y="94" text-anchor="middle" font-size="9"  fill="#555">GPT2LMHeadModel</text>
+  <text x="576" y="108" text-anchor="middle" font-size="9"  fill="#555">T5ForConditionalGeneration ...</text>
+
+  <text x="360" y="138" text-anchor="middle" font-size="10" fill="#555" font-weight="bold">常用 AutoClass 速查：</text>
+  <rect x="18"  y="148" width="155" height="42" rx="6" fill="#fdecea" stroke="#e74c3c" stroke-width="1"/>
+  <text x="95"  y="164" text-anchor="middle" font-size="9.5" fill="#c0392b" font-weight="bold">AutoTokenizer</text>
+  <text x="95"  y="180" text-anchor="middle" font-size="8.5" fill="#888">自动分词器</text>
+
+  <rect x="183" y="148" width="165" height="42" rx="6" fill="#eaf4fb" stroke="#3498db" stroke-width="1"/>
+  <text x="265" y="164" text-anchor="middle" font-size="9.5" fill="#2980b9" font-weight="bold">AutoModel</text>
+  <text x="265" y="180" text-anchor="middle" font-size="8.5" fill="#888">基础模型（输出隐藏层）</text>
+
+  <rect x="358" y="148" width="200" height="42" rx="6" fill="#eafaf1" stroke="#2ecc71" stroke-width="1"/>
+  <text x="458" y="164" text-anchor="middle" font-size="9.5" fill="#27ae60" font-weight="bold">AutoModelForSeqClass</text>
+  <text x="458" y="180" text-anchor="middle" font-size="8.5" fill="#888">文本分类任务</text>
+
+  <rect x="568" y="148" width="135" height="42" rx="6" fill="#f5eafb" stroke="#9b59b6" stroke-width="1"/>
+  <text x="635" y="164" text-anchor="middle" font-size="9.5" fill="#8e44ad" font-weight="bold">AutoModelForCausalLM</text>
+  <text x="635" y="180" text-anchor="middle" font-size="8.5" fill="#888">文本生成任务</text>
+</svg>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoTokenizer<span style="color: Gray;">,</span> AutoModelForSequenceClassification<br />
+<br />
+model_name <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;bert-base-uncased&quot;</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>model_name<span style="color: Olive;">&#41;</span><br />
+model <span style="color: Gray;">=</span> AutoModelForSequenceClassification.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model_name<span style="color: Gray;">,</span> num_labels<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> torch_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">float16</span><span style="color: Gray;">,</span> device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 手动推理完整流程</span><br />
+text <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;Transformers is an amazing library!&quot;</span><br />
+<br />
+<span style="color: #a50"># 1. 编码</span><br />
+inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Gray;">,</span> truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span><br />
+inputs <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span>k: v.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">device</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> k<span style="color: Gray;">,</span> v <span style="color: Green;font-weight:bold;">in</span> inputs.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># 2. 前向传播</span><br />
+<span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>**inputs<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 3. 解析输出</span><br />
+logits <span style="color: Gray;">=</span> outputs.<span style="color: #05a;">logits</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># shape: [1, 2]</span><br />
+probs &nbsp;<span style="color: Gray;">=</span> torch.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+pred &nbsp; <span style="color: Gray;">=</span> torch.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>probs<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+id2label <span style="color: Gray;">=</span> model.<span style="color: #05a;">config</span>.<span style="color: #05a;">id2label</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># {0: 'LABEL_0', 1: 'LABEL_1'}</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;预测类别: {id2label[pred]}, 置信度: {probs[0][pred]:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>提取句子向量</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoModel<span style="color: Gray;">,</span> AutoTokenizer<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<br />
+model <span style="color: Gray;">=</span> AutoModel.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;bert-base-uncased&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;bert-base-uncased&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> get_sentence_embedding<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> torch.<span style="color: #05a;">Tensor</span>:<br />
+&nbsp; &nbsp; inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Gray;">,</span> truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>**inputs<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 对所有 token 做均值池化（Mean Pooling）</span><br />
+&nbsp; &nbsp; token_embeddings <span style="color: Gray;">=</span> outputs.<span style="color: #05a;">last_hidden_state</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># [1, seq_len, 768]</span><br />
+&nbsp; &nbsp; attention_mask <span style="color: Gray;">=</span> inputs<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;attention_mask&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">unsqueeze</span><span style="color: Olive;">&#40;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; mean_embedding <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>token_embeddings * attention_mask<span style="color: Olive;">&#41;</span>.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> / attention_mask.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> mean_embedding &nbsp;<span style="color: #a50"># [1, 768]</span><br />
+<br />
+vec <span style="color: Gray;">=</span> get_sentence_embedding<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Hello world&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>vec.<span style="color: #05a;">shape</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># -&gt; torch.Size([1, 768])</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>十大常见任务实战</h2>
+
+<h3>文本分类（情感分析）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoTokenizer<span style="color: Gray;">,</span> AutoModelForSequenceClassification<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<br />
+model_name <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;cardiffnlp/twitter-roberta-base-sentiment-latest&quot;</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>model_name<span style="color: Olive;">&#41;</span><br />
+model <span style="color: Gray;">=</span> AutoModelForSequenceClassification.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>model_name<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> predict_sentiment<span style="color: Olive;">&#40;</span>texts<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>texts<span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Gray;">,</span> padding<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; logits <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>**inputs<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">logits</span><br />
+&nbsp; &nbsp; probs <span style="color: Gray;">=</span> torch.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; results <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> t <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span>texts<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; pid <span style="color: Gray;">=</span> probs<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span>.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; results.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: t<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;label&quot;</span>: model.<span style="color: #05a;">config</span>.<span style="color: #05a;">id2label</span><span style="color: Olive;">&#91;</span>pid<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a11;">&quot;score&quot;</span>: <span style="color: Teal;">round</span><span style="color: Olive;">&#40;</span>probs<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>pid<span style="color: Olive;">&#93;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">4</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> results<br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>predict_sentiment<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;I love this!&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;This is terrible.&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; [{'text': 'I love this!', 'label': 'positive', 'score': 0.9756}, ...]</span><br />
+
+</div>
+</div>
+
+<h3>文本生成（对话 / 续写）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoTokenizer<span style="color: Gray;">,</span> AutoModelForCausalLM<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<br />
+model_name <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;Qwen/Qwen2-1.5B-Instruct&quot;</span> &nbsp; &nbsp; <span style="color: #a50"># 阿里通义千问（支持中文）</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>model_name<span style="color: Olive;">&#41;</span><br />
+model <span style="color: Gray;">=</span> AutoModelForCausalLM.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model_name<span style="color: Gray;">,</span> torch_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">float16</span><span style="color: Gray;">,</span> device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+messages <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;system&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;你是一个有用的 AI 助手。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;请用三句话解释什么是 Transformer？&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#93;</span><br />
+text <span style="color: Gray;">=</span> tokenizer.<span style="color: #05a;">apply_chat_template</span><span style="color: Olive;">&#40;</span>messages<span style="color: Gray;">,</span> <span style="color: #05a;">tokenize</span><span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; add_generation_prompt<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">device</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; output_ids <span style="color: Gray;">=</span> model.<span style="color: #05a;">generate</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; **inputs<span style="color: Gray;">,</span> max_new_tokens<span style="color: Gray;">=</span><span style="color: Maroon;">300</span><span style="color: Gray;">,</span> temperature<span style="color: Gray;">=</span><span style="color: Maroon;">0.7</span><span style="color: Gray;">,</span> top_p<span style="color: Gray;">=</span><span style="color: Maroon;">0.9</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; do_sample<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> repetition_penalty<span style="color: Gray;">=</span><span style="color: Maroon;">1.1</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; pad_token_id<span style="color: Gray;">=</span>tokenizer.<span style="color: #05a;">eos_token_id</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+new_tokens <span style="color: Gray;">=</span> output_ids<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>inputs<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;input_ids&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">shape</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>:<span style="color: Olive;">&#93;</span><br />
+response <span style="color: Gray;">=</span> tokenizer.<span style="color: #05a;">decode</span><span style="color: Olive;">&#40;</span>new_tokens<span style="color: Gray;">,</span> skip_special_tokens<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>response<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>命名实体识别（NER）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+ner <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ner&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;dslim/bert-base-NER&quot;</span><span style="color: Gray;">,</span> aggregation_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;simple&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> ner<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Elon Musk founded SpaceX in 2002 and Tesla Motors in 2003.&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> entity <span style="color: Green;font-weight:bold;">in</span> result:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;{entity['word']:&lt;20} -&gt; {entity['entity_group']} ({entity['score']:.3f})&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 中文 NER</span><br />
+ner_cn <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ner&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;hfl/chinese-bert-wwm-ext-ner-msra&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;aggregation_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;simple&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> ner_cn<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;小明在北京大学读书，后来去了阿里巴巴工作。&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>机器翻译</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+<span style="color: #a50"># 英译中</span><br />
+translator <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;translation&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;Helsinki-NLP/opus-mt-en-zh&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> translator<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Artificial intelligence is transforming the world.&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;translation_text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># -&gt; 人工智能正在改变世界。</span><br />
+<br />
+<span style="color: #a50"># 中译英</span><br />
+translator_zh <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;translation&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;Helsinki-NLP/opus-mt-zh-en&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> translator_zh<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;人工智能正在改变世界。&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;translation_text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>文本摘要</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+summarizer <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;summarization&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;facebook/bart-large-cnn&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> summarizer<span style="color: Olive;">&#40;</span>long_text<span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">80</span><span style="color: Gray;">,</span> min_length<span style="color: Gray;">=</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;do_sample<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> no_repeat_ngram_size<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;summary_text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>微调（Fine-tuning）</h2>
+<p>微调是将预训练模型适配到你的特定任务和数据上，是 Transformers 最重要的应用场景。</p>
+
+<h3>微调流程全景</h3>
+
+<svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="310" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Transformers 微调完整流程</text>
+
+  <rect x="18"  y="48" width="128" height="240" rx="9" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+  <rect x="18"  y="48" width="128" height="5" rx="9" fill="#e74c3c"/>
+  <text x="82" y="68"  text-anchor="middle" font-size="12" fill="#c0392b" font-weight="bold">准备数据</text>
+  <text x="28" y="92"  font-size="9" fill="#555">数据集加载</text>
+  <text x="28" y="108" font-size="9" fill="#555">HF datasets</text>
+  <text x="28" y="124" font-size="9" fill="#555">or 自定义 CSV</text>
+  <text x="28" y="148" font-size="9" fill="#555">Tokenize 编码</text>
+  <text x="28" y="164" font-size="9" fill="#555">Padding 对齐</text>
+  <text x="28" y="180" font-size="9" fill="#555">DataLoader</text>
+  <text x="28" y="210" font-size="9" fill="#e74c3c">关键：数据质量</text>
+  <text x="28" y="224" font-size="9" fill="#e74c3c">> 数据数量</text>
+
+  <polygon points="150,168 165,161 165,175" fill="#bbb"/>
+
+  <rect x="169" y="48" width="128" height="240" rx="9" fill="#fff" stroke="#f39c12" stroke-width="1.5"/>
+  <rect x="169" y="48" width="128" height="5" rx="9" fill="#f39c12"/>
+  <text x="233" y="68"  text-anchor="middle" font-size="12" fill="#e67e22" font-weight="bold">加载模型</text>
+  <text x="179" y="92"  font-size="9" fill="#555">AutoModelForTask</text>
+  <text x="179" y="108" font-size="9" fill="#555">指定 num_labels</text>
+  <text x="179" y="124" font-size="9" fill="#555">冻结底层参数</text>
+  <text x="179" y="148" font-size="9" fill="#555">（可选）</text>
+  <text x="179" y="164" font-size="9" fill="#555">只微调顶层</text>
+  <text x="179" y="210" font-size="9" fill="#e67e22">技巧：小数据集</text>
+  <text x="179" y="224" font-size="9" fill="#e67e22">先冻结底层</text>
+
+  <polygon points="301,168 316,161 316,175" fill="#bbb"/>
+
+  <rect x="320" y="48" width="128" height="240" rx="9" fill="#fff" stroke="#2ecc71" stroke-width="1.5"/>
+  <rect x="320" y="48" width="128" height="5" rx="9" fill="#2ecc71"/>
+  <text x="384" y="68"  text-anchor="middle" font-size="12" fill="#27ae60" font-weight="bold">训练配置</text>
+  <text x="330" y="92"  font-size="9" fill="#555">TrainingArguments</text>
+  <text x="330" y="108" font-size="9" fill="#555">学习率：2e-5</text>
+  <text x="330" y="124" font-size="9" fill="#555">Batch：32</text>
+  <text x="330" y="140" font-size="9" fill="#555">Epochs：3~5</text>
+  <text x="330" y="156" font-size="9" fill="#555">Warmup 步数</text>
+  <text x="330" y="172" font-size="9" fill="#555">权重衰减</text>
+  <text x="330" y="210" font-size="9" fill="#27ae60">技巧：学习率</text>
+  <text x="330" y="224" font-size="9" fill="#27ae60">最重要</text>
+
+  <polygon points="452,168 467,161 467,175" fill="#bbb"/>
+
+  <rect x="471" y="48" width="128" height="240" rx="9" fill="#fff" stroke="#3498db" stroke-width="1.5"/>
+  <rect x="471" y="48" width="128" height="5" rx="9" fill="#3498db"/>
+  <text x="535" y="68"  text-anchor="middle" font-size="12" fill="#2980b9" font-weight="bold">训练 &amp; 评估</text>
+  <text x="481" y="92"  font-size="9" fill="#555">Trainer.train()</text>
+  <text x="481" y="108" font-size="9" fill="#555">监控 loss 曲线</text>
+  <text x="481" y="124" font-size="9" fill="#555">验证集评估</text>
+  <text x="481" y="140" font-size="9" fill="#555">Early stopping</text>
+  <text x="481" y="156" font-size="9" fill="#555">保存最优 ckpt</text>
+  <text x="481" y="210" font-size="9" fill="#2980b9">注意：过拟合</text>
+  <text x="481" y="224" font-size="9" fill="#2980b9">对比基线</text>
+
+  <polygon points="603,168 618,161 618,175" fill="#bbb"/>
+
+  <rect x="622" y="48" width="80" height="240" rx="9" fill="#fff" stroke="#9b59b6" stroke-width="1.5"/>
+  <rect x="622" y="48" width="80" height="5" rx="9" fill="#9b59b6"/>
+  <text x="662" y="68"  text-anchor="middle" font-size="12" fill="#8e44ad" font-weight="bold">保存</text>
+  <text x="632" y="92"  font-size="9" fill="#555">save_model()</text>
+  <text x="632" y="108" font-size="9" fill="#555">save_pretrained</text>
+  <text x="632" y="124" font-size="9" fill="#555">推送 Hub</text>
+  <text x="632" y="148" font-size="9" fill="#888">生产部署</text>
+  <text x="632" y="164" font-size="9" fill="#888">量化推理</text>
+  <text x="632" y="180" font-size="9" fill="#888">ONNX 导出</text>
+
+  <text x="360" y="305" text-anchor="middle" font-size="10" fill="#888">使用 HuggingFace Trainer 可以大幅简化训练流程，自动处理梯度累积、混合精度、分布式训练等</text>
+</svg>
+
+<h3>完整微调示例：文本分类</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> datasets <span style="color: Green;font-weight:bold;">import</span> load_dataset<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; AutoTokenizer<span style="color: Gray;">,</span> AutoModelForSequenceClassification<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; TrainingArguments<span style="color: Gray;">,</span> Trainer<span style="color: Gray;">,</span> DataCollatorWithPadding<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; EarlyStoppingCallback<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">import</span> evaluate<span style="color: Gray;">,</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># 1. 加载数据集</span><br />
+dataset <span style="color: Gray;">=</span> load_dataset<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;imdb&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># HF Hub 公开数据集</span><br />
+<br />
+<span style="color: #a50"># 2. Tokenizer + 预处理</span><br />
+MODEL_NAME <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;bert-base-uncased&quot;</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>MODEL_NAME<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> tokenize_fn<span style="color: Olive;">&#40;</span>examples<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> tokenizer<span style="color: Olive;">&#40;</span>examples<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span><br />
+<br />
+tokenized_ds <span style="color: Gray;">=</span> dataset.<span style="color: Teal;">map</span><span style="color: Olive;">&#40;</span>tokenize_fn<span style="color: Gray;">,</span> batched<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;remove_columns<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+tokenized_ds <span style="color: Gray;">=</span> tokenized_ds.<span style="color: #05a;">rename_column</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;label&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;labels&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenized_ds.<span style="color: #05a;">set_format</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;torch&quot;</span><span style="color: Olive;">&#41;</span><br />
+data_collator <span style="color: Gray;">=</span> DataCollatorWithPadding<span style="color: Olive;">&#40;</span>tokenizer<span style="color: Gray;">=</span>tokenizer<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 3. 加载模型</span><br />
+model <span style="color: Gray;">=</span> AutoModelForSequenceClassification.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; MODEL_NAME<span style="color: Gray;">,</span> num_labels<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; id2label<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">&quot;NEGATIVE&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span>: <span style="color: #a11;">&quot;POSITIVE&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; label2id<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;NEGATIVE&quot;</span>: <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;POSITIVE&quot;</span>: <span style="color: Maroon;">1</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 4. 评估指标</span><br />
+accuracy <span style="color: Gray;">=</span> evaluate.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;accuracy&quot;</span><span style="color: Olive;">&#41;</span><br />
+f1 <span style="color: Gray;">=</span> evaluate.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;f1&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">def</span> compute_metrics<span style="color: Olive;">&#40;</span>eval_pred<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; logits<span style="color: Gray;">,</span> labels <span style="color: Gray;">=</span> eval_pred<br />
+&nbsp; &nbsp; preds <span style="color: Gray;">=</span> np.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> axis<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;accuracy&quot;</span>: accuracy.<span style="color: #05a;">compute</span><span style="color: Olive;">&#40;</span>predictions<span style="color: Gray;">=</span>preds<span style="color: Gray;">,</span> references<span style="color: Gray;">=</span>labels<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;accuracy&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;f1&quot;</span>: f1.<span style="color: #05a;">compute</span><span style="color: Olive;">&#40;</span>predictions<span style="color: Gray;">=</span>preds<span style="color: Gray;">,</span> references<span style="color: Gray;">=</span>labels<span style="color: Gray;">,</span> average<span style="color: Gray;">=</span><span style="color: #a11;">&quot;binary&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;f1&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># 5. 训练参数</span><br />
+training_args <span style="color: Gray;">=</span> TrainingArguments<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; output_dir<span style="color: Gray;">=</span><span style="color: #a11;">&quot;./results&quot;</span><span style="color: Gray;">,</span> num_train_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; per_device_train_batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> per_device_eval_batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; gradient_accumulation_steps<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> learning_rate<span style="color: Gray;">=</span><span style="color: Maroon;">2e-5</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; weight_decay<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Gray;">,</span> warmup_ratio<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; evaluation_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;steps&quot;</span><span style="color: Gray;">,</span> eval_steps<span style="color: Gray;">=</span><span style="color: Maroon;">500</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; save_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;steps&quot;</span><span style="color: Gray;">,</span> save_steps<span style="color: Gray;">=</span><span style="color: Maroon;">500</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; load_best_model_at_end<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> metric_for_best_model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;f1&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; fp16<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> logging_steps<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span> seed<span style="color: Gray;">=</span><span style="color: Maroon;">42</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 6. 创建 Trainer 并训练</span><br />
+trainer <span style="color: Gray;">=</span> Trainer<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span> args<span style="color: Gray;">=</span>training_args<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; train_dataset<span style="color: Gray;">=</span>tokenized_ds<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;train&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; eval_dataset<span style="color: Gray;">=</span>tokenized_ds<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;test&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; tokenizer<span style="color: Gray;">=</span>tokenizer<span style="color: Gray;">,</span> data_collator<span style="color: Gray;">=</span>data_collator<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; compute_metrics<span style="color: Gray;">=</span>compute_metrics<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; callbacks<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>EarlyStoppingCallback<span style="color: Olive;">&#40;</span>early_stopping_patience<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+trainer.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 7. 评估并保存</span><br />
+eval_result <span style="color: Gray;">=</span> trainer.<span style="color: #05a;">evaluate</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;准确率: {eval_result['eval_accuracy']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;F1: {eval_result['eval_f1']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+trainer.<span style="color: #05a;">save_model</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-sentiment-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-sentiment-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>LoRA 参数高效微调（推荐）</h3>
+
+<svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="220" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">LoRA 原理：只训练低秩矩阵，冻结原始权重</text>
+
+  <rect x="30" y="48" width="290" height="150" rx="9" fill="#fff" stroke="#e74c3c" stroke-width="1.8"/>
+  <rect x="30" y="48" width="290" height="6"   rx="9" fill="#e74c3c"/>
+  <text x="175" y="68"  text-anchor="middle" font-size="11" font-weight="bold" fill="#c0392b">全量微调（Full Fine-tuning）</text>
+  <rect x="50"  y="82"  width="250" height="50" rx="6" fill="#fdecea" stroke="#e74c3c" stroke-width="1"/>
+  <text x="175" y="107" text-anchor="middle" font-size="11" fill="#c0392b">W + ΔW</text>
+  <text x="175" y="123" text-anchor="middle" font-size="9"  fill="#888">更新全部权重矩阵</text>
+  <text x="50"  y="155" font-size="9" fill="#555">参数量：全部（如 7B 参数全训）</text>
+  <text x="50"  y="169" font-size="9" fill="#555">显存需求：极高（需 4x 模型大小）</text>
+  <text x="50"  y="183" font-size="9" fill="#e74c3c">成本：昂贵，需要大量 GPU</text>
+
+  <rect x="400" y="48" width="290" height="150" rx="9" fill="#fff" stroke="#2ecc71" stroke-width="1.8"/>
+  <rect x="400" y="48" width="290" height="6"   rx="9" fill="#2ecc71"/>
+  <text x="545" y="68"  text-anchor="middle" font-size="11" font-weight="bold" fill="#27ae60">LoRA 微调</text>
+  <rect x="420" y="82" width="115" height="50" rx="6" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+  <text x="477" y="104" text-anchor="middle" font-size="11" fill="#7f8c8d">W（冻结）</text>
+  <text x="477" y="120" text-anchor="middle" font-size="9"  fill="#aaa">不参与训练</text>
+  <text x="545" y="108" text-anchor="middle" font-size="14" fill="#555">+</text>
+  <rect x="558" y="82" width="115" height="50" rx="6" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="615" y="101" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">B x A</text>
+  <text x="615" y="115" text-anchor="middle" font-size="8"  fill="#888">r << d（低秩矩阵）</text>
+  <text x="615" y="128" text-anchor="middle" font-size="8"  fill="#2ecc71">只训练这里</text>
+  <text x="420" y="155" font-size="9" fill="#555">参数量：原来的 0.1%～1%</text>
+  <text x="420" y="169" font-size="9" fill="#555">显存需求：低（只存低秩矩阵梯度）</text>
+  <text x="420" y="183" font-size="9" fill="#2ecc71">成本：单卡 24GB 可微调 7B</text>
+
+  <text x="360" y="210" text-anchor="middle" font-size="10" fill="#888">LoRA 将 ΔW 分解为两个低秩矩阵，r 远小于 d（通常 r=8~64），大幅降低训练成本</text>
+</svg>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> peft <span style="color: Green;font-weight:bold;">import</span> LoraConfig<span style="color: Gray;">,</span> get_peft_model<span style="color: Gray;">,</span> TaskType<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> AutoModelForCausalLM<span style="color: Gray;">,</span> AutoTokenizer<span style="color: Gray;">,</span> TrainingArguments<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<br />
+model_name <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;meta-llama/Llama-2-7b-hf&quot;</span><br />
+model <span style="color: Gray;">=</span> AutoModelForCausalLM.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model_name<span style="color: Gray;">,</span> torch_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">float16</span><span style="color: Gray;">,</span> device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; load_in_4bit<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 4-bit 量化加载（QLoRA），进一步省显存</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 配置 LoRA</span><br />
+lora_config <span style="color: Gray;">=</span> LoraConfig<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; task_type<span style="color: Gray;">=</span>TaskType.<span style="color: #05a;">CAUSAL_LM</span><span style="color: Gray;">,</span> r<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> lora_alpha<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; lora_dropout<span style="color: Gray;">=</span><span style="color: Maroon;">0.05</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; target_modules<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;q_proj&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;v_proj&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;k_proj&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;o_proj&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+model <span style="color: Gray;">=</span> get_peft_model<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> lora_config<span style="color: Olive;">&#41;</span><br />
+model.<span style="color: #05a;">print_trainable_parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># -&gt; trainable: 4,194,304 || all: 6,742,609,920 || 0.0622%</span><br />
+
+</div>
+</div>
+
+<blockquote><p>LoRA 优势：只训练不到 1% 的参数，显存降低 60-70%，速度快 2-3 倍，权重文件仅几 MB，可为同一基础模型保存多个 LoRA 适配器用于不同任务。</p></blockquote>
+
+<hr>
+
+<h2>模型保存、加载与发布</h2>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 本地保存</span><br />
+model.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 本地加载</span><br />
+model <span style="color: Gray;">=</span> AutoModelForSequenceClassification.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 发布到 HuggingFace Hub</span><br />
+<span style="color: Green;font-weight:bold;">from</span> huggingface_hub <span style="color: Green;font-weight:bold;">import</span> login<br />
+login<span style="color: Olive;">&#40;</span><span style="color: #05a;">token</span><span style="color: Gray;">=</span><span style="color: #a11;">&quot;your_hf_token&quot;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># huggingface.co/settings/tokens</span><br />
+model.<span style="color: #05a;">push_to_hub</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;your-username/my-sentiment-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer.<span style="color: #05a;">push_to_hub</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;your-username/my-sentiment-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 通过 Trainer 直接发布</span><br />
+training_args <span style="color: Gray;">=</span> TrainingArguments<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; output_dir<span style="color: Gray;">=</span><span style="color: #a11;">&quot;your-username/my-model&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; push_to_hub<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> hub_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;every_save&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>性能优化技巧</h2>
+
+<h3>推理加速全景</h3>
+
+<svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="260" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">推理加速技术栈：从简单到深度优化</text>
+
+  <rect x="18" y="45" width="680" height="45" rx="8" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="30" y="63" font-size="11" fill="#27ae60" font-weight="bold">Level 1 - 零成本优化</text>
+  <text x="30" y="81" font-size="9.5" fill="#555">torch.no_grad() 推理 | fp16/bf16 半精度 | batch 推理 | device_map="auto" 自动分配设备</text>
+  <text x="550" y="72" font-size="9.5" fill="#27ae60">加速：1.5~2x</text>
+
+  <rect x="18" y="100" width="680" height="45" rx="8" fill="#eaf4fb" stroke="#3498db" stroke-width="1.5"/>
+  <text x="30" y="118" font-size="11" fill="#2980b9" font-weight="bold">Level 2 - 量化（模型压缩）</text>
+  <text x="30" y="136" font-size="9.5" fill="#555">bitsandbytes 4-bit/8-bit 量化 | GPTQ（后训练量化）| AWQ（激活感知量化）</text>
+  <text x="550" y="127" font-size="9.5" fill="#3498db">加速：2~4x，显存减半</text>
+
+  <rect x="18" y="155" width="680" height="45" rx="8" fill="#fef9ec" stroke="#f39c12" stroke-width="1.5"/>
+  <text x="30" y="173" font-size="11" fill="#e67e22" font-weight="bold">Level 3 - 编译与运行时优化</text>
+  <text x="30" y="191" font-size="9.5" fill="#555">torch.compile()（PyTorch 2.0）| FlashAttention-2 | xFormers | Optimum（TensorRT/ONNX）</text>
+  <text x="550" y="182" font-size="9.5" fill="#f39c12">加速：3~10x</text>
+
+  <rect x="18" y="210" width="680" height="40" rx="8" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="30" y="228" font-size="11" fill="#c0392b" font-weight="bold">Level 4 - 专用推理引擎</text>
+  <text x="30" y="244" font-size="9.5" fill="#555">vLLM（LLM 高吞吐推理）| TGI | TensorRT-LLM | llama.cpp（CPU）</text>
+  <text x="550" y="236" font-size="9.5" fill="#e74c3c">生产级，最高性能</text>
+</svg>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 4-bit 量化加载（13B 模型只需约 7GB 显存）</span><br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> BitsAndBytesConfig<span style="color: Gray;">,</span> AutoModelForCausalLM<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<br />
+quant_config <span style="color: Gray;">=</span> BitsAndBytesConfig<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; load_in_4bit<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> bnb_4bit_compute_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">float16</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; bnb_4bit_use_double_quant<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> bnb_4bit_quant_type<span style="color: Gray;">=</span><span style="color: #a11;">&quot;nf4&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+model <span style="color: Gray;">=</span> AutoModelForCausalLM.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;meta-llama/Llama-2-13b-hf&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; quantization_config<span style="color: Gray;">=</span>quant_config<span style="color: Gray;">,</span> device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># FlashAttention-2 加速（需 pip install flash-attn）</span><br />
+model <span style="color: Gray;">=</span> AutoModelForCausalLM.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;mistralai/Mistral-7B-v0.1&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; attn_implementation<span style="color: Gray;">=</span><span style="color: #a11;">&quot;flash_attention_2&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; torch_dtype<span style="color: Gray;">=</span>torch.<span style="color: #05a;">bfloat16</span><span style="color: Gray;">,</span> device_map<span style="color: Gray;">=</span><span style="color: #a11;">&quot;auto&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># torch.compile (PyTorch 2.0+)</span><br />
+model <span style="color: Gray;">=</span> torch.<span style="color: Teal;">compile</span><span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> mode<span style="color: Gray;">=</span><span style="color: #a11;">&quot;reduce-overhead&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>常见问题排查</h2>
+
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="320" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">常见报错与解决方案速查</text>
+
+  <rect x="15" y="36" width="690" height="28" fill="#1a1a2e" rx="6"/>
+  <text x="255" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">错误信息</text>
+  <text x="555" y="55" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">原因与解决方案</text>
+
+  <rect x="15" y="66" width="690" height="42" fill="#fff" rx="3"/>
+  <text x="25"  y="82" font-size="9" fill="#e74c3c" font-family="monospace">CUDA out of memory</text>
+  <text x="25"  y="98" font-size="8.5" fill="#888">显存不足</text>
+  <text x="270" y="82" font-size="9.5" fill="#555">减小 batch_size；加 gradient_accumulation_steps；用 fp16/4-bit；用更小模型</text>
+
+  <rect x="15" y="110" width="690" height="42" fill="#fafafa" rx="3"/>
+  <text x="25"  y="126" font-size="9" fill="#e74c3c" font-family="monospace">OSError: model not found</text>
+  <text x="25"  y="142" font-size="8.5" fill="#888">模型名称错误或网络问题</text>
+  <text x="270" y="126" font-size="9.5" fill="#555">检查拼写；设置 HF_ENDPOINT 镜像；已下载则用本地路径</text>
+
+  <rect x="15" y="154" width="690" height="42" fill="#fff" rx="3"/>
+  <text x="25"  y="170" font-size="9" fill="#e74c3c" font-family="monospace">ValueError: num_labels mismatch</text>
+  <text x="270" y="170" font-size="9.5" fill="#555">加载模型时显式指定 num_labels=你的类别数</text>
+
+  <rect x="15" y="198" width="690" height="42" fill="#fafafa" rx="3"/>
+  <text x="25"  y="214" font-size="9" fill="#e74c3c" font-family="monospace">tensors on different devices</text>
+  <text x="270" y="214" font-size="9.5" fill="#555">inputs = {k: v.to(model.device) for k, v in inputs.items()}</text>
+
+  <rect x="15" y="242" width="690" height="35" fill="#fff" rx="3"/>
+  <text x="25"  y="258" font-size="9" fill="#e74c3c" font-family="monospace">loss = NaN / loss 不下降</text>
+  <text x="270" y="258" font-size="9.5" fill="#555">检查学习率（太大会 NaN）；检查 labels 值域（0~N-1）；加 gradient_clipping</text>
+
+  <rect x="15" y="279" width="690" height="35" fill="#fafafa" rx="3"/>
+  <text x="25"  y="295" font-size="9" fill="#e74c3c" font-family="monospace">slow tokenizer / 速度慢</text>
+  <text x="270" y="295" font-size="9.5" fill="#555">pip install tokenizers 安装 Rust 快速版本；使用 use_fast=True（默认）</text>
+</svg>
+
+<hr>
+
+<h2>总结与学习路径</h2>
+
+<svg viewBox="0 0 720 250" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="250" fill="#1a1a2e" rx="12"/>
+  <text x="360" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Transformers 学习路径与核心知识点</text>
+
+  <rect x="15"  y="48" width="160" height="165" rx="10" fill="#e74c3c" opacity="0.9"/>
+  <text x="95"  y="70"  text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第一阶段</text>
+  <text x="95"  y="86"  text-anchor="middle" font-size="10" fill="#fcc">入门（1周）</text>
+  <text x="25"  y="108" font-size="9" fill="#fff">pip install 配置环境</text>
+  <text x="25"  y="124" font-size="9" fill="#fff">Pipeline 跑通 5 个任务</text>
+  <text x="25"  y="140" font-size="9" fill="#fff">理解 Tokenizer 流程</text>
+  <text x="25"  y="156" font-size="9" fill="#fff">AutoModel 手动推理</text>
+  <text x="25"  y="172" font-size="9" fill="#fff">理解 Encoder/Decoder</text>
+  <text x="25"  y="188" font-size="9" fill="#fff">读懂模型输出结构</text>
+
+  <polygon points="178,130 193,123 193,137" fill="#aaa"/>
+
+  <rect x="197" y="48" width="160" height="165" rx="10" fill="#f39c12" opacity="0.9"/>
+  <text x="277" y="70"  text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第二阶段</text>
+  <text x="277" y="86"  text-anchor="middle" font-size="10" fill="#fde">进阶（2周）</text>
+  <text x="207" y="108" font-size="9" fill="#fff">加载 Hub 上的模型</text>
+  <text x="207" y="124" font-size="9" fill="#fff">文本分类微调实战</text>
+  <text x="207" y="140" font-size="9" fill="#fff">Trainer API 熟练使用</text>
+  <text x="207" y="156" font-size="9" fill="#fff">自定义数据集处理</text>
+  <text x="207" y="172" font-size="9" fill="#fff">compute_metrics 评估</text>
+  <text x="207" y="188" font-size="9" fill="#fff">保存发布到 Hub</text>
+
+  <polygon points="360,130 375,123 375,137" fill="#aaa"/>
+
+  <rect x="379" y="48" width="160" height="165" rx="10" fill="#2ecc71" opacity="0.9"/>
+  <text x="459" y="70"  text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第三阶段</text>
+  <text x="459" y="86"  text-anchor="middle" font-size="10" fill="#d5f5e3">高级（3周）</text>
+  <text x="389" y="108" font-size="9" fill="#fff">LoRA / PEFT 微调</text>
+  <text x="389" y="124" font-size="9" fill="#fff">量化（4-bit/8-bit）</text>
+  <text x="389" y="140" font-size="9" fill="#fff">多模态模型使用</text>
+  <text x="389" y="156" font-size="9" fill="#fff">自定义训练循环</text>
+  <text x="389" y="172" font-size="9" fill="#fff">Accelerate 多 GPU</text>
+  <text x="389" y="188" font-size="9" fill="#fff">FlashAttention 加速</text>
+
+  <polygon points="542,130 557,123 557,137" fill="#aaa"/>
+
+  <rect x="561" y="48" width="145" height="165" rx="10" fill="#3498db" opacity="0.9"/>
+  <text x="633" y="70"  text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第四阶段</text>
+  <text x="633" y="86"  text-anchor="middle" font-size="10" fill="#d6eaf8">专家（持续）</text>
+  <text x="571" y="108" font-size="9" fill="#fff">自定义模型架构</text>
+  <text x="571" y="124" font-size="9" fill="#fff">预训练从头开始</text>
+  <text x="571" y="140" font-size="9" fill="#fff">vLLM 生产部署</text>
+  <text x="571" y="156" font-size="9" fill="#fff">RLHF/DPO 对齐</text>
+  <text x="571" y="172" font-size="9" fill="#fff">贡献开源模型</text>
+  <text x="571" y="188" font-size="9" fill="#fff">研究前沿论文</text>
+
+  <text x="360" y="230" text-anchor="middle" font-size="10" fill="#aaa">每个阶段都应动手实践：找一个真实数据集，跑通训练->评估->发布的完整流程</text>
+</svg>
+
+<h3>关键 API 速查</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 1. 加载分词器</span><br />
+tokenizer <span style="color: Gray;">=</span> AutoTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;model_name&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 2. 编码文本</span><br />
+inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Gray;">,</span> truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> max_length<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 3. 加载模型</span><br />
+model <span style="color: Gray;">=</span> AutoModelForSequenceClassification.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;model_name&quot;</span><span style="color: Gray;">,</span> num_labels<span style="color: Gray;">=</span>N<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 4. 推理</span><br />
+<span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>**inputs<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 5. Pipeline</span><br />
+pipe <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;task_name&quot;</span><span style="color: Gray;">,</span> model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;model_name&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 6. 训练配置</span><br />
+args <span style="color: Gray;">=</span> TrainingArguments<span style="color: Olive;">&#40;</span>output_dir<span style="color: Gray;">=</span><span style="color: #a11;">&quot;./out&quot;</span><span style="color: Gray;">,</span> num_train_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> learning_rate<span style="color: Gray;">=</span><span style="color: Maroon;">2e-5</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 7. 训练</span><br />
+trainer <span style="color: Gray;">=</span> Trainer<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span> args<span style="color: Gray;">=</span>args<span style="color: Gray;">,</span> train_dataset<span style="color: Gray;">=</span>ds<span style="color: Gray;">,</span> compute_metrics<span style="color: Gray;">=</span>fn<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 8. 保存</span><br />
+model.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+tokenizer.<span style="color: #05a;">save_pretrained</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;./my-model&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 9. 数据集</span><br />
+dataset <span style="color: Gray;">=</span> load_dataset<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;dataset_name&quot;</span><span style="color: Olive;">&#41;</span><br />
+dataset <span style="color: Gray;">=</span> dataset.<span style="color: Teal;">map</span><span style="color: Olive;">&#40;</span>tokenize_fn<span style="color: Gray;">,</span> batched<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 10. LoRA</span><br />
+config <span style="color: Gray;">=</span> LoraConfig<span style="color: Olive;">&#40;</span>r<span style="color: Gray;">=</span><span style="color: Maroon;">16</span><span style="color: Gray;">,</span> lora_alpha<span style="color: Gray;">=</span><span style="color: Maroon;">32</span><span style="color: Gray;">,</span> target_modules<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;q_proj&quot;</span><span style="color: Gray;">,</span><span style="color: #a11;">&quot;v_proj&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+model <span style="color: Gray;">=</span> get_peft_model<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> config<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>参考资源</h2>
+
+<ul>
+<li><a target="_blank" href="https://huggingface.co/docs/transformers">Transformers 官方文档</a></li>
+<li><a target="_blank" href="https://huggingface.co/learn/nlp-course">Hugging Face NLP Course（免费课程）</a></li>
+<li><a target="_blank" href="https://huggingface.co/models">Hugging Face Hub 模型库（40万+）</a></li>
+<li><a target="_blank" href="https://huggingface.co/datasets">Hugging Face 数据集</a></li>
+<li><a target="_blank" href="https://hf-mirror.com">HF 国内镜像站</a></li>
+<li><a target="_blank" href="https://paperswithcode.com">Papers With Code（论文+代码）</a></li>
+</ul>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai-agent/ai-workflow.html" rel="prev"> AI Workflow（AI 工作流）</a> </div>
+			<div class="next-design-link"><a href="/ai-agent/ai-architecture.html" rel="next"> AI 底层架构</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30865' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30865;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30865, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30865},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30865;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

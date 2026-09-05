@@ -1,0 +1,2226 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 多模态 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-multimodal.html" />
+<meta name="keywords" content="AI 多模态">
+<meta name="description" content="AI 多模态     AI 不只会说话，还能看图片、听声音、理解视频——掌握多模态工具与技术。      在很长一段时间里，AI 都是单感官的。  	 文字 AI 只能处理文本，比如让 ChatGPT 写文章。 	  图像 AI 只能处理图片，比如让 Midjourney 画图。 	  音频 AI 只能处理声音，比如让 Whisper 转录语音。     但现实世界是多模态的——我们看书时会看到插图，看电影时有画面和声音，与人交流时要观..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-rag.html" rel="prev"> RAG 检索增强生成</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-workflow-auto.html" rel="next"> AI 工作流自动化</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>AI 多模态 </h1>
+
+
+
+<blockquote><p>AI 不只会说话，还能看图片、听声音、理解视频——掌握多模态工具与技术。</p></blockquote>
+
+
+
+
+
+<p>在很长一段时间里，AI 都是单感官的。</p>
+
+	<ul>
+<li><p>文字 AI 只能处理文本，比如让 ChatGPT 写文章。</p></li>
+	<li>
+
+<p>图像 AI 只能处理图片，比如让 Midjourney 画图。</p></li>
+	<li>
+
+<p>音频 AI 只能处理声音，比如让 Whisper 转录语音。</p></li></ul>
+
+
+
+
+<p>但现实世界是多模态的——我们看书时会看到插图，看电影时有画面和声音，与人交流时要观察表情和语气。</p>
+
+<p><span class="marked">多模态 AI 就是能同时理解和生成多种类型内容的 AI</span>，这就像给 AI 配上了眼睛、耳朵和嘴巴，让它能用更接近人类的方式与世界互动。</p>
+
+<blockquote>
+<p>一个实用的例子：你给 AI 一张购物小票的照片，它能识别上面的文字（OCR）、理解购买了什么商品、帮你整理成表格，还能用语音读给你听。这就是典型的多模态任务。</p>
+</blockquote>
+
+<hr>
+
+<h2>什么是多模态 AI</h2>
+
+<p>先搞清楚几个基础概念。</p>
+
+<h3>单模态 vs 多模态</h3>
+
+<p>模态（Modality）指的是信息的表现形式。</p>
+
+<p>文字、图片、音频、视频，这些都是不同的模态。</p>
+
+<table class="reference">
+<tr><th>类型</th><th>说明</th><th>典型产品</th></tr>
+<tr><td>单模态 AI</td><td>只能处理一种模态</td><td>早期的 GPT-3（只有文字）、Stable Diffusion（只有图像）</td></tr>
+<tr><td>多模态 AI</td><td>能同时处理多种模态</td><td>GPT-4o、Claude 3、Gemini</td></tr>
+</table>
+
+<p>多模态 AI 的核心突破是：<span class="marked">它能把不同模态的信息转换成同一种语言来理解</span>。</p>
+
+<p>比如，看到一张"猫"的图片，它能把图片转换成向量（一组数字）；看到"猫"这个字，也能转换成向量。这两个向量在数学空间里是接近的，因为它们代表同一个概念。</p>
+
+<h3>多模态的核心挑战</h3>
+
+<p>多模态听起来简单，实际做起来很难。</p>
+
+	<ul>
+<li><p>第一个挑战是"对齐"——如何让图片里的"猫"和文字里的"猫"在模型看来是同一个东西？</p></li><li>
+
+
+<p>第二个挑战是"融合"——当同时看到一张图和一段文字时，如何把它们的信息结合起来？</p></li><li>
+
+<p>第三个挑战是"生成"——如何根据文字描述生成图片，或者根据图片生成文字说明？</p></li><li>
+
+<p>好在这些问题正在被逐步解决。2024 年之后的主流大模型，几乎都是多模态的。</p></li></ul>
+
+
+
+<hr>
+
+<h2>图像理解（Vision）</h2>
+
+<p>图像理解就是让 AI看懂图片——描述内容、识别文字、分析图表、发现细节。</p>
+
+
+<p>主流大模型都支持图片输入了。</p>
+
+<p>使用方式通常有两种：</p>
+<ul>
+
+	<li><p>一种是直接上传图片文件，比如在 ChatGPT 网页版里点击图片图标上传。</p></li>
+	<li>
+
+<p>另一种是用 Base64 编码把图片嵌在 API 请求里，适合程序调用。</p></li></ul>
+
+
+
+
+<table class="reference">
+<tr><th>模型</th><th>图片输入方式</th><th>支持的图片格式</th></tr>
+<tr><td>GPT</td><td>URL、Base64、直接上传</td><td>JPG、PNG、WEBP、GIF</td></tr>
+<tr><td>Claude</td><td>Base64、直接上传</td><td>JPG、PNG、WEBP、GIF</td></tr>
+<tr><td>Gemini</td><td>直接上传、Google Drive</td><td>JPG、PNG、WEBP</td></tr>
+</table>
+
+<p>常见的视觉任务包括：</p>
+
+	<ul>
+<li><p>图像描述——这张图里有什么？</p></li>
+
+	<li>
+<p>OCR——把图片里的文字提取出来。</p></li>
+
+	<li>
+<p>图表分析——这个柱状图在说什么？</p></li>
+
+	<li>
+<p>细节发现——帮我检查这张设计稿有没有问题。</p></li></ul>
+
+
+
+
+<h3>实战：用 Python 调用 GPT-4o Vision API</h3>
+
+<p>我们来看一个完整的例子——用 API 分析一张图片。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 文件：runoob_vision_demo.py</span><br />
+<span style="color: #a50"># 功能：使用 GPT-4o Vision API 分析图片</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">base64</span><br />
+<span style="color: Green;font-weight:bold;">import</span> requests<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<br />
+<span style="color: #a50"># 配置 API 密钥（请替换为你的真实密钥）</span><br />
+<span style="color: #a50"># 获取地址：https://platform.openai.com/api-keys</span><br />
+OPENAI_API_KEY <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;sk-your-api-key-here&quot;</span><br />
+OPENAI_API_URL <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;https://api.openai.com/v1/chat/completions&quot;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> encode_image_to_base64<span style="color: Olive;">&#40;</span>image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 将本地图片文件编码为 Base64 字符串<br />
+&nbsp; &nbsp; 这是 API 要求的传输格式<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;rb&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> image_file:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 读取二进制文件内容，用 Base64 编码</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; base64_data <span style="color: Gray;">=</span> <span style="color: #05a;">base64</span>.<span style="color: #05a;">b64encode</span><span style="color: Olive;">&#40;</span>image_file.<span style="color: #05a;">read</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">decode</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> base64_data<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> analyze_image_with_gpt4o<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; image_path: <span style="color: Teal;">str</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; prompt: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;请详细描述这张图片的内容&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; model: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;gpt-4o&quot;</span><br />
+<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 使用 GPT-4o Vision API 分析图片<br />
+<br />
+&nbsp; &nbsp; 参数说明：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; image_path: 本地图片文件路径（如 &quot;runoob_test.jpg&quot;）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt: 你想问的问题或想让 AI 做的任务<br />
+&nbsp; &nbsp; &nbsp; &nbsp; model: 使用的模型名称（默认 gpt-4o）<br />
+<br />
+&nbsp; &nbsp; 返回：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; AI 的分析结果文本<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 1：将图片编码为 Base64</span><br />
+&nbsp; &nbsp; base64_image <span style="color: Gray;">=</span> encode_image_to_base64<span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 2：构建请求头</span><br />
+&nbsp; &nbsp; headers <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Content-Type&quot;</span>: <span style="color: #a11;">&quot;application/json&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Authorization&quot;</span>: f<span style="color: #a11;">&quot;Bearer {OPENAI_API_KEY}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 3：构建请求体</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 注意：图片内容通过 image_url 字段传递，格式为 &quot;data:image/jpeg;base64,...&quot;</span><br />
+&nbsp; &nbsp; payload <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 第一个部分是文本提示</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;text&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;text&quot;</span>: prompt<span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 第二个部分是图片</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;image_url&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;image_url&quot;</span>: <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;url&quot;</span>: f<span style="color: #a11;">&quot;data:image/jpeg;base64,{base64_image}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;max_tokens&quot;</span>: <span style="color: Maroon;">1000</span> &nbsp;<span style="color: #a50"># 控制输出长度，防止费用过高</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 4：发送 API 请求</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;正在分析图片：{image_path} ...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span>OPENAI_API_URL<span style="color: Gray;">,</span> headers<span style="color: Gray;">=</span>headers<span style="color: Gray;">,</span> json<span style="color: Gray;">=</span>payload<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 5：处理响应</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 提取 AI 的回答</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; answer <span style="color: Gray;">=</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;choices&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;message&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;content&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> answer<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 出错时打印详细信息</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; error_msg <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;请求失败：{response.status_code} - {response.text}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>error_msg<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> error_msg<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> extract_text_from_image<span style="color: Olive;">&#40;</span>image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 专门用于 OCR：提取图片中的文字<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 请提取这张图片中的所有文字内容。<br />
+&nbsp; &nbsp; 要求：<br />
+&nbsp; &nbsp; 1. 准确还原文字，不要遗漏<br />
+&nbsp; &nbsp; 2. 保持原有的段落和格式<br />
+&nbsp; &nbsp; 3. 如果有表格，请用表格形式输出<br />
+&nbsp; &nbsp; 4. 如果图片中没有文字，请说明<br />
+&nbsp; &nbsp; 这是 RUNOOB 教程的 OCR 测试。<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> analyze_image_with_gpt4o<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> analyze_chart<span style="color: Olive;">&#40;</span>image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 专门用于图表分析<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 请分析这张图表。<br />
+&nbsp; &nbsp; 请回答以下问题：<br />
+&nbsp; &nbsp; 1. 这是什么类型的图表（柱状图、折线图、饼图等）？<br />
+&nbsp; &nbsp; 2. 图表的标题和坐标轴含义是什么？<br />
+&nbsp; &nbsp; 3. 图表传达的主要信息是什么？<br />
+&nbsp; &nbsp; 4. 有什么值得注意的趋势或异常？<br />
+&nbsp; &nbsp; 这是 RUNOOB 教程的图表分析测试。<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> analyze_image_with_gpt4o<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 主程序：演示不同的视觉分析任务</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 假设我们有一张测试图片（你需要准备一张真实的图片）</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 可以是：商品照片、截图、文档照片、图表等</span><br />
+&nbsp; &nbsp; test_image <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;runoob_test_image.jpg&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 检查图片是否存在</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>test_image<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;提示：请先准备一张图片，命名为 {test_image} 放在当前目录&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;或者修改代码中的图片路径&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 任务 1：通用图像描述</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;任务 1：图像描述&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result1 <span style="color: Gray;">=</span> analyze_image_with_gpt4o<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; test_image<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;请详细描述这张图片，包括主体、背景、颜色、构图等&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result1<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 任务 2：OCR 文字提取</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;任务 2：OCR 文字提取&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result2 <span style="color: Gray;">=</span> extract_text_from_image<span style="color: Olive;">&#40;</span>test_image<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result2<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 任务 3：图表分析（如果图片是图表）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;任务 3：图表分析&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result3 <span style="color: Gray;">=</span> analyze_chart<span style="color: Olive;">&#40;</span>test_image<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result3<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB 教程演示完成！&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>运行这个程序前，你需要：</p>
+	<ul>
+<li>
+<p>1. 安装依赖：<code>pip install requests</code></p></li>
+
+	<li>
+<p>2. 准备一张测试图片，命名为 <code>runoob_test_image.jpg</code></p></li>
+
+	<li>
+<p>3. 把 API 密钥换成你自己的</p></li></ul>
+
+
+
+
+<blockquote>
+<p>费用提示：GPT-4o Vision 按图片尺寸计费。一张 1024x1024 的图片大约需要 0.00765 美元。小图片更便宜。调试时建议用低分辨率图，正式使用再上高清。</p>
+</blockquote>
+
+<hr>
+
+<h2>文生图（Text-to-Image）</h2>
+
+<p>文生图就是让 AI 根据文字描述生成图片，这是另一个非常成熟的多模态应用领域。</p>
+
+<h3>扩散模型原理简介</h3>
+
+<p>今天的文生图工具，基本都用扩散模型（Diffusion Model）技术。</p>
+
+<p>简单理解它的工作原理：</p><ul>
+
+
+	<li><p>训练阶段：给模型看一张清晰的图片，然后一点一点往上面加噪点，直到变成全是雪花的乱图。模型学习的是如何把乱图一步步变清晰。</p></li>
+	<li>
+
+<p>生成阶段：给模型一张随机噪点图，让它根据文字提示，一步步去噪，最后生成一张符合描述的清晰图片。</p></li></ul>
+
+
+
+
+<p>这个过程通常需要 20-50 步，所以生成一张图需要几秒钟。</p>
+
+<h3>Midjourney 进阶使用技巧</h3>
+
+<p>Midjourney 是目前最流行的文生图工具之一，通过 Discord 使用。</p>
+
+<p>一个高质量的提示词（Prompt）通常包含这些元素：</p>
+	<ul>
+<li>
+<p>主体描述——"一只戴着帽子的猫"</p></li>
+
+	<li>
+<p>风格——"宫崎骏风格"、"油画"、"3D 渲染"</p></li>
+	<li>
+
+<p>光影——"自然光"、"电影光"、"赛博朋克霓虹灯"</p></li>
+	<li>
+
+<p>构图——"特写"、"广角"、"俯视"</p></li>
+	<li>
+
+<p>画质——"8K"、"超高细节"、"摄影级"</p></li></ul>
+
+
+
+
+<table class="reference">
+<tr><th>参数</th><th>说明</th><th>示例</th></tr>
+<tr><td>--ar</td><td>设置宽高比</td><td>--ar 16:9（视频）、--ar 3:4（手机）</td></tr>
+<tr><td>--v</td><td>指定模型版本</td><td>--v 6.0（最新版本）</td></tr>
+<tr><td>--s</td><td>风格化程度（0-1000）</td><td>--s 750（艺术感强）</td></tr>
+<tr><td>--q</td><td>渲染质量（0.25-2）</td><td>--q 2（更高质量，更慢）</td></tr>
+<tr><td>--iw</td><td>参考图权重</td><td>--iw 1.5（更像参考图）</td></tr>
+</table>
+
+<h3>Stable Diffusion 本地部署</h3>
+
+<p>如果你想要完全的控制权，可以在本地运行 Stable Diffusion: <a href="https://github.com/compvis/stable-diffusion" target="_blank">https://github.com/compvis/stable-diffusion</a>。</p>
+
+<p>最常用的工具是 Automatic1111 的 WebUI。</p>
+
+<p>步骤大致是：</p>
+	<ul>
+<li>
+<p>1. 安装 Python 3.10</p></li>
+
+	<li>
+<p>2. 下载 Stable Diffusion WebUI</p></li>
+	<li>
+
+<p>3. 下载模型文件（.safetensors 格式）</p></li>
+	<li>
+
+<p>4. 运行 webui.bat（Windows）或 webui.sh（Mac/Linux）</p></li></ul>
+
+
+
+
+<p>本地部署的优势是：生成不花钱、没有内容限制、可以用 LoRA 微调风格、可以用 ControlNet 精确控制构图。</p>
+
+<p>劣势是：需要一张显存至少 6GB 的显卡，设置比较麻烦。</p>
+
+<h3>实战：调用 DALL·E 3 API 生成图片</h3>
+
+<p>如果你想要简单的 API 方式生成图片，DALL·E 3 是个好选择。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 文件：runoob_dalle3_demo.py</span><br />
+<span style="color: #a50"># 功能：使用 DALL·E 3 API 生成图片</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> requests<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> <span style="color: #05a;">datetime</span> <span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">datetime</span><br />
+<br />
+<span style="color: #a50"># 配置 API 密钥（请替换为你的真实密钥）</span><br />
+OPENAI_API_KEY <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;sk-your-api-key-here&quot;</span><br />
+DALLE3_API_URL <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;https://api.openai.com/v1/images/generations&quot;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> generate_image_with_dalle3<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; prompt: <span style="color: Teal;">str</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; size: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;1024x1024&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; quality: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;standard&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; style: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;vivid&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; save_dir: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;runoob_generated_images&quot;</span><br />
+<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 使用 DALL·E 3 API 生成图片<br />
+<br />
+&nbsp; &nbsp; 参数说明：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt: 文字描述，越详细越好<br />
+&nbsp; &nbsp; &nbsp; &nbsp; size: 图片尺寸<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 可选：1024x1024、1024x1792（竖版）、1792x1024（横版）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; quality: 图片质量<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;可选：standard（标准）、hd（高清，更贵）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; style: 风格<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;可选：vivid（生动，更有艺术感）、natural（自然，更真实）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; save_dir: 图片保存目录<br />
+<br />
+&nbsp; &nbsp; 返回：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 包含图片 URL 和保存路径的字典<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 1：准备请求头</span><br />
+&nbsp; &nbsp; headers <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Content-Type&quot;</span>: <span style="color: #a11;">&quot;application/json&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Authorization&quot;</span>: f<span style="color: #a11;">&quot;Bearer {OPENAI_API_KEY}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 2：准备请求体</span><br />
+&nbsp; &nbsp; payload <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: <span style="color: #a11;">&quot;dall-e-3&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;prompt&quot;</span>: prompt<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;n&quot;</span>: <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># DALL·E 3 每次只能生成 1 张</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;size&quot;</span>: size<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;quality&quot;</span>: quality<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;style&quot;</span>: style<br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 3：发送请求</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;正在生成图片，提示词：{prompt[:50]}...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span>DALLE3_API_URL<span style="color: Gray;">,</span> headers<span style="color: Gray;">=</span>headers<span style="color: Gray;">,</span> json<span style="color: Gray;">=</span>payload<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 4：处理响应</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; image_url <span style="color: Gray;">=</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;data&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;url&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; revised_prompt <span style="color: Gray;">=</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;data&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;revised_prompt&quot;</span><span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;DALL·E 3 自动优化后的提示词：{revised_prompt}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 步骤 5：下载并保存图片</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>save_dir<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #05a;">os</span>.<span style="color: #05a;">makedirs</span><span style="color: Olive;">&#40;</span>save_dir<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 用时间戳生成文件名</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; timestamp <span style="color: Gray;">=</span> <span style="color: #05a;">datetime</span>.<span style="color: #05a;">now</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">strftime</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;%Y%m%d_%H%M%S&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; filename <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;runoob_dalle3_{timestamp}.png&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; filepath <span style="color: Gray;">=</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>save_dir<span style="color: Gray;">,</span> filename<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 下载图片</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; image_response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span>image_url<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> image_response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>filepath<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;wb&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>image_response.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;图片已保存到：{filepath}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;image_url&quot;</span>: image_url<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;filepath&quot;</span>: filepath<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;revised_prompt&quot;</span>: revised_prompt<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; error_msg <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;请求失败：{response.status_code} - {response.text}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>error_msg<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: error_msg<span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> generate_runoob_logo_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;演示：生成 RUNOOB 风格的 Logo&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; A cute and friendly robot mascot for RUNOOB tutorial website.<br />
+&nbsp; &nbsp; Blue and green color scheme, modern flat design, white background.<br />
+&nbsp; &nbsp; The robot looks helpful and intelligent, with big friendly eyes.<br />
+&nbsp; &nbsp; Simple, clean, suitable for a tech education brand.<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 中文提示词也可以，DALL·E 3 支持多语言</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 为 RUNOOB 教程网站设计一个可爱友好的机器人吉祥物。<br />
+&nbsp; &nbsp; 蓝绿色调，现代扁平化设计，白色背景。<br />
+&nbsp; &nbsp; 机器人看起来乐于助人且聪明，有大大的友好眼睛。<br />
+&nbsp; &nbsp; 简洁干净，适合科技教育品牌。<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> generate_image_with_dalle3<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt<span style="color: Gray;">=</span>prompt<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; size<span style="color: Gray;">=</span><span style="color: #a11;">&quot;1024x1024&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; quality<span style="color: Gray;">=</span><span style="color: #a11;">&quot;hd&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; style<span style="color: Gray;">=</span><span style="color: #a11;">&quot;vivid&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> generate_book_cover_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;演示：生成书籍封面&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; Book cover design for &quot;AI Tutorial for Beginners&quot;.<br />
+&nbsp; &nbsp; Modern minimalist style, deep blue and purple gradient background.<br />
+&nbsp; &nbsp; The title text is elegant and readable.<br />
+&nbsp; &nbsp; Subtle tech elements: floating geometric shapes, faint circuit patterns.<br />
+&nbsp; &nbsp; Professional, trustworthy, suitable for a programming book.<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> generate_image_with_dalle3<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt<span style="color: Gray;">=</span>prompt<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; size<span style="color: Gray;">=</span><span style="color: #a11;">&quot;1024x1792&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 竖版</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; quality<span style="color: Gray;">=</span><span style="color: #a11;">&quot;hd&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; style<span style="color: Gray;">=</span><span style="color: #a11;">&quot;natural&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> generate_banner_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;演示：生成横幅广告图&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; Web banner design for a coding tutorial website (RUNOOB).<br />
+&nbsp; &nbsp; 16:9 wide format. Modern gradient background from teal to blue.<br />
+&nbsp; &nbsp; Clean layout with space for text.<br />
+&nbsp; &nbsp; Abstract tech elements: floating code snippets, subtle grid lines.<br />
+&nbsp; &nbsp; Professional and inviting.<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> generate_image_with_dalle3<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt<span style="color: Gray;">=</span>prompt<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; size<span style="color: Gray;">=</span><span style="color: #a11;">&quot;1792x1024&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 横版</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; quality<span style="color: Gray;">=</span><span style="color: #a11;">&quot;standard&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; style<span style="color: Gray;">=</span><span style="color: #a11;">&quot;vivid&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 主程序：演示不同的生成任务</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB DALL·E 3 图片生成演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 任务 1：生成 Logo</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>[任务 1] 生成 Logo ...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; result1 <span style="color: Gray;">=</span> generate_runoob_logo_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 任务 2：生成书籍封面</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>[任务 2] 生成书籍封面 ...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; result2 <span style="color: Gray;">=</span> generate_book_cover_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 任务 3：生成横幅</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>[任务 3] 生成横幅 ...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; result3 <span style="color: Gray;">=</span> generate_banner_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;所有任务完成！查看 runoob_generated_images 目录&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>DALL·E 3 的特点是：理解能力强、不会崩坏手和脸、文字生成效果好。</p>
+
+<p>但它也有限制：每次只能生成 1 张、不能精确控制风格、无法像 Stable Diffusion 那样微调。</p>
+
+<blockquote>
+<p>版权提示：目前的共识是，使用 AI 生成的图片，提示词撰写者拥有使用权，但不拥有版权（因为版权局要求人类创作）。用于商业用途时，建议确认工具的使用条款。</p>
+</blockquote>
+
+<hr>
+
+<h2>视频 AI</h2>
+
+<p>视频 AI 分为两类：视频生成和视频理解。</p>
+
+<p>相比图片，视频的技术难度更大——因为视频是"时间+空间"的组合，要保证每一帧连贯、动作自然。</p>
+
+<h3>AI 视频生成工具对比</h3>
+
+<p>2024 年是 AI 视频元年，多家公司推出了视频生成产品。</p>
+
+<table class="reference"> <tr><th>工具</th><th>出品方</th><th>特点</th><th>典型时长</th></tr> <tr><td>Sora</td><td>OpenAI</td><td>画面细节、空间场景理解行业顶尖，物理逻辑真实，暂未全面开放公测</td><td>最长60秒</td></tr> <tr><td>Runway Gen-4</td><td>Runway</td><td>全能创作平台，文/图生视频、AI后期剪辑、运动笔刷、VFX特效一体化，海外专业创作者首选</td><td>10–20秒</td></tr> <tr><td>Kling（可灵AI）</td><td>快手</td><td>中文提示词适配优秀，人物动作流畅、跨镜头角色稳定，国内性价比高，支持多段叙事拼接</td><td>5–30秒，单段最高2分钟</td></tr> <tr><td>Pika</td><td>Pika Labs</td><td>二次元、影视插画风格表现力极强，角色形象统一，支持视频风格重绘、扩帧</td><td>5–10秒</td></tr> <tr><td>Veo</td><td>Google</td><td>电影级光影与运镜，长镜头叙事稳定，物理渲染自然，尚未公开发布</td><td>60秒以上</td></tr> <tr><td>即梦AI（Seedance）</td><td>字节跳动</td><td>深度打通剪映/抖音生态，中文语义精准，音画口型同步，支持脚本自动分镜</td><td>5–15秒，多段拼接成片</td></tr> <tr><td>通义万相Video</td><td>阿里达摩院</td><td>开源基础模型，多主体交互稳定，支持画面文字生成，可本地部署推理</td><td>2–15秒</td></tr> <tr><td>海螺AI（Hailuo）</td><td>MiniMax稀宇</td><td>轻量化极速生成，适合海报转动态短视频、社媒快闪素材，动漫风格表现突出</td><td>4–10秒</td></tr> <tr><td>Luma Dream Machine</td><td>Luma AI</td><td>物理动力学模拟顶尖，水、火、布料、爆炸等特效画面真实，电影级运镜</td><td>5–12秒</td></tr> <tr><td>智影</td><td>腾讯</td><td>偏向AI剪辑+数字人视频，海量短视频模板，字幕、配音、抠像一站式，商用门槛低</td><td>不限时长，AI生成片段5–15秒</td></tr> <tr><td>海艺AI</td><td>海艺科技</td><td>支持4K/60fps高帧率输出，多图联动生视频，配套完整成片工作台，限时免费额度充足</td><td>单段最长30秒</td></tr> </table>
+
+<p> AI 视频还在早期阶段：</p>
+	<ul>
+<li>
+<p>优点是：创意快、成本低、能实现实拍很难的效果。</p></li>
+	<li>
+
+<p>缺点是：时长有限、细节容易崩坏、物理逻辑有时不对（比如物体乱穿、手指数错）。</p></li>
+	<li>
+
+<p>适合的场景：概念演示、短视频素材、电商广告、游戏动画。</p></li>
+	<li>
+
+<p>不适合的场景：需要精确控制的长片、严肃新闻、法律证据。</p></li></ul>
+
+
+
+
+<h3>视频理解与摘要</h3>
+
+<p>除了生成视频，AI 还能看懂视频。</p>
+
+<p>视频理解的常见任务：</p>
+	<ul>
+<li>
+<p>视频摘要——"这个视频在讲什么？用 3 句话总结。"</p></li>
+	<li>
+
+<p>内容检索——"找到视频里有人骑自行车的片段。"</p></li>
+	<li>
+
+<p>问答——"视频里第三个人说了什么？"</p></li></ul>
+
+
+
+
+<p>技术路线通常是：把视频抽帧（比如每秒抽 1 帧），然后用视觉模型一帧一帧看，最后把信息整合起来。</p>
+
+<h3>未来趋势</h3>
+
+<p>视频 AI 的发展方向很明确：</p>
+	<ul>
+<li>
+<p>更长——从 10 秒到 1 分钟，再到 10 分钟。</p></li>
+	<li>
+
+<p>更可控——能用故事板精确控制每一个镜头。</p></li>
+	<li>
+
+<p>更一致——同一个角色在不同镜头里保持一致。</p></li>
+	<li>
+
+<p>更实用——从看起来很酷到能解决实际问题。</p></li>
+
+	<li>
+<p>可以期待：几年后，可能每个人都能用 AI 做出像电影一样的视频作品。</p></li></ul>
+
+
+
+
+<hr>
+
+<h2>音频与语音 AI</h2>
+
+<p>音频 AI 主要包括：语音转文字（ASR）、文字转语音（TTS）、音乐生成。</p>
+
+<p>这是一个已经相当成熟的领域。</p>
+
+<h3>语音转文字（Whisper API）</h3>
+
+<p>Whisper 是 OpenAI 开源的语音识别模型，效果非常好，支持 99 种语言。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 文件：runoob_whisper_demo.py</span><br />
+<span style="color: #a50"># 功能：使用 Whisper API 转写语音</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> requests<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<br />
+<span style="color: #a50"># 配置 API 密钥</span><br />
+OPENAI_API_KEY <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;sk-your-api-key-here&quot;</span><br />
+WHISPER_API_URL <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;https://api.openai.com/v1/audio/transcriptions&quot;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> transcribe_audio_with_whisper<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; audio_path: <span style="color: Teal;">str</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; language: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;zh&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># zh=中文, en=英文, 留空则自动识别</span><br />
+&nbsp; &nbsp; prompt: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a50"># 可选：提供一些术语提示，提高准确率</span><br />
+&nbsp; &nbsp; temperature: <span style="color: Teal;">float</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><br />
+<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 使用 Whisper API 转写音频文件<br />
+<br />
+&nbsp; &nbsp; 参数说明：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; audio_path: 音频文件路径（支持 mp3、wav、m4a 等）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; language: 语言代码（可选，不指定则自动识别）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 常见代码：zh（中文）、en（英文）、ja（日文）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt: 提示词（可选，把可能出现的专业词、人名写在这里）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; temperature: 采样温度（0.0 最确定，1.0 更多样）<br />
+<br />
+&nbsp; &nbsp; 返回：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 包含转写文本的字典<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 1：检查文件是否存在</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>audio_path<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: f<span style="color: #a11;">&quot;文件不存在：{audio_path}&quot;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 2：准备请求头</span><br />
+&nbsp; &nbsp; headers <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Authorization&quot;</span>: f<span style="color: #a11;">&quot;Bearer {OPENAI_API_KEY}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 3：准备请求体（注意：音频要用 multipart/form-data 格式）</span><br />
+&nbsp; &nbsp; files <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;file&quot;</span>: <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>audio_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;rb&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; data <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: <span style="color: #a11;">&quot;whisper-1&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;temperature&quot;</span>: temperature<br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> language:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; data<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;language&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> language<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> prompt:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; data<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;prompt&quot;</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> prompt<br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 4：发送请求</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;正在转写音频：{audio_path} ...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span>WHISPER_API_URL<span style="color: Gray;">,</span> headers<span style="color: Gray;">=</span>headers<span style="color: Gray;">,</span> files<span style="color: Gray;">=</span>files<span style="color: Gray;">,</span> data<span style="color: Gray;">=</span>data<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 5：关闭文件</span><br />
+&nbsp; &nbsp; files<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;file&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">close</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 步骤 6：处理响应</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; text <span style="color: Gray;">=</span> result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;转写完成，共 {len(text)} 字&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: text<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;language&quot;</span>: language<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; error_msg <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;请求失败：{response.status_code} - {response.text}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>error_msg<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: error_msg<span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> transcribe_with_timestamps<span style="color: Olive;">&#40;</span>audio_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 带时间戳的转写（使用 verbose_json 格式）<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; headers <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Authorization&quot;</span>: f<span style="color: #a11;">&quot;Bearer {OPENAI_API_KEY}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; files <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;file&quot;</span>: <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>audio_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;rb&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; data <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: <span style="color: #a11;">&quot;whisper-1&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;response_format&quot;</span>: <span style="color: #a11;">&quot;verbose_json&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 返回详细信息，包括时间戳</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;timestamp_granularities&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;segment&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;word&quot;</span><span style="color: Olive;">&#93;</span> &nbsp;<span style="color: #a50"># 支持段级和词级时间戳</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span>WHISPER_API_URL<span style="color: Gray;">,</span> headers<span style="color: Gray;">=</span>headers<span style="color: Gray;">,</span> files<span style="color: Gray;">=</span>files<span style="color: Gray;">,</span> data<span style="color: Gray;">=</span>data<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; files<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;file&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">close</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> result<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: response.<span style="color: #05a;">text</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> translate_audio_to_english<span style="color: Olive;">&#40;</span>audio_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">dict</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 将任意语言的音频翻译成英文文本<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; headers <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Authorization&quot;</span>: f<span style="color: #a11;">&quot;Bearer {OPENAI_API_KEY}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; files <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;file&quot;</span>: <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>audio_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;rb&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; data <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: <span style="color: #a11;">&quot;whisper-1&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;task&quot;</span>: <span style="color: #a11;">&quot;translate&quot;</span> &nbsp;<span style="color: #a50"># 特别指定：翻译任务</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;https://api.openai.com/v1/audio/translations&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; headers<span style="color: Gray;">=</span>headers<span style="color: Gray;">,</span> files<span style="color: Gray;">=</span>files<span style="color: Gray;">,</span> data<span style="color: Gray;">=</span>data<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; files<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;file&quot;</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">close</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;error&quot;</span>: response.<span style="color: #05a;">text</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> runoob_meeting_minutes_demo<span style="color: Olive;">&#40;</span>audio_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 实战：生成会议纪要<br />
+&nbsp; &nbsp; 步骤 1：用 Whisper 转写录音<br />
+&nbsp; &nbsp; 步骤 2：用 GPT-4o 整理成纪要<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 先转写</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;第一步：转写会议录音...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; transcribe_result <span style="color: Gray;">=</span> transcribe_audio_with_whisper<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; audio_path<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; language<span style="color: Gray;">=</span><span style="color: #a11;">&quot;zh&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt<span style="color: Gray;">=</span><span style="color: #a11;">&quot;这是一次 RUNOOB 技术团队的会议，讨论产品开发、进度、技术方案等&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;error&quot;</span> <span style="color: Green;font-weight:bold;">in</span> transcribe_result:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> transcribe_result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;error&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; transcript <span style="color: Gray;">=</span> transcribe_result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 再整理（这里简化了，实际项目中可以调用 GPT-4o API）</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;第二步：整理会议纪要...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 这里为了演示，直接返回转写文本</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 实际项目中，你可以把 transcript 发给 GPT-4o，让它整理</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> transcript<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 主程序</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 准备一个测试音频文件</span><br />
+&nbsp; &nbsp; test_audio <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;runoob_test_audio.mp3&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>test_audio<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;提示：请准备一个音频文件，命名为 {test_audio}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;或者用手机录一段语音，保存为 mp3 格式&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 任务 1：简单转写</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;任务 1：简单转写&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result1 <span style="color: Gray;">=</span> transcribe_audio_with_whisper<span style="color: Olive;">&#40;</span>test_audio<span style="color: Gray;">,</span> language<span style="color: Gray;">=</span><span style="color: #a11;">&quot;zh&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;text&quot;</span> <span style="color: Green;font-weight:bold;">in</span> result1:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;转写结果：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result1<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 任务 2：带时间戳的转写</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;任务 2：带时间戳的转写&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result2 <span style="color: Gray;">=</span> transcribe_with_timestamps<span style="color: Olive;">&#40;</span>test_audio<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;segments&quot;</span> <span style="color: Green;font-weight:bold;">in</span> result2:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;段落信息：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> seg <span style="color: Green;font-weight:bold;">in</span> result2<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;segments&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>:<span style="color: Maroon;">3</span><span style="color: Olive;">&#93;</span>: &nbsp;<span style="color: #a50"># 只打印前 3 段</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; start <span style="color: Gray;">=</span> <span style="color: Teal;">round</span><span style="color: Olive;">&#40;</span>seg<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;start&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; end <span style="color: Gray;">=</span> <span style="color: Teal;">round</span><span style="color: Olive;">&#40;</span>seg<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;end&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; text <span style="color: Gray;">=</span> seg<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;[{start}-{end}] {text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span> + <span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB Whisper 演示完成！&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>Whisper 的优势是：多语言支持好、对口音不挑剔、能自动加标点。</p>
+
+<p>典型应用场景：会议录音转写、视频字幕生成、播客文字稿、语音日记。</p>
+
+<h3>文字转语音（TTS）</h3>
+
+<p>文字转语音就是让 AI"读"文章。</p>
+
+<p>OpenAI 也提供了 TTS API，支持多种声音风格。</p>
+
+<p>其他 TTS 工具：ElevenLabs（最像真人）、Azure TTS（商业级）、Edge TTS（免费）、Coqui（开源）。</p>
+
+<h3>音乐生成（Suno、Udio）</h3>
+
+<p>音乐生成也取得了突破。</p>
+
+<p>Suno 和 Udio 是两个代表产品——你输入歌词和风格描述，它们就能生成一首完整的歌，有人声、有伴奏。</p>
+
+<p>能力边界：</p>
+	<ul>
+<li>
+<p>可以做：生成背景音乐、写歌 Demo、快速尝试风格。</p></li>
+	<li>
+
+<p>不太能做：完全复制某首歌、精确控制音符、专业级后期。</p></li>
+	<li>
+
+<p>版权方面：不同工具的条款不同，用于商业前请确认。</p></li></ul>
+
+
+
+
+<hr>
+
+<h2>多模态模型架构简介</h2>
+
+<p>了解一点原理，能帮你更好地使用工具。</p>
+
+<h3>CLIP：图文对齐的基石</h3>
+
+<p>CLIP（Contrastive Language-Image Pre-training）是 OpenAI 2021 年发表的模型。</p>
+
+<p>它的思路很简单：同时看图片和文字，学会把它们对应起来。</p>
+
+<p>训练时，给模型一批<span class="marked">图片+描述</span>对，让它学会：</p>
+	<ul>
+<li>
+<p>1. 把图片转换成向量</p></li>
+	<li>
+
+<p>2. 把文字转换成向量</p></li>
+	<li>
+
+<p>3. 让配对的图文向量尽量接近，不配对的尽量远离</p></li></ul>
+
+
+
+
+<p>CLIP 的意义在于：<span class="marked">它证明了"跨模态理解"是可行的</span>。</p>
+
+<p>后来的 Stable Diffusion、GPT-4o 等，都受到了 CLIP 的启发。</p>
+
+<h3>LLaVA：开源多模态 LLM</h3>
+
+<p>LLaVA（Large Language and Vision Assistant）是一个开源的多模态模型。</p>
+
+<p>它的架构很清晰：</p>
+	<ul>
+<li>
+<p>一个视觉编码器（比如 ViT）——负责看图片</p></li>
+	<li>
+
+<p>一个大语言模型（比如 LLaMA）——负责说话</p></li>
+	<li>
+
+<p>一个投影层——把图片向量转换成语言模型能理解的格式</p></li></ul>
+
+
+
+
+<p>训练分两步：</p>
+	<ul>
+<li>
+<p>第一步：预训练对齐——让视觉编码器和语言模型说同一种语言</p></li>
+
+	<li>
+<p>第二步：指令微调——用图片-问题-答案的数据训练，让它学会按指令回答</p></li></ul>
+
+
+
+
+<p>LLaVA 是学习多模态技术的好起点——代码开源、架构清晰、效果不错。</p>
+
+<hr>
+
+<h2>实战：构建图片分析工具</h2>
+
+<p>我们把前面的知识整合起来，做一个实用的图片分析工具。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 文件：runoob_image_analyzer.py</span><br />
+<span style="color: #a50"># 功能：一个完整的多模态图片分析工具</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">base64</span><br />
+<span style="color: Green;font-weight:bold;">import</span> requests<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">import</span> json<br />
+<span style="color: Green;font-weight:bold;">from</span> <span style="color: #05a;">datetime</span> <span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">datetime</span><br />
+<span style="color: Green;font-weight:bold;">from</span> typing <span style="color: Green;font-weight:bold;">import</span> Optional<span style="color: Gray;">,</span> Dict<span style="color: Gray;">,</span> Any<br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> RunoobImageAnalyzer:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; RUNOOB 图片分析器——一个封装好的多模态工具类<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> api_key: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> base_url: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;https://api.openai.com/v1&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 初始化分析器<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 参数：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; api_key: OpenAI API 密钥<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; base_url: API 地址（可配置代理）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">api_key</span> <span style="color: Gray;">=</span> api_key<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">base_url</span> <span style="color: Gray;">=</span> base_url<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">headers</span> <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Content-Type&quot;</span>: <span style="color: #a11;">&quot;application/json&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;Authorization&quot;</span>: f<span style="color: #a11;">&quot;Bearer {api_key}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> _encode_image<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;将图片编码为 Base64&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;rb&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #05a;">base64</span>.<span style="color: #05a;">b64encode</span><span style="color: Olive;">&#40;</span>f.<span style="color: #05a;">read</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">decode</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> _call_vision_api<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; image_path: <span style="color: Teal;">str</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt: <span style="color: Teal;">str</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; model: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;gpt-4o&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; max_tokens: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">2000</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;内部方法：调用视觉 API&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; base64_image <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>._encode_image<span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; payload <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;model&quot;</span>: model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;text&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;text&quot;</span>: prompt<span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;image_url&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;image_url&quot;</span>: <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;url&quot;</span>: f<span style="color: #a11;">&quot;data:image/jpeg;base64,{base64_image}&quot;</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;max_tokens&quot;</span>: max_tokens<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; url <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;{self.base_url}/chat/completions&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; response <span style="color: Gray;">=</span> requests.<span style="color: #05a;">post</span><span style="color: Olive;">&#40;</span>url<span style="color: Gray;">,</span> headers<span style="color: Gray;">=</span><span style="color: Teal;">self</span>.<span style="color: #05a;">headers</span><span style="color: Gray;">,</span> json<span style="color: Gray;">=</span>payload<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">status_code</span> <span style="color: Gray;">==</span> <span style="color: Maroon;">200</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> response.<span style="color: #05a;">json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;choices&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;message&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;content&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;API 错误：{response.status_code} - {response.text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">None</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> describe<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;详细描述图片内容&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 请详细描述这张图片，包括：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 1. 主体内容（有什么人/物）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 2. 背景环境<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 3. 颜色和光线<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 4. 整体氛围<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 用中文回答，结构清晰。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>._call_vision_api<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> extract_text<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;提取图片中的所有文字（OCR）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 请提取这张图片中的所有文字内容。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 要求：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 1. 准确还原，不要遗漏<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 2. 保持原有的段落结构<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 3. 如果是表格，请用 Markdown 表格格式输出<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 4. 如果没有文字，请明确说明&quot;图片中没有可识别的文字&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>._call_vision_api<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> analyze_ui<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;分析 UI 设计稿（截图）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 请分析这张 UI 设计稿：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 1. 这是什么类型的界面（APP、网页、小程序等）？<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 2. 界面的主要功能模块有哪些？<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 3. 设计风格如何（配色、布局、字体）？<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 4. 有什么可改进的地方？<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 用中文回答，分点列出。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>._call_vision_api<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> analyze_product<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;分析商品图片，生成电商文案&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 请分析这张商品图片，生成一段电商文案。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 文案应包括：<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 1. 商品名称和类型<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 2. 外观特点（颜色、材质、设计）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 3. 一个吸引人的简短推荐语（30-50字）<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 用中文回答，语气友好积极。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>._call_vision_api<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> classify<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> categories: <span style="color: Teal;">list</span> <span style="color: Gray;">=</span> <span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Optional<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;对图片进行分类&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> categories <span style="color: Green;font-weight:bold;">is</span> <span style="color: Teal;">None</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; categories <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;人物照片&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;风景照片&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;美食照片&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;产品照片&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;设计稿/截图&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;文档/表格&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;图表/数据可视化&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;其他&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cat_list <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;、&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>categories<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prompt <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 请判断这张图片属于哪个类别。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 可选类别：{cat_list}<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 请只返回最匹配的一个类别名称，不要其他文字。<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">self</span>._call_vision_api<span style="color: Olive;">&#40;</span>image_path<span style="color: Gray;">,</span> prompt<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> full_analysis<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> image_path: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> output_dir: <span style="color: Teal;">str</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;runoob_analysis&quot;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Dict<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Gray;">,</span> Any<span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 完整分析：生成一份详细的分析报告<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; 返回一个字典，包含所有分析结果<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;开始分析图片：{image_path}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 先分类</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;[1/5] 分类中...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; category <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">classify</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;未知&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 描述</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;[2/5] 描述中...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; description <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">describe</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 提取文字</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;[3/5] OCR 中...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; text <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">extract_text</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 根据类别做专项分析</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;[4/5] 专项分析中...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; special_analysis <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;设计&quot;</span> <span style="color: Green;font-weight:bold;">in</span> category <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;截图&quot;</span> <span style="color: Green;font-weight:bold;">in</span> category:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; special_analysis <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">analyze_ui</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">elif</span> <span style="color: #a11;">&quot;产品&quot;</span> <span style="color: Green;font-weight:bold;">in</span> category <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;商品&quot;</span> <span style="color: Green;font-weight:bold;">in</span> category:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; special_analysis <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">analyze_product</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">or</span> <span style="color: #a11;">&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 保存报告</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;[5/5] 生成报告中...&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>output_dir<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #05a;">os</span>.<span style="color: #05a;">makedirs</span><span style="color: Olive;">&#40;</span>output_dir<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; timestamp <span style="color: Gray;">=</span> <span style="color: #05a;">datetime</span>.<span style="color: #05a;">now</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">strftime</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;%Y%m%d_%H%M%S&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; report <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;image_file&quot;</span>: <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">basename</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;analysis_time&quot;</span>: <span style="color: #05a;">datetime</span>.<span style="color: #05a;">now</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">isoformat</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;category&quot;</span>: category<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;description&quot;</span>: description<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;extracted_text&quot;</span>: text<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;special_analysis&quot;</span>: special_analysis<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 保存 JSON</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; json_path <span style="color: Gray;">=</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>output_dir<span style="color: Gray;">,</span> f<span style="color: #a11;">&quot;report_{timestamp}.json&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>json_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;w&quot;</span><span style="color: Gray;">,</span> encoding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; json.<span style="color: #05a;">dump</span><span style="color: Olive;">&#40;</span>report<span style="color: Gray;">,</span> f<span style="color: Gray;">,</span> ensure_ascii<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> indent<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 保存可读文本</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; txt_path <span style="color: Gray;">=</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>output_dir<span style="color: Gray;">,</span> f<span style="color: #a11;">&quot;report_{timestamp}.txt&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> <span style="color: Teal;">open</span><span style="color: Olive;">&#40;</span>txt_path<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;w&quot;</span><span style="color: Gray;">,</span> encoding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;utf-8&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">as</span> f:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB 图片分析报告<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;图片：{report['image_file']}<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;时间：{report['analysis_time']}<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;分类：{report['category']}<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;图片描述：<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>report<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;description&quot;</span><span style="color: Olive;">&#93;</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;提取文字：<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>report<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;extracted_text&quot;</span><span style="color: Olive;">&#93;</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> report<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;special_analysis&quot;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;专项分析：<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">60</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f.<span style="color: #05a;">write</span><span style="color: Olive;">&#40;</span>report<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;special_analysis&quot;</span><span style="color: Olive;">&#93;</span> + <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;分析完成！报告已保存到：{output_dir}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> report<br />
+<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 使用示例</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> main<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 配置你的 API Key</span><br />
+&nbsp; &nbsp; api_key <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;sk-your-api-key-here&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 创建分析器</span><br />
+&nbsp; &nbsp; analyzer <span style="color: Gray;">=</span> RunoobImageAnalyzer<span style="color: Olive;">&#40;</span>api_key<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 要分析的图片路径</span><br />
+&nbsp; &nbsp; image_path <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;runoob_test_image.jpg&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> <span style="color: #05a;">os</span>.<span style="color: #05a;">path</span>.<span style="color: #05a;">exists</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;请先准备图片：{image_path}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 方式 1：单独使用某个功能</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>方式 1：单独使用 OCR 功能&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">40</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; text <span style="color: Gray;">=</span> analyzer.<span style="color: #05a;">extract_text</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;提取的文字：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>text<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 方式 2：完整分析</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>方式 2：完整分析&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span>*<span style="color: Maroon;">40</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; report <span style="color: Gray;">=</span> analyzer.<span style="color: #05a;">full_analysis</span><span style="color: Olive;">&#40;</span>image_path<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;分类结果：{report['category']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;报告已保存&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; main<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>这个工具封装了常用的图片分析功能，可以直接在项目中使用。</p>
+
+<p>你可以根据需求扩展：</p>
+<ul>
+
+	<li><p>添加更多分析场景（比如医学影像、工业检测、教育题目分析）</p></li>
+	<li>
+
+<p>加一个简单的 Web 界面（用 Flask 或 Gradio）</p></li>
+	<li>
+
+<p>支持批量处理文件夹里的图片</p></li>
+	<li>
+
+<p>把结果存入数据库</p></li></ul>
+
+
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-rag.html" rel="prev"> RAG 检索增强生成</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-workflow-auto.html" rel="next"> AI 工作流自动化</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31510' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31510;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31510, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31510},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31510;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

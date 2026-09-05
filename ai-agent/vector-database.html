@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>向量数据库（Vector Database） | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai-agent/vector-database.html" />
+<meta name="keywords" content="向量数据库（Vector Database）">
+<meta name="description" content="向量数据库（Vector Database）     $(function() {    $(&#039;.math&#039;).each(function() {         renderMathInElement(this, {             // 自定义选项，如果需要的话             delimiters: [                 { left: &#039;\\(&#039;, right..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI Agent 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI Agent(智能体) 教程"  href="/ai-agent/ai-agent-tutorial.html" >
+			AI Agent(智能体) 教程			</a>
+						<a target="_top" data-p="par" title="AI Agent 简介"  href="/ai-agent/ai-agent-intro.html" >
+			AI Agent 简介			</a>
+						<a target="_top" data-p="par" title="AI Agent  核心组件"  href="/ai-agent/ai-agent-core.html" >
+			AI Agent  核心组件			</a>
+			<a target="_top" title="AI Agent 术语" href="/ai-agent/ai-terminology.html">AI Agent 术语</a>
+<a target="_top" title="AI Agent 工作原理" href="/ai-agent/ai-agent-working-principle.html">AI Agent 工作原理</a>
+<a target="_top" title="AI 底层架构" href="/ai-agent/ai-architecture.html">AI 底层架构</a>
+<a target="_top" title="大语言模型基础" href="/ai-agent/ai-agent-llm.html">大语言模型基础</a>
+<a target="_top" title="大模型多模态" href="/ai-agent/llm-multimodal.html">大模型多模态</a>
+<a target="_top" title="提示词工程" href="/ai-agent/prompt-engineering.html">提示词工程</a>
+<a target="_top" title="Token (词元)" href="/ai-agent/token-intro.html">Token (词元)</a>
+<a target="_top" title="推理与规划" href="/ai-agent/reasoning-planning.html">推理与规划</a>
+<a target="_top" title="向量数据库" href="/ai-agent/vector-database.html">向量数据库</a>
+<a target="_top" title="RAG 与知识检索" href="/ai-agent/retrieval-augmented-generation.html">RAG 与知识检索</a>
+<a target="_top" title="Agent 上下文工程" href="/ai-agent/agent-context-engineering.html">Agent 上下文工程</a>
+
+<a target="_top" title="Agent 架构" href="/ai-agent/agent-architecture.html">Agent 架构</a>
+
+<br>
+<h2 class="left"> <span class="left_h2">智能体工具</span></h2>			<a target="_top" data-p="par" title="第一个 AI Agent"  href="/ai-agent/first-ai-agent.html" >
+			第一个 AI Agent			</a>
+			<a target="_top" title="AI 开发平台" href="/ai-agent/ai-monkeycode.html"> AI 开发平台</a>
+<a target="_top" title="OpenClaw (Clawdbot) 教程" href="/ai-agent/openclaw-clawdbot-tutorial.html"> OpenClaw (Clawdbot) 教程</a>
+<a target="_top" title="OpenClaw 快速上手" href="/ai-agent/openclaw-quickstart.html"> OpenClaw 快速上手</a>
+<a target="_top" title="QoderWork 教程" href="/ai-agent/qoderwork.html"> QoderWork 教程</a>
+<a target="_top" title="QoderWake 教程" href="/ai-agent/qoderwake-usage.html"> QoderWake 教程</a>
+<a target="_top" title="WorkBuddy 入门教程" href="/ai-agent/workbuddy-usage.html"> WorkBuddy 入门教程</a>
+<a target="_top" title="AI 工作流" href="/ai-agent/ai-workflow.html"> AI 工作流</a>
+			<a target="_top" data-p="par" title="CrewAI 构建智能体"  href="/ai-agent/crewai-agent.html" >
+			CrewAI 构建智能体			</a>
+						<a target="_top" data-p="par" title="LangChain 制作智能体"  href="/ai-agent/langchain-agent.html" >
+			LangChain 制作智能体			</a>
+			<a target="_top" title="LangGraph 入门教程" href="/ai-agent/langgraph-quick-start.html">LangGraph 入门教程</a>
+<a target="_top" title="Deep Agents 入门教程" href="/ai-agent/deep-agents-usage.html">Deep Agents 入门教程</a>
+<a target="_top" title="GraphRAG 入门教程" href="/ai-agent/graphrag-usage.html">GraphRAG 入门教程</a>
+<a target="_top"title="Harness Engineering" href="/ai-agent/harness-engineering.html">Harness Engineering</a>
+<a target="_top" title="Hermes Agent" href="/ai-agent/hermes-agent.html">Hermes Agent</a>
+<a target="_top" title="Loop Engineering" href="/ai-agent/loop-engineering.html">Loop Engineering</a>
+<a target="_top" title="Vibe Coding 入门教程" href="/ai-agent/vibe-coding-start.html">Vibe Coding</a>
+<a href="/ai-agent/dify-usage.html" title="Dify 入门教程">Dify 入门教程</a>
+<a href="/ai-agent/n8n-usage.html" title="n8n 入门教程">n8n 入门教程 </a>
+<a href="/ai-agent/pi-coding-agent.html" title="Pi Coding Agent">Pi Coding Agent </a>
+
+<br><h2 class="left"> <span class="left_h2">Python 实现智能体</span></h2>
+<a target="_top" title="Python 实现 AI Agent" href="/ai-agent/python-ai-agent.html">Python 实现 AI Agent</a>
+<a target="_top" title="工具调用" href="/ai-agent/ai-agent-function-calling.html">工具调用</a>
+<a target="_top"  title="记忆系统" href="/ai-agent/ai-agent-memory-system-design.html">记忆系统</a>
+
+			<a target="_top" data-p="par" title="Python 智能体环境配置"  href="/ai-agent/ai-agent-python-setup.html" >
+			Python 智能体环境配置			</a>
+						<a target="_top" data-p="par" title="AI Agent 问答实例"  href="/ai-agent/ai-agent-answer-demo.html" >
+			AI Agent 问答实例			</a>
+						<a target="_top" data-p="par" title="Python 实现推理与规划"  href="/ai-agent/python-reasoning-planning.html" >
+			推理与规划			</a>
+						<a target="_top" data-p="par" title="Python 实现 RAG 与知识检索"  href="/ai-agent/python-rag.html" >
+			RAG 与知识检索			</a>
+						<a target="_top" data-p="par" title="多智能体系统（Multi-Agent System）"  href="/ai-agent/multi-agent-system.html" >
+			多智能体系统			</a>
+						<a target="_top" data-p="par" title="AI Agent 工具与外部集成"  href="/ai-agent/tools-integration.html" >
+			工具与外部集成			</a>
+						<a target="_top" data-p="par" title="多模态 Agent"  href="/ai-agent/multimodal-agent.html" >
+			多模态 Agent			</a>
+						<a target="_top" data-p="par" title="Agent 评估、安全与对齐"  href="/ai-agent/evaluation-safety-alignment.html" >
+			评估、安全与对齐			</a>
+						<a target="_top" data-p="par" title="AI Agent 生产部署与工程化"  href="/ai-agent/production-deployment.html" >
+			生产部署与工程化			</a>
+						<a target="_top" data-p="par" title="AI Agent 垂直应用场景"  href="/ai-agent/vertical-applications.html" >
+			垂直应用场景			</a>
+						<a target="_top" data-p="par" title="Hugging Face Transformers"  href="/ai-agent/hugging-face-transformers.html" >
+			Hugging Face Transformers			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai-agent/agent-architecture.html" rel="prev"> Agent 架构</a> </div>
+			<div class="next-design-link"><a href="/ai-agent/ai-workflow.html" rel="next"> AI Workflow（AI 工作流）</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>向量数据库（Vector Database）</h1>
+<link rel="stylesheet" href="../static.jyshare.com/assets/libs/katex-0.15.2/dist/katex.min.css">
+<script src="../static.jyshare.com/assets/libs/katex-0.15.2/dist/katex.min.js"></script>
+<script src="../static.jyshare.com/assets/libs/katex-0.15.2/dist/contrib/auto-render.min.js" ></script>
+<script>
+$(function() {
+   $('.math').each(function() {
+        renderMathInElement(this, {
+            // 自定义选项，如果需要的话
+            delimiters: [
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });
+
+    });
+});
+</script>
+
+
+<p>向量数据库（Vector Database）是一种专门用于存储、索引和检索高维向量数据的数据库系统。</p>
+<p>你可以把它理解为：把意思相近的东西存在一起，并能快速找到和这个最像的那些东西。</p>
+<p>与传统数据库通过精确匹配来查询（<span class="marked">WHERE name = 'Alice'</span>）不同，向量数据库通过相似度来查询（找到和这张图最相似的 10 张图）。</p>
+
+<h3>一个直观的类比</h3>
+<p>想象一个图书馆的场景：</p>
+
+<table class="reference">
+<tr><th>数据库类型</th><th>检索方式</th><th>类比</th></tr>
+<tr><td>传统数据库</td><td>按书号、书名精确检索</td><td>找一本指定编号的书</td></tr>
+<tr><td>向量数据库</td><td>按内容相关性检索</td><td>找"所有和《三体》风格类似的科幻小说"</td></tr>
+</table>
+
+<p>这种语义上的相似，正是向量数据库解决的核心问题。</p>
+
+<hr>
+
+<h2>为什么需要向量数据库</h2>
+<p>在深入技术细节之前，我们先理解向量数据库解决了什么问题。</p>
+
+<h3>传统数据库的局限</h3>
+<p>传统关系型数据库（MySQL、PostgreSQL）非常擅长处理结构化数据，但在面对以下需求时力不从心：</p>
+
+<ul>
+<li>图片搜索（找出视觉相似的图片）</li>
+<li>语义搜索（用户搜"苹果手机"，能找到"iPhone"的相关内容）</li>
+<li>推荐系统（找到"和你喜欢的歌曲风格类似的歌"）</li>
+<li>异常检测（找到"和正常行为差异最大的日志"）</li>
+</ul>
+
+<p>这些问题的共同特征是：需要理解内容的"含义"，而不是做字面匹配。</p>
+
+<h3>传统方案的问题</h3>
+
+<pre>
+用 LIKE '%苹果%' 搜索 &rarr; 找不到 "iPhone"、"Apple"
+用全文索引搜索     &rarr; 找不到语义相关但用词不同的内容
+</pre>
+
+<h3>对比示意图</h3>
+<p>下面的图表直观展示了传统数据库和向量数据库在查询方式上的根本差异。</p>
+
+<svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="760" height="340" fill="#f8f9fa" rx="12"/>
+  <text x="380" y="32" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a2e">传统数据库 vs 向量数据库：查询方式对比</text>
+
+  <rect x="20" y="50" width="340" height="270" fill="#fff" rx="10" stroke="#e0e0e0" stroke-width="1.5"/>
+  <rect x="20" y="50" width="340" height="40" fill="#e74c3c" rx="10"/>
+  <rect x="20" y="78" width="340" height="12" fill="#e74c3c"/>
+  <text x="190" y="76" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">传统数据库（精确匹配）</text>
+
+  <rect x="40" y="105" width="300" height="36" fill="#fdecea" rx="6" stroke="#e74c3c" stroke-width="1"/>
+  <text x="190" y="125" text-anchor="middle" font-size="12" fill="#c0392b" font-style="italic">SELECT * WHERE name = '苹果手机'</text>
+
+  <text x="55" y="165" font-size="11" fill="#555">匹配结果：</text>
+  <rect x="40" y="172" width="300" height="28" fill="#fdecea" rx="5"/>
+  <text x="55" y="191" font-size="12" fill="#e74c3c">√  苹果手机 Pro 128GB</text>
+  <rect x="40" y="205" width="300" height="28" fill="#f5f5f5" rx="5"/>
+  <text x="55" y="224" font-size="12" fill="#aaa">x  iPhone 15（未匹配）</text>
+  <rect x="40" y="238" width="300" height="28" fill="#f5f5f5" rx="5"/>
+  <text x="55" y="257" font-size="12" fill="#aaa">x  Apple 手机（未匹配）</text>
+  <rect x="40" y="271" width="300" height="28" fill="#f5f5f5" rx="5"/>
+  <text x="55" y="290" font-size="12" fill="#aaa">x  智能手机 iOS（未匹配）</text>
+
+  <rect x="400" y="50" width="340" height="270" fill="#fff" rx="10" stroke="#e0e0e0" stroke-width="1.5"/>
+  <rect x="400" y="50" width="340" height="40" fill="#2ecc71" rx="10"/>
+  <rect x="400" y="78" width="340" height="12" fill="#2ecc71"/>
+  <text x="570" y="76" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">向量数据库（语义相似）</text>
+
+  <rect x="420" y="105" width="300" height="36" fill="#eafaf1" rx="6" stroke="#2ecc71" stroke-width="1"/>
+  <text x="570" y="125" text-anchor="middle" font-size="12" fill="#27ae60" font-style="italic">search(embed("苹果手机"), top_k=4)</text>
+
+  <text x="435" y="165" font-size="11" fill="#555">相似结果（含相似度）：</text>
+  <rect x="420" y="172" width="300" height="28" fill="#eafaf1" rx="5"/>
+  <text x="435" y="191" font-size="12" fill="#27ae60">√  苹果手机 Pro 128GB  0.98</text>
+  <rect x="420" y="205" width="300" height="28" fill="#eafaf1" rx="5"/>
+  <text x="435" y="224" font-size="12" fill="#27ae60">√  iPhone 15             0.95</text>
+  <rect x="420" y="238" width="300" height="28" fill="#eafaf1" rx="5"/>
+  <text x="435" y="257" font-size="12" fill="#27ae60">√  Apple 手机            0.93</text>
+  <rect x="420" y="271" width="300" height="28" fill="#eafaf1" rx="5"/>
+  <text x="435" y="290" font-size="12" fill="#27ae60">√  智能手机 iOS          0.87</text>
+</svg>
+
+<hr>
+
+<h2>核心概念：向量与嵌入</h2>
+<p>理解向量和嵌入是掌握向量数据库的第一步。</p>
+
+<h3>什么是向量（Vector）</h3>
+<p>在数学上，向量就是一组有序的数字。</p>
+
+<pre>
+[0.12, -0.54, 0.87, 0.03, ..., 0.61]   &larr; 这就是一个向量
+</pre>
+
+<p>在机器学习中，这组数字代表某个对象的语义特征，维度通常在 128 到 4096 之间。</p>
+
+<h3>什么是嵌入（Embedding）</h3>
+<p>嵌入（Embedding）是将现实世界的对象（文字、图片、音频等）转换成向量的过程和结果。</p>
+<p>这个转换由嵌入模型完成，其核心思想是：语义相近的对象，其向量在空间中的距离也更近。</p>
+
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="320" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">嵌入（Embedding）过程示意</text>
+
+  <rect x="20" y="55" width="130" height="50" rx="8" fill="#3498db" opacity="0.9"/>
+  <text x="85" y="76" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">文本</text>
+  <text x="85" y="94" text-anchor="middle" font-size="11" fill="#dce9f7">"今天天气真好"</text>
+
+  <rect x="20" y="130" width="130" height="50" rx="8" fill="#9b59b6" opacity="0.9"/>
+  <text x="85" y="151" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">图像</text>
+  <text x="85" y="169" text-anchor="middle" font-size="11" fill="#e8d5f5">一张猫咪的照片</text>
+
+  <rect x="20" y="205" width="130" height="50" rx="8" fill="#e67e22" opacity="0.9"/>
+  <text x="85" y="226" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">音频</text>
+  <text x="85" y="244" text-anchor="middle" font-size="11" fill="#fde8cc">一段音乐片段</text>
+
+  <line x1="152" y1="80" x2="255" y2="155" stroke="#bbb" stroke-width="1.5" marker-end="url(#arrow1)"/>
+  <line x1="152" y1="155" x2="255" y2="165" stroke="#bbb" stroke-width="1.5" marker-end="url(#arrow1)"/>
+  <line x1="152" y1="230" x2="255" y2="175" stroke="#bbb" stroke-width="1.5" marker-end="url(#arrow1)"/>
+
+  <defs>
+    <marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#bbb"/>
+    </marker>
+    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2ecc71"/>
+    </marker>
+  </defs>
+
+  <rect x="255" y="115" width="150" height="90" rx="10" fill="#1a1a2e"/>
+  <text x="330" y="150" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">嵌入模型</text>
+  <text x="330" y="168" text-anchor="middle" font-size="10" fill="#aaa">Embedding Model</text>
+  <text x="330" y="186" text-anchor="middle" font-size="10" fill="#f39c12">text-embedding-3</text>
+  <text x="330" y="200" text-anchor="middle" font-size="10" fill="#f39c12">CLIP / ResNet ...</text>
+
+  <line x1="407" y1="150" x2="450" y2="100" stroke="#2ecc71" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <line x1="407" y1="160" x2="450" y2="160" stroke="#2ecc71" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <line x1="407" y1="170" x2="450" y2="220" stroke="#2ecc71" stroke-width="1.5" marker-end="url(#arrow2)"/>
+
+  <rect x="452" y="60" width="245" height="55" rx="8" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.2"/>
+  <text x="465" y="79" font-size="10" fill="#888">文本向量 (1536维):</text>
+  <text x="465" y="98" font-size="10.5" fill="#27ae60" font-family="monospace">[0.12, -0.54, 0.87, 0.03, ...]</text>
+
+  <rect x="452" y="132" width="245" height="55" rx="8" fill="#f5eafb" stroke="#9b59b6" stroke-width="1.2"/>
+  <text x="465" y="151" font-size="10" fill="#888">图像向量 (512维):</text>
+  <text x="465" y="170" font-size="10.5" fill="#8e44ad" font-family="monospace">[-0.33, 0.71, 0.22, 0.95, ...]</text>
+
+  <rect x="452" y="203" width="245" height="55" rx="8" fill="#fef5e7" stroke="#e67e22" stroke-width="1.2"/>
+  <text x="465" y="222" font-size="10" fill="#888">音频向量 (256维):</text>
+  <text x="465" y="241" font-size="10.5" fill="#ca6f1e" font-family="monospace">[0.66, -0.11, 0.48, -0.72, ...]</text>
+
+  <text x="360" y="295" text-anchor="middle" font-size="11" fill="#888">Tip: 语义相近的对象，转换后的向量在空间中距离也更近</text>
+</svg>
+
+<h3>语义近则向量近</h3>
+<p>用一个 2D 简化示例来理解（实际是几百至几千维）：</p>
+
+<svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="500" height="420" fill="#f8f9fa" rx="12"/>
+  <text x="250" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">向量空间中的语义聚类（二维示意）</text>
+
+  <line x1="60" y1="370" x2="460" y2="370" stroke="#ccc" stroke-width="1.5"/>
+  <line x1="60" y1="370" x2="60" y2="50" stroke="#ccc" stroke-width="1.5"/>
+  <text x="465" y="374" font-size="10" fill="#aaa">x</text>
+  <text x="58" y="45" font-size="10" fill="#aaa">y</text>
+
+  <line x1="60" y1="50" x2="460" y2="50" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="60" y1="150" x2="460" y2="150" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="60" y1="250" x2="460" y2="250" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="160" y1="50" x2="160" y2="370" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="260" y1="50" x2="260" y2="370" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="360" y1="50" x2="360" y2="370" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <ellipse cx="150" cy="280" rx="65" ry="55" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="150" y="348" text-anchor="middle" font-size="10" fill="#c0392b">动物类</text>
+  <circle cx="120" cy="270" r="5" fill="#e74c3c"/>
+  <text x="125" y="260" font-size="11" fill="#e74c3c">猫</text>
+  <circle cx="170" cy="260" r="5" fill="#e74c3c"/>
+  <text x="175" y="252" font-size="11" fill="#e74c3c">狗</text>
+  <circle cx="140" cy="305" r="5" fill="#e74c3c"/>
+  <text x="145" y="298" font-size="11" fill="#e74c3c">兔子</text>
+  <circle cx="180" cy="290" r="5" fill="#e74c3c"/>
+  <text x="185" y="285" font-size="11" fill="#e74c3c">熊</text>
+
+  <ellipse cx="370" cy="140" rx="65" ry="55" fill="#eaf4fb" stroke="#3498db" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="370" y="205" text-anchor="middle" font-size="10" fill="#2980b9">科技类</text>
+  <circle cx="340" cy="130" r="5" fill="#3498db"/>
+  <text x="347" y="124" font-size="11" fill="#3498db">电脑</text>
+  <circle cx="390" cy="120" r="5" fill="#3498db"/>
+  <text x="397" y="114" font-size="11" fill="#3498db">手机</text>
+  <circle cx="355" cy="165" r="5" fill="#3498db"/>
+  <text x="362" y="158" font-size="11" fill="#3498db">键盘</text>
+  <circle cx="395" cy="155" r="5" fill="#3498db"/>
+  <text x="402" y="148" font-size="11" fill="#3498db">显示器</text>
+
+  <ellipse cx="280" cy="310" rx="60" ry="45" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="280" y="366" text-anchor="middle" font-size="10" fill="#27ae60">食物类</text>
+  <circle cx="255" cy="300" r="5" fill="#2ecc71"/>
+  <text x="262" y="294" font-size="11" fill="#27ae60">披萨</text>
+  <circle cx="300" cy="295" r="5" fill="#2ecc71"/>
+  <text x="307" y="288" font-size="11" fill="#27ae60">汉堡</text>
+  <circle cx="265" cy="325" r="5" fill="#2ecc71"/>
+  <text x="272" y="319" font-size="11" fill="#27ae60">面条</text>
+
+  <circle cx="200" cy="255" r="8" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+  <text x="213" y="250" font-size="11" fill="#e67e22" font-weight="bold">查询：宠物</text>
+
+  <line x1="200" y1="255" x2="120" y2="270" stroke="#f39c12" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="200" y1="255" x2="170" y2="260" stroke="#f39c12" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <text x="250" y="395" text-anchor="middle" font-size="10" fill="#888">查询"宠物"的向量，距离"猫""狗"更近，属于动物聚类</text>
+</svg>
+
+<blockquote><p>关键理解：向量空间中距离近的两个向量，其原始内容在语义上也更相近。这是向量数据库所有能力的基础。</p></blockquote>
+
+<hr>
+
+<h2>相似度计算方法</h2>
+<p>找到"最相似的向量"的核心是计算两个向量的距离或相似度。以下是三种最常用的方法。</p>
+
+<h3>余弦相似度（Cosine Similarity）</h3>
+<p>余弦相似度衡量两个向量的方向角，忽略长度。这是最常用的方法，尤其适合文本场景。</p>
+
+<p>公式：</p>
+<p class="math">\[
+\text{CosineSimilarity}(A, B)
+=
+\frac{A \cdot B}
+{\|A\|\|B\|}
+=
+\frac{\sum_{i=1}^{n} A_i B_i}
+{\sqrt{\sum_{i=1}^{n} A_i^2}\sqrt{\sum_{i=1}^{n} B_i^2}}
+\]</p>
+<ul>
+<li>结果范围：-1 到 1，值越大越相似</li>
+<li>适用场景：文本语义搜索、文档相似度</li>
+</ul>
+
+<h3>欧氏距离（Euclidean Distance）</h3>
+<p>欧氏距离衡量两点之间的直线距离，距离越小越相似。</p>
+
+<p>公式：</p>
+<p class="math">\[
+d(A,B)
+=
+\sqrt{\sum_{i=1}^{n}(A_i-B_i)^2}
+\]</p>
+<ul>
+<li>结果范围：0 到 ∞，值越小越相似</li>
+<li>适用场景：图像检索、地理位置相关应用</li>
+</ul>
+
+<h3>点积（Dot Product）</h3>
+<p>点积是向量相乘求和，结合了方向和长度信息。</p>
+
+<p>公式：</p>
+<p class="math">\[
+A \cdot B
+=
+\sum_{i=1}^{n} A_i B_i
+\]</p>
+<ul>
+<li>适用场景：推荐系统（向量已归一化时等价于余弦相似度）</li>
+</ul>
+
+<h3>三种方法对比</h3>
+
+<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="700" height="220" fill="#f8f9fa" rx="12"/>
+  <text x="350" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">三种相似度计算方法对比</text>
+
+  <rect x="15" y="38" width="670" height="30" fill="#1a1a2e" rx="6"/>
+  <text x="100" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">方法</text>
+  <text x="270" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">原理</text>
+  <text x="430" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">结果含义</text>
+  <text x="590" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">推荐场景</text>
+
+  <rect x="15" y="70" width="670" height="42" fill="#eaf4fb" rx="4"/>
+  <text x="100" y="97" text-anchor="middle" font-size="11" fill="#2980b9" font-weight="bold">余弦相似度</text>
+  <text x="270" y="90" text-anchor="middle" font-size="10" fill="#444">计算两向量夹角的余弦值</text>
+  <text x="270" y="104" text-anchor="middle" font-size="10" fill="#444">关注方向，忽略大小</text>
+  <text x="430" y="97" text-anchor="middle" font-size="10" fill="#444">[-1, 1]，越接近 1 越相似</text>
+  <text x="590" y="97" text-anchor="middle" font-size="10" fill="#444">文本搜索、NLP 首选</text>
+
+  <rect x="15" y="114" width="670" height="42" fill="#fef9ec" rx="4"/>
+  <text x="100" y="141" text-anchor="middle" font-size="11" fill="#e67e22" font-weight="bold">欧氏距离</text>
+  <text x="270" y="134" text-anchor="middle" font-size="10" fill="#444">两点之间的直线距离</text>
+  <text x="270" y="148" text-anchor="middle" font-size="10" fill="#444">关注绝对位置差异</text>
+  <text x="430" y="141" text-anchor="middle" font-size="10" fill="#444">[0, ∞)，越接近 0 越相似</text>
+  <text x="590" y="141" text-anchor="middle" font-size="10" fill="#444">图像检索、坐标系数据</text>
+
+  <rect x="15" y="158" width="670" height="42" fill="#eafaf1" rx="4"/>
+  <text x="100" y="185" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">点积</text>
+  <text x="270" y="178" text-anchor="middle" font-size="10" fill="#444">向量各分量乘积之和</text>
+  <text x="270" y="192" text-anchor="middle" font-size="10" fill="#444">方向+长度综合考量</text>
+  <text x="430" y="185" text-anchor="middle" font-size="10" fill="#444">值越大越相似（无固定范围）</text>
+  <text x="590" y="185" text-anchor="middle" font-size="10" fill="#444">推荐系统、归一化场景</text>
+</svg>
+
+<h3>Python 代码示例</h3>
+<p>以下示例演示了三种相似度计算方法的 Python 实现：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># 余弦相似度：衡量方向相似性</span><br />
+<span style="color: Green;font-weight:bold;">def</span> cosine_similarity<span style="color: Olive;">&#40;</span>a<span style="color: Gray;">,</span> b<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> np.<span style="color: #05a;">dot</span><span style="color: Olive;">&#40;</span>a<span style="color: Gray;">,</span> b<span style="color: Olive;">&#41;</span> / <span style="color: Olive;">&#40;</span>np.<span style="color: #05a;">linalg</span>.<span style="color: #05a;">norm</span><span style="color: Olive;">&#40;</span>a<span style="color: Olive;">&#41;</span> * np.<span style="color: #05a;">linalg</span>.<span style="color: #05a;">norm</span><span style="color: Olive;">&#40;</span>b<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 欧氏距离：衡量绝对位置差异</span><br />
+<span style="color: Green;font-weight:bold;">def</span> euclidean_distance<span style="color: Olive;">&#40;</span>a<span style="color: Gray;">,</span> b<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> np.<span style="color: #05a;">linalg</span>.<span style="color: #05a;">norm</span><span style="color: Olive;">&#40;</span>a - b<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 点积：结合方向与长度</span><br />
+<span style="color: Green;font-weight:bold;">def</span> dot_product<span style="color: Olive;">&#40;</span>a<span style="color: Gray;">,</span> b<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> np.<span style="color: #05a;">dot</span><span style="color: Olive;">&#40;</span>a<span style="color: Gray;">,</span> b<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 示例向量</span><br />
+v1 <span style="color: Gray;">=</span> np.<span style="color: #05a;">array</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0.12</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">0.54</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.87</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.03</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+v2 <span style="color: Gray;">=</span> np.<span style="color: #05a;">array</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0.10</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">0.50</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.90</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.05</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+v3 <span style="color: Gray;">=</span> np.<span style="color: #05a;">array</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">0.80</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.20</span><span style="color: Gray;">,</span> -<span style="color: Maroon;">0.30</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.70</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;v1 vs v2 余弦相似度: {cosine_similarity(v1, v2):.4f}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 约 0.9997（非常相似）</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;v1 vs v3 余弦相似度: {cosine_similarity(v1, v3):.4f}&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 约 -0.55（不相似）</span><br />
+
+</div>
+</div>
+
+<pre>
+v1 vs v2 余弦相似度: 0.9997
+v1 vs v3 余弦相似度: -0.5512
+</pre>
+
+<hr>
+
+<h2>向量索引算法</h2>
+<p>数据量大时（百万、亿级），对每一条数据做相似度计算（暴力检索）太慢。向量数据库使用专门的索引算法来加速查询。</p>
+
+<h3>暴力检索（Flat / Brute-force）</h3>
+<p>暴力检索遍历所有向量，逐一计算相似度。</p>
+
+<table class="reference">
+<tr><th>维度</th><th>说明</th></tr>
+<tr><td>原理</td><td>遍历所有向量，逐一计算相似度</td></tr>
+<tr><td>优点</td><td>结果 100% 精确</td></tr>
+<tr><td>缺点</td><td>数据量大时极慢，O(n) 复杂度</td></tr>
+<tr><td>适用</td><td>数据量小于 10 万，对精度要求极高</td></tr>
+</table>
+
+<h3>IVF（倒排文件索引）</h3>
+
+<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="640" height="300" fill="#f8f9fa" rx="12"/>
+  <text x="320" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">IVF 索引原理：先聚类，再在桶内搜索</text>
+
+  <ellipse cx="110" cy="160" rx="80" ry="70" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+  <circle cx="90" cy="140" r="4" fill="#e74c3c"/>
+  <circle cx="120" cy="155" r="4" fill="#e74c3c"/>
+  <circle cx="100" cy="175" r="4" fill="#e74c3c"/>
+  <circle cx="130" cy="170" r="4" fill="#e74c3c"/>
+  <circle cx="85" cy="185" r="4" fill="#e74c3c"/>
+  <circle cx="107" cy="165" r="8" fill="#c0392b" stroke="#fff" stroke-width="2"/>
+  <text x="107" y="200" text-anchor="middle" font-size="10" fill="#c0392b">簇 1 中心</text>
+
+  <ellipse cx="320" cy="120" rx="85" ry="65" fill="#eaf4fb" stroke="#3498db" stroke-width="1.5"/>
+  <circle cx="290" cy="100" r="4" fill="#3498db"/>
+  <circle cx="340" cy="105" r="4" fill="#3498db"/>
+  <circle cx="300" cy="130" r="4" fill="#3498db"/>
+  <circle cx="350" cy="125" r="4" fill="#3498db"/>
+  <circle cx="310" cy="145" r="4" fill="#3498db"/>
+  <circle cx="360" cy="140" r="4" fill="#3498db"/>
+  <circle cx="325" cy="118" r="8" fill="#2980b9" stroke="#fff" stroke-width="2"/>
+  <text x="325" y="200" text-anchor="middle" font-size="10" fill="#2980b9">簇 2 中心</text>
+
+  <ellipse cx="530" cy="200" rx="80" ry="65" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5"/>
+  <circle cx="505" cy="185" r="4" fill="#2ecc71"/>
+  <circle cx="550" cy="190" r="4" fill="#2ecc71"/>
+  <circle cx="515" cy="215" r="4" fill="#2ecc71"/>
+  <circle cx="555" cy="220" r="4" fill="#2ecc71"/>
+  <circle cx="530" cy="230" r="4" fill="#2ecc71"/>
+  <circle cx="531" cy="207" r="8" fill="#27ae60" stroke="#fff" stroke-width="2"/>
+  <text x="531" y="280" text-anchor="middle" font-size="10" fill="#27ae60">簇 3 中心</text>
+
+  <circle cx="290" cy="155" r="9" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+  <text x="270" y="175" font-size="11" fill="#e67e22" font-weight="bold">查询</text>
+
+  <line x1="290" y1="155" x2="107" y2="165" stroke="#e74c3c" stroke-width="1.2" stroke-dasharray="5,3"/>
+  <text x="180" y="150" font-size="9" fill="#e74c3c">远</text>
+  <line x1="290" y1="155" x2="325" y2="118" stroke="#2980b9" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="315" y="148" font-size="9" fill="#2980b9">近!</text>
+  <line x1="290" y1="155" x2="531" y2="207" stroke="#2ecc71" stroke-width="1.2" stroke-dasharray="5,3"/>
+  <text x="420" y="168" font-size="9" fill="#2ecc71">远</text>
+
+  <text x="320" y="295" text-anchor="middle" font-size="10" fill="#555">只在距离最近的簇 2 内做精确搜索，大幅减少计算量</text>
+</svg>
+
+<p>IVF 执行步骤：</p>
+<ol>
+<li>训练阶段：用 K-Means 将所有向量聚成 N 个簇，记录每个簇的中心</li>
+<li>查询阶段：先找出距离最近的几个簇的中心，再只在这些簇内做精确搜索</li>
+</ol>
+
+<h3>HNSW（分层导航小世界图）</h3>
+<p>HNSW 是目前最主流的向量索引算法，兼顾速度和精度。</p>
+
+<svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="680" height="360" fill="#f8f9fa" rx="12"/>
+  <text x="340" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">HNSW 分层结构示意</text>
+
+  <rect x="20" y="45" width="640" height="75" fill="#fef5e7" rx="8" stroke="#f39c12" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="30" y="62" font-size="10" fill="#e67e22" font-weight="bold">第 2 层（最稀疏，长程跳转）</text>
+  <circle cx="160" cy="92" r="12" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+  <text x="160" y="97" text-anchor="middle" font-size="10" fill="#fff">A</text>
+  <circle cx="400" cy="92" r="12" fill="#f39c12" stroke="#fff" stroke-width="2"/>
+  <text x="400" y="97" text-anchor="middle" font-size="10" fill="#fff">B</text>
+  <line x1="172" y1="92" x2="388" y2="92" stroke="#f39c12" stroke-width="2"/>
+
+  <rect x="20" y="135" width="640" height="95" fill="#eaf4fb" rx="8" stroke="#3498db" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="30" y="152" font-size="10" fill="#2980b9" font-weight="bold">第 1 层（中等密度，中程跳转）</text>
+  <circle cx="100" cy="188" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  <text x="100" y="193" text-anchor="middle" font-size="10" fill="#fff">C</text>
+  <circle cx="210" cy="180" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  <text x="210" y="185" text-anchor="middle" font-size="10" fill="#fff">A</text>
+  <circle cx="330" cy="195" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  <text x="330" y="200" text-anchor="middle" font-size="10" fill="#fff">D</text>
+  <circle cx="450" cy="182" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  <text x="450" y="187" text-anchor="middle" font-size="10" fill="#fff">B</text>
+  <circle cx="560" cy="190" r="12" fill="#3498db" stroke="#fff" stroke-width="2"/>
+  <text x="560" y="195" text-anchor="middle" font-size="10" fill="#fff">E</text>
+  <line x1="112" y1="188" x2="198" y2="182" stroke="#3498db" stroke-width="1.5"/>
+  <line x1="222" y1="181" x2="318" y2="193" stroke="#3498db" stroke-width="1.5"/>
+  <line x1="342" y1="194" x2="438" y2="184" stroke="#3498db" stroke-width="1.5"/>
+  <line x1="462" y1="183" x2="548" y2="189" stroke="#3498db" stroke-width="1.5"/>
+
+  <rect x="20" y="245" width="640" height="95" fill="#eafaf1" rx="8" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="30" y="262" font-size="10" fill="#27ae60" font-weight="bold">第 0 层（最密集，精确搜索）</text>
+  <circle cx="80" cy="295" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="80" y="299" text-anchor="middle" font-size="9" fill="#fff">F</text>
+  <circle cx="140" cy="310" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="140" y="314" text-anchor="middle" font-size="9" fill="#fff">C</text>
+  <circle cx="200" cy="285" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="200" y="289" text-anchor="middle" font-size="9" fill="#fff">A</text>
+  <circle cx="270" cy="305" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="270" y="309" text-anchor="middle" font-size="9" fill="#fff">G</text>
+  <circle cx="340" cy="288" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="340" y="292" text-anchor="middle" font-size="9" fill="#fff">D</text>
+  <circle cx="410" cy="308" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="410" y="312" text-anchor="middle" font-size="9" fill="#fff">H</text>
+  <circle cx="470" cy="285" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="470" y="289" text-anchor="middle" font-size="9" fill="#fff">B</text>
+  <circle cx="540" cy="300" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="540" y="304" text-anchor="middle" font-size="9" fill="#fff">E</text>
+  <circle cx="600" cy="285" r="10" fill="#2ecc71" stroke="#fff" stroke-width="2"/>
+  <text x="600" y="289" text-anchor="middle" font-size="9" fill="#fff">I</text>
+  <line x1="90" y1="295" x2="130" y2="308" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="150" y1="308" x2="190" y2="287" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="210" y1="287" x2="260" y2="303" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="280" y1="303" x2="330" y2="289" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="350" y1="289" x2="400" y2="306" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="420" y1="306" x2="460" y2="287" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="480" y1="285" x2="530" y2="298" stroke="#2ecc71" stroke-width="1.2"/>
+  <line x1="550" y1="298" x2="590" y2="286" stroke="#2ecc71" stroke-width="1.2"/>
+
+  <line x1="160" y1="104" x2="210" y2="168" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="400" y1="104" x2="450" y2="170" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="210" y1="192" x2="200" y2="273" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="450" y1="194" x2="470" y2="273" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <text x="340" y="352" text-anchor="middle" font-size="10" fill="#888">查询时从顶层大步跳转定位区域，再逐层细化精确找到最近邻</text>
+</svg>
+
+<p>HNSW 核心思路：</p>
+<ul>
+<li>构建多层图结构，顶层稀疏，底层密集</li>
+<li>查询时从顶层入口开始，做"跳格游戏"：每层贪心地往更近的节点跳，再下探到下一层</li>
+<li>大幅减少需要比较的节点数，时间复杂度近似 O(log n)</li>
+</ul>
+
+<h3>其他常用索引</h3>
+
+<table class="reference">
+<tr><th>索引类型</th><th>特点</th><th>适用场景</th></tr>
+<tr><td>Flat（暴力）</td><td>精确但慢</td><td>小数据集、精度优先</td></tr>
+<tr><td>IVF_Flat</td><td>聚类后精确搜索，速度快</td><td>中大规模，内存充足</td></tr>
+<tr><td>IVF_PQ</td><td>量化压缩，节省内存</td><td>超大规模，内存受限</td></tr>
+<tr><td>HNSW</td><td>速度快、精度高，内存占用高</td><td>最常用，推荐首选</td></tr>
+<tr><td>ScaNN</td><td>Google 出品，优化吞吐量</td><td>高并发生产环境</td></tr>
+</table>
+
+<hr>
+
+<h2>主流向量数据库对比</h2>
+<p>以下是当前最主流的向量数据库横向对比，帮助你在不同场景下做出选择。</p>
+
+<svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="380" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="26" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">主流向量数据库横向对比</text>
+
+  <rect x="15" y="38" width="690" height="30" fill="#1a1a2e" rx="6"/>
+  <text x="90"  y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">数据库</text>
+  <text x="195" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">类型</text>
+  <text x="305" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">部署方式</text>
+  <text x="420" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">特点</text>
+  <text x="570" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">适用场景</text>
+  <text x="672" y="58" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">难度</text>
+
+  <rect x="15" y="70" width="690" height="46" fill="#fff" rx="3"/>
+  <rect x="15" y="70" width="6" height="46" fill="#e74c3c" rx="3"/>
+  <text x="90"  y="89" text-anchor="middle" font-size="12" fill="#e74c3c" font-weight="bold">Chroma</text>
+  <text x="90"  y="106" text-anchor="middle" font-size="10" fill="#888">开源免费</text>
+  <text x="195" y="97" text-anchor="middle" font-size="11" fill="#444">纯向量DB</text>
+  <text x="305" y="89" text-anchor="middle" font-size="10" fill="#444">本地 / 云端</text>
+  <text x="305" y="104" text-anchor="middle" font-size="10" fill="#444">嵌入式优先</text>
+  <text x="420" y="89" text-anchor="middle" font-size="10" fill="#444">极简 API，Python 原生</text>
+  <text x="420" y="104" text-anchor="middle" font-size="10" fill="#444">集成 LangChain 最方便</text>
+  <text x="570" y="97" text-anchor="middle" font-size="10" fill="#444">RAG 原型、AI 应用开发</text>
+  <text x="672" y="97" text-anchor="middle" font-size="11" fill="#2ecc71" font-weight="bold">入门</text>
+
+  <rect x="15" y="118" width="690" height="46" fill="#fafafa" rx="3"/>
+  <rect x="15" y="118" width="6" height="46" fill="#3498db" rx="3"/>
+  <text x="90"  y="137" text-anchor="middle" font-size="12" fill="#3498db" font-weight="bold">Qdrant</text>
+  <text x="90"  y="154" text-anchor="middle" font-size="10" fill="#888">开源免费</text>
+  <text x="195" y="141" text-anchor="middle" font-size="11" fill="#444">纯向量DB</text>
+  <text x="305" y="137" text-anchor="middle" font-size="10" fill="#444">本地 / Docker</text>
+  <text x="305" y="152" text-anchor="middle" font-size="10" fill="#444">云服务</text>
+  <text x="420" y="137" text-anchor="middle" font-size="10" fill="#444">Rust 实现，性能强劲</text>
+  <text x="420" y="152" text-anchor="middle" font-size="10" fill="#444">支持过滤+向量混合检索</text>
+  <text x="570" y="141" text-anchor="middle" font-size="10" fill="#444">生产级推荐，性能优先</text>
+  <text x="672" y="141" text-anchor="middle" font-size="11" fill="#f39c12" font-weight="bold">中级</text>
+
+  <rect x="15" y="166" width="690" height="46" fill="#fff" rx="3"/>
+  <rect x="15" y="166" width="6" height="46" fill="#9b59b6" rx="3"/>
+  <text x="90"  y="185" text-anchor="middle" font-size="12" fill="#9b59b6" font-weight="bold">Weaviate</text>
+  <text x="90"  y="202" text-anchor="middle" font-size="10" fill="#888">开源免费</text>
+  <text x="195" y="189" text-anchor="middle" font-size="11" fill="#444">多模态DB</text>
+  <text x="305" y="185" text-anchor="middle" font-size="10" fill="#444">本地 / 云端</text>
+  <text x="305" y="200" text-anchor="middle" font-size="10" fill="#444">SaaS</text>
+  <text x="420" y="185" text-anchor="middle" font-size="10" fill="#444">GraphQL API，内置向量化</text>
+  <text x="420" y="200" text-anchor="middle" font-size="10" fill="#444">多模态（文本+图像）</text>
+  <text x="570" y="189" text-anchor="middle" font-size="10" fill="#444">多模态检索，知识图谱</text>
+  <text x="672" y="189" text-anchor="middle" font-size="11" fill="#f39c12" font-weight="bold">中级</text>
+
+  <rect x="15" y="214" width="690" height="46" fill="#fafafa" rx="3"/>
+  <rect x="15" y="214" width="6" height="46" fill="#e67e22" rx="3"/>
+  <text x="90"  y="233" text-anchor="middle" font-size="12" fill="#e67e22" font-weight="bold">Milvus</text>
+  <text x="90"  y="250" text-anchor="middle" font-size="10" fill="#888">开源免费</text>
+  <text x="195" y="237" text-anchor="middle" font-size="11" fill="#444">纯向量DB</text>
+  <text x="305" y="233" text-anchor="middle" font-size="10" fill="#444">分布式部署</text>
+  <text x="305" y="248" text-anchor="middle" font-size="10" fill="#444">Kubernetes</text>
+  <text x="420" y="233" text-anchor="middle" font-size="10" fill="#444">LF AI 基金会项目</text>
+  <text x="420" y="248" text-anchor="middle" font-size="10" fill="#444">大规模分布式，功能全面</text>
+  <text x="570" y="237" text-anchor="middle" font-size="10" fill="#444">亿级数据，企业大规模</text>
+  <text x="672" y="237" text-anchor="middle" font-size="11" fill="#e74c3c" font-weight="bold">进阶</text>
+
+  <rect x="15" y="262" width="690" height="46" fill="#fff" rx="3"/>
+  <rect x="15" y="262" width="6" height="46" fill="#27ae60" rx="3"/>
+  <text x="90"  y="281" text-anchor="middle" font-size="12" fill="#27ae60" font-weight="bold">Pinecone</text>
+  <text x="90"  y="298" text-anchor="middle" font-size="10" fill="#888">商业 SaaS</text>
+  <text x="195" y="285" text-anchor="middle" font-size="11" fill="#444">托管向量DB</text>
+  <text x="305" y="285" text-anchor="middle" font-size="10" fill="#444">纯云端</text>
+  <text x="305" y="300" text-anchor="middle" font-size="10" fill="#444">全托管服务</text>
+  <text x="420" y="281" text-anchor="middle" font-size="10" fill="#444">零运维，开箱即用</text>
+  <text x="420" y="296" text-anchor="middle" font-size="10" fill="#444">免费套餐可用</text>
+  <text x="570" y="285" text-anchor="middle" font-size="10" fill="#444">快速上线，无运维能力团队</text>
+  <text x="672" y="285" text-anchor="middle" font-size="11" fill="#2ecc71" font-weight="bold">入门</text>
+
+  <rect x="15" y="310" width="690" height="46" fill="#fafafa" rx="3"/>
+  <rect x="15" y="310" width="6" height="46" fill="#2c3e50" rx="3"/>
+  <text x="90"  y="329" text-anchor="middle" font-size="12" fill="#2c3e50" font-weight="bold">pgvector</text>
+  <text x="90"  y="346" text-anchor="middle" font-size="10" fill="#888">开源插件</text>
+  <text x="195" y="333" text-anchor="middle" font-size="11" fill="#444">PG 扩展</text>
+  <text x="305" y="333" text-anchor="middle" font-size="10" fill="#444">已有 PostgreSQL</text>
+  <text x="305" y="348" text-anchor="middle" font-size="10" fill="#444">环境直接用</text>
+  <text x="420" y="333" text-anchor="middle" font-size="10" fill="#444">复用已有 PG 基础设施</text>
+  <text x="420" y="348" text-anchor="middle" font-size="10" fill="#444">SQL 接口，上手最快</text>
+  <text x="570" y="333" text-anchor="middle" font-size="10" fill="#444">已用 PG 的项目，轻量接入</text>
+  <text x="672" y="333" text-anchor="middle" font-size="11" fill="#2ecc71" font-weight="bold">入门</text>
+</svg>
+
+<blockquote><p>新手建议：从 Chroma 或 pgvector 起步，前者适合 AI 应用原型，后者适合已有 PostgreSQL 的项目。</p></blockquote>
+
+<hr>
+
+<h2>快速上手：Python 示例</h2>
+<p>下面用 Chroma（最易入门）演示完整的增删改查流程。</p>
+
+<h3>安装</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+pip <span style="color: #c20cb9; font-weight: bold;">install</span> chromadb openai<br />
+
+</div>
+</div>
+
+<h3>完整示例：构建一个文档语义搜索系统</h3>
+<p>以下代码从头到尾演示了如何使用 Chroma 构建一个基于语义的文档搜索系统。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> chromadb<br />
+<span style="color: Green;font-weight:bold;">from</span> chromadb.<span style="color: #05a;">utils</span> <span style="color: Green;font-weight:bold;">import</span> embedding_functions<br />
+<br />
+<span style="color: #a50"># ─── 1. 初始化客户端 ───────────────────────────────────────────</span><br />
+<span style="color: #a50"># 持久化到本地（推荐）</span><br />
+client <span style="color: Gray;">=</span> chromadb.<span style="color: #05a;">PersistentClient</span><span style="color: Olive;">&#40;</span>path<span style="color: Gray;">=</span><span style="color: #a11;">&quot;./my_vector_db&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 使用 OpenAI 嵌入模型（也可换成本地模型）</span><br />
+openai_ef <span style="color: Gray;">=</span> embedding_functions.<span style="color: #05a;">OpenAIEmbeddingFunction</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #a11;">&quot;your-openai-api-key&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 必填：替换为你的 API Key</span><br />
+&nbsp; &nbsp; model_name<span style="color: Gray;">=</span><span style="color: #a11;">&quot;text-embedding-3-small&quot;</span> &nbsp; <span style="color: #a50"># 1536 维，性价比高</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ─── 2. 创建集合（类似关系库里的&quot;表&quot;）────────────────────────</span><br />
+collection <span style="color: Gray;">=</span> client.<span style="color: #05a;">get_or_create_collection</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; name<span style="color: Gray;">=</span><span style="color: #a11;">&quot;my_documents&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 集合名称</span><br />
+&nbsp; &nbsp; embedding_function<span style="color: Gray;">=</span>openai_ef<span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 绑定嵌入函数</span><br />
+&nbsp; &nbsp; metadata<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;hnsw:space&quot;</span>: <span style="color: #a11;">&quot;cosine&quot;</span><span style="color: Olive;">&#125;</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 使用余弦相似度</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ─── 3. 插入文档 ──────────────────────────────────────────────</span><br />
+documents <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;Python 是一种面向对象的解释型编程语言，广泛用于数据科学和 AI 开发&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;机器学习是人工智能的子领域，让计算机从数据中学习规律&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;深度学习使用多层神经网络，在图像识别和 NLP 任务中表现优异&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;向量数据库专门存储高维向量，支持语义相似度搜索&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;PostgreSQL 是功能强大的开源关系型数据库&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;Redis 是基于内存的高性能键值数据库，常用于缓存&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;Docker 容器化技术让应用可以在任何环境中一致运行&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;Git 是分布式版本控制系统，是现代软件开发的基础工具&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+ids <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>f<span style="color: #a11;">&quot;doc_{i}&quot;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>documents<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: #a50"># 批量插入（Chroma 自动调用嵌入模型转为向量后存储）</span><br />
+collection.<span style="color: #05a;">add</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; documents<span style="color: Gray;">=</span>documents<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; ids<span style="color: Gray;">=</span>ids<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; metadatas<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;source&quot;</span>: <span style="color: #a11;">&quot;tutorial&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;index&quot;</span>: i<span style="color: Olive;">&#125;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>documents<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;已插入 {len(documents)} 条文档&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<pre>
+已插入 8 条文档
+</pre>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ─── 4. 语义搜索 ──────────────────────────────────────────────</span><br />
+query <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;如何用 Python 做人工智能&quot;</span><br />
+<br />
+results <span style="color: Gray;">=</span> collection.<span style="color: #05a;">query</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; query_texts<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>query<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; n_results<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 返回最相似的 3 条</span><br />
+&nbsp; &nbsp; include<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;documents&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;distances&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;metadatas&quot;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>查询：{query}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> <span style="color: Olive;">&#40;</span>doc<span style="color: Gray;">,</span> dist<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">zip</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; results<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;documents&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; results<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;distances&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; similarity <span style="color: Gray;">=</span> <span style="color: Maroon;">1</span> - dist &nbsp; <span style="color: #a50"># 余弦距离转相似度</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;第 {i+1} 名（相似度 {similarity:.4f}）：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;{doc}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<pre>
+查询：如何用 Python 做人工智能
+--------------------------------------------------
+第 1 名（相似度 0.9231）：Python 是一种面向对象的解释型编程语言...
+第 2 名（相似度 0.8874）：机器学习是人工智能的子领域...
+第 3 名（相似度 0.8612）：深度学习使用多层神经网络...
+</pre>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ─── 5. 带过滤条件的搜索（元数据过滤）───────────────────────</span><br />
+results_filtered <span style="color: Gray;">=</span> collection.<span style="color: #05a;">query</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; query_texts<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;数据库技术&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; n_results<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; where<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;source&quot;</span>: <span style="color: #a11;">&quot;tutorial&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 只在 source=tutorial 的文档里搜索</span><br />
+&nbsp; &nbsp; include<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;documents&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;distances&quot;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ─── 6. 更新文档 ──────────────────────────────────────────────</span><br />
+collection.<span style="color: #05a;">update</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; ids<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;doc_0&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; documents<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;Python 是目前最流行的编程语言，在 AI、数据分析、Web 开发中均有广泛应用&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; metadatas<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;source&quot;</span>: <span style="color: #a11;">&quot;tutorial&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;index&quot;</span>: <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;updated&quot;</span>: <span style="color: Teal;">True</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ─── 7. 删除文档 ──────────────────────────────────────────────</span><br />
+collection.<span style="color: #05a;">delete</span><span style="color: Olive;">&#40;</span>ids<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;doc_7&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> &nbsp; <span style="color: #a50"># 删除 Git 相关文档</span><br />
+<br />
+<span style="color: #a50"># ─── 8. 查看集合统计 ──────────────────────────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;当前集合文档数：{collection.count()}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>不使用第三方嵌入 API（纯本地）</h3>
+<p>如果你不想使用 OpenAI API，可以用本地嵌入模型完全离线运行。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> chromadb<br />
+<span style="color: Green;font-weight:bold;">from</span> sentence_transformers <span style="color: Green;font-weight:bold;">import</span> SentenceTransformer<br />
+<br />
+<span style="color: #a50"># 使用本地嵌入模型（无需 API Key，完全离线）</span><br />
+model <span style="color: Gray;">=</span> SentenceTransformer<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;paraphrase-multilingual-MiniLM-L12-v2&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 支持中文</span><br />
+<br />
+client <span style="color: Gray;">=</span> chromadb.<span style="color: #05a;">Client</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+collection <span style="color: Gray;">=</span> client.<span style="color: #05a;">create_collection</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;local_demo&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;今天天气很好&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;阳光明媚，适合出门&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;股市大涨了&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;明天可能会下雨&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: #a50"># 手动生成向量后插入</span><br />
+embeddings <span style="color: Gray;">=</span> model.<span style="color: #05a;">encode</span><span style="color: Olive;">&#40;</span>texts<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">tolist</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+collection.<span style="color: #05a;">add</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; embeddings<span style="color: Gray;">=</span>embeddings<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; documents<span style="color: Gray;">=</span>texts<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; ids<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>f<span style="color: #a11;">&quot;id_{i}&quot;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>texts<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 查询</span><br />
+query_embedding <span style="color: Gray;">=</span> model.<span style="color: #05a;">encode</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;今天天气怎么样&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">tolist</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+results <span style="color: Gray;">=</span> collection.<span style="color: #05a;">query</span><span style="color: Olive;">&#40;</span>query_embeddings<span style="color: Gray;">=</span>query_embedding<span style="color: Gray;">,</span> n_results<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>results<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;documents&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># 输出: [['今天天气很好', '阳光明媚，适合出门']]</span><br />
+
+</div>
+</div>
+
+<h3>pgvector 示例（PostgreSQL 用户）</h3>
+<p>如果你的项目已经使用 PostgreSQL，pgvector 是最轻量的接入方式。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #808080; font-style: italic;">-- 安装扩展</span><br />
+<span style="color: #993333; font-weight: bold;">CREATE</span> EXTENSION <span style="color: #993333; font-weight: bold;">IF</span> <span style="color: #993333; font-weight: bold;">NOT</span> <span style="color: #993333; font-weight: bold;">EXISTS</span> vector;<br />
+<br />
+<span style="color: #808080; font-style: italic;">-- 建表：存储文章标题及其向量（1536维）</span><br />
+<span style="color: #993333; font-weight: bold;">CREATE</span> <span style="color: #993333; font-weight: bold;">TABLE</span> articles <span style="color: #66cc66;">&#40;</span><br />
+&nbsp; &nbsp; id &nbsp; &nbsp; &nbsp; SERIAL <span style="color: #993333; font-weight: bold;">PRIMARY</span> <span style="color: #993333; font-weight: bold;">KEY</span><span style="color: #66cc66;">,</span><br />
+&nbsp; &nbsp; title &nbsp; &nbsp;TEXT <span style="color: #993333; font-weight: bold;">NOT</span> <span style="color: #993333; font-weight: bold;">NULL</span><span style="color: #66cc66;">,</span><br />
+&nbsp; &nbsp; content &nbsp;TEXT<span style="color: #66cc66;">,</span><br />
+&nbsp; &nbsp; embedding vector<span style="color: #66cc66;">&#40;</span><span style="color: #cc66cc;">1536</span><span style="color: #66cc66;">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #808080; font-style: italic;">-- 向量列，1536 维</span><br />
+<span style="color: #66cc66;">&#41;</span>;<br />
+<br />
+<span style="color: #808080; font-style: italic;">-- 创建 HNSW 索引加速查询</span><br />
+<span style="color: #993333; font-weight: bold;">CREATE</span> <span style="color: #993333; font-weight: bold;">INDEX</span> <span style="color: #993333; font-weight: bold;">ON</span> articles<br />
+<span style="color: #993333; font-weight: bold;">USING</span> hnsw <span style="color: #66cc66;">&#40;</span>embedding vector_cosine_ops<span style="color: #66cc66;">&#41;</span><br />
+<span style="color: #993333; font-weight: bold;">WITH</span> <span style="color: #66cc66;">&#40;</span>m <span style="color: #66cc66;">=</span> <span style="color: #cc66cc;">16</span><span style="color: #66cc66;">,</span> ef_construction <span style="color: #66cc66;">=</span> <span style="color: #cc66cc;">64</span><span style="color: #66cc66;">&#41;</span>;<br />
+<br />
+<span style="color: #808080; font-style: italic;">-- 插入数据（向量由应用层生成后传入）</span><br />
+<span style="color: #993333; font-weight: bold;">INSERT</span> <span style="color: #993333; font-weight: bold;">INTO</span> articles <span style="color: #66cc66;">&#40;</span>title<span style="color: #66cc66;">,</span> embedding<span style="color: #66cc66;">&#41;</span><br />
+<span style="color: #993333; font-weight: bold;">VALUES</span> <span style="color: #66cc66;">&#40;</span><span style="color: #ff0000;">'Python 入门指南'</span><span style="color: #66cc66;">,</span> <span style="color: #ff0000;">'[0.12, -0.54, 0.87, ...]'</span>::vector<span style="color: #66cc66;">&#41;</span>;<br />
+<br />
+<span style="color: #808080; font-style: italic;">-- 语义搜索：找最相似的 5 篇文章</span><br />
+<span style="color: #993333; font-weight: bold;">SELECT</span> id<span style="color: #66cc66;">,</span> title<span style="color: #66cc66;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #cc66cc;">1</span> <span style="color: #66cc66;">-</span> <span style="color: #66cc66;">&#40;</span>embedding <span style="color: #66cc66;">&lt;=&gt;</span> <span style="color: #ff0000;">'[0.10, -0.50, 0.90, ...]'</span>::vector<span style="color: #66cc66;">&#41;</span> <span style="color: #993333; font-weight: bold;">AS</span> similarity<br />
+<span style="color: #993333; font-weight: bold;">FROM</span> articles<br />
+<span style="color: #993333; font-weight: bold;">ORDER</span> <span style="color: #993333; font-weight: bold;">BY</span> embedding <span style="color: #66cc66;">&lt;=&gt;</span> <span style="color: #ff0000;">'[0.10, -0.50, 0.90, ...]'</span>::vector<br />
+<span style="color: #993333; font-weight: bold;">LIMIT</span> <span style="color: #cc66cc;">5</span>;<br />
+
+</div>
+</div>
+
+<blockquote><p>注意：<=> 是 pgvector 提供的向量距离运算符，用于计算余弦距离。用 1 减去余弦距离即得到余弦相似度。</p></blockquote>
+
+<hr>
+
+<h2>典型应用场景</h2>
+<p>向量数据库在 AI 时代的应用场景非常广泛，以下是六个最典型的场景概览。</p>
+
+<svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="720" height="400" fill="#f8f9fa" rx="12"/>
+  <text x="360" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">向量数据库的典型应用场景</text>
+
+  <rect x="20"  y="45" width="210" height="160" rx="10" fill="#fff" stroke="#e0e0e0" stroke-width="1.2"/>
+  <rect x="20"  y="45" width="210" height="5"   rx="10" fill="#e74c3c"/>
+  <text x="125" y="75"  text-anchor="middle" font-size="18" fill="#e74c3c" font-weight="bold">RAG</text>
+  <text x="125" y="96"  text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">RAG 知识库问答</text>
+  <text x="35"  y="116" font-size="10" fill="#555">将企业文档转换为向量，</text>
+  <text x="35"  y="130" font-size="10" fill="#555">用户提问时检索相关片段</text>
+  <text x="35"  y="144" font-size="10" fill="#555">交给 LLM 生成答案。</text>
+  <text x="35"  y="165" font-size="10" fill="#e74c3c">代表：ChatPDF、NotionAI</text>
+  <text x="35"  y="181" font-size="10" fill="#e74c3c">企业知识库助手</text>
+
+  <rect x="250" y="45" width="210" height="160" rx="10" fill="#fff" stroke="#e0e0e0" stroke-width="1.2"/>
+  <rect x="250" y="45" width="210" height="5"   rx="10" fill="#3498db"/>
+  <text x="355" y="75"  text-anchor="middle" font-size="18" fill="#3498db" font-weight="bold">推荐</text>
+  <text x="355" y="96"  text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">个性化推荐系统</text>
+  <text x="265" y="116" font-size="10" fill="#555">将用户行为、商品信息转为</text>
+  <text x="265" y="130" font-size="10" fill="#555">向量，寻找"品味相似的用户</text>
+  <text x="265" y="144" font-size="10" fill="#555">喜欢什么"来做推荐。</text>
+  <text x="265" y="165" font-size="10" fill="#3498db">代表：Spotify 歌曲推荐</text>
+  <text x="265" y="181" font-size="10" fill="#3498db">电商相关商品推荐</text>
+
+  <rect x="490" y="45" width="210" height="160" rx="10" fill="#fff" stroke="#e0e0e0" stroke-width="1.2"/>
+  <rect x="490" y="45" width="210" height="5"   rx="10" fill="#9b59b6"/>
+  <text x="595" y="75"  text-anchor="middle" font-size="18" fill="#9b59b6" font-weight="bold">图片</text>
+  <text x="595" y="96"  text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">以图搜图</text>
+  <text x="505" y="116" font-size="10" fill="#555">将图像编码为向量，</text>
+  <text x="505" y="130" font-size="10" fill="#555">通过相似度搜索找出视觉</text>
+  <text x="505" y="144" font-size="10" fill="#555">相近的图片，无需标签。</text>
+  <text x="505" y="165" font-size="10" fill="#9b59b6">代表：Google 图片搜索</text>
+  <text x="505" y="181" font-size="10" fill="#9b59b6">淘宝拍照搜商品</text>
+
+  <rect x="20"  y="225" width="210" height="155" rx="10" fill="#fff" stroke="#e0e0e0" stroke-width="1.2"/>
+  <rect x="20"  y="225" width="210" height="5"   rx="10" fill="#e67e22"/>
+  <text x="125" y="255" text-anchor="middle" font-size="18" fill="#e67e22" font-weight="bold">检测</text>
+  <text x="125" y="276" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">异常检测</text>
+  <text x="35"  y="296" font-size="10" fill="#555">正常行为被映射到聚集的</text>
+  <text x="35"  y="310" font-size="10" fill="#555">向量区域，异常行为的向量</text>
+  <text x="35"  y="324" font-size="10" fill="#555">远离正常区域即可检测。</text>
+  <text x="35"  y="345" font-size="10" fill="#e67e22">代表：网络入侵检测</text>
+  <text x="35"  y="361" font-size="10" fill="#e67e22">金融欺诈识别</text>
+
+  <rect x="250" y="225" width="210" height="155" rx="10" fill="#fff" stroke="#e0e0e0" stroke-width="1.2"/>
+  <rect x="250" y="225" width="210" height="5"   rx="10" fill="#27ae60"/>
+  <text x="355" y="255" text-anchor="middle" font-size="18" fill="#27ae60" font-weight="bold">去重</text>
+  <text x="355" y="276" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">内容去重 / 版权检测</text>
+  <text x="265" y="296" font-size="10" fill="#555">通过向量相似度判断两段</text>
+  <text x="265" y="310" font-size="10" fill="#555">内容是否高度相似，识别</text>
+  <text x="265" y="324" font-size="10" fill="#555">抄袭或重复内容。</text>
+  <text x="265" y="345" font-size="10" fill="#27ae60">代表：论文查重系统</text>
+  <text x="265" y="361" font-size="10" fill="#27ae60">音乐版权检测</text>
+
+  <rect x="490" y="225" width="210" height="155" rx="10" fill="#fff" stroke="#e0e0e0" stroke-width="1.2"/>
+  <rect x="490" y="225" width="210" height="5"   rx="10" fill="#2c3e50"/>
+  <text x="595" y="255" text-anchor="middle" font-size="18" fill="#2c3e50" font-weight="bold">人脸</text>
+  <text x="595" y="276" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">人脸 / 生物特征识别</text>
+  <text x="505" y="296" font-size="10" fill="#555">将人脸编码为特征向量，</text>
+  <text x="505" y="310" font-size="10" fill="#555">在向量库中检索最相似的</text>
+  <text x="505" y="324" font-size="10" fill="#555">已知人脸完成识别。</text>
+  <text x="505" y="345" font-size="10" fill="#2c3e50">代表：人脸门禁系统</text>
+  <text x="505" y="361" font-size="10" fill="#2c3e50">手机人脸解锁</text>
+</svg>
+
+<h3>RAG（检索增强生成）架构</h3>
+<p>RAG 是目前向量数据库最主要的应用场景之一。下面是其核心工作流程：</p>
+
+<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="700" height="180" fill="#f8f9fa" rx="12"/>
+  <text x="350" y="24" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">RAG 系统工作流程</text>
+
+  <rect x="15" y="45" width="110" height="80" rx="8" fill="#e8f4f8" stroke="#3498db" stroke-width="1.5"/>
+  <text x="70" y="72" text-anchor="middle" font-size="14" fill="#2980b9" font-weight="bold">Step 1</text>
+  <text x="70" y="92" text-anchor="middle" font-size="10" font-weight="bold" fill="#2980b9">用户提问</text>
+  <text x="70" y="107" text-anchor="middle" font-size="9" fill="#555">"Python 怎么</text>
+  <text x="70" y="120" text-anchor="middle" font-size="9" fill="#555">处理异常？"</text>
+
+  <polygon points="128,85 145,78 145,92" fill="#aaa"/>
+
+  <rect x="148" y="45" width="110" height="80" rx="8" fill="#fef9ec" stroke="#f39c12" stroke-width="1.5"/>
+  <text x="203" y="72" text-anchor="middle" font-size="14" fill="#e67e22" font-weight="bold">Step 2</text>
+  <text x="203" y="92" text-anchor="middle" font-size="10" font-weight="bold" fill="#e67e22">问题向量化</text>
+  <text x="203" y="107" text-anchor="middle" font-size="9" fill="#555">Embedding 模型</text>
+  <text x="203" y="120" text-anchor="middle" font-size="9" fill="#555">-> [0.12, -0.54, ...]</text>
+
+  <polygon points="261,85 278,78 278,92" fill="#aaa"/>
+
+  <rect x="281" y="45" width="110" height="80" rx="8" fill="#eafaf1" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="336" y="72" text-anchor="middle" font-size="14" fill="#27ae60" font-weight="bold">Step 3</text>
+  <text x="336" y="92" text-anchor="middle" font-size="10" font-weight="bold" fill="#27ae60">向量检索</text>
+  <text x="336" y="107" text-anchor="middle" font-size="9" fill="#555">在向量DB中</text>
+  <text x="336" y="120" text-anchor="middle" font-size="9" fill="#555">找最相似文档</text>
+
+  <polygon points="394,85 411,78 411,92" fill="#aaa"/>
+
+  <rect x="414" y="45" width="110" height="80" rx="8" fill="#fdecea" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="469" y="72" text-anchor="middle" font-size="14" fill="#c0392b" font-weight="bold">Step 4</text>
+  <text x="469" y="92" text-anchor="middle" font-size="10" font-weight="bold" fill="#c0392b">LLM 生成</text>
+  <text x="469" y="107" text-anchor="middle" font-size="9" fill="#555">检索内容+问题</text>
+  <text x="469" y="120" text-anchor="middle" font-size="9" fill="#555">-> Prompt -> 答案</text>
+
+  <polygon points="527,85 544,78 544,92" fill="#aaa"/>
+
+  <rect x="547" y="45" width="138" height="80" rx="8" fill="#f5eafb" stroke="#9b59b6" stroke-width="1.5"/>
+  <text x="616" y="72" text-anchor="middle" font-size="14" fill="#8e44ad" font-weight="bold">Step 5</text>
+  <text x="616" y="92" text-anchor="middle" font-size="10" font-weight="bold" fill="#8e44ad">返回答案</text>
+  <text x="616" y="107" text-anchor="middle" font-size="9" fill="#555">基于文档的</text>
+  <text x="616" y="120" text-anchor="middle" font-size="9" fill="#555">准确、可溯源回答</text>
+
+  <text x="350" y="162" text-anchor="middle" font-size="10" fill="#888">向量数据库在步骤 3 中承担核心角色：毫秒级找到最相关的知识片段</text>
+</svg>
+
+<hr>
+
+<h2>选型建议与最佳实践</h2>
+
+<h3>选型决策树</h3>
+<p>根据你的具体情况，按照以下决策树选择合适的向量数据库：</p>
+
+<pre>
+你的情况是什么？
+│
+├─── 已有 PostgreSQL，且数据量 &lt; 500 万
+│    └──&gt; 用 pgvector，无缝集成，零额外运维
+│
+├─── 做 AI/LLM 应用原型，快速验证
+│    └──&gt; 用 Chroma，几行代码跑起来
+│
+├─── 需要生产级部署，性能优先，数据量 500 万 ~ 1 亿
+│    └──&gt; 用 Qdrant，Rust 实现，性能强
+│
+├─── 超大规模（&gt; 1 亿），有 K8s 运维能力
+│    └──&gt; 用 Milvus，分布式，功能最全
+│
+└─── 团队没有运维能力，愿意付费
+     └──&gt; 用 Pinecone 云服务，开箱即用
+</pre>
+
+<h3>嵌入模型的选择</h3>
+<p>选择合适的嵌入模型是向量数据库应用的关键第一步。</p>
+
+<table class="reference">
+<tr><th>需求</th><th>推荐模型</th></tr>
+<tr><td>中英文文本（高质量）</td><td>OpenAI <span class="marked">text-embedding-3-small</span></td></tr>
+<tr><td>中文文本（本地离线）</td><td><span class="marked">BAAI/bge-large-zh-v1.5</span></td></tr>
+<tr><td>多语言通用</td><td><span class="marked">paraphrase-multilingual-MiniLM-L12-v2</span></td></tr>
+<tr><td>图文多模态</td><td>OpenAI <span class="marked">CLIP</span> 系列</td></tr>
+</table>
+
+<h3>性能优化技巧</h3>
+
+<p>1. 批量插入：一次插入多条，避免频繁单条写入。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 推荐：批量插入</span><br />
+collection.<span style="color: #05a;">add</span><span style="color: Olive;">&#40;</span>documents<span style="color: Gray;">=</span>docs_list<span style="color: Gray;">,</span> ids<span style="color: Gray;">=</span>ids_list<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 不推荐：循环单条（每次都重新索引，效率极低）</span><br />
+<span style="color: #a50"># for doc, id in zip(docs_list, ids_list):</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; collection.add(documents=[doc], ids=[id])</span><br />
+
+</div>
+</div>
+
+<p>2. 向量归一化：使用余弦相似度前，提前归一化向量可加速计算。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> normalize<span style="color: Olive;">&#40;</span>v<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;对向量做 L2 归一化，使模长为 1&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> v / np.<span style="color: #05a;">linalg</span>.<span style="color: #05a;">norm</span><span style="color: Olive;">&#40;</span>v<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>3. 合理设置 n_results：不要无脑设置很大的 top_k，一般 RAG 场景 3~10 条足够。</p>
+
+<p>4. 善用元数据过滤：在搜索时配合 where 条件，缩小搜索范围。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 只在&quot;技术文档&quot;分类里搜索，缩小范围提升精度</span><br />
+collection.<span style="color: #05a;">query</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; query_texts<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;Python 异常处理&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; where<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;category&quot;</span>: <span style="color: #a11;">&quot;tech_doc&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; n_results<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>5. 定期重建索引：数据量增长后，适时重建 HNSW 索引以维持查询性能。</p>
+
+<h3>常见踩坑</h3>
+<p>以下是初学者使用向量数据库时最容易遇到的问题及解决方案。</p>
+
+<table class="reference">
+<tr><th>问题</th><th>说明</th><th>解决方案</th></tr>
+<tr><td>嵌入模型要统一</td><td>插入和查询必须用同一个模型</td><td>在配置文件中固定模型版本</td></tr>
+<tr><td>维度不匹配</td><td>换了模型但没重建集合</td><td>换模型时删除重建集合</td></tr>
+<tr><td>文本过长</td><td>大多数模型有 token 限制（512~8192）</td><td>超长文本先分块（chunking）</td></tr>
+<tr><td>相似度不准确</td><td>文本没有分块，语义被稀释</td><td>按段落或固定长度切分文档</td></tr>
+<tr><td>冷启动慢</td><td>数据量大时首次加载索引耗时</td><td>提前预热，或使用持久索引</td></tr>
+</table>
+
+<hr>
+
+<h2>总结</h2>
+<p>让我们回顾本教程的核心知识点：</p>
+
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', Arial, sans-serif" style="max-width:100%;height:auto;">
+  <rect width="700" height="200" fill="#1a1a2e" rx="12"/>
+  <text x="350" y="32" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Vector Database 核心知识点回顾</text>
+
+  <rect x="20"  y="55" width="122" height="120" rx="10" fill="#e74c3c" opacity="0.85"/>
+  <text x="81"  y="82" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">向量/嵌入</text>
+  <text x="81"  y="100" text-anchor="middle" font-size="9"  fill="#fcc">把对象转为</text>
+  <text x="81"  y="114" text-anchor="middle" font-size="9"  fill="#fcc">高维数字向量</text>
+  <text x="81"  y="128" text-anchor="middle" font-size="9"  fill="#fcc">语义近则距离近</text>
+  <text x="81"  y="142" text-anchor="middle" font-size="9"  fill="#fcc">是一切的基础</text>
+
+  <rect x="152" y="55" width="122" height="120" rx="10" fill="#f39c12" opacity="0.85"/>
+  <text x="213" y="82" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">相似度计算</text>
+  <text x="213" y="100" text-anchor="middle" font-size="9"  fill="#fde">余弦相似度</text>
+  <text x="213" y="114" text-anchor="middle" font-size="9"  fill="#fde">欧氏距离</text>
+  <text x="213" y="128" text-anchor="middle" font-size="9"  fill="#fde">点积</text>
+  <text x="213" y="142" text-anchor="middle" font-size="9"  fill="#fde">文本首选余弦</text>
+
+  <rect x="284" y="55" width="122" height="120" rx="10" fill="#2ecc71" opacity="0.85"/>
+  <text x="345" y="82" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">索引算法</text>
+  <text x="345" y="100" text-anchor="middle" font-size="9"  fill="#d5f5e3">HNSW 最主流</text>
+  <text x="345" y="114" text-anchor="middle" font-size="9"  fill="#d5f5e3">IVF 适合大规模</text>
+  <text x="345" y="128" text-anchor="middle" font-size="9"  fill="#d5f5e3">Flat 适合小数据</text>
+  <text x="345" y="142" text-anchor="middle" font-size="9"  fill="#d5f5e3">近似换速度</text>
+
+  <rect x="416" y="55" width="122" height="120" rx="10" fill="#3498db" opacity="0.85"/>
+  <text x="477" y="82" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">选型参考</text>
+  <text x="477" y="100" text-anchor="middle" font-size="9"  fill="#d6eaf8">入门：Chroma</text>
+  <text x="477" y="114" text-anchor="middle" font-size="9"  fill="#d6eaf8">生产：Qdrant</text>
+  <text x="477" y="128" text-anchor="middle" font-size="9"  fill="#d6eaf8">已有PG：pgvector</text>
+  <text x="477" y="142" text-anchor="middle" font-size="9"  fill="#d6eaf8">亿级：Milvus</text>
+
+  <rect x="548" y="55" width="132" height="120" rx="10" fill="#9b59b6" opacity="0.85"/>
+  <text x="614" y="82" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">核心应用</text>
+  <text x="614" y="100" text-anchor="middle" font-size="9"  fill="#e8daef">RAG 知识问答</text>
+  <text x="614" y="114" text-anchor="middle" font-size="9"  fill="#e8daef">个性化推荐</text>
+  <text x="614" y="128" text-anchor="middle" font-size="9"  fill="#e8daef">以图搜图</text>
+  <text x="614" y="142" text-anchor="middle" font-size="9"  fill="#e8daef">异常检测</text>
+</svg>
+
+<p>向量数据库是 AI 时代基础设施的重要一环。</p>
+<p>它解决了传统数据库无法处理的语义相似性搜索问题，是构建 RAG 系统、推荐系统、多模态搜索的核心组件。</p>
+
+<h3>学习路径建议</h3>
+
+<ol>
+<li>第一步：理解向量和嵌入的概念，运行本文的 Chroma 示例</li>
+<li>第二步：尝试用 LangChain + Chroma 构建一个简单的文档问答系统</li>
+<li>第三步：学习 HNSW 等索引算法，理解精度与速度的权衡</li>
+<li>第四步：根据实际项目需求，选择合适的向量数据库并在生产环境部署</li>
+</ol>
+
+<hr>
+
+<h2>参考资源</h2>
+
+<ul>
+<li><a target="_blank" href="https://docs.trychroma.com">Chroma 官方文档</a></li>
+<li><a target="_blank" href="https://qdrant.tech/documentation">Qdrant 官方文档</a></li>
+<li><a target="_blank" href="https://github.com/pgvector/pgvector">pgvector GitHub</a></li>
+<li><a target="_blank" href="https://milvus.io/docs">Milvus 官方文档</a></li>
+<li><a target="_blank" href="https://arxiv.org/abs/1603.09320">HNSW 论文原文</a></li>
+<li><a target="_blank" href="https://platform.openai.com/docs/guides/embeddings">OpenAI Embeddings 指南</a></li>
+<li><a target="_blank" href="https://huggingface.co/spaces/mteb/leaderboard">HuggingFace 文本嵌入排行榜（MTEB）</a></li>
+</ul>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai-agent/agent-architecture.html" rel="prev"> Agent 架构</a> </div>
+			<div class="next-design-link"><a href="/ai-agent/ai-workflow.html" rel="next"> AI Workflow（AI 工作流）</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30849' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30849;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30849, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30849},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30849;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

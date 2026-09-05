@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>老不死的IE 6，到底有什么幕后原因 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./why-ie6-no-die.html" />
+<meta name="keywords" content="老不死的IE 6，到底有什么幕后原因">
+<meta name="description" content="​如果你问别人IE 6是什么，不同的人会有不同的答案，但或许都曾爱过。     ​从2014年4月份起，微软官方已经正式结束了Windows XP的技术支持，伴随XP一道的IE 6 终于要淡出江湖。     ​但是这只是微软的想法，用户或许并不同意。     ​来自Net Market Share 的数据，11月份，占据全球浏览器排行榜首位的仍然是IE浏览器，总市场份额高达58.94%（10月份份额58.49%），Chrome浏览器位居..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<div class="container navigation">
+    <div class="row">
+        <div class="col nav">
+            
+
+                        <ul class="pc-nav" id="note-nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../w3cnote.html">笔记首页</a></li>
+                <li><a href="./android-tutorial-intro.html" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" title="ES6 教程">ES6 教程</a></li>
+                <li><a href="./ten-sorting-algorithm.html" title="排序算法">排序算法</a></li>
+                <li><a href="./hadoop-tutorial.html" title="Hadoop 教程">Hadoop</a></li>
+                <li><a href="./zookeeper-tutorial.html" title="Zookeeper 教程">Zookeeper</a></li>
+                <li><a href="./verilog-tutorial.html" title="Verilog 教程">Verilog</a></li>
+                <li><a href="../w3cnote_genre/code.html" title="编程技术">编程技术</a></li> 
+                <li><a href="../w3cnote_genre/coderlife.html" title="程序员人生">程序员人生</a></li>
+                
+                <!--<li><a href=".." class="runoob-pop">登录</a></li>
+                
+                
+                        <li>
+                <a style="font-weight:bold;" href="../linux/linux-tutorial.html" target="_blank" onclick="_hmt.push(['_trackEvent', 'aliyun', 'click', 'aliyun'])" title="kkb">云服务器</a>
+                </li>
+                <li><a href="http://gk.link/a/104mQ" target="_blank" style="font-weight: bold;"onclick="_hmt.push(['_trackEvent', '极客时间', 'click', 'jike'])" title="我的圈子">极客时间</a></li>
+            
+                
+                <li><a target="_blank" href="../shoppinglist.html" rel="nofollow">知识店铺</a></li> 
+        -->
+            </ul>
+                        
+              
+            <ul class="mobile-nav">
+                <li><a href="../w3cnote.html">首页</a></li>
+                <li><a href="../w3cnote_genre/android.html" target="_blank" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" target="_blank" title="ES6 教程">ES6</a></li>
+                <li><a href="../w3cnote_genre/joke.html" target="_blank" title="程序员笑话">逗乐</a></li>
+                
+                <a href="void(0).html" class="search-reveal">Search</a> 
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--  内容  -->
+<div class="container main">
+	<div class="row">
+
+		<div class="col middle-column big-middle-column">
+	 			<div class="article">
+			<div class="article-heading">
+				<h2>老不死的IE 6，到底有什么幕后原因</h2>				<h3><em>分类</em> <a href="../w3cnote_genre/net-2.html" title="互联网" >互联网</a> </h3>
+			</div>
+			<div class="article-body note-body">
+				<div class="article-intro">
+					<!-- ad start-->
+			            <!-- ad end-->
+					<p style="line-height: 21pt; text-indent: 2em;"><img fetchpriority="high" decoding="async" src="../wp-content/uploads/2015/02/why-ie6-no-die.jpg" alt="why-ie6-no-die" width="500" height="300" class="alignnone size-full wp-image-11276" srcset="http://www.runoob.com/wp-content/uploads/2015/02/why-ie6-no-die.jpg 500w, http://www.runoob.com/wp-content/uploads/2015/02/why-ie6-no-die-300x180.jpg 300w" sizes="(max-width: 500px) 100vw, 500px" /></p>
+<p style="line-height: 21pt; text-indent: 2em;">  <strong>  ​如果你问别人IE 6是什么，不同的人会有不同的答案，但或许都曾爱过。</strong></p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​从2014年4月份起，微软官方已经正式结束了Windows XP的技术支持，伴随XP一道的IE 6 终于要淡出江湖。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​但是这只是微软的想法，用户或许并不同意。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​来自Net Market Share 的数据，11月份，占据全球浏览器排行榜首位的仍然是IE浏览器，总市场份额高达58.94%（10月份份额58.49%），Chrome浏览器位居第二位，市场份额20.57%（10月份同期份额21.25%），稍有下降。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​不过这些都不是亮点，亮点在于2014年4月就放弃更新的IE 6，全球仍然有0.96的市场占有率。尽管相比于4月初的4.15%已经有大比例的下滑，但仍然值得注意的是不论是4月初发布的数据，还是12月初发布的数据，IE 6的份额仍然高于统计数据中"其他"项的占比，可见IE在全球的使用基数尽管一降再降，但用户数还是不容忽视。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​再来看一组数据，根据2014年4月初的数据统计，老而弥坚的Windows XP在国内依然占据了接近28%的市场份额。与此同时，Office 2003办公软件套装依然活跃。IE 6的全球市场份额也有4.15%。而且据不完全统计，在中国大陆，依然有22.2%的用户在使用IE 6浏览器。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​尽管如今全球的数据已经从4.15降低到0.96%，即使按照同等比例，截止12月初，中国大陆仍然有至少6%的用户在使用IE 6。然而因为盗版等原因造成的数据统计不到等等，实际上国内IE 6的用户使用率可能仍然高于10%。</p>
+<p style="line-height: 21pt; text-indent: 2em;"><strong>为什么国人老是喜欢用IE6等过时的浏览器呢？</strong></p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​必须从中国大陆地区不乐意承认的盗版猖獗说起。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​政府部门必须支持正版，但是政府部门往往采购的不是最新版本。事实上国内特别喜欢Windows XP系统，自然也就爱屋及乌的已经习惯IE 6，并一直沿用多时。以至于很多政府机构的网站都是基于IE 6来设计的，之后迟迟未更新。一方面是因为习惯问题，一方面很多政府部门网站使用频次特别低，当初建设完成之后至今没有做过升级或改版。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​一些特殊的企业或者机构，比如国企等，也得预防微软突袭查盗版问题，往往一有风吹草动，网维部门就会统一将企业的系统换回已经买了正版的版本。不少企业买的正版版本正是Windows XP，因为经典和好用，也为了节省成本，很多企业便一用多年。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​以及不得不说到的银行等特殊企业，对安全控制要求特别高。多数银行的网银只能使用IE浏览器，而且还不能使用高版本的IE 10，只能用相当低版本的IE 6等。银行业界这种"不思进取"的做法引得网友吐槽，并且IE浏览器也躺枪。造成这种情况主要是国内的网上银行的密码输入框一般采用了ActiveX控件，而ActiveX是微软的专有技术，并且IE浏览器的用户相对较多，银行自然会优先使用IE浏览器。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​但实际上银行也有银行的苦衷。银行基于安全考虑，在网银开发过程中需要进行大量的测试、严格立项，每一次IE更新，网银都会打补丁，但是IE浏览器之外的Chrome和Firefox等更新频率往往又很高，银行不太愿意也没有足够的精力去维护IE之外的其他相对小众的浏览器的安全控件。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​不过好消息是，目前各大银行正在研究下一代网银系统，将基于HTML 5技术实现跨平台操作，打破浏览器之间的技术差异所带来的影响。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​最后，谈一谈核心原因盗版问题。肯定有很多老机器只能用IE 6，原因就是盗版XP了，因为XP在国内太受欢迎了 ，XP用户现在还是第一大。但事实上你应该懂的，国内估计百分之七八十的XP都是盗版吧，盗版系统直接关闭了系统更新，否则很多IE 6都可以升级到IE 8，甚至更高。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​早些年买的电脑，尤其是在电脑城买的话，和Ghost for Windows XP有关，各大电脑城，"电脑爱好者"人手一张系统盘，能大大节省XP电脑装机时间，带的基本都是悲催的IE 6。深度、番茄等Ghost版本早已经停止更新，关键是还没有集成IE 8，电脑城的装机民工也懒得换就一直用了。当然，也考虑到有些执迷不悔的电脑白痴拒绝用IE 8等更高版本。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​多数人装完了就不会去升级的，甚至有人买了新的电脑用不惯 Vista/Win 7 还用 XP 盗版盘重装系统的。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​诸多原因，直接造成了 当年IE 6盛行，并遗毒至今。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​国外同行的"提示更新"的办法为什么在国内行不通呢？比如有用户用 IE 6 查看网站时，提示用户：请使用更有逼格的浏览器！然后给出 Chrome 或者其他浏览器的下载地址。原因在于：升级版本IE 7 和 IE 8 等其他版本并不让人满意，它们和 IE 6 比起来并没有多么大的改善，缓慢，界面臃肿。所以提示升级 IE 6 是不够的，目前需要的是提示用户使用 Chrome、Safari、Firefox 这样的浏览器。但对国内使用 IE 6 的人群来说，这就更是得寸进尺了。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​而且事实上，网站都依然会支持IE 6，因为竞争激烈，谁都不想丢失这部分用户，以至于他们总是替网民考虑太多，以至于服务器的开发有落后，而网民自然懒得去换。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​<strong>读到这里，应该明白，为啥国内那么多人乐此不疲的坚持使用IE 6了吧。</strong></p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​未来会怎样？笔者认为答案时候乐观的。随着时间的推移，IE 6的使用者会越来越少，网站和开发者们也会逐渐摈弃IE 6，更重要的是移动互联网的时代已经来临。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​移动端变得越来越重要，流量从PC到移动端的转变已经是大势所趋了，越来越多的网站应该先考虑移动端的效果。即使在PC端，当IE 6 的支撑成本和收益不对等时，网站和开发者们自然也会摈弃。</p>
+<p style="line-height: 21pt; text-indent: 2em;">    ​所以，稍微耐心点吧，IE 6终将退出全球浏览器的舞台，中国市场也不例外。目前一切已经就绪，剩下的就是时间问题了。那么，在文章的末尾，问题来了：即将退役的IE 6，你会怀念它吗？</p>
+<p style="line-height: 21pt; text-indent: 2em;">原文出处：http://www.donews.com/idonews/article/5157.shtm</p>				</div>
+			</div>
+			<div class="previous-next-links">
+			<div class="previous-design-link">← <a href="./10-internet-truth.html" rel="prev"> 10大人艰不拆的网络真相，你中了几枪？</a> </div>
+			<div class="next-design-link"><a href="./china-internet-top-ten-companies.html" rel="next"> 中国十大最棒的互联网公司清单，留着跳槽参考</a> →</div>
+			</div>
+			<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="../tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="./runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=".." class="runoob-pop">登录</a>！</h3>
+		<p><a href="./runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href="..">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='11275' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  11275;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 11275, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":11275},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+			<style>
+@media screen and (max-width: 768px) {
+	#w3cnote-ad728 {
+		display: none;
+	}
+}
+p.note-author {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<script>
+var aid = 11275;
+</script>
+	</div>
+		
+	</div>
+	<div class="listcol last right-column">
+
+
+
+
+<!--
+	<div class="tab tab-light-blue"> 订阅</div>
+	<div class="sidebar-box">
+		<div class="socialicons">
+			<a href="/feed.html" class="rss">RSS 订阅</a>
+		
+			<form action="//list.qq.com/cgi-bin/qf_compose_send" method="post">
+			<input type="hidden" value="qf_booked_feedback" name="t">
+			<input type="hidden" value="4b67b6b6c1f5e792559940cab4aebb8f1126fba880bff1a8" name="id">
+			<input class="placeholder" id="feed_email" name="to" value="输入邮箱 订阅笔记" autocomplete="off">
+			<input type="submit" value="订阅" class="btn btn-primary">
+			</form>
+		
+		</div>
+ 
+	</div>
+-->	
+
+
+
+<!--
+	<div class="sidebar-box cate-list">
+	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">笔记列表</a>
+		</div>
+
+ 
+
+</div>
+-->
+<div class="sidebar-box cate-list" style="display:none;">
+	<div class="sidebar-box recommend-here list-link">
+	<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">热门文章</a>
+	</div>
+	<div class="membership"> 
+		<ul class="membership">
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/ZaP6YNgKTCHYy3r2WPBBaw" title="2024 年 04 月 JavaScript 框架排行榜" >2024 年 04 月 JavaScript 框架排行榜</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/JBR2twC0t6krjjuxqvhsEQ" title="免费、开源、好用的 SQL 客户端合集" >免费、开源、好用的 SQL 客户端合集</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/TwV3YQjA1glyaW7TiHvhlA" title="优雅的代码规范，提升代码质量" >优雅的代码规范，提升代码质量</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/CnUJ-2OHPbBKlnVpjDzavA" title="命令行中的趣味世界，牛也能说话，有趣又好玩" >命令行中的趣味世界，牛也能说话，有趣又好玩</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/7NKl-mD7N8CeSNQlbKDEWA" title="2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？" >2024 年 05 月编程语言排行榜，Fortran 进入前 10 名，发生了什么？</a></li>
+						<li><a target="_blank"  href="https://mp.weixin.qq.com/s/yWlSVDKobtDhThnhirVRpw" title="免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端" >免费开源的 IDE、数据库管理工具、SSH客户端和FTP客户端</a></li>
+					</ul>
+	</div>
+</div>
+
+	 <div class="sidebar-box cate-list">
+		 		
+		
+	 	<div class="sidebar-box recommend-here list-link">
+			<a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;">教程列表</a>
+		</div>
+		
+		<div class="cate-items"> 
+				<a href="../ado.html">ADO 教程</a>
+	<a href="../ai-agent.html">AI Agent 教程</a>
+	<a href="../ai.html">AI 入门教程</a>
+	<a href="../ai-math.html">AI 数学基础</a>
+	<a href="../ajax.html">Ajax 教程</a>
+	<a href="../android.html">Android 教程</a>
+	<a href="../angularjs2.html">Angular2 教程</a>
+	<a href="../angularjs.html">AngularJS 教程</a>
+	<a href="../appml.html">AppML 教程</a>
+	<a href="../asp.html">ASP 教程</a>
+	<a href="../aspnet.html">ASP.NET 教程</a>
+	<a href="../bootstrap.html">Bootstrap 教程</a>
+	<a href="../bootstrap4.html">Bootstrap4 教程</a>
+	<a href="../bootstrap5.html">Bootstrap5 教程</a>
+	<a href="../cprogramming.html">C 教程</a>
+	<a href="../c-dsa.html">C 语言数据结构与算法</a>
+	<a href="../csharp.html">C# 教程</a>
+	<a href="../cplusplus.html">C++ 教程</a>
+	<a href="../chartjs.html">Chart.js 教程</a>
+	<a href="../claude-code.html">Claude Code 教程</a>
+	<a href="../cmake.html">CMake 教程</a>
+	<a href="../codex.html">Codex 教程</a>
+	<a href="../cssref.html">CSS 参考手册</a>
+	<a href="../css.html">CSS 教程</a>
+	<a href="../css3.html">CSS3 教程</a>
+	<a href="../cursor.html">Cursor 教程</a>
+	<a href="../dart.html">Dart 教程</a>
+	<a href="../dash.html">Dash 教程</a>
+	<a href="../deepseek-harness.html">DeepSeek Harness</a>
+	<a href="../django.html">Django 教程</a>
+	<a href="../docker.html">Docker 教程</a>
+	<a href="../dtd.html">DTD 教程</a>
+	<a href="../echarts.html">ECharts 教程</a>
+	<a href="../eclipse.html">Eclipse 教程</a>
+	<a href="../electron.html">Electron 教程</a>
+	<a href="../fastapi.html">FastAPI 教程</a>
+	<a href="../firebug.html">Firebug 教程</a>
+	<a href="../flask.html">Flask 教程</a>
+	<a href="../flutter.html">Flutter 教程</a>
+	<a href="../font-awesome.html">Font Awesome 图标</a>
+	<a href="../foundation.html">Foundation 教程</a>
+	<a href="../git.html">Git 教程</a>
+	<a href="../go.html">Go 语言教程</a>
+	<a href="../googleapi.html">Google 地图 API 教程</a>
+	<a href="../hermes-agent.html">Hermes Agent</a>
+	<a href="../highcharts.html">Highcharts 教程</a>
+	<a href="../htmldom.html">HTML DOM 教程</a>
+	<a href="../tags.html">HTML 参考手册</a>
+	<a href="../charsets.html">HTML 字符集</a>
+	<a href="../html.html">HTML 教程</a>
+	<a href="../http.html">HTTP 教程</a>
+	<a href="../ionic.html">ionic 教程</a>
+	<a href="../ios.html">iOS 教程</a>
+	<a href="../java.html">Java 教程</a>
+	<a href="../jsref.html">JavaScript 参考手册</a>
+	<a href="../js.html">Javascript 教程</a>
+	<a href="../jeasyui.html">jQuery EasyUI 教程</a>
+	<a href="../jquerymobile.html">jQuery Mobile 教程</a>
+	<a href="../jqueryui.html">jQuery UI 教程</a>
+	<a href="../jquery.html">jQuery 教程</a>
+	<a href="../json.html">JSON 教程</a>
+	<a href="../jsp.html">JSP 教程</a>
+	<a href="../julia.html">Julia 教程</a>
+	<a href="../jupyter-notebook.html">Jupyter Notebook 教程</a>
+	<a href="../kotlin.html">Kotlin 教程</a>
+	<a href="../langchain.html">LangChain 教程</a>
+	<a href="../latex.html">LaTeX 教程</a>
+	<a href="../linux.html">Linux 教程</a>
+	<a href="../lua.html">Lua 教程</a>
+	<a href="../markdown.html">Markdown 教程</a>
+	<a href="../matplotlib.html">Matplotlib 教程</a>
+	<a href="../maven.html">Maven 教程</a>
+	<a href="../memcached.html">Memcached 教程</a>
+	<a href="../mongodb.html">MongoDB 教程</a>
+	<a href="../mysql.html">MySQL 教程</a>
+	<a href="../nextjs.html">Next.js 教程</a>
+	<a href="../nlp.html">NLP 教程</a>
+	<a href="../nodejs.html">Node.js 教程</a>
+	<a href="../numpy.html">NumPy 教程</a>
+	<a href="../obsidian.html">Obsidian 教程</a>
+	<a href="../ollama.html">Ollama 教程</a>
+	<a href="../opencode.html">OpenCode 教程</a>
+	<a href="../opencv.html">OpenCV 教程</a>
+	<a href="../pandas.html">Pandas 教程</a>
+	<a href="../perl.html">Perl 教程</a>
+	<a href="../php.html">PHP 教程</a>
+	<a href="../pi-agent.html">Pi Agent</a>
+	<a href="../pillow.html">Pillow 教程</a>
+	<a href="../playwright.html">Playwright 教程</a>
+	<a href="../postgresql.html">PostgreSQL 教程</a>
+	<a href="../powershell.html">PowerShell</a>
+	<a href="../pycharm.html">Pycharm 教程</a>
+	<a href="../python3.html">Python 3 教程</a>
+	<a href="../python.html">Python 基础教程</a>
+	<a href="../python-design-pattern.html">Python 设计模式</a>
+	<a href="/python-qt.html">Python 量化交易</a>
+	<a href="../pytorch.html">PyTorch 教程</a>
+	<a href="../r.html">R 教程</a>
+	<a href="../rdf.html">RDF 教程</a>
+	<a href="../react.html">React 教程</a>
+	<a href="../redis.html">Redis 教程</a>
+	<a href="/restfulapi.html">RESTful API</a>
+	<a href="../rss.html">RSS 教程</a>
+	<a href="../ruby.html">Ruby 教程</a>
+	<a href="../rust.html">Rust 教程</a>
+	<a href="../sass.html">Sass 教程</a>
+	<a href="../scala.html">Scala 教程</a>
+	<a href="../scipy.html">SciPy 教程</a>
+	<a href="../selenium.html">Selenium 教程</a>
+	<a href="../servlet.html">Servlet 教程</a>
+	<a href="../skills.html">Skills 教程</a>
+	<a href="../sklearn.html">Sklearn 教程</a>
+	<a href="../soap.html">SOAP 教程</a>
+	<a href="../sql.html">SQL 教程</a>
+	<a href="../sqlite.html">SQLite 教程</a>
+	<a href="../svg.html">SVG 教程</a>
+	<a href="../svn.html">SVN 教程</a>
+	<a href="../swagger.html">Swagger 教程</a>
+	<a href="../swift.html">Swift 教程</a>
+	<a href="../tailwindcss.html">Tailwind CSS 教程</a>
+	<a href="../tcpip.html">TCP/IP 教程</a>
+	<a href="../tensorflow.html">TensorFlow 教程</a>
+	<a href="../typescript.html">TypeScript 教程</a>
+	<a href="../uniapp.html">uni-app 教程</a>
+	<a href="../vbscript.html">VBScript 教程</a>
+	<a href="../vibe-coding.html">Vibe Coding 教程</a>
+	<a href="../vscode.html">VSCode 教程</a>
+	<a href="../vue2.html">Vue.js 教程</a>
+	<a href="../vue3.html">Vue3 教程</a>
+	<a href="../w3c.html">W3C 教程</a>
+	<a href="../webservices.html">Web Service 教程</a>
+	<a href="../wsdl.html">WSDL 教程</a>
+	<a href="../xlink.html">XLink 教程</a>
+	<a href="../dom.html">XML DOM 教程</a>
+	<a href="../schema.html">XML Schema 教程</a>
+	<a href="../xml.html">XML 教程</a>
+	<a href="../xpath.html">XPath 教程</a>
+	<a href="../xquery.html">XQuery 教程</a>
+	<a href="../xslfo.html">XSLFO 教程</a>
+	<a href="../xsl.html">XSLT 教程</a>
+	<a href="../zig.html">Zig 教程</a>
+	<a href="../data-structures.html">数据结构</a>
+	<a href="../ml.html">机器学习</a>
+	<a href="../regexp.html">正则表达式</a>
+	<a href="../assembly.html">汇编语言</a>
+	<a href="../quiz.html">测验</a>
+	<a href="../browsers.html">浏览器</a>
+	<a href="../quality.html">网站品质</a>
+	<a href="/web.html">网站建设指南</a>
+	<a href="../hosting.html">网站服务器教程</a>
+	<a href="../np.html">网络协议</a>
+	<a href="../computer-organization.html">计算机组成原理</a>
+	<a href="../design-pattern.html">设计模式</a>
+			
+		</div> 
+		 	 </div>
+</div>
+	</div>
+</div>
+
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="../ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="../for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

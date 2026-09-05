@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch 学习率调度器 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/pytorch/pytorch-lr-scheduler.html" />
+<meta name="keywords" content="PyTorch 学习率调度器">
+<meta name="description" content="PyTorch 学习率调度器 学习率（Learning Rate）是神经网络训练中最重要的超参数之一。学习率过大，训练震荡甚至发散；学习率过小，收敛极慢，容易陷入局部最优。 学习率调度器（LR Scheduler） 通过在训练过程中动态调整学习率，兼顾训练初期的快速收敛与后期的精细调优。   1. 基础概念与使用模式  标准使用流程   实例  [mycode4 type=&#039;python&#039;] import torch..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>PyTorch 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="PyTorch 教程"  href="/pytorch/pytorch-tutorial.html" >
+			PyTorch 教程			</a>
+						<a target="_top" data-p="par" title="PyTorch 简介"  href="/pytorch/pytorch-intro.html" >
+			PyTorch 简介			</a>
+						<a target="_top" data-p="par" title="PyTorch 安装"  href="/pytorch/pytorch-install.html" >
+			PyTorch 安装			</a>
+						<a target="_top" data-p="par" title="PyTorch 基础"  href="/pytorch/pytorch-basic.html" >
+			PyTorch 基础			</a>
+			<a target="_top"  title="PyTorch 张量" href="/pytorch/pytorch-tensor.html">PyTorch 张量</a>			<a target="_top" data-p="par" title="PyTorch 神经网络基础"  href="/pytorch/pytorch-neural-network.html" >
+			PyTorch 神经网络基础			</a>
+			<a target="_top"  title="PyTorch 第一个神经网络" href="/pytorch/pytorch-first-neural-network.html">PyTorch 第一个神经网络</a>			<a target="_top" data-p="par" title="PyTorch 数据处理与加载"  href="/pytorch/pytorch-dataset-dataloader.html" >
+			PyTorch 数据处理与加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 线性回归"  href="/pytorch/pytorch-linear-regression.html" >
+			PyTorch 线性回归			</a>
+						<a target="_top" data-p="par" title="PyTorch 卷积神经网络"  href="/pytorch/pytorch-cnn.html" >
+			PyTorch 卷积神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 循环神经网络"  href="/pytorch/pytorch-recurrent-neural-network.html" >
+			PyTorch 循环神经网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据集"  href="/pytorch/pytorch-datasets.html" >
+			PyTorch 数据集			</a>
+						<a target="_top" data-p="par" title="PyTorch 数据转换"  href="/pytorch/pytorch-transforms.html" >
+			PyTorch 数据转换			</a>
+						<a target="_top" data-p="par" title="Pytorch torch 参考手册"  href="/pytorch/pytorch-torch-ref.html" >
+			Pytorch torch			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.nn 参考手册"  href="/pytorch/pytorch-torch-nn-ref.html" >
+			PyTorch torch.nn			</a>
+						<a target="_top" data-p="par" title="Transformer 模型"  href="/pytorch/transformer-model.html" >
+			Transformer 模型			</a>
+						<a target="_top" data-p="par" title="PyTorch 构建 Transformer 模型"  href="/pytorch/pytorch-transformer-model.html" >
+			PyTorch Transformer			</a>
+						<a target="_top" data-p="par" title="PyTorch torch.optim 优化器模块"  href="/pytorch/pytorch-torch-optim.html" >
+			PyTorch torch.optim			</a>
+						<a target="_top" data-p="par" title="PyTorch torchvision 计算机视觉模块"  href="/pytorch/pytorch-torchvision.html" >
+			PyTorch torchvision			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型部署"  href="/pytorch/pytorch-model-deployment.html" >
+			PyTorch 模型部署			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型保存和加载"  href="/pytorch/pytorch-model-save.html" >
+			PyTorch 模型保存和加载			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 图像分类项目"  href="/pytorch/pytorch-image-classification.html" >
+			PyTorch 图像分类			</a>
+						<a target="_top" data-p="par" title="PyTorch 实例 &#8211; 文本情感分析项目"  href="/pytorch/pytorch-text-classification.html" >
+			PyTorc 文本情感分析			</a>
+						<a target="_top" data-p="par" title="PyTorch Autograd 自动微分"  href="/pytorch/pytorch-autograd.html" >
+			PyTorch Autograd			</a>
+						<a target="_top" data-p="par" title="PyTorch GPU / CUDA 加速"  href="/pytorch/pytorch-gpu-cuda.html" >
+			PyTorch GPU / CUDA 加速			</a>
+						<a target="_top" data-p="par" title="PyTorch 损失函数"  href="/pytorch/pytorch-loss-function.html" >
+			PyTorch 损失函数			</a>
+						<a target="_top" data-p="par" title="PyTorch 学习率调度器"  href="/pytorch/pytorch-lr-scheduler.html" >
+			PyTorch 学习率调度器			</a>
+						<a target="_top" data-p="par" title="PyTorch 迁移学习"  href="/pytorch/pytorch-transfer-learning.html" >
+			PyTorch 迁移学习			</a>
+						<a target="_top" data-p="par" title="PyTorch 批归一化与 Dropout"  href="/pytorch/pytorch-batchnorm-dropout.html" >
+			PyTorch 批归一化			</a>
+						<a target="_top" data-p="par" title="PyTorch LSTM / GRU"  href="/pytorch/pytorch-lstm-gru.html" >
+			PyTorch LSTM / GRU			</a>
+						<a target="_top" data-p="par" title="PyTorch 词嵌入 (Embedding)"  href="/pytorch/pytorch-embedding.html" >
+			PyTorch 词嵌入			</a>
+						<a target="_top" data-p="par" title="PyTorch 生成对抗网络 (GAN)"  href="/pytorch/pytorch-gan.html" >
+			PyTorch 生成对抗网络			</a>
+						<a target="_top" data-p="par" title="PyTorch 自编码器 (Autoencoder)"  href="/pytorch/pytorch-autoencoder.html" >
+			PyTorch 自编码器			</a>
+						<a target="_top" data-p="par" title="PyTorch 模型评估与调试"  href="/pytorch/pytorch-evaluation-debugging.html" >
+			PyTorch 模型评估与调试			</a>
+						<a target="_top" data-p="par" title="PyTorch torchtext"  href="/pytorch/pytorch-torchtext.html" >
+			PyTorch torchtext			</a>
+						<a target="_top" data-p="par" title="PyTorch 混合精度训练 (AMP)"  href="/pytorch/pytorch-amp.html" >
+			PyTorch 混合精度训练			</a>
+						<a target="_top" data-p="par" title="PyTorch TorchScript/ONNX 导出"  href="/pytorch/pytorch-torchscript-onnx-export.html" >
+			PyTorch TorchScript/ONNX 导出			</a>
+						<a target="_top" data-p="par" title="PyTorch 分布式训练"  href="/pytorch/pytorch-distributed.html" >
+			PyTorch 分布式训练			</a>
+						<a target="_top" data-p="par" title="PyTorch 注意力机制"  href="/pytorch/pytorch-attention.html" >
+			PyTorch 注意力机制			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-loss-function.html" rel="prev"> PyTorch 损失函数</a> </div>
+			<div class="next-design-link"><a href="/pytorch/pytorch-transfer-learning.html" rel="next"> PyTorch 迁移学习</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>PyTorch 学习率调度器</h1>
+<p>学习率（Learning Rate）是神经网络训练中最重要的超参数之一。学习率过大，训练震荡甚至发散；学习率过小，收敛极慢，容易陷入局部最优。</p>
+<p><strong>学习率调度器（LR Scheduler）</strong> 通过在训练过程中动态调整学习率，兼顾训练初期的快速收敛与后期的精细调优。</p>
+<hr>
+
+<h2>1. 基础概念与使用模式</h2>
+
+<h3>标准使用流程</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">optim</span> <span style="color: Green;font-weight:bold;">as</span> optim<br />
+<br />
+model &nbsp; &nbsp; <span style="color: Gray;">=</span> nn.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 1. 创建调度器，传入 optimizer</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">StepLR</span><span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> step_size<span style="color: Gray;">=</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> gamma<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 2. 训练</span><br />
+&nbsp; &nbsp; train<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> optimizer<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 3. 每个 epoch 结束后调用 scheduler.step()</span><br />
+&nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 4. 查看当前学习率</span><br />
+&nbsp; &nbsp; current_lr <span style="color: Gray;">=</span> scheduler.<span style="color: #05a;">get_last_lr</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Epoch {epoch+1}, LR: {current_lr:.6f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>step() 的调用时机</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 正确：optimizer.step() 在前，scheduler.step() 在后</span><br />
+optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 错误：scheduler.step() 在 optimizer.step() 之前</span><br />
+<span style="color: #a50"># PyTorch 1.1.0 之后会产生警告，部分调度器行为异常</span><br />
+scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>注意：<code>optimizer.step()</code> 必须在 <code>scheduler.step()</code> 之前调用。</p></blockquote>
+
+<h3>查看和保存学习率状态</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 获取当前学习率</span><br />
+current_lr <span style="color: Gray;">=</span> optimizer.<span style="color: #05a;">param_groups</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'lr'</span><span style="color: Olive;">&#93;</span><br />
+current_lr <span style="color: Gray;">=</span> scheduler.<span style="color: #05a;">get_last_lr</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span> &nbsp; <span style="color: #a50"># 上一次 step() 后的 LR</span><br />
+<br />
+<span style="color: #a50"># 保存检查点（必须同时保存 scheduler 状态）</span><br />
+torch.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'epoch'</span>: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;epoch<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'model'</span>: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;model.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'optimizer'</span>: &nbsp; &nbsp; &nbsp;optimizer.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'scheduler'</span>: &nbsp; &nbsp; &nbsp;scheduler.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 别漏掉这个</span><br />
+<span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'checkpoint.pth'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 恢复检查点</span><br />
+ckpt <span style="color: Gray;">=</span> torch.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'checkpoint.pth'</span><span style="color: Olive;">&#41;</span><br />
+model.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'model'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+optimizer.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'optimizer'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+scheduler.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'scheduler'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>2. 固定衰减调度器</h2>
+
+<h3>2.1 StepLR 按步衰减</h3>
+<p>每隔固定 <code>step_size</code> 个 epoch，将学习率乘以 <code>gamma</code>。是最简单、最常用的调度器之一。</p>
+
+<p><strong>公式：</strong> lr = lr_base * gamma^(floor(step / step_size))</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">StepLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; step_size<span style="color: Gray;">=</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 每 30 个 epoch 衰减一次</span><br />
+&nbsp; &nbsp; gamma<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 每次乘以 0.1（即缩小为原来的 1/10）</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># LR 变化：</span><br />
+<span style="color: #a50"># Epoch &nbsp;0-29: &nbsp;0.1</span><br />
+<span style="color: #a50"># Epoch 30-59: &nbsp;0.01</span><br />
+<span style="color: #a50"># Epoch 60-89: &nbsp;0.001</span><br />
+<span style="color: #a50"># Epoch 90+: &nbsp; &nbsp;0.0001</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>训练节奏固定、阶段清晰的任务，如 ResNet 在 ImageNet 上的训练（90 epoch，在第 30、60 epoch 衰减）。</p></blockquote>
+
+<hr>
+
+<h3>2.2 MultiStepLR 多里程碑衰减</h3>
+<p>在指定的若干个 epoch（里程碑）处衰减学习率，比 StepLR 更灵活。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">MultiStepLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; milestones<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> <span style="color: Maroon;">60</span><span style="color: Gray;">,</span> <span style="color: Maroon;">80</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 在第 30、60、80 epoch 衰减</span><br />
+&nbsp; &nbsp; gamma<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># LR 变化：</span><br />
+<span style="color: #a50"># Epoch &nbsp;0-29: &nbsp;0.1</span><br />
+<span style="color: #a50"># Epoch 30-59: &nbsp;0.01</span><br />
+<span style="color: #a50"># Epoch 60-79: &nbsp;0.001</span><br />
+<span style="color: #a50"># Epoch 80+: &nbsp; &nbsp;0.0001</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>已知在哪些 epoch 模型需要精细调整，如分类模型中后期精细收敛阶段。</p></blockquote>
+
+<hr>
+
+<h3>2.3 ExponentialLR 指数衰减</h3>
+<p>每个 epoch 都衰减，学习率以指数形式持续下降，衰减更平滑。</p>
+
+<p><strong>公式：</strong> lr = lr_base * gamma^epoch</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">ExponentialLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; gamma<span style="color: Gray;">=</span><span style="color: Maroon;">0.95</span> &nbsp; <span style="color: #a50"># 每个 epoch 乘以 0.95</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># LR 变化（前 5 个 epoch）：</span><br />
+<span style="color: #a50"># Epoch 1: 0.0100</span><br />
+<span style="color: #a50"># Epoch 2: 0.0095</span><br />
+<span style="color: #a50"># Epoch 3: 0.0090</span><br />
+<span style="color: #a50"># Epoch 4: 0.0086</span><br />
+<span style="color: #a50"># Epoch 5: 0.0081</span><br />
+
+</div>
+</div>
+
+<blockquote><p><code>gamma</code> 设置得太小（如 0.5）会导致学习率迅速趋近于零，通常设在 0.9~0.99 之间。</p></blockquote>
+
+<hr>
+
+<h2>3. 自适应调度器</h2>
+
+<h3>3.1 ReduceLROnPlateau 监控指标衰减</h3>
+<p><strong>最智能的调度器之一</strong>：监控某个指标（如验证集 loss），当该指标停止改善时自动降低学习率。不需要提前知道在哪个 epoch 衰减。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">ReduceLROnPlateau</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; mode<span style="color: Gray;">=</span><span style="color: #a11;">'min'</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 'min': 监控值越小越好（loss）；'max': 越大越好（accuracy）</span><br />
+&nbsp; &nbsp; factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 触发时 lr = lr × factor</span><br />
+&nbsp; &nbsp; patience<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 允许指标停滞的 epoch 数，超过则衰减</span><br />
+&nbsp; &nbsp; threshold<span style="color: Gray;">=</span><span style="color: Maroon;">1e-4</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 改善幅度小于该值视为未改善</span><br />
+&nbsp; &nbsp; min_lr<span style="color: Gray;">=</span><span style="color: Maroon;">1e-6</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 学习率下限，不会低于此值</span><br />
+&nbsp; &nbsp; verbose<span style="color: Gray;">=</span><span style="color: Teal;">True</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 打印衰减信息</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; train_loss <span style="color: Gray;">=</span> train<span style="color: Olive;">&#40;</span>model<span style="color: Gray;">,</span> optimizer<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; val_loss &nbsp; <span style="color: Gray;">=</span> evaluate<span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 与其他调度器不同，这里传入监控指标</span><br />
+&nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span>val_loss<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p><strong>监控 Accuracy 的写法：</strong></p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">ReduceLROnPlateau</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; mode<span style="color: Gray;">=</span><span style="color: #a11;">'max'</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># accuracy 越大越好</span><br />
+&nbsp; &nbsp; factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; patience<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span>val_accuracy<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>几乎所有任务的默认首选，尤其是不确定训练多少 epoch、或训练不稳定时。</p></blockquote>
+
+<hr>
+
+<h3>3.2 CosineAnnealingLR 余弦退火</h3>
+<p>学习率按<strong>余弦曲线</strong>从初始值平滑下降到最小值（<code>eta_min</code>），避免了阶梯式衰减的突变。</p>
+
+<p><strong>公式：</strong> lr_t = eta_min + 0.5 * (eta_max - eta_min) * (1 + cos(t * pi / T_max)</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">CosineAnnealingLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; T_max<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a50"># 半个周期的长度（通常设为总 epoch 数）</span><br />
+&nbsp; &nbsp; eta_min<span style="color: Gray;">=</span><span style="color: Maroon;">1e-6</span> &nbsp; <span style="color: #a50"># 学习率最小值（默认 0）</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># LR 变化轨迹（T_max=10 时的示意）：</span><br />
+<span style="color: #a50"># 0.1 -&gt; 0.095 -&gt; 0.079 -&gt; 0.055 -&gt; 0.026 -&gt; 0.001</span><br />
+<span style="color: #a50"># &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;（余弦曲线平滑下降）</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>训练 epoch 数固定的场景，在 Vision Transformer、ResNet 等论文中广泛使用，收敛质量好。</p></blockquote>
+
+<hr>
+
+<h3>3.3 CosineAnnealingWarmRestarts</h3>
+<p>余弦退火的升级版，支持<strong>周期性重启</strong>（Warm Restarts）：每个周期结束后学习率重置回初始值，开始新一轮余弦衰减。允许模型跳出局部最优。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">CosineAnnealingWarmRestarts</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; T_0<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 第一个周期的长度（epoch 数）</span><br />
+&nbsp; &nbsp; T_mult<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a50"># 每次重启后周期长度的倍数（1=等长，2=逐渐加长）</span><br />
+&nbsp; &nbsp; eta_min<span style="color: Gray;">=</span><span style="color: Maroon;">1e-6</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># T_mult=2 时的周期长度：10 -&gt; 20 -&gt; 40 -&gt; 80 ...</span><br />
+<span style="color: #a50"># LR 变化（T_0=10, T_mult=1）：</span><br />
+<span style="color: #a50"># 0.1 -&gt; ... -&gt; 0 -&gt; 0.1 -&gt; ... -&gt; 0 -&gt; 0.1（每 10 个 epoch 重启一次）</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>训练大模型、或希望模型从多个收敛点中选最优时，配合 Snapshot Ensemble 使用效果显著。</p></blockquote>
+
+<hr>
+
+<h2>4. 预热调度器</h2>
+<p><strong>Warmup（预热）</strong>是指训练开始的若干步内，学习率从一个极小值逐渐升高到目标值。大 batch size 训练、Transformer 类模型几乎都需要预热，否则初期梯度更新过猛，模型难以稳定。</p>
+
+<h3>4.1 LinearLR 线性调度</h3>
+<p>在指定 epoch 内线性改变学习率（可用于线性预热或线性衰减）。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 线性预热：前 5 个 epoch 内，lr 从 0.01×0.1=0.001 线性增长到 0.01</span><br />
+warmup_scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">LinearLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; start_factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 初始 lr = base_lr × start_factor</span><br />
+&nbsp; &nbsp; end_factor<span style="color: Gray;">=</span><span style="color: Maroon;">1.0</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a50"># 结束 lr = base_lr × end_factor</span><br />
+&nbsp; &nbsp; total_iters<span style="color: Gray;">=</span><span style="color: Maroon;">5</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 经过 5 个 epoch 完成</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># LR 变化：0.001 -&gt; 0.003 -&gt; 0.005 -&gt; 0.007 -&gt; 0.009 -&gt; 0.01</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h3>4.2 ConstantLR 常数阶段</h3>
+<p>在指定 epoch 数内，将学习率固定为 <code>base_lr × factor</code>，之后恢复原值。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 前 5 个 epoch 使用 base_lr × 0.5，之后恢复正常</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">ConstantLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; total_iters<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h3>4.3 SequentialLR 组合调度</h3>
+<p>将多个调度器<strong>按顺序串联</strong>，是实现"预热 + 衰减"组合策略的标准做法。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 阶段一：预热（前 5 个 epoch，LR 从 0.001 线性增长到 0.01）</span><br />
+warmup <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">LinearLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span> start_factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> end_factor<span style="color: Gray;">=</span><span style="color: Maroon;">1.0</span><span style="color: Gray;">,</span> total_iters<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 阶段二：余弦退火（剩余 95 个 epoch）</span><br />
+cosine <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">CosineAnnealingLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span> T_max<span style="color: Gray;">=</span><span style="color: Maroon;">95</span><span style="color: Gray;">,</span> eta_min<span style="color: Gray;">=</span><span style="color: Maroon;">1e-6</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 组合：先执行 warmup，第 5 个 epoch 后切换到 cosine</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">SequentialLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; schedulers<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>warmup<span style="color: Gray;">,</span> cosine<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; milestones<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">5</span><span style="color: Olive;">&#93;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 在第 5 个 epoch 切换</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 使用方式与普通调度器完全一致</span><br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; train<span style="color: Olive;">&#40;</span>...<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>Transformer 训练的标配（预热 + 余弦退火），BERT、GPT、ViT 的预训练均采用此策略。</p></blockquote>
+
+<hr>
+
+<h2>5. 循环调度器</h2>
+
+<h3>5.1 CyclicLR 循环学习率</h3>
+<p>学习率在 <code>base_lr</code> 和 <code>max_lr</code> 之间<strong>周期性循环</strong>，可帮助模型探索更广的参数空间、跳出鞍点。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">CyclicLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.001</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 学习率下界</span><br />
+&nbsp; &nbsp; max_lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 学习率上界</span><br />
+&nbsp; &nbsp; step_size_up<span style="color: Gray;">=</span><span style="color: Maroon;">2000</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 从 base_lr 上升到 max_lr 的迭代步数</span><br />
+&nbsp; &nbsp; step_size_down<span style="color: Gray;">=</span><span style="color: Maroon;">2000</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 从 max_lr 下降到 base_lr 的迭代步数（默认等于 step_size_up）</span><br />
+&nbsp; &nbsp; mode<span style="color: Gray;">=</span><span style="color: #a11;">'triangular'</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 三角形循环（等幅）</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># mode='triangular2' &nbsp; &nbsp;# 每个周期振幅减半</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># mode='exp_range' &nbsp; &nbsp; &nbsp;# 振幅指数衰减</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># CyclicLR 按 step（batch）调用，不是按 epoch</span><br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>num_epochs<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> inputs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> train_loader:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">zero_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; loss <span style="color: Gray;">=</span> criterion<span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#40;</span>inputs<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> labels<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; loss.<span style="color: #05a;">backward</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 每个 batch 后调用</span><br />
+
+</div>
+</div>
+
+<p><strong>三种模式对比：</strong></p>
+
+<table class="reference">
+<thead>
+    <tr><th>mode</th><th>振幅变化</th><th>特点</th></tr>
+</thead>
+<tbody>
+    <tr><td><code>triangular</code></td><td>不变</td><td>稳定探索，适合初期</td></tr>
+    <tr><td><code>triangular2</code></td><td>每周期减半</td><td>先探索后收敛</td></tr>
+    <tr><td><code>exp_range</code></td><td>指数衰减</td><td>最终平稳收敛</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h3>5.2 OneCycleLR 单周期策略</h3>
+<p><strong>性能最优的调度器之一</strong>，由 fastai 提出的 1-Cycle Policy。整个训练只有一个周期：学习率先升后降，动量（momentum）反向变化。</p>
+<p>训练速度更快，通常只需传统训练的 <strong>1/5~1/10</strong> 的 epoch 数就能达到相同精度。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Gray;">,</span> momentum<span style="color: Gray;">=</span><span style="color: Maroon;">0.9</span><span style="color: Olive;">&#41;</span><br />
+<br />
+steps_per_epoch <span style="color: Gray;">=</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>train_loader<span style="color: Olive;">&#41;</span><br />
+<br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">OneCycleLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; max_lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 学习率最高点</span><br />
+&nbsp; &nbsp; steps_per_epoch<span style="color: Gray;">=</span>steps_per_epoch<span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 每个 epoch 的 step 数</span><br />
+&nbsp; &nbsp; epochs<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 总 epoch 数</span><br />
+&nbsp; &nbsp; pct_start<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 前 30% 用于预热上升</span><br />
+&nbsp; &nbsp; anneal_strategy<span style="color: Gray;">=</span><span style="color: #a11;">'cos'</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 衰减策略（'cos' 或 'linear'）</span><br />
+&nbsp; &nbsp; div_factor<span style="color: Gray;">=</span><span style="color: Maroon;">25</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 初始 lr = max_lr / div_factor</span><br />
+&nbsp; &nbsp; final_div_factor<span style="color: Gray;">=</span><span style="color: Maroon;">1e4</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 最终 lr = max_lr / final_div_factor</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 初始 lr = 0.1 / 25 = 0.004</span><br />
+<span style="color: #a50"># 峰值 lr = 0.1（在 30% 处）</span><br />
+<span style="color: #a50"># 最终 lr = 0.1 / 10000 = 0.00001</span><br />
+<br />
+<span style="color: #a50"># 同样按 batch 调用</span><br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">10</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> inputs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> train_loader:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">zero_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; loss <span style="color: Gray;">=</span> criterion<span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#40;</span>inputs<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> labels<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; loss.<span style="color: #05a;">backward</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp; &nbsp;<span style="color: #a50"># 每个 batch 后调用</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>适用场景：</strong>在计算资源有限、需要快速验证想法时首选；<code>max_lr</code> 建议通过 LR Finder 工具确定最优值。</p></blockquote>
+
+<hr>
+
+<h2>6. 自定义调度器</h2>
+
+<h3>6.1 LambdaLR 函数式自定义</h3>
+<p>通过传入一个 Lambda 函数（接受 epoch 数，返回学习率乘数）来完全自定义调度策略。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 示例一：Transformer 经典预热策略</span><br />
+<span style="color: #a50"># lr ∝ min(step^-0.5, step × warmup_steps^-1.5)</span><br />
+<span style="color: Green;font-weight:bold;">def</span> transformer_lr<span style="color: Olive;">&#40;</span>epoch<span style="color: Gray;">,</span> warmup_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span> d_model<span style="color: Gray;">=</span><span style="color: Maroon;">512</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> epoch <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">1e-7</span> / <span style="color: Maroon;">0.01</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 避免除零</span><br />
+&nbsp; &nbsp; step <span style="color: Gray;">=</span> epoch + <span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; warmup <span style="color: Gray;">=</span> warmup_epochs<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#40;</span>d_model ** -<span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span> * <span style="color: Teal;">min</span><span style="color: Olive;">&#40;</span>step ** -<span style="color: Maroon;">0.5</span><span style="color: Gray;">,</span> step * warmup ** -<span style="color: Maroon;">1.5</span><span style="color: Olive;">&#41;</span> / <span style="color: Maroon;">0.01</span><br />
+<br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">LambdaLR</span><span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> lr_lambda<span style="color: Gray;">=</span>transformer_lr<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 示例二：多项式衰减（lr 从初始值线性/多项式降到 0）</span><br />
+<span style="color: Green;font-weight:bold;">def</span> polynomial_decay<span style="color: Olive;">&#40;</span>epoch<span style="color: Gray;">,</span> total_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span> power<span style="color: Gray;">=</span><span style="color: Maroon;">1.0</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> - epoch / total_epochs<span style="color: Olive;">&#41;</span> ** power<span style="color: Gray;">,</span> <span style="color: Maroon;">0.0</span><span style="color: Olive;">&#41;</span><br />
+<br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">LambdaLR</span><span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> lr_lambda<span style="color: Gray;">=</span>polynomial_decay<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: #a50"># 示例三：分组学习率（不同参数组不同策略）</span><br />
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">'params'</span>: model.<span style="color: #05a;">backbone</span>.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'lr'</span>: <span style="color: Maroon;">1e-4</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">'params'</span>: model.<span style="color: #05a;">head</span>.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; <span style="color: #a11;">'lr'</span>: <span style="color: Maroon;">1e-3</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 每个参数组一个 lambda 函数</span><br />
+scheduler <span style="color: Gray;">=</span> optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">LambdaLR</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; lr_lambda<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">lambda</span> epoch: <span style="color: Maroon;">0.95</span> ** epoch<span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># backbone：慢衰减</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">lambda</span> epoch: <span style="color: Maroon;">0.85</span> ** epoch<span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># head：快衰减</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h3>6.2 继承 LRScheduler</h3>
+<p>需要更复杂的逻辑时，继承 <code>LRScheduler</code>（PyTorch >= 2.0，旧版为 <code>_LRScheduler</code>）实现完全自定义：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> torch.<span style="color: #05a;">optim</span>.<span style="color: #05a;">lr_scheduler</span> <span style="color: Green;font-weight:bold;">import</span> LRScheduler<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">class</span> WarmupCosineScheduler<span style="color: Olive;">&#40;</span>LRScheduler<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 预热 + 余弦退火组合调度器（手动实现版）<br />
+&nbsp; &nbsp; - 前 warmup_epochs 个 epoch 线性预热<br />
+&nbsp; &nbsp; - 之后余弦退火到 min_lr<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> <span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Gray;">,</span> optimizer<span style="color: Gray;">,</span> warmup_epochs<span style="color: Gray;">,</span> total_epochs<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;min_lr<span style="color: Gray;">=</span><span style="color: Maroon;">1e-6</span><span style="color: Gray;">,</span> last_epoch<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">warmup_epochs</span> <span style="color: Gray;">=</span> warmup_epochs<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">total_epochs</span> &nbsp;<span style="color: Gray;">=</span> total_epochs<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">min_lr</span> &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: Gray;">=</span> min_lr<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">super</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: Navy;">__init__</span><span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> last_epoch<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> get_lr<span style="color: Olive;">&#40;</span><span style="color: Teal;">self</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; epoch <span style="color: Gray;">=</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">last_epoch</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 预热阶段：线性增大</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> epoch <span style="color: Gray;">&lt;</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">warmup_epochs</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; warmup_factor <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>epoch + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> / <span style="color: Teal;">self</span>.<span style="color: #05a;">warmup_epochs</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#91;</span>base_lr * warmup_factor <span style="color: Green;font-weight:bold;">for</span> base_lr <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">base_lrs</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 余弦退火阶段</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; progress <span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>epoch - <span style="color: Teal;">self</span>.<span style="color: #05a;">warmup_epochs</span><span style="color: Olive;">&#41;</span> / <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">total_epochs</span> - <span style="color: Teal;">self</span>.<span style="color: #05a;">warmup_epochs</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cosine_factor <span style="color: Gray;">=</span> <span style="color: Maroon;">0.5</span> * <span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> + <span style="color: #05a;">math</span>.<span style="color: #05a;">cos</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">math</span>.<span style="color: #05a;">pi</span> * progress<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Teal;">self</span>.<span style="color: #05a;">min_lr</span> + <span style="color: Olive;">&#40;</span>base_lr - <span style="color: Teal;">self</span>.<span style="color: #05a;">min_lr</span><span style="color: Olive;">&#41;</span> * cosine_factor<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> base_lr <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">self</span>.<span style="color: #05a;">base_lrs</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+<br />
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">Adam</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Olive;">&#41;</span><br />
+scheduler <span style="color: Gray;">=</span> WarmupCosineScheduler<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; optimizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; warmup_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; total_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; min_lr<span style="color: Gray;">=</span><span style="color: Maroon;">1e-6</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>7. 调度器可视化对比</h2>
+<p>以下代码可以绘制各调度器的 LR 变化曲线，方便直观对比：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">optim</span> <span style="color: Green;font-weight:bold;">as</span> optim<br />
+<span style="color: Green;font-weight:bold;">import</span> matplotlib.<span style="color: #05a;">pyplot</span> <span style="color: Green;font-weight:bold;">as</span> plt<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> simulate_lr<span style="color: Olive;">&#40;</span>scheduler_fn<span style="color: Gray;">,</span> epochs<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Gray;">,</span> steps_per_epoch<span style="color: Gray;">=</span><span style="color: Teal;">None</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;模拟并记录调度器的学习率变化&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; model &nbsp; &nbsp; <span style="color: Gray;">=</span> torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">Linear</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">SGD</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; scheduler <span style="color: Gray;">=</span> scheduler_fn<span style="color: Olive;">&#40;</span>optimizer<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; lrs <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> steps_per_epoch:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 按 step 调用的调度器</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>epochs<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>steps_per_epoch<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lrs.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>optimizer.<span style="color: #05a;">param_groups</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'lr'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 按 epoch 调用的调度器</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>epochs<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lrs.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>optimizer.<span style="color: #05a;">param_groups</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">'lr'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> lrs<br />
+<br />
+schedulers <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'StepLR(step=30, gamma=0.1)'</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">lambda</span> opt: optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">StepLR</span><span style="color: Olive;">&#40;</span>opt<span style="color: Gray;">,</span> <span style="color: Maroon;">30</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'CosineAnnealingLR'</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">lambda</span> opt: optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">CosineAnnealingLR</span><span style="color: Olive;">&#40;</span>opt<span style="color: Gray;">,</span> T_max<span style="color: Gray;">=</span><span style="color: Maroon;">100</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'ExponentialLR(gamma=0.95)'</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">lambda</span> opt: optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">ExponentialLR</span><span style="color: Olive;">&#40;</span>opt<span style="color: Gray;">,</span> <span style="color: Maroon;">0.95</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">'CosineWarmRestarts(T0=25)'</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">lambda</span> opt: optim.<span style="color: #05a;">lr_scheduler</span>.<span style="color: #05a;">CosineAnnealingWarmRestarts</span><span style="color: Olive;">&#40;</span>opt<span style="color: Gray;">,</span> T_0<span style="color: Gray;">=</span><span style="color: Maroon;">25</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#125;</span><br />
+<br />
+plt.<span style="color: #05a;">figure</span><span style="color: Olive;">&#40;</span>figsize<span style="color: Gray;">=</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">12</span><span style="color: Gray;">,</span> <span style="color: Maroon;">5</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> name<span style="color: Gray;">,</span> fn <span style="color: Green;font-weight:bold;">in</span> schedulers.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; plt.<span style="color: #05a;">plot</span><span style="color: Olive;">&#40;</span>simulate_lr<span style="color: Olive;">&#40;</span>fn<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> label<span style="color: Gray;">=</span>name<span style="color: Olive;">&#41;</span><br />
+<br />
+plt.<span style="color: #05a;">xlabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Epoch'</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">ylabel</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'Learning Rate'</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">title</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'PyTorch LR Scheduler Comparison'</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">legend</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">grid</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> alpha<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">tight_layout</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">savefig</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'lr_schedulers.png'</span><span style="color: Gray;">,</span> dpi<span style="color: Gray;">=</span><span style="color: Maroon;">150</span><span style="color: Olive;">&#41;</span><br />
+plt.<span style="color: #05a;">show</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>8. 完整训练模板</h2>
+<p>集成了预热 + 余弦退火、模型保存与恢复的生产级训练模板：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">nn</span> <span style="color: Green;font-weight:bold;">as</span> nn<br />
+<span style="color: Green;font-weight:bold;">import</span> torch.<span style="color: #05a;">optim</span> <span style="color: Green;font-weight:bold;">as</span> optim<br />
+<span style="color: Green;font-weight:bold;">from</span> torch.<span style="color: #05a;">optim</span>.<span style="color: #05a;">lr_scheduler</span> <span style="color: Green;font-weight:bold;">import</span> SequentialLR<span style="color: Gray;">,</span> LinearLR<span style="color: Gray;">,</span> CosineAnnealingLR<br />
+<br />
+<span style="color: #a50"># 超参数</span><br />
+EPOCHS &nbsp; &nbsp; &nbsp; <span style="color: Gray;">=</span> <span style="color: Maroon;">100</span><br />
+WARMUP_EPOCHS <span style="color: Gray;">=</span> <span style="color: Maroon;">5</span><br />
+BASE_LR &nbsp; &nbsp; &nbsp;<span style="color: Gray;">=</span> <span style="color: Maroon;">1e-3</span><br />
+MIN_LR &nbsp; &nbsp; &nbsp; <span style="color: Gray;">=</span> <span style="color: Maroon;">1e-6</span><br />
+SAVE_PATH &nbsp; &nbsp;<span style="color: Gray;">=</span> <span style="color: #a11;">'best_model.pth'</span><br />
+<br />
+device <span style="color: Gray;">=</span> torch.<span style="color: #05a;">device</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">'cuda'</span> <span style="color: Green;font-weight:bold;">if</span> torch.<span style="color: #05a;">cuda</span>.<span style="color: #05a;">is_available</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">else</span> <span style="color: #a11;">'cpu'</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 模型 / 优化器 / 调度器</span><br />
+model &nbsp; &nbsp; <span style="color: Gray;">=</span> MyModel<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>device<span style="color: Olive;">&#41;</span><br />
+optimizer <span style="color: Gray;">=</span> optim.<span style="color: #05a;">AdamW</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> lr<span style="color: Gray;">=</span>BASE_LR<span style="color: Gray;">,</span> weight_decay<span style="color: Gray;">=</span><span style="color: Maroon;">1e-4</span><span style="color: Olive;">&#41;</span><br />
+criterion <span style="color: Gray;">=</span> nn.<span style="color: #05a;">CrossEntropyLoss</span><span style="color: Olive;">&#40;</span>label_smoothing<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 预热 5 epoch + 余弦退火 95 epoch</span><br />
+warmup_sched <span style="color: Gray;">=</span> LinearLR<span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> start_factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> total_iters<span style="color: Gray;">=</span>WARMUP_EPOCHS<span style="color: Olive;">&#41;</span><br />
+cosine_sched <span style="color: Gray;">=</span> CosineAnnealingLR<span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> T_max<span style="color: Gray;">=</span>EPOCHS - WARMUP_EPOCHS<span style="color: Gray;">,</span> eta_min<span style="color: Gray;">=</span>MIN_LR<span style="color: Olive;">&#41;</span><br />
+scheduler &nbsp; &nbsp;<span style="color: Gray;">=</span> SequentialLR<span style="color: Olive;">&#40;</span>optimizer<span style="color: Gray;">,</span> <span style="color: Olive;">&#91;</span>warmup_sched<span style="color: Gray;">,</span> cosine_sched<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> milestones<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>WARMUP_EPOCHS<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 恢复检查点</span><br />
+start_epoch <span style="color: Gray;">=</span> <span style="color: Maroon;">0</span><br />
+best_acc &nbsp; &nbsp;<span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; ckpt <span style="color: Gray;">=</span> torch.<span style="color: #05a;">load</span><span style="color: Olive;">&#40;</span>SAVE_PATH<span style="color: Gray;">,</span> map_location<span style="color: Gray;">=</span>device<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; model.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'model'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; optimizer.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'optimizer'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; scheduler.<span style="color: #05a;">load_state_dict</span><span style="color: Olive;">&#40;</span>ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'scheduler'</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; start_epoch <span style="color: Gray;">=</span> ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'epoch'</span><span style="color: Olive;">&#93;</span> + <span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; best_acc &nbsp; &nbsp;<span style="color: Gray;">=</span> ckpt<span style="color: Olive;">&#91;</span><span style="color: #a11;">'best_acc'</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;恢复自 Epoch {start_epoch}，最佳准确率 {best_acc:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">except</span> FileNotFoundError:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;从头开始训练&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 训练循环</span><br />
+history <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">'train_loss'</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'val_acc'</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: #a11;">'lr'</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">for</span> epoch <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>start_epoch<span style="color: Gray;">,</span> EPOCHS<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 训练</span><br />
+&nbsp; &nbsp; model.<span style="color: #05a;">train</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; total_loss <span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> inputs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> train_loader:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; inputs<span style="color: Gray;">,</span> labels <span style="color: Gray;">=</span> inputs.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>device<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> labels.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>device<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">zero_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; loss <span style="color: Gray;">=</span> criterion<span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#40;</span>inputs<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> labels<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; loss.<span style="color: #05a;">backward</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; torch.<span style="color: #05a;">nn</span>.<span style="color: #05a;">utils</span>.<span style="color: #05a;">clip_grad_norm_</span><span style="color: Olive;">&#40;</span>model.<span style="color: #05a;">parameters</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> max_norm<span style="color: Gray;">=</span><span style="color: Maroon;">1.0</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 梯度裁剪</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; optimizer.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; total_loss +<span style="color: Gray;">=</span> loss.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 验证</span><br />
+&nbsp; &nbsp; model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; correct <span style="color: Gray;">=</span> <span style="color: Maroon;">0</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> inputs<span style="color: Gray;">,</span> labels <span style="color: Green;font-weight:bold;">in</span> val_loader:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; inputs<span style="color: Gray;">,</span> labels <span style="color: Gray;">=</span> inputs.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>device<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> labels.<span style="color: #05a;">to</span><span style="color: Olive;">&#40;</span>device<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; correct +<span style="color: Gray;">=</span> <span style="color: Olive;">&#40;</span>model<span style="color: Olive;">&#40;</span>inputs<span style="color: Olive;">&#41;</span>.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> <span style="color: Gray;">==</span> labels<span style="color: Olive;">&#41;</span>.<span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; avg_loss <span style="color: Gray;">=</span> total_loss / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>train_loader<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; val_acc &nbsp;<span style="color: Gray;">=</span> correct / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>val_loader.<span style="color: #05a;">dataset</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; cur_lr &nbsp; <span style="color: Gray;">=</span> scheduler.<span style="color: #05a;">get_last_lr</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 记录 &amp; 打印</span><br />
+&nbsp; &nbsp; history<span style="color: Olive;">&#91;</span><span style="color: #a11;">'train_loss'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>avg_loss<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; history<span style="color: Olive;">&#91;</span><span style="color: #a11;">'val_acc'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>val_acc<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; history<span style="color: Olive;">&#91;</span><span style="color: #a11;">'lr'</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>cur_lr<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Epoch {epoch+1:3d}/{EPOCHS} | &quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;Loss: {avg_loss:.4f} | Acc: {val_acc:.4f} | LR: {cur_lr:.2e}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 调度器更新</span><br />
+&nbsp; &nbsp; scheduler.<span style="color: #05a;">step</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 保存最优模型</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> val_acc <span style="color: Gray;">&gt;</span> best_acc:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; best_acc <span style="color: Gray;">=</span> val_acc<br />
+&nbsp; &nbsp; &nbsp; &nbsp; torch.<span style="color: #05a;">save</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'epoch'</span>: &nbsp; &nbsp; &nbsp;epoch<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'model'</span>: &nbsp; &nbsp; &nbsp;model.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'optimizer'</span>: &nbsp;optimizer.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'scheduler'</span>: &nbsp;scheduler.<span style="color: #05a;">state_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">'best_acc'</span>: &nbsp; best_acc<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span> SAVE_PATH<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;保存最优模型，Acc: {best_acc:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>训练完成，最佳验证准确率: {best_acc:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>9. 调度器选择指南</h2>
+
+<h3>按任务类型推荐</h3>
+
+<table class="reference">
+<thead>
+    <tr><th>场景</th><th>推荐调度器</th><th>理由</th></tr>
+</thead>
+<tbody>
+    <tr><td>快速实验 / 原型验证</td><td><code>ReduceLROnPlateau</code></td><td>无需调超参，自适应衰减</td></tr>
+    <tr><td>图像分类（固定 epoch）</td><td><code>CosineAnnealingLR</code></td><td>平滑衰减，收敛质量好</td></tr>
+    <tr><td>Transformer / BERT</td><td><code>LinearLR</code> + <code>CosineAnnealingLR</code></td><td>预热必不可少</td></tr>
+    <tr><td>资源有限，快速训练</td><td><code>OneCycleLR</code></td><td>1/5 时间达同等精度</td></tr>
+    <tr><td>大模型精调（fine-tune）</td><td><code>LinearLR</code>（预热） + <code>ConstantLR</code></td><td>低学习率稳定微调</td></tr>
+    <tr><td>不确定 epoch 数</td><td><code>ReduceLROnPlateau</code></td><td>自动响应，不依赖固定节奏</td></tr>
+    <tr><td>目标检测（YOLO/Faster-RCNN）</td><td><code>MultiStepLR</code> / <code>OneCycleLR</code></td><td>有明确衰减点或追求速度</td></tr>
+    <tr><td>希望跳出局部最优</td><td><code>CosineAnnealingWarmRestarts</code></td><td>周期重启探索参数空间</td></tr>
+</tbody>
+</table>
+
+<h3>常见配置组合</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 组合一：Warmup + 余弦退火（Transformer 标配）</span><br />
+SequentialLR<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span>LinearLR<span style="color: Olive;">&#40;</span><span style="color: Maroon;">5</span> epochs<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> CosineAnnealingLR<span style="color: Olive;">&#40;</span><span style="color: Maroon;">95</span> epochs<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 组合二：监控验证集 + 自动衰减（通用首选）</span><br />
+ReduceLROnPlateau<span style="color: Olive;">&#40;</span>mode<span style="color: Gray;">=</span><span style="color: #a11;">'min'</span><span style="color: Gray;">,</span> patience<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><span style="color: Gray;">,</span> factor<span style="color: Gray;">=</span><span style="color: Maroon;">0.5</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 组合三：OneCycleLR（快速训练首选）</span><br />
+OneCycleLR<span style="color: Olive;">&#40;</span>max_lr<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Gray;">,</span> total_steps<span style="color: Gray;">=</span>total_steps<span style="color: Gray;">,</span> pct_start<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 组合四：传统阶梯衰减（CV 经典）</span><br />
+MultiStepLR<span style="color: Olive;">&#40;</span>milestones<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">30</span><span style="color: Gray;">,</span> <span style="color: Maroon;">60</span><span style="color: Gray;">,</span> <span style="color: Maroon;">90</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> gamma<span style="color: Gray;">=</span><span style="color: Maroon;">0.1</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>注意事项速查</h3>
+
+<table class="reference">
+<thead>
+    <tr><th>问题</th><th>解决方法</th></tr>
+</thead>
+<tbody>
+    <tr><td>调度器没有生效</td><td>检查 <code>scheduler.step()</code> 是否在 <code>optimizer.step()</code> <strong>之后</strong> 调用</td></tr>
+    <tr><td>CyclicLR / OneCycleLR 没变化</td><td>这两个按 <strong>batch</strong> 调用，不是按 epoch</td></tr>
+    <tr><td>ReduceLROnPlateau 不触发</td><td>检查 <code>mode</code> 是否设对（loss 用 <code>'min'</code>，accuracy 用 <code>'max'</code>）</td></tr>
+    <tr><td>恢复训练后 LR 不对</td><td>检查是否保存并加载了 <code>scheduler.state_dict()</code></td></tr>
+    <tr><td>多参数组 LR 设置</td><td>使用 <code>LambdaLR</code> 传入列表，每个参数组一个 lambda</td></tr>
+</tbody>
+</table>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/pytorch/pytorch-loss-function.html" rel="prev"> PyTorch 损失函数</a> </div>
+			<div class="next-design-link"><a href="/pytorch/pytorch-transfer-learning.html" rel="next"> PyTorch 迁移学习</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='30659' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  30659;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 30659, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":30659},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 30659;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

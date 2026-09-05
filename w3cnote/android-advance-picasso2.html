@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.2 带你全方位学习Picasso（二） | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="./android-advance-picasso2.html" />
+<meta name="keywords" content="2.2 带你全方位学习Picasso（二）">
+<meta name="description" content="目录   图像请求排序 tag() 分组请求 回调, RemoteView与Notifications 图像旋转与转换 图像缓存 缓存指示器，日志，统计 使用 Picasso.Builder 自定义Picasso 自定义请求处理 picasso2-okhttp3-downloader 与 picasso-transformations   图像请求排序 优先级：HIGH,MEDIUM,LOW 假设有一种场景，就是图片加载需要优先级显示，..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="../index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div><!-- 导航栏 -->
+<div class="container navigation">
+    <div class="row">
+        <div class="col nav">
+            
+
+                        <ul class="pc-nav" id="note-nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../w3cnote.html">笔记首页</a></li>
+                <li><a href="./android-tutorial-intro.html" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" title="ES6 教程">ES6 教程</a></li>
+                <li><a href="./ten-sorting-algorithm.html" title="排序算法">排序算法</a></li>
+                <li><a href="./hadoop-tutorial.html" title="Hadoop 教程">Hadoop</a></li>
+                <li><a href="./zookeeper-tutorial.html" title="Zookeeper 教程">Zookeeper</a></li>
+                <li><a href="./verilog-tutorial.html" title="Verilog 教程">Verilog</a></li>
+                <li><a href="../w3cnote_genre/code.html" title="编程技术">编程技术</a></li> 
+                <li><a href="../w3cnote_genre/coderlife.html" title="程序员人生">程序员人生</a></li>
+                
+                <!--<li><a href=".." class="runoob-pop">登录</a></li>
+                
+                
+                        <li>
+                <a style="font-weight:bold;" href="../linux/linux-tutorial.html" target="_blank" onclick="_hmt.push(['_trackEvent', 'aliyun', 'click', 'aliyun'])" title="kkb">云服务器</a>
+                </li>
+                <li><a href="http://gk.link/a/104mQ" target="_blank" style="font-weight: bold;"onclick="_hmt.push(['_trackEvent', '极客时间', 'click', 'jike'])" title="我的圈子">极客时间</a></li>
+            
+                
+                <li><a target="_blank" href="../shoppinglist.html" rel="nofollow">知识店铺</a></li> 
+        -->
+            </ul>
+                        
+              
+            <ul class="mobile-nav">
+                <li><a href="../w3cnote.html">首页</a></li>
+                <li><a href="../w3cnote_genre/android.html" target="_blank" title="Android 基础入门教程">Android</a></li>
+                <li><a href="./es6-tutorial.html" target="_blank" title="ES6 教程">ES6</a></li>
+                <li><a href="../w3cnote_genre/joke.html" target="_blank" title="程序员笑话">逗乐</a></li>
+                
+                <a href="void(0).html" class="search-reveal">Search</a> 
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--  内容  -->
+<div class="container main">
+	<div class="row">
+
+		<div class="col middle-column big-middle-column">
+	 			<div class="article">
+			<div class="article-heading">
+				<h2>2.2 带你全方位学习Picasso（二）</h2>				<h3><em>分类</em> <a href="../w3cnote_genre/android-advance.html" title="Android 扩展教程" >Android 扩展教程</a> </h3>
+			</div>
+			<div class="article-body note-body">
+				<div class="article-intro">
+					<!-- ad start-->
+			            <!-- ad end-->
+					<h2>目录</h2>
+
+<ol>
+<li>图像请求排序</li>
+<li>tag() 分组请求</li>
+<li>回调, RemoteView与Notifications</li>
+<li>图像旋转与转换</li>
+<li>图像缓存</li>
+<li>缓存指示器，日志，统计</li>
+<li>使用 Picasso.Builder 自定义Picasso</li>
+<li>自定义请求处理</li>
+<li>picasso2-okhttp3-downloader 与 picasso-transformations</li>
+</ol>
+<hr>
+<h2>图像请求排序</h2>
+<h3>优先级：HIGH,MEDIUM,LOW</h3>
+<p>假设有一种场景，就是图片加载需要优先级显示，这时候就会用到 <code>priority()</code>。这个方法需要三个参数之一： <code>HIGH,MEDIUM,LOW</code>，默认情况下，所有的请求是 MEDIUM。</p>
+<pre>
+//HIGH
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .fit()
+    .priority(Picasso.Priority.HIGH)
+    .into(imageViewHero);
+
+//LOW
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[2])
+    .fit()
+    .priority(Picasso.Priority.LOW)
+    .into(imageViewLowPrioRight);
+</pre><p><strong>注</strong>：使用 <code>priority()</code> 并不能百分百保证图片显示的顺序，只是请求的优先级。</p>
+<hr>
+<h2>tag() 分组请求</h2><p>您已经了解了图片的请求优先级，可能这还不够，假设我们需要同时取消，暂停，恢复多个图片请求，这将会用到 <code>tag()</code></p>
+
+<p><code>tag()</code> 可以以任何java对象作为参数，因为，基于这些我们可以构建图像组。图像组具有以下选项：</p>
+<ul>
+<li>暂停请求 pauseTag()</li>
+<li>恢复请求 resumeTag()</li>
+<li>取消请求 cancelTag()</li>
+</ul><p>或许你到现在也不能理解这究竟是什么，不妨我们看个小例子。</p>
+<h3>实例：pauseTag()和resumeTag()</h3>
+<p>假设我们有有个邮箱应用，内容主要用过 <code>ListView</code> 显示。</p>
+<p><img decoding="async" src="../wp-content/uploads/2017/01/2.png" alt=""></p>
+<p>现在，让我们想象一个情形：用户要寻找某条信息，然后会快速的滑动，ListView本来会迅速的回收和再利用每个 container，然而，Picasso将会尝试为每个 item去做一次请求，然后立即取消，因为用户快速的滑动。</p>
+<p>为了减少更多的请求，我们可以等 ListView 滚动结束后去加载图片，同时用户不会注意到任何差异，但是这样已经减少了请求量。</p>
+<p>实现很容易，首先，向你的Picasso请求添加标签。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .tag("Profile ListView") // can be any Java object
+    .into(imageViewWithTag);
+
+//接着，实现一个  `AbsListView.OnScrollListener` 和重写  `onScrollStateChanged()`
+
+@Override
+public void onScrollStateChanged(AbsListView view, int scrollState) {
+final Picasso picasso = Picasso.with(context);
+
+if (scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+      picasso.resumeTag(context);
+} else {
+      picasso.pauseTag(context);
+}
+}
+
+//最后一步
+listView.setOnScrollListener(onScrollListener);
+</pre>
+<blockquote>
+<p>当ListView处于非常快的滚动状态，它会暂停所有请求，当正常滚动或者停止，它就会恢复请求。</p>
+
+<p><a href="https://github.com/square/picasso/blob/master/picasso-sample/src/main/java/com/example/picasso/SampleScrollListener.java">官网示例代码</a>  </p>
+</blockquote>
+<p>注： 这篇主要使用了 String 作为 tag，或许你想使用不同的对象，或许你会想到 <code>Context or Activity, Fragment</code>，但是官方发出了警告 <strong>如果用户离开了 <code>Activity</code>，垃圾收集器可能因为 Picasso无法销毁Activity对象，会出现能存泄露</strong></p>
+<hr>
+<h2>回调, RemoteView与Notifications</h2>
+<h3>fetch(), get()和Target之间的区别</h3>
+<p><strong>fetch()：</strong> <code>fetch()</code> 将异步加载图像在后台线程，但是不显示在 <code>ImageView</code> 中，也不返回 Bitmat，此方法只会映射保存到磁盘和内存的高速缓存中。可以用之后要加载当前图片。</p>
+<p><strong>get()：</strong> <code>get()</code>同步加载图像，返回一个 <code>Bitmap</code> 对象。
+<strong>Targets：</strong> into选项除了传入ImageView对象，还可以转入 Target,这是一个回调。</p>
+<h3>使用 Target作为回调机制</h3>
+<p>到目前为止，<code>.into()</code> 我们一直传入的是ImageView对象，当然，这个方法还有重载。我们直接看一个例子，你或许会直接明白。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .into(target);
+
+//下面是重点
+private Target target = new Target() {  
+    @Override
+    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from){
+        // 图片加载成功
+    }
+    @Override
+    public void onBitmapFailed(Drawable errorDrawable) {
+        // 图片加载失败
+    }
+    @Override
+    public void onPrepareLoad(Drawable placeHolderDrawable) {
+        //图片加载中
+    }
+};
+</pre><p><strong>注：</strong> 这里不推荐使用匿名，垃圾回收机制可能会回收你的目标，将得不到 Bitmap</p>
+<h3>使用 RemoteView将图像加载到自定义Notifications</h3>
+<p><code>RemoteView</code> 用于 <code>Widgets</code>和<code>自定义notification</code></p>
+<p>我们先来看一个自定义notification。</p>
+<pre>
+// create RemoteViews
+final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.remoteview_notification);
+
+remoteViews.setImageViewResource(R.id.remoteview_notification_icon, R.mipmap.future_studio_launcher);
+
+remoteViews.setTextViewText(R.id.remoteview_notification_headline, "Headline");  
+remoteViews.setTextViewText(R.id.remoteview_notification_short_message, "Short Message");
+
+remoteViews.setTextColor(R.id.remoteview_notification_headline, getResources().getColor(android.R.color.black));  
+remoteViews.setTextColor(R.id.remoteview_notification_short_message, getResources().getColor(android.R.color.black));
+
+// build notification
+NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(UsageExampleTargetsAndRemoteViews.this)  
+    .setSmallIcon(R.mipmap.future_studio_launcher)
+    .setContentTitle("Content Title")
+    .setContentText("Content Text")
+    .setContent(remoteViews)
+    .setPriority(NotificationCompat.PRIORITY_MIN);
+
+final Notification notification = mBuilder.build();
+
+// set big content view for newer androids
+if (android.os.Build.VERSION.SDK_INT &gt;= 16) {  
+    notification.bigContentView = remoteViews;
+}
+
+NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);  
+mNotificationManager.notify(NOTIFICATION_ID, notification); 
+</pre>
+<p>上面一些代码都是创建一个自定义布局的通知，但是不打算深入细节，因为这不是我们要说的重点。我们去使用Picasso去实现这一需求，它是非常的容易：
+<code>.into(android.widget.RemoteViews remoteViews, int viewId, int notificationId, android.app.Notification notification)</code></p>
+<pre>
+Picasso  
+    .with(UsageExampleTargetsAndRemoteViews.this)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .into(remoteViews, R.id.remoteview_notification_icon, NOTIFICATION_ID, notification);
+</pre>
+<blockquote>
+<p>如果你不知道每个变量是什么，可以常考上面的代码，我们先来看看效果图</p>
+</blockquote>
+<p><img decoding="async" src="../wp-content/uploads/2017/01/3.jpg" alt=""></p>
+<hr>
+<h2>图像旋转与转换</h2>
+<h3>旋转</h3>
+<p>Picasso内置旋转功能，我们直接来看代码，因为它并不难理解。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .rotate(90f)
+    .into(imageViewSimpleRotate);
+</pre><p>除了默认以中心点旋转有的时候我们或许需要其他轴点进行选装，我们可以调用 <code>rotate(float degrees, float pivotX, float pivotY)</code>。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(R.drawable.floorplan)
+    .rotate(45f, 200f, 100f)
+    .into(imageViewComplexRotate);
+</pre><h3>转换</h3>
+<p>旋转只是图像处理技术的一小部分，Picasso还提供了 <code>Transformation</code> 用于图像处理。只需要实现 <code>Transformation</code> 接口的一个主要方法 <code>transform(android.graphics.Bitmap source)</code>，此方法传入 Bitmap，并返回转换后的。 实现这个接口后，只需要在Picasso中调用 <code>transform(Transformation transformation)</code> 就完成了图像的转换，说了这么多，不妨我们看两个例子。</p>
+<p><strong>模糊图像</strong></p>
+<p>首先，我们需要去实现 <code>Transformation</code> 接口，通过使用 <code>RenderScript</code>。但是这篇文章并不打算介绍 <code>RenderScript</code>，但是我们要明白，他可以用于模糊图像。</p>
+<pre>
+public class BlurTransformation implements Transformation {
+
+    RenderScript rs;
+
+    public BlurTransformation(Context context) {
+        super();
+        rs = Renderscript.create(context);
+    }
+
+    @Override
+    public Bitmap transform(Bitmap bitmap) {
+        // 创建一个位图，
+        Bitmap blurredBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+        // 分配内存
+        Allocation input = Allocation.createFromBitmap(rs, blurredBitmap, Allocation.MipmapControl.MIPMAP_FULL, Allocation.USAGE_SHARED);
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        // 加载一个特定的脚本
+        ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        script.setInput(input);
+
+        // 设置模糊半径
+        script.setRadius(10);
+
+        // 启动ScriptIntrinisicBlur
+        script.forEach(output);
+
+        // 输出
+        output.copyTo(blurredBitmap);
+
+        bitmap.recycle();
+        return blurredBitmap;
+    }
+
+    @Override
+    public String key() {
+        return "blur";
+    }
+}
+</pre>
+<p>定义完成之后，Picasso中的调用就会非常的简单了。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .transform(new BlurTransformation(context))
+    .into(imageViewTransformationBlur);
+</pre>
+<p><strong>模糊和灰色缩放</strong>
+不仅如此，Picasso的 <code>transform</code>方法中还提供了 <code>transform(List&lt;? extends Transformation&gt; transformations)</code>,这意味着我们可以对图像使用一连串的转换。在这里，我们再实现一个灰色缩放。</p>
+<pre>
+public class GrayscaleTransformation implements Transformation {
+
+    private final Picasso picasso;
+
+    public GrayscaleTransformation(Picasso picasso) {
+        this.picasso = picasso;
+    }
+
+    @Override
+    public Bitmap transform(Bitmap source) {
+        Bitmap result = createBitmap(source.getWidth(), source.getHeight(), source.getConfig());
+        Bitmap noise;
+        try {
+            noise = picasso.load(R.drawable.noise).get();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to apply transformation! Missing resource.");
+        }
+
+        BitmapShader shader = new BitmapShader(noise, REPEAT, REPEAT);
+
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0);
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+
+        Paint paint = new Paint(ANTI_ALIAS_FLAG);
+        paint.setColorFilter(filter);
+
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(source, 0, 0, paint);
+
+        paint.setColorFilter(null);
+        paint.setShader(shader);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
+
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
+
+        source.recycle();
+        noise.recycle();
+
+        return result;
+    }
+
+    @Override
+    public String key() {
+        return "grayscaleTransformation()";
+    }
+}
+</pre>
+<p>完成之后就是又到了Picasso中引用，这次只需要建立一个List集合。</p>
+<pre>
+List&lt;Transformation&gt; transformations = new ArrayList&lt;&gt;();
+
+transformations.add(new GrayscaleTransformation(Picasso.with(context)));  
+transformations.add(new BlurTransformation(context));
+
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .transform(transformations)
+    .into(imageViewTransformationsMultiple);
+</pre><hr><h2>图像缓存</h2><p>默认Picasso的缓存配置。</p>
+<blockquote>
+<p>LRU内存缓存15%的可用RAM
+磁盘缓存2%的存储空间，高达50mb，但是不能小于5mb
+三个下载线程用于磁盘和网络访问</p>
+</blockquote>
+<p>我们可以更改缓存大小，但是超出了本博客的范围，回到图像缓存的主题，Picasso优先尝试从内存缓存中加载图像，如果没有则在检索磁盘缓存，如果磁盘上也没有， 那么就会启动网络请求（内存-&gt;磁盘-&gt;网络请求）。此外，所有请求的图像都存储在两个缓存中（知道他们必须被删除才释放空间）。
+如果你认为这种缓存策略无法满足自己，我们可以看看 <code>MemoryPolicy</code></p>
+<h3>内存策略</h3>
+<p>首先，Picasso优先会从内存中获取所请求图像，如果你想跳过这一步，可以用使用 <code>memoryPolicy(MemoryPolicy policy, MemoryPolicy... additional)</code>。 <code>MemoryPolicy</code> 是一个有两个值的简单枚举 <code>NO_CACHE和NO_STORE</code>。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[1])
+    .memoryPolicy(MemoryPolicy.NO_CACHE)
+    .into(imageViewFromDisk);
+</pre><p>如果你想知道 NO_STORE 用于什么情况：就是请求的图片不缓存到内存中。
+我们再来看下下面的例子。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[1])
+    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+    .into(imageViewFromDisk);
+</pre><p>这样做就是使请求的图片既不缓存到内存中，Picasso也不去内存中寻找。这样做的好处可以加速内存回收，因为现有API无法清理内存缓存。</p>
+<h3>网络策略</h3>
+<p>如果你想跳过磁盘缓存，可以调用 <code>.networkPolicy(NetworkPolicy policy, NetworkPolicy... additional)</code> 与 <code>NetworkPolicy.NO_CACHE</code> 作为参数。</p>
+<pre>
+Picasso  
+    .with(context)
+    .load(UsageExampleListViewAdapter.eatFoodyImages[2])
+    .networkPolicy(NetworkPolicy.NO_CACHE)
+    .into(imageViewFromNetwork);
+</pre>
+<p>最后还提供了第三个选项 <code>NetworkPolicy：OFFLINE</code>。如果使用这个作为参数，那么Picasso只会从缓存中寻找图像，即使有网络也不会发送请求。</p>
+<hr>
+<h2>缓存指示器，日志，统计</h2>
+<h3>缓存指示器</h3><p>作为称职的开发人员，有的时候我们需要去分析图像来自何处，最简单的方法就是激活缓存指示器，只需要使用 <code>.setIndicatorsEnabled(true)</code> 。</p>
+<pre>
+Picasso  
+    .with(context)
+    .setIndicatorsEnabled(true);
+</pre>
+<p>之后所有的图片在左上角都会有一个小指标。</p>
+<p><img decoding="async" src="../wp-content/uploads/2017/01/4.png" alt=""></p>
+<ul>
+<li>绿色（图片来自内存）</li>
+<li>蓝色（图片来自磁盘）</li>
+<li>红色（图片来自网络）</li>
+</ul><h3>日志</h3>
+<p>有的时候我们或许需要更多的信息，我们可以激活日志，<code>.setLoggingEnabled(true)</code>。</p>
+<pre>
+Picasso  
+    .with(context)
+    .setLoggingEnabled(true);
+</pre><p>这将导致所有的图片加载都将打印日志。</p>
+<pre>
+D/Picasso﹕ Main        created      [R0] Request{http://i.imgur.com/rT5vXE1.jpg}  
+D/Picasso﹕ Dispatcher  enqueued     [R0]+21ms  
+D/Picasso﹕ Hunter      executing    [R0]+26ms  
+D/Picasso﹕ Hunter      decoded      [R0]+575ms  
+D/Picasso﹕ Dispatcher  batched      [R0]+576ms for completion  
+D/Picasso﹕ Main        completed    [R0]+807ms from NETWORK  
+D/Picasso﹕ Dispatcher  delivered    [R0]+809ms  
+</pre><hr><h2>统计</h2><p>我们可以得到请求的平均结果。</p>
+<pre>
+StatsSnapshot picassoStats = Picasso.with(context).getSnapshot();
+
+Log.d("Picasso Stats", picassoStats.toString());
+</pre><p>控制台将会输出</p>
+<pre>
+D/Picasso Stats﹕ StatsSnapshot{
+maxSize=28760941, 
+size=26567204, 
+cacheHits=30, 
+cacheMisses=58, 
+downloadCount=0, 
+totalDownloadSize=0, 
+averageDownloadSize=0, 
+totalOriginalBitmapSize=118399432, 
+totalTransformedBitmapSize=96928004, 
+averageOriginalBitmapSize=2466654, 
+averageTransformedBitmapSize=2019333, 
+originalBitmapCount=48, 
+transformedBitmapCount=41, 
+timeStamp=1432576918067}
+</pre><hr><h2>使用 Picasso.Builder 自定义Picasso</h2><p>Picasso有着直接的方法来修改Picasso的实例 <code>Picasso.Builder类</code>。可以使用它自定义Picasso。</p><h3>局部自定义Picasso</h3><p>在进入自定义Picasso之前，我们需要简单的回顾下获取标准的Picasso实例。</p>
+<pre>
+Picasso picasso = Picasso.with(Context);  
+</pre><p>这个方法返回的是标准的Picasso，如果你需要建立一个自定义实例，有一种方法就是建立 <code>Picasso.Builder</code>对象来做调整。</p>
+<pre>
+// 创建 Picasso.Builder 对象
+Picasso.Builder picassoBuilder = new Picasso.Builder(context);
+// TODO
+Picasso picasso = picassoBuilder.build()
+</pre><p>接下来我们就可以使用自定义的picasso去加载图片</p>
+<pre>
+picasso  
+    .load(UsageExampleListViewAdapter.eatFoodyImages[0])
+    .into(imageView1)
+</pre>
+
+<h3>全局使用自定义Picasso</h3><p>创建和修改Picasso实例方法保持不变</p>
+<pre>
+// 创建 Picasso.Builder 对象
+Picasso.Builder picassoBuilder = new Picasso.Builder(context);
+
+//TODO
+Picasso picasso = picassoBuilder.build(); 
+</pre><p>为了让这个Picasso变成全局的，只需要调用 <code>Picasso.setSingletonInstance(picasso);</code>,通常情况下，这个应该在App启动的时候初始化。</p>
+<pre>
+try {  
+    Picasso.setSingletonInstance(picasso);
+} catch (IllegalStateException ignored) {
+}
+</pre><p>一旦你自定义的全局Picasso，接下来所有的 <code>Picasso.with(Context context)</code> 调用都将返回自定义的Picasso。</p>
+<p>既然我们学会了如何自定义Picasso，但是我们并不明白自定义Picasso能做些什么？</p>
+<h3>自定义Picasso：更改下载器</h3><p>Picasso默认使用最佳可用缓存和网络组件。如果你想更换默认的下载器,你可以通过 <code>Picasso.Builder</code> 调用 <code>downloader(Downloader downloader)</code>，比如说我们的 Okhttp。</p>
+<pre>
+Picasso.Builder picassoBuilder = new Picasso.Builder(context);
+
+//更改下载器。
+picassoBuilder.downloader(new OkHttpDownloader(new OkHttpClient()));
+
+Picasso picasso = picassoBuilder.build();
+</pre><p>但是有一个需要注意的地方,如果你加载的图片是从自己服务器上获取的,而且服务器用的是HTTPS,而且需要一个签名,这个时候OKHttp就会因为SSL的问题而导致图片无法被加载,这时你可以选择使用UnsafeOkHttpClient,就可以避免该问题的产生;</p>
+<pre>
+picassoBuilder.downloader(  
+    new OkHttpDownloader(
+        UnsafeOkHttpClient.getUnsafeOkHttpClient()
+    )
+);
+</pre><h3>自定义请求处理</h3><p>依旧是自定义Picasso，我们先来看一段代码。</p>
+<pre>
+Picasso.Builder picassoBuilder = new Picasso.Builder(context);
+
+picassoBuilder.addRequestHandler(new EatFoodyRequestHandler());
+
+Picasso picasso = picassoBuilder.build();  
+</pre><p>唯一有疑惑的应该是 <code>EatFoodyRequestHandler</code> ，这是一个我们继承 <code>RequestHandler</code> 的自定义（请求处理）类，所以我们来看看什么是 <code>RequestHandler</code>。</p>
+<h3>RequestHandler实现</h3><p>这是一个抽象类，有两个方法要实现。</p>
+<pre>
+boolean canHandleRequest(Request data) Result load(Request request, int networkPolicy)
+</pre><p>第一个方法让Picasso知道这个请求处理程序是否处理当前请求，如果可以的话请求将被传递给 <code>load()</code> 方法。</p>
+<p>不妨我们来看下这个类整体是如何实现的。</p>
+<pre>
+public class EatFoodyRequestHandler extends RequestHandler {  
+    private static final String EAT_FOODY_RECIPE_SCHEME = "eatfoody";
+    @Override
+    public boolean canHandleRequest(Request data) {
+        return EAT_FOODY_RECIPE_SCHEME.equals(data.uri.getScheme());
+    }
+
+    @Override
+    public Result load(Request request, int networkPolicy) throws IOException {
+        //获取请求的host
+       String imageKey = request.uri.getHost(); 
+       Bitmap bitmap;
+       if (imageKey.contentEquals("cupcake")) {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cupcake);
+       }else if (imageKey.contentEquals("full_cake")) {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.full_cake);
+       }else {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+       }
+       return new Result(bitmap, Picasso.LoadedFrom.DISK);
+    }
+}
+</pre><p>代码看起来并不理解，首先 <code>canHandleRequest</code> 方法中判断uri的协议是否等于 <code>eatfoody</code>。如果不是，Picasso会回复到标准的下载流程。如果是，那么就会进入 <code>load</code> 方法，在 <code>load</code> 方法中，我们判断uri的 <code>host</code> 部分，随后通过判断返回相应的 bitmap。</p>
+<pre>
+//这会按照标准的流程加载图片
+picasso  
+    .load("http://i.imgur.com/DvpvklR.png")
+    .into(imageView1);
+
+//他会进入 load 方法中的逻辑判断去加载 `R.drawable.full_cake`
+picasso  
+    .load("eatfoody://cupcake")
+    .into(imageView2)
+</pre><hr>
+<h2>picasso2-okhttp3-downloader 与 picasso-transformations</h2>
+<p>如果你仔细看过前面的内容，我想你已经明白了下载器以及转换。他的可扩展性是不可否认的，那么自然会有很多优秀的开发者会去为我们提供相应的框架。</p>
+<ul>
+<li><a href="https://github.com/wasabeef/picasso-transformations" target="_blank">picasso-transformations</a></li>
+<li><a href="https://github.com/JakeWharton/picasso2-okhttp3-downloader" target="_blank">picasso2-okhttp3-downloader</a></li>
+</ul>
+<p>但是我们需要添加相关的依赖，这个并不困难，可以自己去翻阅github，同时也给出了实例。</p><hr>
+<h2>总结</h2><p>Picasso的使用教程暂时到这里，有机会我们还会去带你阅读他的源码，但是博主承认目前为止还不够成熟，所以我们放在后面带你去阅读，因为他的设计理念，可扩展真的非常出色，即便是博主现在一直使用的Glide也是基于累死的设计模式，只是在策略上略有出入。同时，我们还要学习Glide，虽然两者差不多，但是还是要给有需要的人..... 当然，少不了博主对于他们两者之间的对比分析，这或许会更加的有意思。</p>
+
+<blockquote>
+<p><strong>译</strong> <a href="https://futurestud.io/tutorials/picasso-getting-started-simple-loading" target="_blank">未来工作室 - Picasso</a></p></blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</div>
+			</div>
+			<div class="previous-next-links">
+			<div class="previous-design-link">← <a href="./android-advance-picasso1.html" rel="prev"> 2.1 带你全方位学习Picasso（一）</a> </div>
+			<div class="next-design-link"></div>
+			</div>
+						<style>
+@media screen and (max-width: 768px) {
+	#w3cnote-ad728 {
+		display: none;
+	}
+}
+p.note-author {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+    color: #78a15a;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+</style>
+<script>
+var aid = 18234;
+</script>
+	</div>
+		
+	</div>
+	<div class="listcol last right-column">
+
+	<script type="text/javascript">
+jQuery(document).ready(function ($){
+	var total = $(".membership li").length;
+	var left_list = '';
+	href = window.location.href;
+	
+	$(".membership li").each(function(index, value){
+
+		left_list += $(this).html();
+
+		cur_href = $(this).find("a").attr("href");
+		cur_obj = $(this);
+		
+		if(href.match(cur_href) != null) {
+			if(index==0) {
+				$(".previous-design-link").hide();
+			}
+			if(index==(total-1)) {
+				$(".next-design-link").hide();
+			}
+			prev_href = cur_obj.prev("li").find("a").attr("href");
+			prev_title = cur_obj.prev("li").find("a").attr("title");
+
+			next_href = cur_obj.next("li").find("a").attr("href");
+			next_title = cur_obj.next("li").find("a").attr("title");
+			if(prev_title) {
+				$(".previous-design-link a").attr("href", prev_href);
+				$(".previous-design-link a").attr("title", prev_title);
+				$(".previous-design-link a").text(prev_title);
+			} else {
+				$(".previous-design-link").html("");
+			}
+
+			if(next_title) {
+				$(".next-design-link a").attr("href", next_href);
+				$(".next-design-link a").attr("title", next_title);
+				$(".next-design-link a").text(next_title);
+			} else {
+				$(".next-design-link").html("");
+			}
+		}
+	});
+
+	$("#leftcolumn").html(left_list);
+});
+	</script>
+	<div class="sidebar-box cate-list">
+	<div class="sidebar-box recommend-here list-link">
+	<a href="void(0);.html">Android 进阶教程</a>	</div>
+	
+	<ul class="membership">
+		
+	<li><a target="_top" data-id="17013" title="1.1 Android 中喜闻乐见的屏幕适配" href="./android-advance-screen-adaptation.html" >1.1 Android 中喜闻乐见的屏幕适配</a></li>
+	
+		
+	<li><a target="_top" data-id="17036" title="1.2 自定义 View" href="./android-advance-custom-view.html" >1.2 自定义 View</a></li>
+	
+		
+	<li><a target="_top" data-id="17085" title="1.3 自定义 ViewGroup" href="./android-advance-viewgrouphtml.html" >1.3 自定义 ViewGroup</a></li>
+	
+		
+	<li><a target="_top" data-id="17090" title="1.4 Android6.0权限管理-开源框架源码分析" href="./android-advance-authority-management.html" >1.4 Android6.0权限管理-开源框架源码分析</a></li>
+	
+		
+	<li><a target="_top" data-id="18227" title="2.0 Android 插件式开发" href="./android-advance-plug-in-development.html" >2.0 Android 插件式开发</a></li>
+	
+		
+	<li><a target="_top" data-id="18230" title="2.1 带你全方位学习Picasso（一）" href="./android-advance-picasso1.html" >2.1 带你全方位学习Picasso（一）</a></li>
+	
+		<li>
+	2.2 带你全方位学习Picasso（二）	</li>
+	
+	</ul></div>	</div>
+</div>
+
+
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="../html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="../jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="../java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="../charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="../tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="../ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="../ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="../disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="../aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="../for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="../archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="../index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="../index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

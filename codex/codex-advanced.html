@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex 进阶使用技巧 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/codex/codex-advanced.html" />
+<meta name="keywords" content="Codex 进阶使用技巧">
+<meta name="description" content="Codex 进阶使用技巧 完成基础安装和第一次对话之后，Codex 真正的价值在于将其嵌入日常开发工作流。 本文覆盖五个进阶方向：项目配置、会话管理、编辑器集成、CI/CD 自动化和提示词技巧，帮助你让 Codex 理解你的项目、记住你的约定、在流水线里自动干活。   一、用 AGENTS.md 给 Codex 写&#039;入职文档&#039; AGENTS.md 是写给 Codex 的项目说明书，放在项目根目录，每次启动时自动加载，..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>Codex 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="ChatGPT (Codex) 教程"  href="/codex/codex-tutorial.html" >
+			ChatGPT (Codex) 教程			</a>
+						<a target="_top" data-p="par" title="CodeX  简介"  href="/codex/codex-intro.html" >
+			CodeX  简介			</a>
+			<a target="_top"   title="Codex 核心概念" href="/codex/codex-concepts.html">Codex 核心概念</a>			<a target="_top" data-p="par" title="Codex 安装与使用"  href="/codex/codex-install.html" >
+			Codex 安装与使用			</a>
+			<a target="_top" title="Codex 桌面应用" href="/codex/codex-app.html">Codex 桌面应用</a>			<a target="_top" data-p="par" title="Codex 基础入门"  href="/codex/codex-usage.html" >
+			Codex 基础入门			</a>
+			<a target="_top" title="Codex  接入 DeepSeek (官方)" href="/codex/codex-deepseek.html">Codex  接入 DeepSeek (官方)</a>
+<a target="_top" title="Codex DeepSeek (CCSwitch)" href="/codex/codex-deepseek-setup.html">Codex DeepSeek (CCSwitch)</a>
+<a target="_top"  title="Codex App 界面说明" href="/codex/codex-app-interface.html">Codex App 界面说明</a>			<a target="_top" data-p="par" title="Codex 配置与定制"  href="/codex/codex-config-file.html" >
+			Codex 配置与定制			</a>
+			<a target="_top" title="Codex 高级配置" href="/codex/codex-config-advanced.html">Codex 高级配置</a>
+<a target="_top" title="Codex App 界面说明" href="/codex/codex-permission-settings.html">Codex 权限设置</a>
+<a target="_top" title="Codex 斜杆 / 命令" href="/codex/slash-commands.html">Codex 斜杆 / 命令</a>
+<a target="_top" title="Codex 电脑操控" href="/codex/codex-computer-use.html">Codex 电脑操控</a>			<a target="_top" data-p="par" title="Codex 进阶使用技巧"  href="/codex/codex-advanced.html" >
+			Codex 进阶使用技巧			</a>
+						<a target="_top" data-p="par" title="Codex 速查表"  href="/codex/codex-commands.html" >
+			Codex 速查表			</a>
+						<a target="_top" data-p="par" title="Codex IDE 扩展"  href="/codex/codex-ide.html" >
+			Codex IDE 扩展			</a>
+						<a target="_top" data-p="par" title="Codex 命令行工具"  href="/codex/codex-cli.html" >
+			Codex 命令行工具			</a>
+						<a target="_top" data-p="par" title="Codex 云端版本"  href="/codex/codex-web.html" >
+			Codex 云端版本			</a>
+						<a target="_top" data-p="par" title="Codex 集成与连接"  href="/codex/codex-integrations.html" >
+			Codex 集成与连接			</a>
+						<a target="_top" data-p="par" title="Codex 自动化与 CI/CD"  href="/codex/codex-automation.html" >
+			Codex 自动化与 CI/CD			</a>
+						<a target="_top" data-p="par" title="Codex 工作流模式"  href="/codex/codex-workflows.html" >
+			Codex 工作流模式			</a>
+						<a target="_top" data-p="par" title="Codex 提示词最佳实践"  href="/codex/codex-prompting.html" >
+			Codex 提示词最佳实践			</a>
+						<a target="_top" data-p="par" title="Codex 安全与企业管理"  href="/codex/codex-security.html" >
+			Codex 安全与企业管理			</a>
+						<a target="_top" data-p="par" title="Codex 模型选择"  href="/codex/codex-models.html" >
+			Codex 模型选择			</a>
+			<a target="_top" title="Codex Agent Skills" href="/codex/codex-agent-skills.html">Codex Agent Skills</a>
+<a target="_top" title="Codex 子代理" href="/codex/codex-subagents.html">Codex 子代理</a>
+<a target="_top" title="Codex MCP" href="/codex/codex-mcp.html">Codex MCP</a>
+<a target="_top" title="Codex 规则与钩子" href="/codex/codex-hooks.html">Codex 规则与钩子</a>
+<a target="_top" title="Codex 非交互模式" href="/codex/codex-noninteractive.html">Codex 非交互模式</a>
+<a target="_top" title="Codex AGENTS.md" href="/codex/codex-agents-md.html">Codex AGENTS.md</a>
+<a target="_top" title="Codex GitHub 集成" href="/codex/codex-github.html">Codex GitHub 集成</a>
+<a target="_top" title="Codex Windows " href="/codex/codex-windows.html">Codex Windows</a>
+<a target="_top" title="Codex Worktrees 使用
+" href="/codex/codex-worktrees.html">Codex Worktrees 使用
+</a>
+
+
+
+
+
+
+<br><h2 class="left">Codex <span class="left_h2">Cli</span> </h2>
+			<a target="_top" data-p="par" title="Codex CLI 配置"  href="/codex/codex-config.html" >
+			Codex CLI 配置			</a>
+						<a target="_top" data-p="par" title="Codex CLI Skills"  href="/codex/codex-cli-skills.html" >
+			Codex CLI Skills			</a>
+						<a target="_top" data-p="par" title="Codex CLI 沙箱与安全"  href="/codex/codex-sandbox.html" >
+			Codex CLI 沙箱与安全			</a>
+						<a target="_top" data-p="par" title="Codex CLI 实用示例"  href="/codex/codex-examples.html" >
+			Codex CLI 实用示例			</a>
+						<a target="_top" data-p="par" title="Codex CLI 提示词技巧"  href="/codex/codex-cli-prompting.html" >
+			Codex CLI 提示词技巧			</a>
+						<a target="_top" data-p="par" title="Codex CLI 模型选择"  href="/codex/codex-cli-models.html" >
+			Codex CLI 模型选择			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/codex/codex-commands.html" rel="prev"> Codex 速查表</a> </div>
+			<div class="next-design-link"><a href="/codex/codex-concepts.html" rel="next"> Codex 核心概念</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Codex 进阶使用技巧</h1>
+<p>完成基础安装和第一次对话之后，Codex 真正的价值在于将其嵌入日常开发工作流。</p>
+<p>本文覆盖五个进阶方向：项目配置、会话管理、编辑器集成、CI/CD 自动化和提示词技巧，帮助你让 Codex 理解你的项目、记住你的约定、在流水线里自动干活。</p>
+<hr>
+
+<h2>一、用 AGENTS.md 给 Codex 写"入职文档"</h2>
+<p>AGENTS.md 是写给 Codex 的项目说明书，放在项目根目录，每次启动时自动加载，整个会话期间持续生效。</p>
+
+<h3>为什么需要它</h3>
+<p>Codex 默认对你的项目一无所知。</p>
+<p>它不知道你用的是 App Router 还是 Pages Router，不知道数据库操作要统一走哪个文件，也不知道哪些文件是碰不得的。</p>
+<p>如果每次对话都要重新交代背景，效率会非常低，而且容易出错。</p>
+<p>AGENTS.md 让这些信息一次写入、持续生效，省去重复交代的麻烦。</p>
+
+<h3>写什么内容</h3>
+<p>一份有效的 AGENTS.md 通常包含四类信息：项目概述、技术栈、重要约定和禁止事项。</p>
+<p>以下是一个完整的示例：</p>
+
+<pre>
+# AGENTS.md
+
+## 项目概述
+这是一个基于 Next.js 14 + Prisma + PostgreSQL 的 SaaS 应用。
+使用 App Router，不使用 Pages Router。
+
+## 技术栈
+- 前端：Next.js 14, React 18, TailwindCSS, shadcn/ui
+- 后端：Next.js API Routes, Prisma ORM
+- 数据库：PostgreSQL 15
+- 认证：NextAuth.js
+
+## 重要约定
+- 所有数据库操作必须通过 lib/db.ts 中的 prisma 实例
+- API 路由错误统一用 lib/api-error.ts 处理
+- 环境变量在 .env.local 中，参考 .env.example
+
+## 禁止事项
+- 不要修改 prisma/schema.prisma，除非我明确要求
+- 不要删除任何现有测试
+- 生产环境的 .env 文件不要碰</pre>
+
+<blockquote><p>「禁止事项」这一节尤其重要。Codex 在执行任务时会主动推断哪些文件需要修改，没有明确边界的情况下，它可能动到你不希望它碰的地方。把红线写清楚，比出问题后再补救要省事得多。</p></blockquote>
+
+<h3>配置的层级结构</h3>
+<p>AGENTS.md 支持三层嵌套，优先级从低到高排列。</p>
+<p>越靠近当前目录的文件优先级越高。同一目录下，AGENTS.override.md 存在时，同级的 AGENTS.md 会被跳过。</p>
+
+<table class="reference">
+<tr>
+  <th>层级</th>
+  <th>路径</th>
+  <th>作用范围</th>
+  <th>优先级</th>
+</tr>
+<tr>
+  <td>全局层</td>
+  <td>~/.codex/AGENTS.md</td>
+  <td>跨项目通用约定</td>
+  <td>低</td>
+</tr>
+<tr>
+  <td>项目层</td>
+  <td>repo/AGENTS.md</td>
+  <td>仓库级规范</td>
+  <td>中</td>
+</tr>
+<tr>
+  <td>覆写层</td>
+  <td>repo/services/payments/AGENTS.override.md</td>
+  <td>子目录特殊规则</td>
+  <td>高</td>
+</tr>
+</table>
+
+<p>全局层适合写那些在所有项目里都成立的约定，例如：</p>
+
+<pre>
+# ~/.codex/AGENTS.md
+
+## 全局约定
+- 安装依赖时优先使用 pnpm
+- 修改 JavaScript 文件后始终运行 npm test
+- 新增生产依赖前先请求确认</pre>
+
+<p>配置完成后，可以用以下命令验证加载是否正确：</p>
+
+<pre>
+codex --ask-for-approval never "Summarize the current instructions."</pre>
+<hr>
+
+<h2>二、会话管理：跨天延续大型任务</h2>
+<p>会话管理功能允许你把当前对话状态导出到文件，下次直接恢复，不需要重新铺垫背景。</p>
+
+<h3>问题背景</h3>
+<p>Codex 的上下文窗口是有限的。</p>
+<p>处理一个跨越多个文件、需要分阶段推进的大型任务时，如果中途关掉终端或者切换到别的事情，再回来时上下文就断了——Codex 不记得之前讨论过什么、做过哪些决策。</p>
+<p>导出会话可以解决这个问题，让你在任意时间点恢复到之前的对话状态。</p>
+
+<h3>基本用法</h3>
+<p>以下是与会话管理相关的常用命令：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 在对话中途随时导出当前会话</span><br />
+<span style="color: #000000; font-weight: bold;">/</span><span style="color: #7a0874; font-weight: bold;">export</span> session-<span style="color: #000000;">2024</span>-01-<span style="color: #000000;">15</span>.json<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 下次继续时恢复</span><br />
+<span style="color: #000000; font-weight: bold;">/</span>load session-<span style="color: #000000;">2024</span>-01-<span style="color: #000000;">15</span>.json<br />
+<br />
+<span style="color: #666666; font-style: italic;"># 直接恢复最近一次会话（最常用）</span><br />
+codex resume <span style="color: #660033;">--last</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 查看所有已保存的会话</span><br />
+<span style="color: #c20cb9; font-weight: bold;">ls</span> ~<span style="color: #000000; font-weight: bold;">/</span>.codex<span style="color: #000000; font-weight: bold;">/</span>sessions<span style="color: #000000; font-weight: bold;">/</span><br />
+
+</div>
+</div>
+
+<h3>什么时候该导出</h3>
+<p>不需要每次对话都导出。以下几种情况值得保存：</p>
+
+<table class="reference">
+<tr>
+  <th>场景</th>
+  <th>说明</th>
+</tr>
+<tr>
+  <td>跨天进行的多阶段任务</td>
+  <td>任务分多天进行，且中间有明确的阶段划分，保存后下次可以直接从上次断点继续</td>
+</tr>
+<tr>
+  <td>重要的架构决策</td>
+  <td>和 Codex 讨论出了一个重要的架构决策，后续任务需要基于这个决策继续推进</td>
+</tr>
+<tr>
+  <td>复杂的调试过程</td>
+  <td>调试复杂 bug，已经排除了若干方向，不想下次从头再来</td>
+</tr>
+</table>
+<hr>
+
+<h2>三、与 VS Code 集成</h2>
+<p>Codex 官方提供 VS Code 扩展，安装后可以在编辑器内直接发起对话，不用切换到终端。</p>
+
+<h3>安装与登录</h3>
+<p>安装步骤如下：</p>
+<ul>
+	<li><p>第一步，打开扩展市场（Cmd/Ctrl + Shift + X）。</p></li>
+	<li>
+<p>第二步，搜索「Codex」或「OpenAI Codex」，安装官方插件。</p>
+<p><img decoding="async" src="../wp-content/uploads/2026/03/runoob_1780381605963.png"></p>
+</li>
+	<li>
+<p>第三步，首次使用需要登录 ChatGPT 账号。</p></li>
+	<li>
+<p>第四步，侧边栏出现 Codex 图标后即可使用。</p></li></ul>
+
+
+
+
+<p>安装完成后，可以使用以下快捷键快速操作：</p>
+
+<table class="reference">
+<tr>
+  <th>快捷键</th>
+  <th>功能</th>
+</tr>
+<tr>
+  <td>Alt + G</td>
+  <td>将选中代码发送到 Codex，带上当前文件上下文</td>
+</tr>
+<tr>
+  <td>Cmd + Shift + P</td>
+  <td>打开命令面板，输入 "Codex" 查看全部可用命令</td>
+</tr>
+</table>
+
+<h3>BYO 模式（未订阅 ChatGPT 的用户）</h3>
+<p>如果你已经在 CLI 里配置了自己的 API Key（Anthropic、OpenAI 或其他兼容提供商），可以用免费 ChatGPT 账号登录 VS Code 插件。</p>
+<p>插件会自动复用 CLI 的模型配置，不强制使用 ChatGPT Plus。</p>
+
+<table class="reference">
+<tr>
+  <th>适用场景</th>
+  <th>说明</th>
+</tr>
+<tr>
+  <td>已有 API Key 但不想额外订阅 ChatGPT</td>
+  <td>直接使用自己的 API Key，无需额外付费订阅</td>
+</tr>
+<tr>
+  <td>希望 VS Code 和 CLI 使用一致的模型</td>
+  <td>插件自动复用 CLI 配置，两端体验完全一致</td>
+</tr>
+</table>
+<hr>
+
+<h2>四、CI/CD 集成</h2>
+<p>Codex CLI 支持以无头模式运行，不需要人工交互，适合接入自动化流程。</p>
+
+<h3>Codex 在流水线里能做什么</h3>
+<p>以下是无头模式下 Codex 在 CI/CD 中的常见用途：</p>
+
+<table class="reference">
+<tr>
+  <th>用途</th>
+  <th>说明</th>
+  <th>典型触发时机</th>
+</tr>
+<tr>
+  <td>自动更新 CHANGELOG</td>
+  <td>每次合并主分支后自动根据提交记录更新 CHANGELOG.md</td>
+  <td>合并到 main 分支后</td>
+</tr>
+<tr>
+  <td>生成 API 文档</td>
+  <td>根据代码变更自动生成或同步 API 文档</td>
+  <td>代码推送后</td>
+</tr>
+<tr>
+  <td>自动代码审查</td>
+  <td>在 PR 流水线里自动跑代码审查并留下注释</td>
+  <td>PR 创建或更新时</td>
+</tr>
+</table>
+
+<h3>GitHub Actions 示例</h3>
+<p>以下工作流在每次推送到 main 分支时，自动让 Codex 根据最新提交更新 CHANGELOG.md：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: blue;"># 文件路径：.github/workflows/codex-changelog.yml</span><br />
+<span style="color: green;"><br />
+name</span><span style="font-weight: bold; color: brown;">: </span>Auto Update Changelog<span style="color: #007F45;"><br />
+on</span>:<span style="color: #007F45;"><br />
+&nbsp; push</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; branches</span><span style="font-weight: bold; color: brown;">: </span><span class="br0">&#91;</span>main<span class="br0">&#93;</span><br />
+<span style="color: #007F45;"><br />
+jobs</span>:<span style="color: #007F45;"><br />
+&nbsp; update-changelog</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; runs-on</span><span style="font-weight: bold; color: brown;">: </span>ubuntu-latest<span style="color: #007F45;"><br />
+&nbsp; &nbsp; steps</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; - uses</span><span style="font-weight: bold; color: brown;">: </span>actions/checkout@v4<br />
+<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; - name</span><span style="font-weight: bold; color: brown;">: </span>Setup Node.js<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; uses</span><span style="font-weight: bold; color: brown;">: </span>actions/setup-node@v4<span style="color: #007F45;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; with</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; node-version</span><span style="font-weight: bold; color: brown;">: </span>'<span style="">22</span>'<br />
+<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; - name</span><span style="font-weight: bold; color: brown;">: </span>Install Codex CLI<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; run</span><span style="font-weight: bold; color: brown;">: </span>npm install -g @openai/codex<br />
+<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; - name</span><span style="font-weight: bold; color: brown;">: </span>Run Codex Task<span style="color: #007F45;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; env</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; OPENAI_API_KEY</span><span style="font-weight: bold; color: brown;">: </span>$<span class="br0">&#123;</span><span class="br0">&#123;</span> secrets.OPENAI_API_KEY <span class="br0">&#125;</span><span class="br0">&#125;</span><span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CODEX_QUIET_MODE</span><span style="font-weight: bold; color: brown;">: </span><span style="">1</span><span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; run</span><span style="font-weight: bold; color: brown;">: |<br />
+</span><span style="color: #303050;background-color: #F5F5F5"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;codex exec --full-auto &quot;根据最新 commits 更新 CHANGELOG.md&quot;<br />
+</span><span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; - name</span><span style="font-weight: bold; color: brown;">: </span>Commit changes<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; run</span><span style="font-weight: bold; color: brown;">: |<br />
+</span><span style="color: #303050;background-color: #F5F5F5"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;git config --local user.email 'action@github.com'<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; git add CHANGELOG.md<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; git commit -m 'chore: update changelog [skip ci]'<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; git push</span><br />
+
+</div>
+</div>
+
+<p>配置中有两个关键点需要特别注意：</p>
+
+<table class="reference">
+<tr>
+  <th>配置项</th>
+  <th>作用</th>
+  <th>说明</th>
+</tr>
+<tr>
+  <td>CODEX_QUIET_MODE: 1</td>
+  <td>抑制交互式输出</td>
+  <td>避免流水线因等待交互输入而卡住</td>
+</tr>
+<tr>
+  <td>--full-auto</td>
+  <td>无头模式运行</td>
+  <td>让 Codex 在无人值守的情况下直接执行，不等待确认</td>
+</tr>
+</table>
+
+<blockquote><p>在 CI 里使用时，建议在项目根目录的 AGENTS.md 里明确限定 Codex 在自动模式下允许修改的文件范围，防止因提示词理解偏差导致意外改动。</p></blockquote>
+<hr>
+
+<h2>五、提示词技巧</h2>
+<p>Codex 的输出质量很大程度上取决于你怎么提问。</p>
+<p>以下五条技巧针对新用户最常遇到的问题，每条都配有具体示例。</p>
+
+<h3>技巧一：给出足够的上下文</h3>
+<p>Codex 没有读心术。「修复 bug」这种指令会让它瞎猜，结果往往不是你想要的。</p>
+
+<p>以下是对比示例：</p>
+
+<table class="reference">
+<tr>
+  <th><span >不推荐写法</span></th>
+  <th><span>推荐写法</span></th>
+</tr>
+<tr>
+  <td>「修复 bug」</td>
+  <td>「用户登录时报错 TypeError: Cannot read properties of null，报错发生在 src/auth/login.ts 第 42 行，这个函数负责验证 JWT token，帮我找出并修复这个问题」</td>
+</tr>
+</table>
+
+<p>有效上下文包含三个要素：</p>
+
+<table class="reference">
+<tr>
+  <th>要素</th>
+  <th>说明</th>
+  <th>示例</th>
+</tr>
+<tr>
+  <td>具体现象</td>
+  <td>报错信息或具体表现</td>
+  <td>TypeError: Cannot read properties of null</td>
+</tr>
+<tr>
+  <td>涉及位置</td>
+  <td>文件和行号</td>
+  <td>src/auth/login.ts 第 42 行</td>
+</tr>
+<tr>
+  <td>代码职责</td>
+  <td>这段代码原本的功能</td>
+  <td>验证 JWT token</td>
+</tr>
+</table>
+
+<h3>技巧二：复杂任务分两步走</h3>
+<p>对改动范围较大的任务，先让 Codex 分析和列出方案，确认没问题再执行。</p>
+<p>一步到位看起来更快，但遇到方向偏差时代价更大。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 第一步：只分析，不修改</span><br />
+codex <span style="color: #a10;">&quot;分析 src/api/ 目录的代码质量，列出主要问题，不要修改任何文件&quot;</span><br />
+<br />
+<span style="color: #666666; font-style: italic;"># 第二步：确认方案后再执行</span><br />
+codex <span style="color: #a10;">&quot;好，按你说的方案，先处理错误处理问题，其他的我来 review 后再说&quot;</span><br />
+
+</div>
+</div>
+
+<h3>技巧三：用 ask 模式先摸清代码库</h3>
+<p><code>ask</code> 模式是只读模式，适合在动手之前先理解现有代码的结构和逻辑。</p>
+<p>搞清楚再改，比改完再回头理解要省时间。</p>
+<h4>实例</h4>
+<pre># ask 模式不会触发任何文件修改
+codex -a ask "这个项目是如何处理用户认证的？梳理完整的认证流程"
+</pre><p>
+理解清楚后，退出当前会话，重新以可编辑模式启动：</p>
+<pre>
+# 可编辑模式（需要确认）
+codex -a auto
+
+# 全自动执行（谨慎使用）
+codex -a full-auto</pre>
+<p>推荐工作流：</p>
+<pre>ask
+&darr;
+理解代码结构
+&darr;
+确定修改方案
+&darr;
+重新启动 Codex
+&darr;
+进入可编辑模式
+&darr;
+执行修改</pre>
+<blockquote>
+    <p>注意：CLI 中已不再支持使用 <code>/approvals</code> 在运行过程中切换权限模式，需要在启动时通过 <code>-a</code> 参数指定。桌面客户端仍支持会话内切换。</p>
+</blockquote>
+
+<h3>技巧四：用否定指令划定边界</h3>
+<p>告诉 Codex 不要碰什么，和告诉它要做什么同等重要。</p>
+<p>尤其是涉及多个相关文件的重构任务，边界不清容易产生不必要的连带修改。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 明确划定不要修改的范围</span><br />
+codex <span style="color: #a10;">&quot;重构 utils/date.ts 中的日期格式化函数，不要修改函数签名，不要改变测试文件&quot;</span><br />
+
+</div>
+</div>
+
+<h3>技巧五：先要计划，再开始执行</h3>
+<p>对于没有把握的任务，先让 Codex 列出它打算怎么做。</p>
+<p>这一步几乎不花时间，但能让你在早期发现方向偏差，避免在错误路径上走太远。</p>
+
+<pre>
+# 先要计划
+codex "你打算怎么实现这个功能？先列出步骤，不要执行"
+
+# 确认计划合理后再推进
+codex "计划没问题，开始执行第一步"</pre>
+<hr>
+
+<h2>小结</h2>
+<p>这五个方向覆盖了从「项目配置」到「日常操作」再到「自动化」的完整路径。</p>
+<p>刚开始不需要全部用上，建议按顺序来：先写好 AGENTS.md 让 Codex 理解你的项目，再逐步把它融入 VS Code 工作流和 CI/CD 流程。</p>
+<p>提示词技巧在日常使用中慢慢积累，比一次性记住更有效。</p>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/codex/codex-commands.html" rel="prev"> Codex 速查表</a> </div>
+			<div class="next-design-link"><a href="/codex/codex-concepts.html" rel="next"> Codex 核心概念</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='29582' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  29582;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 29582, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":29582},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 29582;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

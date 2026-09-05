@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Agents 入门教程 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai-agent/deep-agents-usage.html" />
+<meta name="keywords" content="Deep Agents 入门教程">
+<meta name="description" content="Deep Agents 入门教程 Deep Agents 是 LangChain 官方推出的一套开箱即用（Batteries Included）的 Agent 开发框架，专门面向复杂任务、长流程执行、多步骤规划以及多 Agent 协作场景而设计。 相比传统 Agent 需要开发者自行组合 Prompt、Tool、Memory、Workflow 等组件，Deep Agents 已经内置了任务规划、文件系统、子 Agent 调度、上下文压缩..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI Agent 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI Agent(智能体) 教程"  href="/ai-agent/ai-agent-tutorial.html" >
+			AI Agent(智能体) 教程			</a>
+						<a target="_top" data-p="par" title="AI Agent 简介"  href="/ai-agent/ai-agent-intro.html" >
+			AI Agent 简介			</a>
+						<a target="_top" data-p="par" title="AI Agent  核心组件"  href="/ai-agent/ai-agent-core.html" >
+			AI Agent  核心组件			</a>
+			<a target="_top" title="AI Agent 术语" href="/ai-agent/ai-terminology.html">AI Agent 术语</a>
+<a target="_top" title="AI Agent 工作原理" href="/ai-agent/ai-agent-working-principle.html">AI Agent 工作原理</a>
+<a target="_top" title="AI 底层架构" href="/ai-agent/ai-architecture.html">AI 底层架构</a>
+<a target="_top" title="大语言模型基础" href="/ai-agent/ai-agent-llm.html">大语言模型基础</a>
+<a target="_top" title="大模型多模态" href="/ai-agent/llm-multimodal.html">大模型多模态</a>
+<a target="_top" title="提示词工程" href="/ai-agent/prompt-engineering.html">提示词工程</a>
+<a target="_top" title="Token (词元)" href="/ai-agent/token-intro.html">Token (词元)</a>
+<a target="_top" title="推理与规划" href="/ai-agent/reasoning-planning.html">推理与规划</a>
+<a target="_top" title="向量数据库" href="/ai-agent/vector-database.html">向量数据库</a>
+<a target="_top" title="RAG 与知识检索" href="/ai-agent/retrieval-augmented-generation.html">RAG 与知识检索</a>
+<a target="_top" title="Agent 上下文工程" href="/ai-agent/agent-context-engineering.html">Agent 上下文工程</a>
+
+<a target="_top" title="Agent 架构" href="/ai-agent/agent-architecture.html">Agent 架构</a>
+
+<br>
+<h2 class="left"> <span class="left_h2">智能体工具</span></h2>			<a target="_top" data-p="par" title="第一个 AI Agent"  href="/ai-agent/first-ai-agent.html" >
+			第一个 AI Agent			</a>
+			<a target="_top" title="AI 开发平台" href="/ai-agent/ai-monkeycode.html"> AI 开发平台</a>
+<a target="_top" title="OpenClaw (Clawdbot) 教程" href="/ai-agent/openclaw-clawdbot-tutorial.html"> OpenClaw (Clawdbot) 教程</a>
+<a target="_top" title="OpenClaw 快速上手" href="/ai-agent/openclaw-quickstart.html"> OpenClaw 快速上手</a>
+<a target="_top" title="QoderWork 教程" href="/ai-agent/qoderwork.html"> QoderWork 教程</a>
+<a target="_top" title="QoderWake 教程" href="/ai-agent/qoderwake-usage.html"> QoderWake 教程</a>
+<a target="_top" title="WorkBuddy 入门教程" href="/ai-agent/workbuddy-usage.html"> WorkBuddy 入门教程</a>
+<a target="_top" title="AI 工作流" href="/ai-agent/ai-workflow.html"> AI 工作流</a>
+			<a target="_top" data-p="par" title="CrewAI 构建智能体"  href="/ai-agent/crewai-agent.html" >
+			CrewAI 构建智能体			</a>
+						<a target="_top" data-p="par" title="LangChain 制作智能体"  href="/ai-agent/langchain-agent.html" >
+			LangChain 制作智能体			</a>
+			<a target="_top" title="LangGraph 入门教程" href="/ai-agent/langgraph-quick-start.html">LangGraph 入门教程</a>
+<a target="_top" title="Deep Agents 入门教程" href="/ai-agent/deep-agents-usage.html">Deep Agents 入门教程</a>
+<a target="_top" title="GraphRAG 入门教程" href="/ai-agent/graphrag-usage.html">GraphRAG 入门教程</a>
+<a target="_top"title="Harness Engineering" href="/ai-agent/harness-engineering.html">Harness Engineering</a>
+<a target="_top" title="Hermes Agent" href="/ai-agent/hermes-agent.html">Hermes Agent</a>
+<a target="_top" title="Loop Engineering" href="/ai-agent/loop-engineering.html">Loop Engineering</a>
+<a target="_top" title="Vibe Coding 入门教程" href="/ai-agent/vibe-coding-start.html">Vibe Coding</a>
+<a href="/ai-agent/dify-usage.html" title="Dify 入门教程">Dify 入门教程</a>
+<a href="/ai-agent/n8n-usage.html" title="n8n 入门教程">n8n 入门教程 </a>
+<a href="/ai-agent/pi-coding-agent.html" title="Pi Coding Agent">Pi Coding Agent </a>
+
+<br><h2 class="left"> <span class="left_h2">Python 实现智能体</span></h2>
+<a target="_top" title="Python 实现 AI Agent" href="/ai-agent/python-ai-agent.html">Python 实现 AI Agent</a>
+<a target="_top" title="工具调用" href="/ai-agent/ai-agent-function-calling.html">工具调用</a>
+<a target="_top"  title="记忆系统" href="/ai-agent/ai-agent-memory-system-design.html">记忆系统</a>
+
+			<a target="_top" data-p="par" title="Python 智能体环境配置"  href="/ai-agent/ai-agent-python-setup.html" >
+			Python 智能体环境配置			</a>
+						<a target="_top" data-p="par" title="AI Agent 问答实例"  href="/ai-agent/ai-agent-answer-demo.html" >
+			AI Agent 问答实例			</a>
+						<a target="_top" data-p="par" title="Python 实现推理与规划"  href="/ai-agent/python-reasoning-planning.html" >
+			推理与规划			</a>
+						<a target="_top" data-p="par" title="Python 实现 RAG 与知识检索"  href="/ai-agent/python-rag.html" >
+			RAG 与知识检索			</a>
+						<a target="_top" data-p="par" title="多智能体系统（Multi-Agent System）"  href="/ai-agent/multi-agent-system.html" >
+			多智能体系统			</a>
+						<a target="_top" data-p="par" title="AI Agent 工具与外部集成"  href="/ai-agent/tools-integration.html" >
+			工具与外部集成			</a>
+						<a target="_top" data-p="par" title="多模态 Agent"  href="/ai-agent/multimodal-agent.html" >
+			多模态 Agent			</a>
+						<a target="_top" data-p="par" title="Agent 评估、安全与对齐"  href="/ai-agent/evaluation-safety-alignment.html" >
+			评估、安全与对齐			</a>
+						<a target="_top" data-p="par" title="AI Agent 生产部署与工程化"  href="/ai-agent/production-deployment.html" >
+			生产部署与工程化			</a>
+						<a target="_top" data-p="par" title="AI Agent 垂直应用场景"  href="/ai-agent/vertical-applications.html" >
+			垂直应用场景			</a>
+						<a target="_top" data-p="par" title="Hugging Face Transformers"  href="/ai-agent/hugging-face-transformers.html" >
+			Hugging Face Transformers			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai-agent/qoderwake-usage.html" rel="prev"> QoderWake 入门教程</a> </div>
+			<div class="next-design-link"><a href="/ai-agent/graphrag-usage.html" rel="next"> GraphRAG 入门教程</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Deep Agents 入门教程</h1>
+<p>Deep Agents 是 LangChain 官方推出的一套开箱即用（Batteries Included）的 Agent 开发框架，专门面向复杂任务、长流程执行、多步骤规划以及多 Agent 协作场景而设计。</p>
+<p>相比传统 Agent 需要开发者自行组合 Prompt、Tool、Memory、Workflow 等组件，Deep Agents 已经内置了任务规划、文件系统、子 Agent 调度、上下文压缩、记忆管理等核心能力，让开发者能够将更多精力放在业务逻辑上，而不是底层架构搭建。</p>
+<p>本教程面向零基础开发者，带你从安装配置开始，逐步了解 Deep Agents 的核心工作机制，并使用 DeepSeek API 构建一个真实可运行的 AI Agent 项目。</p>
+
+<hr>
+
+<h2>什么是 Deep Agents</h2>
+<p>Deep Agents 可以理解为一个面向生产环境的高级 Agent 框架（Agent Harness）。</p>
+<p>官方将其定义为：一个具备完整基础设施的 Agent 运行框架，而不仅仅是一个简单的 LLM + Tool 调用循环。</p>
+<p>安装完成后，即可直接获得以下能力，无需额外开发：</p>
+
+<ul>
+<li>自动任务规划（Planning）</li>
+<li>文件系统读写（Filesystem）</li>
+<li>子 Agent 协作（Sub Agents）</li>
+<li>上下文压缩与管理（Context Management）</li>
+<li>长任务执行（Long Running Tasks）</li>
+<li>人工审批（Human-in-the-Loop）</li>
+<li>持久化记忆（Memory）</li>
+<li>流式输出（Streaming）</li>
+</ul>
+
+<h3>Deep Agents 的设计目标</h3>
+<p>传统 Agent 通常采用 ReAct 模式：用户输入 → LLM 推理 → 调用工具 → LLM 推理 → 调用工具 → 输出结果。</p>
+<p>当任务规模较小时，这种模式运行良好。但随着任务复杂度提升（例如自动生成市场调研报告、分析多家公司财报、编写完整项目代码），就会逐渐暴露出以下问题：</p>
+
+<ul>
+<li>上下文窗口迅速膨胀，超出模型限制</li>
+<li>推理链过长导致性能下降</li>
+<li>Agent 容易遗忘之前完成的工作</li>
+<li>多任务之间缺乏隔离，相互干扰</li>
+<li>Tool 调用逻辑越来越复杂，难以维护</li>
+</ul>
+
+<p>Deep Agents 的核心目标，就是解决这些复杂任务场景下的工程化问题。</p>
+
+<h3>与 LangChain、LangGraph 的关系</h3>
+<p>很多初学者容易混淆这三个项目的定位，它们实际上处于不同的抽象层级。</p>
+
+<table class="reference">
+<thead>
+<tr><th>框架</th><th>层级定位</th><th>核心职责</th><th>适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="tag1">LangChain</span></td><td>基础组件层</td><td>提供 Model、Prompt、Tool、Retriever、Output Parser 等 AI 基础组件</td><td>构建单个 Agent 或 AI 应用的基础能力</td></tr>
+<tr><td><span class="tag1 blue">LangGraph</span></td><td>运行时层</td><td>提供状态管理、工作流编排、节点与边、Checkpoint 持久化能力</td><td>需要自定义图结构和执行流程的复杂场景</td></tr>
+<tr><td><span class="tag1 green">Deep Agents</span></td><td>应用框架层</td><td>在 LangGraph 之上封装规划、文件系统、子 Agent、记忆、上下文压缩等生产级能力</td><td>快速构建复杂多步骤 Agent，无需从头设计架构</td></tr>
+</tbody>
+</table>
+<p><img decoding="async" src="../wp-content/uploads/2026/06/45542e2c-e404-47ef-a87c-e23ec7f594d4.webp"></p>
+<blockquote><p>三者并非相互替代，而是可以协同使用：LangChain 提供积木，LangGraph 是组织积木的工程框架，Deep Agents 是在此之上开箱即用的高级应用层。任何一个 LangGraph <code>CompiledStateGraph</code> 都可以作为 subagent 传入 Deep Agents，三层可以灵活混用。</p></blockquote>
+
+<h3>核心能力一览</h3>
+<p>Deep Agents 内置以下中间件，无需额外配置即可使用：</p>
+
+<table class="reference">
+<thead>
+<tr><th>能力</th><th>说明</th><th>核心组件</th></tr>
+</thead>
+<tbody>
+<tr><td>任务规划</td><td>用内置 <code>write_todos</code> 工具将复杂任务分解为有序步骤</td><td>TodoListMiddleware</td></tr>
+<tr><td>虚拟文件系统</td><td>读写文件、将大型工具输出卸载到磁盘，节省上下文窗口</td><td>FilesystemMiddleware</td></tr>
+<tr><td>子 Agent</td><td>将子任务委派给独立上下文窗口的专用子 Agent</td><td>SubAgentMiddleware</td></tr>
+<tr><td>上下文压缩</td><td>自动总结历史消息，避免超出模型上下文限制</td><td>SummarizationMiddleware</td></tr>
+<tr><td>Human-in-the-loop</td><td>在关键工具调用前暂停，等待人工审批</td><td>HumanInTheLoopMiddleware</td></tr>
+<tr><td>长期记忆</td><td>跨会话持久化记忆，基于 LangGraph Store</td><td>MemoryMiddleware</td></tr>
+<tr><td>Skills</td><td>按需加载可复用的领域知识与指令集</td><td>SkillsMiddleware</td></tr>
+</tbody>
+</table>
+
+<hr>
+
+<h2>安装</h2>
+<p>Deep Agents 发布在 PyPI，包名为 <span class="marked">deepagents</span>。</p>
+<p>推荐使用 <span class="tag1">uv</span> 安装，速度更快；也可以使用传统的 <span class="tag1">pip</span>。</p>
+
+<h3>使用 uv 安装（推荐）</h3>
+
+<pre>
+uv init
+uv add deepagents tavily-python
+uv sync
+</pre>
+
+<h3>使用 pip 安装</h3>
+
+<pre>
+pip install deepagents tavily-python
+</pre>
+
+<h3>搭配 DeepSeek API 安装</h3>
+<p>DeepSeek 兼容 OpenAI 接口，因此需要同时安装 <span class="tag1">langchain-openai</span>。</p>
+
+<pre>
+pip install deepagents langchain-openai
+</pre>
+
+<blockquote><p>Deep Agents 对模型的唯一要求是：该模型支持 <strong>tool calling（工具调用）</strong>。DeepSeek V3 和 DeepSeek R1 系列均支持，可放心使用。</p></blockquote>
+
+<hr>
+
+<h2>配置说明</h2>
+<p><code>create_deep_agent</code> 是创建 Agent 的核心函数，支持以下参数配置。</p>
+
+<table class="reference">
+<thead>
+<tr><th>参数</th><th>类型</th><th>是否必填</th><th>说明</th><th>默认值</th></tr>
+</thead>
+<tbody>
+<tr><td><code>model</code></td><td>str 或模型实例</td><td>否</td><td>模型字符串，格式为 <code>provider:model-name</code>，或直接传入初始化好的模型对象</td><td><code>anthropic:claude-sonnet-4-6</code></td></tr>
+<tr><td><code>tools</code></td><td>列表</td><td>否</td><td>自定义工具函数或 LangChain Tool 对象的列表</td><td>None</td></tr>
+<tr><td><code>system_prompt</code></td><td>str 或 SystemMessage</td><td>否</td><td>自定义系统提示词，用于定义 Agent 角色和行为</td><td>None</td></tr>
+<tr><td><code>backend</code></td><td>BackendProtocol</td><td>否</td><td>虚拟文件系统后端，决定文件存储位置</td><td>StateBackend</td></tr>
+<tr><td><code>subagents</code></td><td>列表</td><td>否</td><td>子 Agent 定义列表，用于任务委派</td><td>None</td></tr>
+<tr><td><code>memory</code></td><td>列表</td><td>否</td><td>启动时加载的 AGENTS.md 文件路径列表</td><td>None</td></tr>
+<tr><td><code>skills</code></td><td>列表</td><td>否</td><td>按需加载的 Skills 目录路径列表</td><td>None</td></tr>
+<tr><td><code>permissions</code></td><td>列表</td><td>否</td><td>文件系统路径级别的访问权限控制规则</td><td>None</td></tr>
+<tr><td><code>interrupt_on</code></td><td>dict</td><td>否</td><td>指定哪些工具调用需要人工审批，需配合 checkpointer 使用</td><td>None</td></tr>
+<tr><td><code>checkpointer</code></td><td>Checkpointer</td><td>否</td><td>状态持久化检查点，多轮对话或 HITL 时必须设置</td><td>None</td></tr>
+<tr><td><code>store</code></td><td>BaseStore</td><td>否</td><td>跨会话的长期存储后端</td><td>None</td></tr>
+<tr><td><code>response_format</code></td><td>ResponseFormat</td><td>否</td><td>结构化输出的 Schema 定义</td><td>None</td></tr>
+<tr><td><code>middleware</code></td><td>列表</td><td>否</td><td>追加到默认中间件栈末尾的自定义中间件</td><td>()</td></tr>
+<tr><td><code>debug</code></td><td>bool</td><td>否</td><td>开启调试模式，输出详细日志</td><td>False</td></tr>
+</tbody>
+</table>
+
+<h3>文件系统后端对比</h3>
+<p>Deep Agents 提供多种后端，用来控制 Agent 如何读写文件。</p>
+
+<table class="reference">
+<thead>
+<tr><th>后端</th><th>存储位置</th><th>跨会话持久化</th><th>适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="tag1">StateBackend</span></td><td>LangGraph 图状态内</td><td>否（同线程内有效）</td><td>默认，本地开发和简单场景</td></tr>
+<tr><td><span class="tag1 blue">FilesystemBackend</span></td><td>本机磁盘</td><td>是</td><td>需要真实读写本地文件，需谨慎使用</td></tr>
+<tr><td><span class="tag1 green">StoreBackend</span></td><td>LangGraph Store</td><td>是</td><td>多轮对话持久化、跨 Thread 共享</td></tr>
+<tr><td><span class="tag1 purple">LocalShellBackend</span></td><td>本机磁盘 + Shell</td><td>是</td><td>需要执行 Shell 命令，仅限受信任环境</td></tr>
+<tr><td><span class="tag1">CompositeBackend</span></td><td>路由到多个后端</td><td>取决于子后端</td><td>精细控制不同目录的存储策略</td></tr>
+</tbody>
+</table>
+
+<blockquote><p>初学者直接使用默认的 <strong>StateBackend</strong> 即可。<strong>FilesystemBackend</strong> 和 <strong>LocalShellBackend</strong> 会让 Agent 直接操作你的本地文件系统，需要严格配置权限后再使用。</p></blockquote>
+
+<hr>
+
+<h2>快速开始</h2>
+<p>本节演示如何用最少的代码创建一个可以运行的 Deep Agent。</p>
+
+<h3>配置 DeepSeek API Key</h3>
+<p>DeepSeek 兼容 OpenAI 的接口格式，需要同时设置 API Key 和 Base URL。</p>
+
+<pre>
+export OPENAI_API_KEY="sk-your-deepseek-api-key"
+export OPENAI_BASE_URL="https://api.deepseek.com"
+export TAVILY_API_KEY="your-tavily-api-key"
+</pre>
+
+<blockquote><p>DeepSeek 的 API Key 可在 <strong><a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a></strong> 申请。将环境变量 <code>OPENAI_BASE_URL</code> 指向 DeepSeek 的地址，LangChain 会自动将请求转发过去。</p>
+<p>
+TAVILY_API_KEY 需要到 Tavily 官方网站 <a href="https://www.tavily.com/" target="_blank">https://www.tavily.com/ </a>申请，生成的 tvly-xxxxxxxx 格式密钥。</p>
+</blockquote>
+
+<h3>最简示例：Hello World Agent</h3>
+<p>创建一个带自定义工具的 Agent，向 DeepSeek 发送第一条消息。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：hello_agent.py</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<br />
+<span style="color: #a50"># 使用 ChatOpenAI 并将 base_url 指向 DeepSeek，这是最直接的接入方式</span><br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 必填：模型名称</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 必填：DeepSeek API Key</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 必填：DeepSeek 的 OpenAI 兼容端点</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 定义一个简单的自定义工具，函数的 docstring 就是工具描述</span><br />
+<span style="color: Green;font-weight:bold;">def</span> get_weather<span style="color: Olive;">&#40;</span>city: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;查询指定城市的天气。&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 实际项目中这里会调用真实天气 API</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;{city} 今天晴天，气温 25°C，适合出行。&quot;</span><br />
+<br />
+<span style="color: #a50"># 创建 Agent，传入模型实例和工具列表</span><br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; tools<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>get_weather<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span><span style="color: #a11;">&quot;你是一个友好的助手，能够查询天气信息。&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 调用 Agent，messages 接受 OpenAI 风格的消息格式</span><br />
+result <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;北京今天天气怎么样？&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 打印 Agent 的最终回复</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<pre>
+# 运行脚本
+python hello_agent.py
+</pre><strong>
+输出内容：</strong>
+<p><strong>北京今天**晴天**，气温 **25°C**，非常适合出行。&#x2600;&#xfe0f;</strong></p>
+
+<blockquote><p>注意：Agent 返回的是完整的消息列表（<code>messages</code>），最终回复位于列表末尾，即 <code>result["messages"][-1].content</code>。</p></blockquote>
+
+<hr>
+
+<h2>详细用法</h2>
+<p>本节通过几个真实场景，逐步展示 Deep Agents 的核心能力。</p>
+
+<h3>使用 DeepSeek R1 进行推理任务</h3>
+<p>DeepSeek R1 是推理增强模型，适合需要复杂分析的任务。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：reasoning_agent.py</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<br />
+<span style="color: #a50"># DeepSeek R1：专为复杂推理设计的模型</span><br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-pro&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># DeepSeek 思考模型</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 数学计算工具示例</span><br />
+<span style="color: Green;font-weight:bold;">def</span> calculate<span style="color: Olive;">&#40;</span>expression: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;对数学表达式进行安全求值，返回计算结果。&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 注意：生产环境中应使用更安全的表达式求值库</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> <span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span>expression<span style="color: Gray;">,</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;__builtins__&quot;</span>: <span style="color: Olive;">&#123;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#123;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;计算结果：{expression} = {result}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> <span style="color: Teal;">Exception</span> <span style="color: Green;font-weight:bold;">as</span> e:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;计算出错：{str(e)}&quot;</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; tools<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>calculate<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span><span style="color: #a11;">&quot;你是一位数学分析专家，善于分解复杂问题并逐步求解。&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+result <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;计算 1 到 100 的所有奇数之和，并验证结果。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+<p>
+执行输出：</p>
+
+<pre>再换一种方法做交叉验证：
+
+- 1 到 100 所有整数之和：\( \frac{100 \times 101}{2} = 5050 \)
+- 1 到 100 的偶数之和：\( 2 + 4 + \cdots + 100 = 2 \times \frac{50 \times 51}{2} = 2550 \)
+- 奇数之和：\( 5050 - 2550 = 2500 \)
+
+两种方法结果一致。
+
+---
+
+**结论**：1 到 100 的所有奇数之和为 **2500**。
+
+**推导回顾**：
+- 奇数序列首项 1，末项 99，项数 \( \frac{99-1}{2}+1 = 50 \)
+- 等差数列求和：\( S = \frac{n(a_1 + a_n)}{2} = \frac{50 \times (1+99)}{2} = 2500 \)</pre>
+
+
+
+<h3>自定义系统提示词</h3>
+<p>通过 <code>system_prompt</code> 参数定义 Agent 的角色、任务目标和行为规范。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：custom_prompt_agent.py</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 自定义系统提示词：明确 Agent 的身份、职责和行为准则</span><br />
+code_review_instructions <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;你是一位资深 Python 工程师，专注于代码审查。<br />
+<br />
+你的职责：<br />
+- 检查代码的可读性、性能、安全性<br />
+- 指出潜在的 Bug 和改进建议<br />
+- 提供具体的修改示例<br />
+<br />
+回复格式：<br />
+1. 总体评分（1-10）<br />
+2. 主要问题列表<br />
+3. 具体改进建议（附修改后的代码片段）<br />
+&quot;&quot;&quot;</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span>code_review_instructions<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 提交一段待审查的代码</span><br />
+code_to_review <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+def find_user(users, name):<br />
+&nbsp; &nbsp; for i in range(len(users)):<br />
+&nbsp; &nbsp; &nbsp; &nbsp; if users[i]['name'] == name:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return users[i]<br />
+&nbsp; &nbsp; return None<br />
+&quot;&quot;&quot;</span><br />
+<br />
+result <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: f<span style="color: #a11;">&quot;请审查以下代码：<span style="color: #000099; font-weight: bold;">\n</span>```python{code_to_review}```&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>流式输出</h3>
+<p>对于需要实时展示进度的场景，可以使用 <code>stream</code> 方法逐块接收 Agent 输出。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：streaming_agent.py</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span><span style="color: #a11;">&quot;你是一位技术写作专家，擅长写清晰易懂的技术文档。&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># stream 方法返回生成器，每次 yield 一个事件块</span><br />
+<span style="color: Green;font-weight:bold;">for</span> <span style="color: #05a;">chunk</span> <span style="color: Green;font-weight:bold;">in</span> agent.<span style="color: #05a;">stream</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;写一篇关于 Python 装饰器的简短介绍。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a50"># chunk 是一个包含增量消息的字典</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;messages&quot;</span> <span style="color: Green;font-weight:bold;">in</span> <span style="color: #05a;">chunk</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> msg <span style="color: Green;font-weight:bold;">in</span> <span style="color: #05a;">chunk</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">hasattr</span><span style="color: Olive;">&#40;</span>msg<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">and</span> msg.<span style="color: #05a;">content</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>msg.<span style="color: #05a;">content</span><span style="color: Gray;">,</span> end<span style="color: Gray;">=</span><span style="color: #a11;">&quot;&quot;</span><span style="color: Gray;">,</span> flush<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 最终换行</span><br />
+
+</div>
+</div>
+
+<h3>多轮对话（带检查点）</h3>
+<p>配合 <code>MemorySaver</code> 检查点，可以实现跨轮次的有状态对话。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：multi_turn_agent.py</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<span style="color: Green;font-weight:bold;">from</span> langgraph.<span style="color: #05a;">checkpoint</span>.<span style="color: #05a;">memory</span> <span style="color: Green;font-weight:bold;">import</span> MemorySaver &nbsp;<span style="color: #a50"># 内存检查点，重启后数据会丢失</span><br />
+<br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># MemorySaver 将对话状态保存在内存中，进程结束后丢失</span><br />
+<span style="color: #a50"># 生产环境建议使用 SqliteSaver 或 PostgresSaver</span><br />
+checkpointer <span style="color: Gray;">=</span> MemorySaver<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span><span style="color: #a11;">&quot;你是一个乐于助人的编程助手。&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; checkpointer<span style="color: Gray;">=</span>checkpointer<span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 必须传入，否则多轮对话无法记忆上下文</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># thread_id 是对话线程的唯一标识，同一 thread_id 共享同一上下文</span><br />
+config <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;configurable&quot;</span>: <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;thread_id&quot;</span>: <span style="color: #a11;">&quot;runoob-session-001&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># 第一轮</span><br />
+result1 <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;我叫 RUNOOB，我在学习 Python。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; config<span style="color: Gray;">=</span>config<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;第一轮回复：&quot;</span><span style="color: Gray;">,</span> result1<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 第二轮：Agent 能记住上一轮的信息</span><br />
+result2 <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;我叫什么名字？我在学什么？&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; config<span style="color: Gray;">=</span>config<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;第二轮回复：&quot;</span><span style="color: Gray;">,</span> result2<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<pre>
+第一轮回复：你好，RUNOOB！很高兴认识你，Python 是一门非常适合初学者的语言...
+第二轮回复：你叫 RUNOOB，你正在学习 Python！...
+</pre>
+
+<blockquote><p><strong>thread_id 的作用：</strong>同一个 <code>thread_id</code> 下的所有调用共享同一段对话历史。不同的 <code>thread_id</code> 之间相互隔离，互不干扰。可以把它理解为"对话房间号"。</p></blockquote>
+
+<hr>
+
+<h2>综合 Demo：研究报告 Agent</h2>
+<p>本节展示一个完整的研究报告 Agent，使用 DeepSeek V3 作为主模型，集成自定义搜索工具，并演示子 Agent 的使用。</p>
+
+<h3>场景说明</h3>
+<p>我们将构建一个 Agent，接收用户的研究主题，自动分解任务、调用搜索工具收集资料，最终输出一份结构化报告。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：research_agent_demo.py</span><br />
+<span style="color: #a50"># 演示：使用 DeepSeek API + Deep Agents 构建研究报告 Agent</span><br />
+<span style="color: #a50"># 依赖安装：pip install deepagents langchain-openai requests</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">import</span> json<br />
+<span style="color: Green;font-weight:bold;">from</span> tavily <span style="color: Green;font-weight:bold;">import</span> TavilyClient<br />
+<span style="color: Green;font-weight:bold;">from</span> typing <span style="color: Green;font-weight:bold;">import</span> Literal<br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<span style="color: Green;font-weight:bold;">from</span> langgraph.<span style="color: #05a;">checkpoint</span>.<span style="color: #05a;">memory</span> <span style="color: Green;font-weight:bold;">import</span> MemorySaver<br />
+<br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: #a50"># 1. 初始化 DeepSeek 模型</span><br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+main_model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 综合能力强，适合规划和写作</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; temperature<span style="color: Gray;">=</span><span style="color: Maroon;">0.3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 可选：降低随机性，使报告更严谨</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># 初始化 Tavily 客户端（用于搜索工具）</span><br />
+tavily_client <span style="color: Gray;">=</span> TavilyClient<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;TAVILY_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: #a50"># 2. 定义搜索工具 Tavily</span><br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">def</span> web_search<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; query: <span style="color: Teal;">str</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; max_results: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">5</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用 Tavily 搜索互联网信息&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; response <span style="color: Gray;">=</span> tavily_client.<span style="color: #05a;">search</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; query<span style="color: Gray;">=</span>query<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; max_results<span style="color: Gray;">=</span>max_results<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; search_depth<span style="color: Gray;">=</span><span style="color: #a11;">&quot;advanced&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; include_answer<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; include_raw_content<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; lines <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># AI 总结答案</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> response.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;answer&quot;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lines.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;总结：{response['answer']}<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 搜索结果</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> idx<span style="color: Gray;">,</span> item <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span>response.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;results&quot;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> start<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lines.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; f<span style="color: #a11;">&quot;&quot;&quot;<br />
+[{idx}] {item.get('title', '')}<br />
+URL: {item.get('url', '')}<br />
+内容: {item.get('content', '')}<br />
+&quot;&quot;&quot;</span>.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>lines<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> format_report<span style="color: Olive;">&#40;</span>title: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> sections: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;将研究内容整理为 Markdown 格式的报告。<br />
+<br />
+&nbsp; &nbsp; Args:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; title: 报告标题<br />
+&nbsp; &nbsp; &nbsp; &nbsp; sections: 各章节内容，以 JSON 字符串表示，格式：{&quot;章节名&quot;: &quot;内容&quot;}<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; data <span style="color: Gray;">=</span> json.<span style="color: #05a;">loads</span><span style="color: Olive;">&#40;</span>sections<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; lines <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>f<span style="color: #a11;">&quot;# {title}<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> section_name<span style="color: Gray;">,</span> content <span style="color: Green;font-weight:bold;">in</span> data.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lines.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;## {section_name}<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lines.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;{content}<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>lines<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> <span style="color: Teal;">Exception</span> <span style="color: Green;font-weight:bold;">as</span> e:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;格式化出错：{str(e)}&quot;</span><br />
+<br />
+<br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: #a50"># 3. 定义专用子 Agent（信息整合专家）</span><br />
+<span style="color: #a50"># &nbsp; &nbsp;子 Agent 有独立的上下文窗口，避免主 Agent 上下文膨胀</span><br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+report_writer_subagent <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;name&quot;</span>: <span style="color: #a11;">&quot;report-writer&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 必填：子 Agent 唯一名称</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;description&quot;</span>: <span style="color: #a11;">&quot;专业的报告撰写助手，负责将研究资料整合为结构清晰的报告。&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 必填：主 Agent 用此描述决定何时委派任务</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;system_prompt&quot;</span>: <span style="color: #a11;">&quot;你是一位专业的报告撰写专家。接收研究资料后，请整理成包含摘要、主要内容、结论三部分的报告，语言简洁清晰。&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;tools&quot;</span>: <span style="color: Olive;">&#91;</span>format_report<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 可选：子 Agent 专用工具</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 不指定 model 则继承主 Agent 的模型</span><br />
+<span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: #a50"># 4. 配置并创建 Deep Agent</span><br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+checkpointer <span style="color: Gray;">=</span> MemorySaver<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+research_instructions <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;你是一位专业的研究助手，擅长深度调研和报告撰写。<br />
+<br />
+当用户提供研究主题时，你应当：<br />
+1. 使用 web_search 工具搜索相关信息（至少搜索 2-3 次，涵盖不同角度）<br />
+2. 将收集到的资料整理汇总<br />
+3. 委派 report-writer 子 Agent 撰写最终报告<br />
+4. 输出完整报告给用户<br />
+<br />
+注意：每次搜索使用不同的关键词，以获取更全面的信息。<br />
+&quot;&quot;&quot;</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>main_model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; tools<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>web_search<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 主 Agent 可用的工具</span><br />
+&nbsp; &nbsp; system_prompt<span style="color: Gray;">=</span>research_instructions<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; subagents<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>report_writer_subagent<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> <span style="color: #a50"># 注册子 Agent</span><br />
+&nbsp; &nbsp; checkpointer<span style="color: Gray;">=</span>checkpointer<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: #a50"># 5. 运行 Agent</span><br />
+<span style="color: #a50"># ──────────────────────────────────────────</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;正在研究中，请稍候...<span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+result <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;请帮我研究 LangGraph 是什么，以及它的主要应用场景。&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; config<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;configurable&quot;</span>: <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;thread_id&quot;</span>: <span style="color: #a11;">&quot;runoob-research-001&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#125;</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;研究报告&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">60</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<pre>
+正在研究中，请稍候...
+
+============================================================
+研究报告
+============================================================
+# LangGraph 研究报告
+
+## 摘要
+LangGraph 是 LangChain 团队推出的一个用于构建有状态、多角色 LLM 应用的框架...
+
+## 主要内容
+### 核心概念
+LangGraph 将 Agent 的执行流程建模为一张有向图...
+
+### 主要应用场景
+1. 多步骤推理任务
+2. 人机协作（Human-in-the-loop）工作流
+3. 多 Agent 协作系统
+...
+
+## 结论
+LangGraph 是构建生产级 Agent 应用的重要工具...
+</pre>
+
+<hr>
+
+<h2>Human-in-the-loop 示例</h2>
+<p>对于敏感操作（例如删除文件、发送邮件），可以配置 Agent 在执行前暂停等待人工确认。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 文件路径：hitl_agent.py</span><br />
+<span style="color: #a50"># Human-in-the-loop：让 Agent 在执行危险操作前请求人工审批</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<span style="color: Green;font-weight:bold;">from</span> langchain.<span style="color: #05a;">tools</span> <span style="color: Green;font-weight:bold;">import</span> tool<br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<span style="color: Green;font-weight:bold;">from</span> langgraph.<span style="color: #05a;">checkpoint</span>.<span style="color: #05a;">memory</span> <span style="color: Green;font-weight:bold;">import</span> MemorySaver<br />
+<span style="color: Green;font-weight:bold;">from</span> langgraph.<span style="color: #05a;">types</span> <span style="color: Green;font-weight:bold;">import</span> Command<br />
+<br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 使用 @tool 装饰器定义工具（需要 langchain 包）</span><br />
+<span style="color: Gray;">@</span>tool<br />
+<span style="color: Green;font-weight:bold;">def</span> delete_file<span style="color: Olive;">&#40;</span>path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;删除指定路径的文件。&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 实际项目中这里会调用 os.remove(path)</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;文件 {path} 已删除。&quot;</span><br />
+<br />
+<span style="color: Gray;">@</span>tool<br />
+<span style="color: Green;font-weight:bold;">def</span> read_file<span style="color: Olive;">&#40;</span>path: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;读取指定路径的文件内容。&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f<span style="color: #a11;">&quot;文件 {path} 的内容：（示例内容）&quot;</span><br />
+<br />
+<span style="color: #a50"># interrupt_on 配置哪些工具需要人工审批</span><br />
+<span style="color: #a50"># True 表示允许：审批、编辑参数、拒绝、发送自定义回复</span><br />
+<span style="color: #a50"># False 表示不需要审批</span><br />
+<span style="color: #a50"># dict 可以精细控制允许的操作类型</span><br />
+checkpointer <span style="color: Gray;">=</span> MemorySaver<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># HITL 必须配合 checkpointer 使用</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; tools<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span>delete_file<span style="color: Gray;">,</span> read_file<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; interrupt_on<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;delete_file&quot;</span>: <span style="color: Teal;">True</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 删除操作：需要完整审批流程</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;read_file&quot;</span>: <span style="color: Teal;">False</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 读取操作：无需审批</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; checkpointer<span style="color: Gray;">=</span>checkpointer<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+config <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;configurable&quot;</span>: <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;thread_id&quot;</span>: <span style="color: #a11;">&quot;runoob-hitl-001&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># 第一次调用：Agent 执行到 delete_file 时会暂停</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;启动 Agent...&quot;</span><span style="color: Olive;">&#41;</span><br />
+result <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;messages&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;请删除 /tmp/test.txt 文件。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; config<span style="color: Gray;">=</span>config<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 检查是否有待审批的中断</span><br />
+<span style="color: Green;font-weight:bold;">for</span> msg <span style="color: Green;font-weight:bold;">in</span> result.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Gray;">,</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;Agent 消息: {msg.content if hasattr(msg, 'content') else msg}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 恢复执行：传入审批决定</span><br />
+<span style="color: #a50"># &quot;approve&quot; 表示批准执行该工具</span><br />
+<span style="color: #a50"># &quot;reject&quot; 表示拒绝，Agent 将不执行该工具</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>用户审批：批准删除操作&quot;</span><span style="color: Olive;">&#41;</span><br />
+final_result <span style="color: Gray;">=</span> agent.<span style="color: #05a;">invoke</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; Command<span style="color: Olive;">&#40;</span>resume<span style="color: Gray;">=</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;decision&quot;</span>: <span style="color: #a11;">&quot;approve&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; config<span style="color: Gray;">=</span>config<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;最终结果：&quot;</span><span style="color: Gray;">,</span> final_result<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;messages&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">content</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote><p><strong>interrupt_on 的工作原理：</strong>当 Agent 即将调用被标记的工具时，LangGraph 会触发一个 <code>interrupt</code>，Agent 的执行暂停。你可以通过 <code>Command(resume=...)</code> 传入审批结果来恢复执行。</p></blockquote>
+
+<hr>
+
+<h2>常见问题</h2>
+<p>以下是使用 Deep Agents 时常见的疑问和注意事项。</p>
+
+<h3>如何判断选用 Deep Agents 还是直接用 LangChain/LangGraph？</h3>
+
+<table class="reference">
+<thead>
+<tr><th>场景</th><th>推荐选择</th><th>理由</th></tr>
+</thead>
+<tbody>
+<tr><td>需要规划、文件读写、子 Agent、上下文压缩</td><td>Deep Agents</td><td>这些能力开箱即用，无需自行组装</td></tr>
+<tr><td>需要轻量封装，只要工具调用循环</td><td>LangChain create_agent</td><td>比 Deep Agents 更轻，没有内置中间件</td></tr>
+<tr><td>需要自定义图结构，循环不是标准的工具调用循环</td><td>LangGraph</td><td>完全自定义图节点和边的逻辑</td></tr>
+<tr><td>LangGraph CompiledStateGraph 作为子 Agent</td><td>混用</td><td>可以将自定义图作为 subagent 传入 Deep Agents</td></tr>
+</tbody>
+</table>
+
+<h3>DeepSeek 模型的选择建议</h3>
+
+<table class="reference">
+<thead>
+<tr><th>模型</th><th>model 字符串</th><th>特点</th><th>适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td>deepseek-v4-flash</td><td><code>deepseek-v4-flash</code></td><td>综合能力强，速度快，价格低</td><td>通用任务、日常对话、写作</td></tr>
+<tr><td>deepseek-v4-pro</td><td><code>deepseek-v4-pro</code></td><td>推理能力强，内置思维链</td><td>数学、代码、复杂逻辑推理</td></tr>
+</tbody>
+</table>
+
+<h3>Agent 调用工具后没有返回结果怎么办？</h3>
+<p>工具函数的返回值必须是字符串或可序列化为字符串的类型。</p>
+<p>如果工具返回复杂对象（如字典、列表），建议用 <code>json.dumps(result, ensure_ascii=False)</code> 转换后再返回。</p>
+
+<h3>如何让 Agent 一次只能访问特定文件？</h3>
+<p>使用 <code>permissions</code> 参数配置文件系统访问权限，可以精确控制 Agent 只能读写指定路径。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: Green;font-weight:bold;">from</span> deepagents <span style="color: Green;font-weight:bold;">import</span> create_deep_agent<br />
+<span style="color: Green;font-weight:bold;">from</span> deepagents.<span style="color: #05a;">permissions</span> <span style="color: Green;font-weight:bold;">import</span> FilesystemPermission<br />
+<span style="color: Green;font-weight:bold;">from</span> langchain_openai <span style="color: Green;font-weight:bold;">import</span> ChatOpenAI<br />
+<span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">os</span><br />
+<br />
+model <span style="color: Gray;">=</span> ChatOpenAI<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;deepseek-v4-flash&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; api_key<span style="color: Gray;">=</span><span style="color: #05a;">os</span>.<span style="color: #05a;">environ</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;OPENAI_API_KEY&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; base_url<span style="color: Gray;">=</span><span style="color: #a11;">&quot;https://api.deepseek.com&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+agent <span style="color: Gray;">=</span> create_deep_agent<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; permissions<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; FilesystemPermission<span style="color: Olive;">&#40;</span>path<span style="color: Gray;">=</span><span style="color: #a11;">&quot;/workspace/&quot;</span><span style="color: Gray;">,</span> read<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span> write<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; <span style="color: #a50"># 允许读写工作目录</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; FilesystemPermission<span style="color: Olive;">&#40;</span>path<span style="color: Gray;">=</span><span style="color: #a11;">&quot;/secrets/&quot;</span><span style="color: Gray;">,</span> read<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Gray;">,</span> write<span style="color: Gray;">=</span><span style="color: Teal;">False</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 禁止访问敏感目录</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>Agent 默认系统提示词和我的提示词如何合并？</h3>
+<p>Deep Agents 的提示词由四部分按固定顺序拼接：</p>
+<p><span class="tag1">USER</span>（你的 system_prompt）→ <span class="tag1 blue">BASE</span>（SDK 默认提示词）→ <span class="tag1 green">SUFFIX</span>（模型厂商特定调整）</p>
+<p>你的提示词永远在最前面，不会被覆盖。SDK 的默认提示词告诉模型如何使用规划和文件工具，所以大多数情况下不需要自己重写它。</p>
+
+<h3>初学者容易犯的错误</h3>
+
+<blockquote><p><strong>常见错误 1：</strong>忘记传入 <code>checkpointer</code>。使用 Human-in-the-loop（<code>interrupt_on</code>）或多轮对话时，<strong>必须</strong>传入 checkpointer，否则状态无法保存，Agent 会报错。</p></blockquote>
+
+<blockquote><p><strong>常见错误 2：</strong>工具函数没有写 docstring。Deep Agents 用函数的 docstring 作为工具描述，让模型知道什么时候调用这个工具。没有 docstring 的工具，模型可能不知道何时调用甚至拒绝使用。</p></blockquote>
+
+<blockquote><p><strong>常见错误 3：</strong>在中间件中直接修改 <code>self</code> 的属性。Agent 的子 Agent 和并发操作可能同时运行，对中间件实例属性的直接修改会导致竞争条件（race condition）。需要保存状态时，应通过图的 state 来传递，而不是中间件实例变量。</p></blockquote>
+
+<hr>
+
+<h2>更多资料</h2>
+<p>更多内容可以参考以下文档：</p>
+
+<table class="reference">
+
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>地址</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Deep Agents 官方文档（首页）</td>
+            <td><a  target="_blank" href="https://docs.langchain.com/deepagents">https://docs.langchain.com/deepagents</a></td>
+        </tr>
+        <tr>
+            <td>Deep Agents GitHub 仓库（源码）</td>
+            <td><a  target="_blank" href="https://github.com/langchain-ai/deepagents">https://github.com/langchain-ai/deepagents</a></td>
+        </tr>
+        <tr>
+            <td>Deep Agents Python 文档（Python 开发指南）</td>
+            <td><a  target="_blank" href="https://docs.langchain.com/oss/python/deepagents/overview">https://docs.langchain.com/oss/python/deepagents/overview</a></td>
+        </tr>
+        <tr>
+            <td>Deep Agents JavaScript 文档（JS/TS 开发指南）</td>
+            <td><a  target="_blank" href="https://docs.langchain.com/oss/javascript/deepagents/overview">https://docs.langchain.com/oss/javascript/deepagents/overview</a></td>
+        </tr>
+        <tr>
+            <td>Deep Agents Python API 参考手册</td>
+            <td><a  target="_blank" href="https://reference.langchain.com/python/deepagents/deepagents">https://reference.langchain.com/python/deepagents/deepagents</a></td>
+        </tr>
+        <tr>
+            <td>Deep Agents JavaScript API 参考手册</td>
+            <td><a  target="_blank" href="https://reference.langchain.com/javascript/modules/deepagents.html">https://reference.langchain.com/javascript/modules/deepagents.html</a></td>
+        </tr>
+        <tr>
+            <td>LangChain 官方文档（基础组件库）</td>
+            <td><a  target="_blank" href="https://docs.langchain.com/langchain">https://docs.langchain.com/langchain</a></td>
+        </tr>
+        <tr>
+            <td>LangGraph 官方文档（Agent 运行时）</td>
+            <td><a  target="_blank" href="https://docs.langchain.com/langgraph">https://docs.langchain.com/langgraph</a></td>
+        </tr>
+        <tr>
+            <td>LangGraph GitHub 仓库（源码）</td>
+            <td><a  target="_blank" href="https://github.com/langchain-ai/langgraph">https://github.com/langchain-ai/langgraph</a></td>
+        </tr>
+        <tr>
+            <td>LangChain GitHub 仓库（源码）</td>
+            <td><a  target="_blank" href="https://github.com/langchain-ai/langchain">https://github.com/langchain-ai/langchain</a></td>
+        </tr>
+        <tr>
+            <td>LangSmith 官方网站（Agent 调试与监控）</td>
+            <td><a  target="_blank" href="https://www.langchain.com/langsmith">https://www.langchain.com/langsmith</a></td>
+        </tr>
+        <tr>
+            <td>LangSmith 官方文档</td>
+            <td><a  target="_blank" href="https://docs.smith.langchain.com">https://docs.smith.langchain.com</a></td>
+        </tr>
+        <tr>
+            <td>Tavily 官方网站（搜索工具）</td>
+            <td><a  target="_blank" href="https://tavily.com">https://tavily.com</a></td>
+        </tr>
+        <tr>
+            <td>Tavily API 文档</td>
+            <td><a  target="_blank" href="https://docs.tavily.com">https://docs.tavily.com</a></td>
+        </tr>
+        <tr>
+            <td>DeepSeek 开放平台（模型服务）</td>
+            <td><a  target="_blank" href="https://platform.deepseek.com">https://platform.deepseek.com</a></td>
+        </tr>
+        <tr>
+            <td>DeepSeek API 文档</td>
+            <td><a  target="_blank" href="https://api-docs.deepseek.com">https://api-docs.deepseek.com</a></td>
+        </tr>
+    </tbody>
+</table>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai-agent/qoderwake-usage.html" rel="prev"> QoderWake 入门教程</a> </div>
+			<div class="next-design-link"><a href="/ai-agent/graphrag-usage.html" rel="next"> GraphRAG 入门教程</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31345' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31345;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31345, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31345},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31345;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

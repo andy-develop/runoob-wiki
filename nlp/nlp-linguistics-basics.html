@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语言学基础 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/nlp/nlp-linguistics-basics.html" />
+<meta name="keywords" content="语言学基础">
+<meta name="description" content="语言学基础  自然语言处理(NLP)作为人工智能的重要分支，其核心是让计算机理解、解释和生成人类语言。要掌握NLP，首先需要了解支撑人类语言运作的基本原理 - 这就是语言学基础。 语言学基础为 NLP 提供了理论框架和分析工具，主要包括以下几个关键方面：  语音学(Phonetics)：研究语言的声音系统 音系学(Phonology)：研究声音如何组合形成有意义的语言单位 形态学(Morphology)：研究词的内部结构 句法学(Syn..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>NLP 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="NLP  教程"  href="/nlp/nlp-tutorial.html" >
+			NLP  教程			</a>
+						<a target="_top" data-p="par" title="NLP 简介"  href="/nlp/nlp-intro.html" >
+			NLP 简介			</a>
+						<a target="_top" data-p="par" title="语言学基础"  href="/nlp/nlp-linguistics-basics.html" >
+			语言学基础			</a>
+						<a target="_top" data-p="par" title="文本预处理"  href="/nlp/text-preprocessing.html" >
+			文本预处理			</a>
+						<a target="_top" data-p="par" title="文本表示方法"  href="/nlp/text-representation.html" >
+			文本表示方法			</a>
+						<a target="_top" data-p="par" title="文本分类"  href="/nlp/text-classification.html" >
+			文本分类			</a>
+						<a target="_top" data-p="par" title="情感分析"  href="/nlp/sentiment-analysis.html" >
+			情感分析			</a>
+						<a target="_top" data-p="par" title="命名实体识别（NER）"  href="/nlp/named-entity-recognition.html" >
+			命名实体识别（NER）			</a>
+						<a target="_top" data-p="par" title="关系抽取"  href="/nlp/relation-extraction.html" >
+			关系抽取			</a>
+						<a target="_top" data-p="par" title="文本相似度计算"  href="/nlp/text-similarity.html" >
+			文本相似度计算			</a>
+						<a target="_top" data-p="par" title="循环神经网络（RNN）"  href="/nlp/recurrent-neural-network.html" >
+			循环神经网络（RNN）			</a>
+						<a target="_top" data-p="par" title="注意力机制"  href="/nlp/attention-mechanism.html" >
+			注意力机制			</a>
+						<a target="_top" data-p="par" title="Transformer 架构"  href="/nlp/transformer-architecture.html" >
+			Transformer 架构			</a>
+						<a target="_top" data-p="par" title="序列到序列模型"  href="/nlp/sequence-to-sequence.html" >
+			序列到序列模型			</a>
+						<a target="_top" data-p="par" title="预训练模型"  href="/nlp/pre-trained-models.html" >
+			预训练模型			</a>
+						<a target="_top" data-p="par" title="BERT 系列模型"  href="/nlp/bert-encoder.html" >
+			BERT 系列模型			</a>
+						<a target="_top" data-p="par" title="生成式预训练模型"  href="/nlp/generative-pre-trained-transformer.html" >
+			生成式预训练模型			</a>
+						<a target="_top" data-p="par" title="多模态预训练模型"  href="/nlp/multimodal-pre-trained-models.html" >
+			多模态预训练模型			</a>
+						<a target="_top" data-p="par" title="Python NLP 生态"  href="/nlp/python-nlp.html" >
+			Python NLP 生态			</a>
+						<a target="_top" data-p="par" title="深度学习框架"  href="/nlp/deep-learning-frameworks.html" >
+			深度学习框架			</a>
+						<a target="_top" data-p="par" title="数据处理工具"  href="/nlp/data-processing-tools.html" >
+			数据处理工具			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/nlp/nlp-intro.html" rel="prev"> NLP 简介</a> </div>
+			<div class="next-design-link"><a href="/nlp/text-preprocessing.html" rel="next"> 文本预处理</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>语言学基础</h1>
+
+<p>自然语言处理(NLP)作为人工智能的重要分支，其核心是让计算机理解、解释和生成人类语言。要掌握NLP，首先需要了解支撑人类语言运作的基本原理 - 这就是语言学基础。</p>
+<p>语言学基础为 NLP 提供了理论框架和分析工具，主要包括以下几个关键方面：</p>
+<ol>
+<li><strong>语音学(Phonetics)</strong>：研究语言的声音系统</li>
+<li><strong>音系学(Phonology)</strong>：研究声音如何组合形成有意义的语言单位</li>
+<li><strong>形态学(Morphology)</strong>：研究词的内部结构</li>
+<li><strong>句法学(Syntax)</strong>：研究句子结构</li>
+<li><strong>语义学(Semantics)</strong>：研究语言的意义</li>
+<li><strong>语用学(Pragmatics)</strong>：研究语言在语境中的使用</li>
+</ol>
+
+<p><img decoding="async" src="../wp-content/uploads/2025/06/5468a834-8688-4562-8b16-38cf7faf46a4.png"></p>
+
+<hr><h2>语音学与音韵学（Phonetics &amp; Phonology）</h2>
+<h3>语音学（Phonetics）</h3>
+<p>语音学研究语音的物理特性和产生机制，关注语音的声学和生理特征。</p>
+<p><strong>发音器官与发音方式</strong></p>
+<ul>
+    <li><strong>发音器官</strong>：<ul>
+            <li>肺部：提供气流</li>
+            <li>喉头：声带振动产生浊音</li>
+            <li>口腔：舌头、牙齿、嘴唇调节气流</li>
+            <li>鼻腔：产生鼻音</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>辅音分类</strong><br>按照发音方式和发音部位分类：</p>
+<ul>
+    <li>
+        <p><strong>发音方式</strong>：</p>
+        <ul>
+            <li>塞音：/p/, /b/, /t/, /d/, /k/, /g/</li>
+            <li>擦音：/f/, /v/, /s/, /z/</li>
+            <li>塞擦音：/ts/, /tʃ/</li>
+            <li>鼻音：/m/, /n/, /ŋ/</li>
+            <li>边音：/l/</li>
+            <li>颤音：/r/</li>
+        </ul>
+    </li>
+    <li>
+        <p><strong>发音部位</strong>：</p>
+        <ul>
+            <li>双唇音：/p/, /b/, /m/</li>
+            <li>唇齿音：/f/, /v/</li>
+            <li>舌尖音：/t/, /d/, /n/</li>
+            <li>舌根音：/k/, /g/, /ŋ/</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>元音分类</strong><br>按照舌位和唇形分类：</p>
+<ul>
+    <li><strong>舌位高低</strong>：高元音/i/, /u/，中元音/e/, /o/，低元音/a/</li>
+    <li><strong>舌位前后</strong>：前元音/i/, /e/，央元音/a/，后元音/u/, /o/</li>
+    <li><strong>唇形</strong>：圆唇音/u/, /o/，不圆唇音/i/, /e/, /a/</li>
+</ul>
+<p><strong>汉语语音特点</strong></p>
+<ul>
+    <li><strong>声调语言</strong>：声调具有区别意义的作用<ul>
+            <li>普通话四个基本声调：阴平、阳平、上声、去声</li>
+            <li>例：妈(mā) 麻(má) 马(mǎ) 骂(mà)</li>
+        </ul>
+    </li>
+    <li><strong>音节结构</strong>：声母+韵母的结构<ul>
+            <li>声母：21个基本声母</li>
+            <li>韵母：39个基本韵母</li>
+        </ul>
+    </li>
+</ul>
+<h3>音韵学（Phonology）</h3>
+<p>音韵学研究语音系统的结构和规律，关注语音在特定语言中的功能。</p>
+<p><strong>音位（Phoneme）</strong></p>
+<ul>
+    <li>具有区别意义功能的最小语音单位</li>
+    <li>例：英语中/p/和/b/是不同音位（pit vs bit）</li>
+    <li>汉语中声调是音位的组成部分</li>
+</ul>
+<p><strong>音位变体（Allophone）</strong></p>
+<ul>
+    <li>同一音位在不同环境中的语音实现</li>
+    <li>例：英语/p/在不同位置的送气程度不同</li>
+</ul>
+<p><strong>音韵规则</strong></p>
+<ul>
+    <li>描述语音在特定环境中的变化规律</li>
+    <li>例：汉语的"一"字变调规律</li>
+    <li>英语的复数形式语音变化：cats /s/, dogs /z/, horses /ɪz/</li>
+</ul>
+<p><strong>在NLP中的应用</strong></p>
+<ul>
+    <li><strong>语音识别</strong>：将声音信号转换为文本</li>
+    <li><strong>语音合成</strong>：将文本转换为语音</li>
+    <li><strong>音字转换</strong>：拼音到汉字的转换</li>
+    <li><strong>韵律分析</strong>：诗歌韵律的计算分析</li>
+</ul>
+<hr><h2>形态学（Morphology）</h2>
+<p>形态学研究词的内部结构和构词规律，是词汇层面分析的基础。</p>
+<h3>基本概念</h3>
+<p><strong>词素（Morpheme）</strong></p>
+<ul>
+    <li>语言中最小的有意义的语法单位</li>
+    <li><strong>自由词素</strong>：可以独立使用的词素，如"书"、"run"</li>
+    <li><strong>粘着词素</strong>：必须附着在其他词素上，如前缀、后缀</li>
+</ul>
+<p><strong>词根、词缀和词干</strong></p>
+<ul>
+    <li><strong>词根（Root）</strong>：词的核心意义承载者<ul>
+            <li>例：在"unhappiness"中，"happy"是词根</li>
+        </ul>
+    </li>
+    <li><strong>词缀（Affix）</strong>：<ul>
+            <li>前缀（Prefix）：un-, re-, pre-</li>
+            <li>后缀（Suffix）：-ness, -tion, -ly</li>
+            <li>中缀（Infix）：较少见，如他加禄语</li>
+        </ul>
+    </li>
+    <li><strong>词干（Stem）</strong>：去掉屈折词缀后的形式</li>
+</ul>
+<h3>构词方式</h3>
+<p><strong>派生（Derivation）</strong></p>
+<ul>
+    <li>通过添加派生词缀改变词性或词义</li>
+    <li>例：<ul>
+            <li>happy → unhappy（添加否定前缀）</li>
+            <li>happy → happiness（名词化后缀）</li>
+            <li>teach → teacher（施事后缀）</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>复合（Compounding）</strong></p>
+<ul>
+    <li>将两个或多个词根结合成新词</li>
+    <li>英语例子：<ul>
+            <li>blackboard（black + board）</li>
+            <li>laptop（lap + top）</li>
+        </ul>
+    </li>
+    <li>中文例子：<ul>
+            <li>电脑（电 + 脑）</li>
+            <li>手机（手 + 机）</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>屈折（Inflection）</strong></p>
+<ul>
+    <li>改变词的语法形式但不改变基本词义</li>
+    <li>英语动词变位：walk, walks, walked, walking</li>
+    <li>名词复数：book → books, child → children</li>
+    <li>中文的屈折变化相对较少</li>
+</ul>
+<h3>中文形态学特点</h3>
+<p><strong>词的概念</strong></p>
+<ul>
+    <li>中文词的边界相对模糊</li>
+    <li>字、词、短语的界限不如英文明确</li>
+    <li>例："研究生"可以是一个词，也可以分析为"研究"+"生"</li>
+</ul>
+<p><strong>构词方式</strong></p>
+<ul>
+    <li>
+        <p><strong>复合为主</strong>：</p>
+        <ul>
+            <li>偏正式：火车（火+车）</li>
+            <li>动宾式：司机（司+机）</li>
+            <li>主谓式：地震（地+震）</li>
+            <li>并列式：朋友（朋+友）</li>
+        </ul>
+    </li>
+    <li>
+        <p><strong>重叠构词</strong>：</p>
+        <ul>
+            <li>动词重叠：看看、走走</li>
+            <li>形容词重叠：红红的、慢慢地</li>
+            <li>名词重叠：人人、事事</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>词类活用</strong></p>
+<ul>
+    <li>同一个字或词可以充当不同词性</li>
+    <li>例："水"可以是名词（喝水）或动词（水稻田）</li>
+</ul>
+<h3>在NLP中的应用</h3>
+<p><strong>词干提取（Stemming）</strong></p>
+<ul>
+    <li>将词汇还原到词干形式</li>
+    <li>Porter算法：将"running", "runs", "ran"都还原为"run"</li>
+</ul>
+<p><strong>词形还原（Lemmatization）</strong></p>
+<ul>
+    <li>将词汇还原到词典形式（引理）</li>
+    <li>考虑词性信息，更准确</li>
+</ul>
+<p><strong>中文分词</strong></p>
+<ul>
+    <li>由于中文词间无空格分隔，需要进行分词处理</li>
+    <li>基于词典、统计或神经网络的方法</li>
+</ul>
+<p><strong>词性标注</strong></p>
+<ul>
+    <li>确定每个词的语法类别</li>
+    <li>为句法分析提供基础信息</li>
+</ul>
+<hr><h2>句法学（Syntax）</h2>
+<p>句法学研究句子的结构和组织规律，是理解语言语法的核心。</p>
+<h3>基本概念</h3>
+<p><strong>短语结构</strong></p>
+<ul>
+    <li><strong>名词短语（NP）</strong>：以名词为中心的短语<ul>
+            <li>例：那本有趣的书</li>
+        </ul>
+    </li>
+    <li><strong>动词短语（VP）</strong>：以动词为中心的短语<ul>
+            <li>例：快速地跑步</li>
+        </ul>
+    </li>
+    <li><strong>介词短语（PP）</strong>：以介词为中心的短语<ul>
+            <li>例：在桌子上</li>
+        </ul>
+    </li>
+    <li><strong>形容词短语（AP）</strong>：以形容词为中心的短语<ul>
+            <li>例：非常美丽</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>句子成分</strong></p>
+<ul>
+    <li><strong>主语（Subject）</strong>：动作的执行者</li>
+    <li><strong>谓语（Predicate）</strong>：描述主语的动作或状态</li>
+    <li><strong>宾语（Object）</strong>：动作的承受者</li>
+    <li><strong>定语（Attributive）</strong>：修饰名词的成分</li>
+    <li><strong>状语（Adverbial）</strong>：修饰动词、形容词的成分</li>
+    <li><strong>补语（Complement）</strong>：补充说明的成分</li>
+</ul>
+<h3>句法分析方法</h3>
+<p><strong>短语结构文法（Phrase Structure Grammar）</strong></p>
+<ul>
+    <li>用重写规则描述句子结构</li>
+    <li>例：
+<pre>
+S &rarr; NP VP
+NP &rarr; Det N
+VP &rarr; V NP
+Det &rarr; the, a, an
+N &rarr; cat, dog, book
+V &rarr; chase, read
+</pre>
+    </li>
+</ul>
+<p><strong>依存文法（Dependency Grammar）</strong></p>
+<ul>
+    <li>以词与词之间的依存关系为核心</li>
+    <li>每个词依存于一个中心词（除了根节点）</li>
+    <li>例：在"小猫追老鼠"中：<ul>
+            <li>"追"是根节点</li>
+            <li>"小猫"依存于"追"（主谓关系）</li>
+            <li>"老鼠"依存于"追"（动宾关系）</li>
+            <li>"小"依存于"猫"（定中关系）</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>树形表示</strong></p>
+<pre>
+        追
+       /  \
+     小猫   老鼠
+     /
+    小
+</pre>
+<h3>中文句法特点</h3>
+<p><strong>语序特点</strong></p>
+<ul>
+    <li>基本语序：主-谓-宾（SVO）</li>
+    <li>修饰语在被修饰语前：的字结构</li>
+    <li>例：那个穿红衣服的美丽女孩</li>
+</ul>
+<p><strong>特殊结构</strong></p>
+<ul>
+    <li><strong>把字句</strong>：把+宾语+动词<ul>
+            <li>例：我把书放在桌子上</li>
+        </ul>
+    </li>
+    <li><strong>被字句</strong>：主语+被+施事者+动词<ul>
+            <li>例：书被我放在桌子上</li>
+        </ul>
+    </li>
+    <li><strong>存现句</strong>：表示存在或出现<ul>
+            <li>例：桌子上放着一本书</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>语法化程度</strong></p>
+<ul>
+    <li>中文的语法化程度相对较低</li>
+    <li>词序和语境在表达语法关系中起重要作用</li>
+    <li>缺乏丰富的形态变化</li>
+</ul>
+<h3>句法分析的挑战</h3>
+<p><strong>歧义问题</strong></p>
+<ul>
+    <li><strong>结构歧义</strong>：一个句子可以有多种句法分析</li>
+    <li>例："我看见了拿着望远镜的人"<ul>
+            <li>分析1：我用望远镜看见了人</li>
+            <li>分析2：我看见了一个拿着望远镜的人</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>长距离依赖</strong></p>
+<ul>
+    <li>句子成分之间的依赖关系可能跨越很大距离</li>
+    <li>例：在问句"什么书你昨天买了？"中，"什么"与"买"之间存在依赖关系</li>
+</ul>
+<p><strong>省略现象</strong></p>
+<ul>
+    <li>中文经常省略主语或其他成分</li>
+    <li>例：（我）昨天看了电影，（电影）很好看</li>
+</ul>
+<h3>在NLP中的应用</h3>
+<p><strong>句法分析器</strong></p>
+<ul>
+    <li><strong>基于规则</strong>：使用手工编写的语法规则</li>
+    <li><strong>统计方法</strong>：基于标注语料库的概率模型</li>
+    <li><strong>深度学习</strong>：使用神经网络进行端到端学习</li>
+</ul>
+<p><strong>句法树库</strong></p>
+<ul>
+    <li>Penn Treebank（英文）</li>
+    <li>中文树库（CTB）</li>
+    <li>为句法分析提供训练和评估数据</li>
+</ul>
+<p><strong>应用任务</strong></p>
+<ul>
+    <li><strong>机器翻译</strong>：理解源语言句法结构</li>
+    <li><strong>信息抽取</strong>：基于句法模式抽取信息</li>
+    <li><strong>问答系统</strong>：理解问句的句法结构</li>
+</ul>
+<hr><h2>语义学（Semantics）</h2>
+<p>语义学研究语言的意义，是自然语言理解的核心。</p>
+<h3>基本概念</h3>
+<p><strong>词汇语义</strong></p>
+<ul>
+    <li><strong>词义</strong>：词汇所表达的概念或意义</li>
+    <li><strong>多义性</strong>：一个词有多个相关意义</li>
+    <li><strong>同义关系</strong>：不同词汇表达相同或相似意义</li>
+    <li><strong>反义关系</strong>：词汇间的对立关系</li>
+    <li><strong>上下位关系</strong>：概念间的包含关系</li>
+</ul>
+<p><strong>语义关系</strong></p>
+<ul>
+    <li><strong>同义词（Synonyms）</strong>：<ul>
+            <li>完全同义：较少见</li>
+            <li>近义词：快乐-高兴，大-巨大</li>
+        </ul>
+    </li>
+    <li><strong>反义词（Antonyms）</strong>：<ul>
+            <li>互补反义：死-活，男-女</li>
+            <li>等级反义：冷-热，大-小</li>
+            <li>关系反义：老师-学生，买-卖</li>
+        </ul>
+    </li>
+    <li><strong>上下位词</strong>：<ul>
+            <li>上位词：动物、颜色</li>
+            <li>下位词：狗、猫（动物的下位词）</li>
+        </ul>
+    </li>
+</ul>
+<h3>句子语义</h3>
+<p><strong>命题（Proposition）</strong></p>
+<ul>
+    <li>句子所表达的基本语义内容</li>
+    <li>例：句子"小明在图书馆看书"表达的命题：<ul>
+            <li>施事者：小明</li>
+            <li>动作：看</li>
+            <li>受事者：书</li>
+            <li>地点：图书馆</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>语义角色（Semantic Roles）</strong></p>
+<ul>
+    <li><strong>施事者（Agent）</strong>：动作的执行者</li>
+    <li><strong>受事者（Patient）</strong>：动作的承受者</li>
+    <li><strong>工具（Instrument）</strong>：完成动作所使用的工具</li>
+    <li><strong>地点（Location）</strong>：动作发生的地点</li>
+    <li><strong>时间（Time）</strong>：动作发生的时间</li>
+    <li><strong>方式（Manner）</strong>：动作的方式</li>
+</ul>
+<p><strong>论元结构（Argument Structure）</strong></p>
+<ul>
+    <li>动词所要求的语义参与者</li>
+    <li>例：动词"给"要求三个论元：<ul>
+            <li>给予者（施事）</li>
+            <li>接受者（与事）</li>
+            <li>给予物（受事）</li>
+        </ul>
+    </li>
+</ul>
+<h3>语义表示</h3>
+<p><strong>逻辑表示</strong></p>
+<ul>
+    <li>使用逻辑公式表示语义</li>
+    <li>一阶逻辑：∃x (人(x) ∧ 高兴(x))</li>
+    <li>例：句子"有人很高兴"的逻辑表示</li>
+</ul>
+<p><strong>框架语义学（Frame Semantics）</strong></p>
+<ul>
+    <li>基于认知框架理解语义</li>
+    <li>FrameNet项目：构建基于框架的语义资源</li>
+    <li>例：商业交易框架包含买方、卖方、商品、价格等要素</li>
+</ul>
+<p><strong>概念图</strong></p>
+<ul>
+    <li>使用图结构表示概念和关系</li>
+    <li>节点代表概念，边代表关系</li>
+    <li>适合表示复杂的语义网络</li>
+</ul>
+<h3>语义歧义</h3>
+<p><strong>词汇歧义</strong></p>
+<ul>
+    <li>一词多义：银行（金融机构/河岸）</li>
+    <li>同音异义：他们/它们</li>
+</ul>
+<p><strong>结构歧义</strong></p>
+<ul>
+    <li>修饰歧义："漂亮的女孩的衣服"</li>
+    <li>范围歧义："所有学生都不及格"</li>
+</ul>
+<p><strong>语用歧义</strong></p>
+<ul>
+    <li>需要上下文才能确定意义</li>
+    <li>例：代词指代、省略成分的恢复</li>
+</ul>
+<h3>在NLP中的应用</h3>
+<p><strong>词汇语义资源</strong></p>
+<ul>
+    <li><strong>WordNet</strong>：英文词汇语义网络</li>
+    <li><strong>HowNet</strong>：中文词汇语义知识库</li>
+    <li><strong>同义词词林</strong>：中文同义词分类体系</li>
+</ul>
+<p><strong>语义分析任务</strong></p>
+<ul>
+    <li><strong>词义消歧</strong>：确定多义词在特定上下文中的含义</li>
+    <li><strong>语义角色标注</strong>：识别句子中的语义角色</li>
+    <li><strong>语义相似度计算</strong>：计算词汇或句子间的语义相似度</li>
+</ul>
+<p><strong>应用领域</strong></p>
+<ul>
+    <li><strong>问答系统</strong>：理解问题的语义意图</li>
+    <li><strong>机器翻译</strong>：保持翻译的语义一致性</li>
+    <li><strong>信息检索</strong>：基于语义进行相关性匹配</li>
+</ul>
+<hr><h2>语用学（Pragmatics）</h2>
+<p>语用学研究语言在具体交际情境中的使用，关注语境对意义的影响。</p>
+<h3>基本概念</h3>
+<p><strong>语境（Context）</strong></p>
+<ul>
+    <li><strong>语言语境</strong>：上下文信息</li>
+    <li><strong>情景语境</strong>：交际的具体情境</li>
+    <li><strong>文化语境</strong>：社会文化背景</li>
+</ul>
+<p><strong>言语行为理论（Speech Act Theory）</strong></p>
+<ul>
+    <li><strong>言内行为</strong>：说话行为本身</li>
+    <li><strong>言外行为</strong>：通过说话要达到的目的</li>
+    <li><strong>言后行为</strong>：说话产生的效果</li>
+</ul>
+<p><strong>言外行为类型</strong></p>
+<ul>
+    <li><strong>断言类</strong>：陈述事实，如"今天下雨了"</li>
+    <li><strong>指令类</strong>：要求行动，如"请关门"</li>
+    <li><strong>承诺类</strong>：承诺未来行动，如"我明天来"</li>
+    <li><strong>表达类</strong>：表达态度，如"恭喜你"</li>
+    <li><strong>宣告类</strong>：改变现状，如"我宣布会议开始"</li>
+</ul>
+<h3>语用现象</h3>
+<p><strong>指示语（Deixis）</strong></p>
+<ul>
+    <li>依赖语境才能确定所指的语言成分</li>
+    <li><strong>人称指示</strong>：我、你、他</li>
+    <li><strong>时间指示</strong>：现在、昨天、明天</li>
+    <li><strong>空间指示</strong>：这里、那里、上面</li>
+    <li><strong>语篇指示</strong>：如上所述、综上所言</li>
+</ul>
+<p><strong>预设（Presupposition）</strong></p>
+<ul>
+    <li>说话者假定听话者已知的信息</li>
+    <li>例："小明的妻子很漂亮"预设小明已婚</li>
+</ul>
+<p><strong>含义（Implicature）</strong></p>
+<ul>
+    <li><strong>会话含义</strong>：通过违反合作原则产生的隐含意义</li>
+    <li>例：A："你知道几点了吗？" B："知道。"<ul>
+            <li>B的回答违反了量准则，暗示不愿透露时间</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>合作原则（Cooperative Principle）</strong></p>
+<ul>
+    <li><strong>量准则</strong>：提供适量信息</li>
+    <li><strong>质准则</strong>：说真话</li>
+    <li><strong>关系准则</strong>：说相关的话</li>
+    <li><strong>方式准则</strong>：表达清楚</li>
+</ul>
+<h3>中文语用特点</h3>
+<p><strong>礼貌策略</strong></p>
+<ul>
+    <li>中文非常注重礼貌原则</li>
+    <li>使用委婉语和敬语</li>
+    <li>例：请问、麻烦您、不好意思</li>
+</ul>
+<p><strong>高语境文化</strong></p>
+<ul>
+    <li>依赖语境理解意义</li>
+    <li>话语含蓄，不直接表达</li>
+    <li>例：中文的拒绝常常是间接的</li>
+</ul>
+<p><strong>面子理论</strong></p>
+<ul>
+    <li>积极面子：被认可的需要</li>
+    <li>消极面子：不被打扰的需要</li>
+    <li>影响言语行为的选择</li>
+</ul>
+<h3>在NLP中的应用</h3>
+<p><strong>对话系统</strong></p>
+<ul>
+    <li><strong>意图识别</strong>：理解用户的真实意图</li>
+    <li><strong>槽位填充</strong>：提取对话中的关键信息</li>
+    <li><strong>对话管理</strong>：控制对话流程</li>
+</ul>
+<p><strong>情感分析</strong></p>
+<ul>
+    <li><strong>隐含情感</strong>：识别间接表达的情感</li>
+    <li><strong>反讽检测</strong>：理解反话的真实含义</li>
+</ul>
+<p><strong>机器翻译</strong></p>
+<ul>
+    <li><strong>语用等价</strong>：保持原文的语用功能</li>
+    <li><strong>文化适应</strong>：考虑目标语言的文化特点</li>
+</ul><hr>
+<h2>中文语言特点</h2>
+<p>中文作为汉语系的代表，具有独特的语言特点，这些特点为中文NLP带来了特殊的挑战和机遇。</p>
+
+<h3>分词的必要性</h3>
+<p><strong>无空格分隔</strong></p>
+<ul>
+    <li>中文词与词之间没有明显的分界符</li>
+    <li>例：「我爱北京天安门」需要分解为「我/爱/北京/天安门」</li>
+    <li>与英文等语言的天然分词不同</li>
+</ul>
+<p><strong>词的概念复杂</strong></p>
+<ul>
+    <li>字、词、短语的界限模糊</li>
+    <li>例：「研究」可以是一个词，「研究生」也可以是一个词</li>
+    <li>上下文影响分词结果</li>
+</ul>
+<h3>分词歧义</h3>
+<p><strong>组合歧义</strong></p>
+<ul>
+    <li>同一字符序列可以有不同的分词方式</li>
+    <li>例：「结婚的和尚未结婚的」<ul>
+            <li>错误分词：结婚的/和尚/未结婚的</li>
+            <li>正确分词：结婚的/和/尚未/结婚的</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>交集歧义</strong></p>
+<ul>
+    <li>相邻的分词方案有重叠</li>
+    <li>例：「长春市长春药店」<ul>
+            <li>方案1：长春市/长春/药店</li>
+            <li>方案2：长春/市长/春药店</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>真歧义</strong></p>
+<ul>
+    <li>不同分词结果都在语法和语义上合理</li>
+    <li>例：「乒乓球拍卖完了」<ul>
+            <li>方案1：乒乓球拍/卖完了</li>
+            <li>方案2：乒乓球/拍卖/完了</li>
+        </ul>
+    </li>
+</ul>
+<h3>分词方法</h3>
+<p><strong>基于词典的方法</strong></p>
+<ul>
+    <li>最大匹配算法（正向、逆向、双向）</li>
+    <li>优点：简单高效</li>
+    <li>缺点：无法处理歧义和未登录词</li>
+</ul>
+<p><strong>基于统计的方法</strong></p>
+<ul>
+    <li>N-gram语言模型</li>
+    <li>隐马尔可夫模型（HMM）</li>
+    <li>条件随机场（CRF）</li>
+</ul>
+<p><strong>基于深度学习的方法</strong></p>
+<ul>
+    <li>双向LSTM + CRF</li>
+    <li>BERT等预训练模型</li>
+    <li>字符级神经网络</li>
+</ul>
+<hr><h2>汉字、词汇与语法结构</h2>
+<h3>汉字特点</h3>
+<p><strong>方块字结构</strong></p>
+<ul>
+    <li>汉字具有方形的视觉特征</li>
+    <li>每个字占据等宽的空间</li>
+    <li>字形、字音、字义的统一</li>
+</ul>
+<p><strong>象形表意特征</strong></p>
+<ul>
+    <li><strong>象形字</strong>：日、月、山、水</li>
+    <li><strong>指事字</strong>：上、下、本、末</li>
+    <li><strong>会意字</strong>：明、休、信</li>
+    <li><strong>形声字</strong>：占汉字的80%以上，如：江（氵+工）</li>
+</ul>
+<p><strong>多音多义现象</strong></p>
+<ul>
+    <li>一字多音：行（xíng/háng）、长（cháng/zhǎng）</li>
+    <li>一字多义：「打」有击打、购买、制作等多种含义</li>
+</ul>
+<h3>词汇特点</h3>
+<p><strong>构词方式丰富</strong></p>
+<ul>
+    <li><strong>单纯词</strong>：不能拆分，如：桌子、葡萄</li>
+    <li><strong>合成词</strong>：由两个或多个语素组成<ul>
+            <li>复合式：电脑、手机</li>
+            <li>附加式：第一、老师</li>
+        </ul>
+    </li>
+</ul>
+<p><strong>词汇语义透明度高</strong></p>
+<ul>
+    <li>从组成汉字可以推测词义</li>
+    <li>例：「洗衣机」= 洗 + 衣 + 机</li>
+    <li>有助于理解新词和术语</li>
+</ul>
+<p><strong>词类转换灵活</strong></p>
+<ul>
+    <li>同一词汇可以充当不同词性</li>
+    <li>例：「水」<ul>
+            <li>名词：喝水</li>
+            <li>动词：水田</li>
+            <li>形容词：水平很水（口语）</li>
+        </ul>
+    </li>
+</ul>
+<h3>语法结构特点</h3>
+<p><strong>语序相对固定</strong></p>
+<ul>
+    <li>基本语序：主-谓-宾（SVO）</li>
+    <li>定语在中心语前：红色的花</li>
+    <li>状语在谓语前：慢慢地走</li>
+</ul>
+<p><strong>语法手段多样</strong></p>
+<ul>
+    <li><strong>语序</strong>：改变词序表达不同意思</li>
+    <li><strong>虚词</strong>：的、地、得、了、着、过等</li>
+    <li><strong>重叠</strong>：看看、走走、红红的</li>
+</ul>
+<p><strong>语法化程度低</strong></p>
+<ul>
+    <li>缺乏丰富的词形变化</li>
+    <li>动词无时态、语态的形态变化</li>
+    <li>名词无格变、数的一致性要求</li>
+</ul>
+<hr><h2>中文NLP的特殊挑战</h2>
+<h3>文本预处理挑战</h3>
+<p><strong>分词困难</strong></p>
+<ul>
+    <li>歧义消解需要语义理解</li>
+    <li>新词识别困难</li>
+    <li>专业领域词汇识别</li>
+</ul>
+<p><strong>简繁转换</strong></p>
+<ul>
+    <li>一简对多繁：后（後/后）</li>
+    <li>一繁对多简：髮（发/髪）</li>
+    <li>地区用词差异：计算机/电脑</li>
+</ul>
+<p><strong>编码问题</strong></p>
+<ul>
+    <li>多种编码方式：GB2312、GBK、UTF-8</li>
+    <li>编码转换可能导致信息丢失</li>
+</ul>
+<h3>语言变体处理</h3>
+<p><strong>方言差异</strong></p>
+<ul>
+    <li>语音、词汇、语法的地区差异</li>
+    <li>例：北京话的"倍儿"、上海话的"阿拉"</li>
+    <li>影响语音识别和文本理解</li>
+</ul>
+<p><strong>文体差异</strong></p>
+<ul>
+    <li>古文与现代文</li>
+    <li>正式语体与口语</li>
+    <li>网络用语和流行语</li>
+</ul>
+<p><strong>港澳台用语</strong></p>
+<ul>
+    <li>用词习惯不同：的士/出租车、巴士/公交车</li>
+    <li>语法结构差异：有冇（有没有）</li>
+    <li>外来词处理：音译vs意译</li>
+</ul>
+<h3>语义理解挑战</h3>
+<p><strong>语境依赖性强</strong></p>
+<ul>
+    <li>代词指代复杂</li>
+    <li>省略现象频繁</li>
+    <li>需要更多上下文信息</li>
+</ul>
+<p><strong>文化内涵丰富</strong></p>
+<ul>
+    <li>成语、典故的理解</li>
+    <li>文化特有概念：面子、关系</li>
+    <li>传统文化背景知识</li>
+</ul>
+<p><strong>语言使用灵活</strong></p>
+<ul>
+    <li>语序变化：把字句、被字句</li>
+    <li>表达方式多样：委婉、含蓄</li>
+    <li>语用原则的文化特色</li>
+</ul><hr>
+<h2>文本的层次结构</h2>
+<p>文本作为语言的载体，具有多层次的结构特征。理解这些层次结构对于设计有效的NLP系统至关重要。</p>
+<h3>字符层面（Character Level）</h3>
+<h4>基本单位</h4>
+<p><strong>字符定义</strong></p>
+<ul>
+    <li>文本的最小视觉单位</li>
+    <li>包括字母、汉字、数字、标点符号等</li>
+    <li>Unicode编码系统的基本单元</li>
+</ul>
+<p><strong>字符类型</strong></p>
+<ul>
+    <li><strong>字母字符</strong>：A-Z, a-z</li>
+    <li><strong>数字字符</strong>：0-9</li>
+    <li><strong>汉字字符</strong>：Unicode范围4E00-9FFF</li>
+    <li><strong>标点符号</strong>：。，！？；：""''</li>
+    <li><strong>特殊字符</strong>：@#$%^&amp;*等</li>
+</ul>
+<h4>字符级处理</h4>
+<p><strong>编码处理</strong></p>
+<ul>
+    <li><strong>ASCII编码</strong>：适用于英文</li>
+    <li><strong>Unicode编码</strong>：支持多语言</li>
+    <li><strong>UTF-8编码</strong>：变长编码，广泛使用</li>
+</ul>
+<p><strong>字符序列模型</strong></p>
+<ul>
+    <li><strong>字符级RNN</strong>：直接处理字符序列</li>
+    <li><strong>卷积神经网络</strong>：提取字符级特征</li>
+    <li><strong>Transformer</strong>：自注意力机制处理字符</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+    <li><strong>拼写检查</strong>：检测字符级错误</li>
+    <li><strong>文本生成</strong>：字符级语言模型</li>
+    <li><strong>低资源语言</strong>：缺乏词汇资源时的备选方案</li>
+</ul>
+<hr><h2>词汇层面（Word Level）</h2>
+<h3>词汇定义</h3>
+<p><strong>词的概念</strong></p>
+<ul>
+    <li>具有完整意义的语言单位</li>
+    <li>语法分析的基本单元</li>
+    <li>在语音上具有相对独立性</li>
+</ul>
+<p><strong>词汇类型</strong></p>
+<ul>
+    <li><strong>实词</strong>：名词、动词、形容词、副词</li>
+    <li><strong>虚词</strong>：介词、连词、助词、叹词</li>
+    <li><strong>功能词</strong>：the, a, is, have等高频功能性词汇</li>
+    <li><strong>内容词</strong>：承载主要意义的词汇</li>
+</ul>
+<h3>词汇表示</h3>
+<p><strong>独热编码（One-hot Encoding）</strong></p>
+<ul>
+    <li>每个词用一个向量表示</li>
+    <li>向量长度等于词汇表大小</li>
+    <li>只有对应位置为1，其他为0</li>
+    <li>缺点：维度高，无法表示语义相似性</li>
+</ul>
+<p><strong>词向量（Word Embeddings）</strong></p>
+<ul>
+    <li><strong>Word2Vec</strong>：基于神经网络的词向量<ul>
+            <li>CBOW：根据上下文预测中心词</li>
+            <li>Skip-gram：根据中心词预测上下文</li>
+        </ul>
+    </li>
+    <li><strong>GloVe</strong>：基于全局词汇统计信息</li>
+    <li><strong>FastText</strong>：考虑字符级信息的词向量</li>
+</ul>
+<p><strong>上下文词向量</strong></p>
+<ul>
+    <li><strong>ELMo</strong>：双向LSTM生成的上下文敏感表示</li>
+    <li><strong>BERT</strong>：基于Transformer的双向编码器</li>
+    <li>同一词在不同上下文中有不同表示</li>
+</ul>
+<h3>词汇关系</h3>
+<p><strong>语义关系</strong></p>
+<ul>
+    <li><strong>同义关系</strong>：快乐-高兴</li>
+    <li><strong>反义关系</strong>：大-小</li>
+    <li><strong>上下位关系</strong>：动物-狗</li>
+</ul>
+<p><strong>形态关系</strong></p>
+<ul>
+    <li><strong>词根关系</strong>：run-running-ran</li>
+    <li><strong>派生关系</strong>：happy-happiness </li>
+
+ <li><strong>复合关系</strong>：black + board → blackboard</li>
+</ul>
+
+<p><strong>分布关系</strong></p>
+<ul>
+    <li>具有相似上下文分布的词汇往往语义相关</li>
+    <li>例："医生"和"护士"常在相似语境出现</li>
+    <li>是词向量学习的基础假设</li>
+</ul>
+<h4>词汇级处理</h4>
+<p><strong>词汇规范化</strong></p>
+<ul>
+    <li><strong>大小写处理</strong>：将文本统一为小写或大写</li>
+    <li><strong>词形还原</strong>：将词汇还原为词典形式（lemma）</li>
+    <li><strong>词干提取</strong>：去除词缀得到词干（stem）</li>
+</ul>
+<p><strong>停用词过滤</strong></p>
+<ul>
+    <li>移除高频低信息量词汇</li>
+    <li>中文停用词：的、了、是、在、和等</li>
+    <li>英文停用词：the, a, an, is, are等</li>
+</ul>
+<p><strong>低频词处理</strong></p>
+<ul>
+    <li>替换为统一标记（如&lt;UNK&gt;）</li>
+    <li>提高模型泛化能力</li>
+    <li>减少词汇表规模</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+    <li><strong>信息检索</strong>：建立倒排索引</li>
+    <li><strong>文本分类</strong>：特征提取与表示</li>
+    <li><strong>机器翻译</strong>：词汇对齐与替换</li>
+</ul>
+<h3>短语层面（Phrase Level）</h3>
+<h4>短语定义</h4>
+<p><strong>基本概念</strong></p>
+<ul>
+    <li>由多个词组成的语法单位</li>
+    <li>具有内部结构和外部功能</li>
+    <li>围绕一个中心词展开</li>
+</ul>
+<p><strong>短语类型</strong></p>
+<ul>
+    <li><strong>名词短语（NP）</strong>：以名词为中心<ul>
+            <li>例：一本有趣的书</li>
+        </ul>
+    </li>
+    <li><strong>动词短语（VP）</strong>：以动词为中心<ul>
+            <li>例：正在认真阅读</li>
+        </ul>
+    </li>
+    <li><strong>介词短语（PP）</strong>：以介词为中心<ul>
+            <li>例：在桌子上</li>
+        </ul>
+    </li>
+    <li><strong>形容词短语（AP）</strong>：以形容词为中心<ul>
+            <li>例：非常漂亮</li>
+        </ul>
+    </li>
+</ul>
+<h4>短语识别</h4>
+<p><strong>基于规则的方法</strong></p>
+<ul>
+    <li>使用语法规则模板</li>
+    <li>例：NP → (Det) (Adj) N</li>
+    <li>依赖人工编写的语法规则</li>
+</ul>
+<p><strong>基于统计的方法</strong></p>
+<ul>
+    <li>使用n-gram模型识别常见短语</li>
+    <li>基于互信息、卡方检验等统计量</li>
+    <li>例："纽约时报"作为固定短语</li>
+</ul>
+<p><strong>基于深度学习的方法</strong></p>
+<ul>
+    <li>序列标注模型（如BiLSTM-CRF）</li>
+    <li>端到端的短语检测</li>
+    <li>预训练语言模型（如BERT）</li>
+</ul>
+<h4>短语表示</h4>
+<p><strong>词向量组合</strong></p>
+<ul>
+    <li><strong>简单平均</strong>：取组成词向量的平均值</li>
+    <li><strong>加权平均</strong>：根据词重要性分配权重</li>
+    <li><strong>递归神经网络</strong>：考虑词序的组合</li>
+</ul>
+<p><strong>短语嵌入</strong></p>
+<ul>
+    <li>直接学习短语级别的向量表示</li>
+    <li>Skip-phrase模型：类似Skip-gram</li>
+    <li>短语类比任务：中国:北京::法国:巴黎</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+    <li><strong>信息抽取</strong>：识别关键短语</li>
+    <li><strong>查询理解</strong>：处理搜索引擎查询</li>
+    <li><strong>情感分析</strong>：识别评价对象短语</li>
+</ul>
+<h3>句子层面（Sentence Level）</h3>
+<h4>句子定义</h4>
+<p><strong>基本概念</strong></p>
+<ul>
+    <li>表达完整意思的语言单位</li>
+    <li>具有语法独立性</li>
+    <li>包含主语和谓语的基本结构</li>
+</ul>
+<p><strong>句子类型</strong></p>
+<ul>
+    <li><strong>陈述句</strong>：表达事实或观点</li>
+    <li><strong>疑问句</strong>：提出问题</li>
+    <li><strong>祈使句</strong>：表达请求或命令</li>
+    <li><strong>感叹句</strong>：表达强烈情感</li>
+</ul>
+<h4>句子表示</h4>
+<p><strong>词向量组合</strong></p>
+<ul>
+    <li><strong>词袋模型（BoW）</strong>：忽略词序的简单加和</li>
+    <li><strong>TF-IDF加权</strong>：考虑词的重要性</li>
+    <li><strong>序列模型</strong>：RNN/LSTM考虑词序信息</li>
+</ul>
+<p><strong>句子嵌入</strong></p>
+<ul>
+    <li><strong>Skip-Thought</strong>：预测上下文句子</li>
+    <li><strong>InferSent</strong>：基于监督任务的表示</li>
+    <li><strong>Sentence-BERT</strong>：基于BERT的句子表示</li>
+</ul>
+<p><strong>句法结构表示</strong></p>
+<ul>
+    <li><strong>依存树</strong>：表示词间依存关系</li>
+    <li><strong>成分树</strong>：表示短语结构关系</li>
+    <li><strong>图表示</strong>：结合多种关系</li>
+</ul>
+<h4>句子级处理</h4>
+<p><strong>句子分割</strong></p>
+<ul>
+    <li>将连续文本分割为句子</li>
+    <li>中文难点：句号的多功能性</li>
+    <li>方法：基于规则、机器学习</li>
+</ul>
+<p><strong>句子压缩</strong></p>
+<ul>
+    <li>保留核心信息的简化</li>
+    <li>删除冗余成分</li>
+    <li>应用于摘要生成</li>
+</ul>
+<p><strong>句子改写</strong></p>
+<ul>
+    <li>保持语义的句式变换</li>
+    <li>主动被动转换</li>
+    <li>应用于数据增强</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+    <li><strong>机器翻译</strong>：句子级对齐与生成</li>
+    <li><strong>文本摘要</strong>：关键句子抽取</li>
+    <li><strong>问答系统</strong>：问句理解与答案生成</li>
+</ul>
+<h3>篇章层面（Discourse Level）</h3>
+<h4>篇章结构</h4>
+<p><strong>基本概念</strong></p>
+<ul>
+    <li>由多个句子组成的连贯整体</li>
+    <li>具有主题一致性和逻辑连贯性</li>
+    <li>包括引言、主体、结论等结构</li>
+</ul>
+<p><strong>衔接手段</strong></p>
+<ul>
+    <li><strong>指代</strong>：代词、指示词</li>
+    <li><strong>连接词</strong>：因为、所以、但是</li>
+    <li><strong>词汇衔接</strong>：重复、同义、上下位</li>
+    <li><strong>省略</strong>：承前或蒙后省略</li>
+</ul>
+<p><strong>篇章关系</strong></p>
+<ul>
+    <li><strong>因果关系</strong>：因为…所以…</li>
+    <li><strong>转折关系</strong>：虽然…但是…</li>
+    <li><strong>并列关系</strong>：一方面…另一方面…</li>
+    <li><strong>时序关系</strong>：首先…然后…最后…</li>
+</ul>
+<h4>篇章分析</h4>
+<p><strong>指代消解</strong></p>
+<ul>
+    <li>确定代词或名词短语的指代对象</li>
+    <li>例："小明迟到了。他很抱歉。"中"他"指代"小明"</li>
+    <li>方法：基于规则、机器学习、深度学习</li>
+</ul>
+<p><strong>主题建模</strong></p>
+<ul>
+    <li><strong>LDA</strong>：潜在狄利克雷分配</li>
+    <li>发现文本的潜在主题分布</li>
+    <li>应用于文本聚类和分类</li>
+</ul>
+<p><strong>情感轨迹分析</strong></p>
+<ul>
+    <li>跟踪篇章中情感的变化</li>
+    <li>识别情感转折点</li>
+    <li>应用于评论分析和文学研究</li>
+</ul>
+<h4>篇章表示</h4>
+<p><strong>全局向量</strong></p>
+<ul>
+    <li>平均所有句子向量</li>
+    <li>加权平均（如TF-IDF权重）</li>
+    <li>层次化组合</li>
+</ul>
+<p><strong>图表示</strong></p>
+<ul>
+    <li>节点表示句子或概念</li>
+    <li>边表示关系</li>
+    <li>应用于摘要生成</li>
+</ul>
+<p><strong>记忆网络</strong></p>
+<ul>
+    <li>存储和检索篇章信息</li>
+    <li>处理长距离依赖</li>
+    <li>应用于问答系统</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+    <li><strong>自动摘要</strong>：提取核心内容</li>
+    <li><strong>问答系统</strong>：多句推理</li>
+    <li><strong>文本生成</strong>：保持篇章连贯</li>
+</ul><hr>
+<h2>语言模型与概率语法</h2>
+<h3>语言模型基础</h3>
+<h4>基本概念</h4>
+<p><strong>语言模型定义</strong></p>
+<ul>
+    <li>计算词序列概率的模型</li>
+    <li>评估句子的流畅度和合理性</li>
+    <li>形式化描述：P(w₁,w₂,…,wₙ)</li>
+</ul>
+<p><strong>应用领域</strong></p>
+<ul>
+    <li>语音识别：选择最可能的词序列</li>
+    <li>机器翻译：评估翻译候选</li>
+    <li>文本生成：预测下一个词</li>
+</ul>
+<h4>N-gram模型</h4>
+<p><strong>马尔可夫假设</strong></p>
+<ul>
+    <li>当前词只依赖前n-1个词</li>
+    <li>简化概率计算：P(wᵢ|w₁,…,wᵢ₋₁) ≈ P(wᵢ|wᵢ₋ₙ₊₁,…,wᵢ₋₁)</li>
+</ul>
+<p><strong>模型训练</strong></p>
+<ul>
+    <li>最大似然估计</li>
+    <li>计数与归一化</li>
+    <li>平滑技术（加一、Good-Turing等）</li>
+</ul>
+<p><strong>局限性</strong></p>
+<ul>
+    <li>数据稀疏问题</li>
+    <li>长距离依赖难以捕捉</li>
+    <li>上下文信息有限</li>
+</ul>
+<h3>神经网络语言模型</h3>
+<h4>前馈神经网络模型</h4>
+<p><strong>基本结构</strong></p>
+<ul>
+    <li>输入层：前n-1个词的one-hot表示</li>
+    <li>嵌入层：学习词向量</li>
+    <li>隐藏层：非线性变换</li>
+    <li>输出层：预测下一个词的概率分布</li>
+</ul>
+<p><strong>优势</strong></p>
+<ul>
+    <li>分布式表示缓解数据稀疏</li>
+    <li>自动学习特征组合</li>
+    <li>更好的泛化能力</li>
+</ul>
+<h4>循环神经网络模型</h4>
+<p><strong>RNN结构</strong></p>
+<ul>
+    <li>循环处理变长序列</li>
+    <li>隐藏状态传递历史信息</li>
+    <li>应用于语言建模</li>
+</ul>
+<p><strong>LSTM/GRU</strong></p>
+<ul>
+    <li>解决梯度消失问题</li>
+    <li>长距离依赖建模</li>
+    <li>更稳定的训练过程</li>
+</ul>
+<h4>Transformer模型</h4>
+<p><strong>自注意力机制</strong></p>
+<ul>
+    <li>全局上下文建模</li>
+    <li>并行计算优势</li>
+    <li>位置编码处理词序</li>
+</ul>
+<p><strong>预训练语言模型</strong></p>
+<ul>
+    <li>BERT：双向上下文表示</li>
+    <li>GPT：自回归生成模型</li>
+    <li>强大的迁移学习能力</li>
+</ul>
+<h3>概率语法模型</h3>
+<h4>概率上下文无关文法</h4>
+<p><strong>基本概念</strong></p>
+<ul>
+    <li>为CFG规则赋予概率</li>
+    <li>P(X → γ)表示规则应用概率</li>
+    <li>句子的概率是推导路径概率的乘积</li>
+</ul>
+<p><strong>参数估计</strong></p>
+<ul>
+    <li>从树库中计数规则应用</li>
+    <li>最大似然估计</li>
+    <li>平滑处理稀疏规则</li>
+</ul>
+<p><strong>应用</strong></p>
+<ul>
+    <li>句法分析</li>
+    <li>句子概率评估</li>
+    <li>歧义消解</li>
+</ul>
+<h4>依存语法模型</h4>
+<p><strong>概率依存文法</strong></p>
+<ul>
+    <li>为依存关系赋予概率</li>
+    <li>基于词汇共现统计</li>
+    <li>考虑距离和语法约束</li>
+</ul>
+<p><strong>解析算法</strong></p>
+<ul>
+    <li>基于图的算法（Eisner算法）</li>
+    <li>基于转移的算法</li>
+    <li>神经网络解析器</li>
+</ul><hr>
+<h2>语言资源与标注</h2>
+<h3>语料库资源</h3>
+<h4>通用语料库</h4>
+<p><strong>英文语料库</strong></p>
+<ul>
+    <li>Brown Corpus</li>
+    <li>British National Corpus (BNC)</li>
+    <li>Corpus of Contemporary American English (COCA)</li>
+</ul>
+<p><strong>中文语料库</strong></p>
+<ul>
+    <li>北京大学现代汉语语料库</li>
+    <li>国家语委现代汉语平衡语料库</li>
+    <li>中文维基百科语料</li>
+</ul>
+<h4>标注语料库</h4>
+<p><strong>词性标注语料</strong></p>
+<ul>
+    <li>Penn Treebank</li>
+    <li>中文树库(CTB)</li>
+</ul>
+<p><strong>句法树库</strong></p>
+<ul>
+    <li>Penn Treebank</li>
+    <li>Chinese Dependency Treebank</li>
+</ul>
+<p><strong>语义标注语料</strong></p>
+<ul>
+    <li>PropBank（语义角色）</li>
+    <li>FrameNet（框架语义）</li>
+    <li>Semeval（语义关系）</li>
+</ul>
+<h3>词汇语义资源</h3>
+<h4>英文资源</h4>
+<p><strong>WordNet</strong></p>
+<ul>
+    <li>同义词集合（synset）</li>
+    <li>词汇关系网络</li>
+    <li>广泛用于NLP研究</li>
+</ul>
+<p><strong>FrameNet</strong></p>
+<ul>
+    <li>基于框架语义学</li>
+    <li>标注语义角色</li>
+    <li>丰富的例句资源</li>
+</ul>
+<h4>中文资源</h4>
+<p><strong>HowNet</strong></p>
+<ul>
+    <li>中英文概念词典</li>
+    <li>义原分析系统</li>
+    <li>语义关系网络</li>
+</ul>
+<p><strong>同义词词林</strong></p>
+<ul>
+    <li>中文同义词分类</li>
+    <li>层次化组织结构</li>
+    <li>词汇扩展资源</li>
+</ul>
+<h3>评估数据集</h3>
+<h4>标准任务数据集</h4>
+<p><strong>分词与词性标注</strong></p>
+<ul>
+    <li>PKU标注语料</li>
+    <li>MSRA标注语料</li>
+</ul>
+<p><strong>句法分析</strong></p>
+<ul>
+    <li>Chinese Treebank</li>
+    <li>CTB 5.1/6.0/7.0</li>
+</ul>
+<p><strong>语义分析</strong></p>
+<ul>
+    <li>Chinese PropBank</li>
+    <li>NLPCC评测数据</li>
+</ul>
+<h4>应用任务数据集</h4>
+<p><strong>文本分类</strong></p>
+<ul>
+    <li>THUCNews</li>
+    <li>Fudan Corpus</li>
+</ul>
+<p><strong>情感分析</strong></p>
+<ul>
+    <li>ChnSentiCorp</li>
+    <li>Weibo Sentiment Corpus</li>
+</ul>
+<p><strong>问答系统</strong></p>
+<ul>
+    <li>NLPCC QA数据集</li>
+    <li>WebQA</li>
+</ul><hr>
+<h2>语言学与NLP的交叉研究</h2>
+<h3>计算语言学</h3>
+<h4>研究领域</h4>
+<p><strong>语音技术</strong></p>
+<ul>
+    <li>语音识别</li>
+    <li>语音合成</li>
+    <li>语音转换</li>
+</ul>
+<p><strong>语法分析</strong></p>
+<ul>
+    <li>自动句法分析</li>
+    <li>文法归纳</li>
+    <li>树库构建</li>
+</ul>
+<p><strong>语义计算</strong></p>
+<ul>
+    <li>词义消歧</li>
+    <li>语义角色标注</li>
+    <li>语义相似度</li>
+</ul>
+<h3>认知语言学与NLP</h3>
+<h4>语言习得建模</h4>
+<p><strong>儿童语言习得</strong></p>
+<ul>
+    <li>词汇增长模型</li>
+    <li>语法发展模拟</li>
+    <li>认知启发的NLP</li>
+</ul>
+<p><strong>神经认知模型</strong></p>
+<ul>
+    <li>大脑语言处理模拟</li>
+    <li>神经符号系统</li>
+    <li>多模态学习</li>
+</ul>
+<h4>语言进化建模</h4>
+<p><strong>计算模拟</strong></p>
+<ul>
+    <li>词汇形成</li>
+    <li>语法涌现</li>
+    <li>文化传播</li>
+</ul>
+<p><strong>多智能体系统</strong></p>
+<ul>
+    <li>交流系统演化</li>
+    <li>符号接地问题</li>
+    <li>语言游戏模型</li>
+</ul>
+<h3>社会语言学与NLP</h3>
+<h4>语言变异处理</h4>
+<p><strong>方言识别</strong></p>
+<ul>
+    <li>语音特征分析</li>
+    <li>词汇差异建模</li>
+    <li>方言机器翻译</li>
+</ul>
+<p><strong>社会语言特征</strong></p>
+<ul>
+    <li>年龄、性别识别</li>
+    <li>教育水平预测</li>
+    <li>地域方言分析</li>
+</ul>
+<h4>语言政策支持</h4>
+<p><strong>语言资源建设</strong></p>
+<ul>
+    <li>少数民族语言</li>
+    <li>濒危语言保护</li>
+    <li>多语言技术开发</li>
+</ul>
+<p><strong>语言教育技术</strong></p>
+<ul>
+    <li>计算机辅助学习</li>
+    <li>自动作文评分</li>
+    <li>个性化教学系统</li>
+</ul>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/nlp/nlp-intro.html" rel="prev"> NLP 简介</a> </div>
+			<div class="next-design-link"><a href="/nlp/text-preprocessing.html" rel="next"> 文本预处理</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='28612' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  28612;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 28612, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":28612},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 28612;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oh My Pi（omp）入门教程 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/vibe-coding/omp-usage.html" />
+<meta name="keywords" content="Oh My Pi（omp）入门教程">
+<meta name="description" content="Oh My Pi（omp）入门教程 Oh My Pi（命令行简称 omp）是一个运行在终端里的开源 AI 编程 Agent，由 Can Bölük fork 自 Mario Zechner 的 Pi 并大幅扩展而来。 Oh My Pi 的核心理念是：工具不应该只是「连上去」，而要被打磨到极致——每一个工具都经过基准测试调优，编辑命中率、搜索速度、LSP 集成都力求做到同类最优。 	 GitHub：https://github.com/c..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>Vibe Coding 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="Vibe Coding 教程"  href="/vibe-coding/vibe-coding-tutorial.html" >
+			Vibe Coding 教程			</a>
+						<a target="_top" data-p="par" title="Vibe Coding 简介"  href="/vibe-coding/vibe-coding-intro.html" >
+			Vibe Coding 简介			</a>
+						<a target="_top" data-p="par" title="Vibe Coding 思维模式"  href="/vibe-coding/vibe-coding-mindset.html" >
+			Vibe Coding 思维模式			</a>
+						<a target="_top" data-p="par" title="第一个 Vibe Coding"  href="/vibe-coding/vibe-coding-usage.html" >
+			第一个 Vibe Coding			</a>
+						<a target="_top" data-p="par" title="提示词（Prompt）工程"  href="/vibe-coding/vibe-coding-prompt.html" >
+			提示词（Prompt）工程			</a>
+			<a target="_top" title="Vibe Coding 实战项目" href="/vibe-coding/vibe-coding-practice.html">Vibe Coding 实战项目</a>
+<br><h2 class="left"><span class="left_h2">Vibe Coding</span>  工具</h2>			<a target="_top" data-p="par" title="GitHub Copilot 入门教程"  href="/vibe-coding/github-copilot-usage.html" >
+			GitHub Copilot 入门教程			</a>
+			<a target="_top" title="Claude Code 入门教程" href="claude-code.html">Claude Code 入门教程</a>
+<a target="_top" title="OpenCode 入门教程" href="opencode-coding-agent.html">OpenCode 入门教程</a>
+<a target="_top" title="OpenCode Coding Plan" href="opencode-coding-plan.html">OpenCode Coding Plan</a>
+<a target="_top" title="CC Switch" href="cc-switch.html">CC Switch</a>
+<a target="_top" title="Skills 教程" href="skills-agent.html">Skills 教程</a>
+<a target="_top" title="MCP 入门教程" href="mcp-usage.html">MCP 入门教程</a>
+<a target="_top" title="OpenCode skills" href="opencode-skills-intro.html">OpenCode skills</a>
+<a target="_top" title="Qoder 教程" href="qoder-quick-start.html">Qoder 教程</a>
+<a target="_top" title="Qoder Quest 模式" href="qoder-quest-mode.html">Qoder Quest 模式</a>
+<a target="_top" title="Qoder CLI" href="qoder-cli.html">Qoder CLI</a>
+<a target="_top" title="ZCode 入门教程" href="zcode-usage.html">ZCode 入门教程</a>
+<a target="_top" title="Trae 教程" href="trae-quick-star.html">Trae 教程</a>
+<a target="_top" title="Trae Solo" href="trae-solo.html">Trae Solo</a>
+<a target="_top" title="Kilo Code" href="kilo-code-usage.html">Kilo Code</a>
+<a target="_top" title="Oh My Pi" href="omp-usage.html">Oh My Pi</a>			<a target="_top" data-p="par" title="Reasonix 入门教程"  href="/vibe-coding/reasonix-usage.html" >
+			Reasonix 入门教程			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/vibe-coding/kilo-code-usage.html" rel="prev"> Kilo Code 入门教程</a> </div>
+			<div class="next-design-link"><a href="/vibe-coding/vibe-coding-practice.html" rel="next"> Vibe Coding 实战项目</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Oh My Pi（omp）入门教程</h1>
+<p>Oh My Pi（命令行简称 omp）是一个运行在终端里的开源 AI 编程 Agent，由 Can Bölük fork 自 Mario Zechner 的 Pi 并大幅扩展而来。</p>
+<p>Oh My Pi 的核心理念是：<strong>工具不应该只是「连上去」，而要被打磨到极致</strong>——每一个工具都经过基准测试调优，编辑命中率、搜索速度、LSP 集成都力求做到同类最优。</p>
+	<ul>
+<li><p>GitHub：<a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener noreferrer">https://github.com/can1357/oh-my-pi</a> </p></li>
+	<li>
+<p>官网：<a href="https://omp.sh" target="_blank" rel="noopener noreferrer">omp.sh</a> </p></li></ul>
+<p><img decoding="async" src="../wp-content/uploads/2026/06/omp.png"></p>
+
+
+<hr>
+
+<h2>omp 是什么？</h2>
+
+<p>omp 是一个<strong>终端优先</strong>的 AI 编程 Agent。它不依赖任何 IDE，在你的终端里以全功能 TUI 运行，集成了 LSP、DAP 调试器、Python/JavaScript 双执行内核、子 Agent 并行、跨会话记忆，以及一套经过基准调优的 32 个工具。</p>
+
+<h3>和其他 AI 编程工具的差异</h3>
+
+<table class="reference">
+<tr><th>维度</th><th>Claude Code / 同类工具</th><th>omp</th></tr>
+<tr><td>编辑格式</td><td>str_replace（易出错）</td><td>Hashline（内容哈希锚点，抗空白差异）</td></tr>
+<tr><td>文件读取</td><td>全文 dump</td><td>结构摘要 + 按需展开</td></tr>
+<tr><td>LSP</td><td>无或有限</td><td>完整 14 个 LSP 操作（含重命名、跳转、代码动作）</td></tr>
+<tr><td>调试器</td><td>无</td><td>完整 DAP：lldb、dlv、debugpy</td></tr>
+<tr><td>子 Agent</td><td>无或有限</td><td>并行子 Agent，隔离工作区，类型化返回值</td></tr>
+<tr><td>搜索</td><td>shell 调用 ripgrep</td><td>in-process ripgrep，无 fork/exec</td></tr>
+<tr><td>行为纠正</td><td>靠 prompt</td><td>流规则：正则命中 → mid-token 注入 → 重试</td></tr>
+<tr><td>跨会话记忆</td><td>无</td><td>Hindsight 记忆银行（项目级）</td></tr>
+<tr><td>代码执行</td><td>Python sandbox</td><td>持久 Python + Bun 双内核，可互相调用 Agent 工具</td></tr>
+<tr><td>技术栈</td><td>纯 JS/Python</td><td>~55,000 行 Rust 核心 + TypeScript</td></tr>
+</table>
+
+<hr>
+
+<h2>安装</h2>
+<p>本节介绍 omp 在 macOS、Linux、Windows 上的多种安装方式。</p>
+
+<h3>macOS / Linux（推荐）</h3>
+
+<pre>
+$ curl -fsSL https://omp.sh/install | sh
+</pre>
+
+<p>安装脚本会自动检测 Bun 是否可用：有 Bun（≥ 1.3.14）则优先用 Bun 安装，否则下载预构建二进制。</p>
+
+<h3>Homebrew（macOS / Linux）</h3>
+
+<pre>
+$ brew install can1357/tap/omp
+</pre>
+
+<h3>Bun（推荐，获得最新版）</h3>
+
+<pre>
+$ bun install -g @oh-my-pi/pi-coding-agent
+</pre>
+
+<h3>Windows（PowerShell）</h3>
+
+<pre>
+$ irm https://omp.sh/install.ps1 | iex
+</pre>
+
+<p>Windows 支持原生运行，无需 WSL。</p>
+
+<h3>版本锁定（mise）</h3>
+
+<pre>
+$ mise use -g github:can1357/oh-my-pi
+</pre>
+
+<h3>验证安装</h3>
+
+<pre>
+$ omp --version
+</pre>
+
+<h3>Shell 自动补全</h3>
+<p>omp 从 CLI 元数据动态生成补全脚本，因此子命令、Flag 和枚举值永远不会与实际 CLI 脱节：</p>
+
+<pre>
+# zsh（加入 ~/.zshrc）
+eval "$(omp completions zsh)"
+
+# bash（加入 ~/.bashrc）
+eval "$(omp completions bash)"
+
+# fish
+omp completions fish &gt; ~/.config/fish/completions/omp.fish
+</pre>
+
+<h3>从源码构建</h3>
+
+<pre>
+$ git clone https://github.com/can1357/oh-my-pi
+$ cd oh-my-pi
+$ bun setup    # 安装 Bun 工作区依赖并构建 Rust N-API 插件
+$ bun dev      # 启动开发版 CLI
+
+# 修改 Rust 代码后，重新构建原生插件
+$ bun run build:native
+</pre>
+<hr>
+
+<h2>初次配置：登录模型提供商</h2>
+<p>首次运行 omp 后，使用 /login 或 /model 配置你的 AI 提供商。</p>
+
+<h3>方式一：OAuth 一键登录（无需 API Key）</h3>
+<p>omp 支持多个提供商通过 OAuth 登录，最简单的方式：</p>
+
+<pre>
+/login                  # 打开交互式提供商选择器
+</pre>
+
+<p>支持 OAuth 的提供商包括：Anthropic、OpenAI Codex、Google Antigravity（Gemini）、Perplexity、Cursor、GitHub Copilot、GitLab Duo 等。</p>
+
+<h3>方式二：API Key（直连提供商）</h3>
+
+<pre>
+# 在环境变量里设置（推荐写入 ~/.zshrc 或 ~/.bashrc）
+export ANTHROPIC_API_KEY="sk-ant-xxxx"
+export OPENAI_API_KEY="sk-xxxx"
+export GOOGLE_API_KEY="xxxx"
+</pre>
+
+<p>或在 omp 里直接配置：</p>
+
+<pre>
+/model      # 打开模型选择器，可以在这里配置 Key
+</pre>
+
+<h3>方式三：Coding Plan 订阅</h3>
+<p>如果你已经订阅了 Cursor、GitHub Copilot、Kilo、Kimi Code、MiniMax Coding Plan 等服务，可以直接路由到你的订阅：</p>
+
+<pre>
+/login     # 选择对应的 Coding Plan 提供商，OAuth 授权
+</pre>
+
+<h3>方式四：本地模型（Ollama / LM Studio）</h3>
+
+<pre>
+# 先启动 Ollama
+$ ollama serve
+
+# 在 omp 里选择 Ollama 提供商（key 可选）
+/model     # 选择 Ollama，指向 http://localhost:11434
+</pre>
+
+<h3>配置路径</h3>
+<p>所有配置存储在 ~/.omp/ 目录：</p>
+
+<pre>
+~/.omp/
+  agent/
+    settings.yml      # 主配置文件
+    models.yml        # 自定义模型/提供商
+    keybindings.yml   # 快捷键绑定
+    rules/            # 流规则（stream rules）
+    skills/           # 技能文档
+</pre>
+<hr>
+
+<h2>第一次对话：TUI 基础操作</h2>
+<p>本节介绍 omp 的全屏 TUI 界面和基本交互方式。</p>
+
+<h3>启动 omp</h3>
+
+<pre>
+# 在项目目录下启动
+$ cd ~/your-project
+$ omp
+</pre>
+
+<p>omp 启动后进入全屏 TUI（终端用户界面），工具调用以卡片形式渲染，编辑操作在落盘前显示预览。</p>
+
+<blockquote><p>注意：omp 使用 Kitty 键盘协议，推荐在支持该协议的终端下运行（Kitty、Ghostty、WezTerm、iTerm2）以获得最佳体验。</p></blockquote>
+
+<h3>基本交互</h3>
+<p>输入你的任务，按 Enter 发送：</p>
+
+<pre>
+&gt; 分析这个项目的目录结构，告诉我主要模块是什么
+</pre>
+
+<p>omp 会自动调用 read、search 等工具扫描代码库，返回结构化摘要。</p>
+
+<h3>常用键位</h3>
+
+<table class="reference">
+<tr><th>按键</th><th>功能</th></tr>
+<tr><td>Enter</td><td>发送消息</td></tr>
+<tr><td>Ctrl+J / Shift+Enter</td><td>消息内换行（不发送）</td></tr>
+<tr><td>Ctrl+P</td><td>循环切换当前角色的可用模型</td></tr>
+<tr><td>Shift+Ctrl+P</td><td>反向循环切换</td></tr>
+<tr><td>Ctrl+T</td><td>展开/折叠 Todo 面板</td></tr>
+<tr><td>Ctrl+C</td><td>中断当前任务</td></tr>
+<tr><td>Esc</td><td>取消待确认操作</td></tr>
+<tr><td>↑ / ↓</td><td>浏览历史消息 / 选项</td></tr>
+<tr><td>?</td><td>在空白输入时插入 ?；用 /hotkeys 查看快捷键列表</td></tr>
+</table>
+
+<h3>单次执行（非交互模式）</h3>
+
+<pre>
+# 一次性执行任务并退出
+$ omp -p "列出所有 .ts 文件里未使用的 export"
+
+# 管道输入
+$ git diff HEAD~1 | omp -p "给这个 diff 写一个精简的 commit message"
+</pre>
+
+<h3>恢复历史会话</h3>
+
+<pre>
+$ omp --resume          # 打开会话选择器（Tab 补全可用）
+$ omp --resume &amp;lt;id&amp;gt;     # 直接恢复指定会话
+</pre>
+<hr>
+
+<h2>核心工具详解</h2>
+<p>omp 的 32 个工具统一在一个命名空间里，read、search、bash 是日常使用最频繁的三个。</p>
+
+<h3>read：统一读取接口</h3>
+<p>read 是 omp 的杀手工具之一。它不只是读文件——它理解内容结构：</p>
+
+<pre>
+# 读文件（返回结构化摘要，而非全文 dump）
+read src/auth/login.ts
+
+# 读目录（返回树形结构概览）
+read src/
+
+# 读 URL（返回结构化 Markdown，锚点保留）
+read https://docs.anthropic.com/en/api/messages
+
+# 读 arxiv 论文 PDF
+read https://arxiv.org/pdf/2604.10739v1
+
+# 读 SQLite 数据库
+read data/app.db
+
+# 读 GitHub PR（统一路径接口）
+read pr://can1357/oh-my-pi/1428
+
+# 读 PR 的 diff
+read pr://can1357/oh-my-pi/1428/diff/1
+
+# 读 GitHub Issue
+read issue://can1357/oh-my-pi/142
+</pre>
+
+<p>关键设计：read 对文件返回的是 Tree-sitter 生成的<strong>结构化摘要</strong>（函数名、类名、重要注释），而不是把整个文件 dump 进上下文。这大幅节省 Token 同时保留了关键信息，需要详细内容时 Agent 会再次调用 read 展开具体段落。</p>
+
+<h3>search：in-process ripgrep</h3>
+
+<pre>
+# 正则搜索（无 fork/exec，直接在进程内跑）
+search "useState\(" src/
+
+# 带文件类型过滤
+search "TODO:" --type ts
+
+# 在内部 URL 上搜索（如 PR diff）
+search "loginUser" pr://can1357/oh-my-pi/1063/diff
+</pre>
+
+<h3>edit：Hashline 精确编辑</h3>
+<p>详见下一节。这是 omp 技术含量最高的工具之一。</p>
+
+<h3>bash：持久 Shell 会话</h3>
+
+<pre>
+# 执行命令（bash 会话在调用间保持存活）
+bash: npm test
+bash: git log --oneline -10
+bash: cargo build --release
+</pre>
+
+<p>omp 的 bash 工具嵌入了完整的 brush shell（Rust 实现的 bash），不是每次 fork 一个新进程，而是维持持久会话，环境变量和工作目录跨调用保留。</p>
+
+<h3>eval：Python + JavaScript 持久内核</h3>
+<p>详见后续章节。</p>
+
+<h3>lsp：完整 LSP 操作</h3>
+<p>详见后续章节。</p>
+
+<h3>todo：任务管理</h3>
+<p>omp 内置结构化任务列表，支持阶段（phase）和任务状态跟踪。Ctrl+T 切换 Todo 面板可见性。</p>
+
+<h3>ask：结构化问题</h3>
+<p>Agent 在需要用户决策时调用 ask，弹出带有推荐选项的交互式选择器，而不是在输出里混入问题。</p>
+<hr>
+
+<h2>Hashline：更精准的文件编辑</h2>
+<p>这是 omp 最重要的技术创新之一。本节介绍 Hashline 的工作原理和基准测试结果。</p>
+
+<h3>传统 str_replace 的问题</h3>
+<p>其他 Agent 大多使用 str_replace 格式让模型输出「旧内容」+「新内容」对。问题在于：</p>
+<ul>
+<li>模型容易把旧内容的空格、换行、引号搞错</li>
+<li>文件一旦在 Agent 操作后被修改，锚点就失效了</li>
+<li>错误导致大量重试，消耗更多 Token</li>
+</ul>
+
+<h3>Hashline 的解法</h3>
+<p>Hashline 让模型<strong>用内容哈希来标识要修改的行</strong>，而不是重新打出那些内容：</p>
+
+<pre>
+# Hashline patch 示例（Agent 内部生成，你不需要手写）
+@@{a3f2}
+-  const result = compute(x)
++  const result = compute(x, options)
+@@{b7c1}
+-  return null
++  return undefined
+</pre>
+
+<p>{a3f2} 是目标行内容的哈希前缀。如果文件改变导致哈希对不上，patch 会被<strong>拒绝</strong>而不是静默地打错地方。</p>
+
+<h3>基准测试结果</h3>
+<p>来自 README 的实测数据：</p>
+
+<table class="reference">
+<tr><th>模型</th><th>指标</th><th>效果</th></tr>
+<tr><td>Grok Code Fast 1</td><td>编辑成功率</td><td>6.7% → 68.3%（10 倍提升）</td></tr>
+<tr><td>Gemini 3 Flash</td><td>vs str_replace</td><td>+5 个百分点，超过 Google 自己的最佳实现</td></tr>
+<tr><td>Grok 4 Fast</td><td>Output Token 消耗</td><td>减少 61%</td></tr>
+<tr><td>MiniMax</td><td>通过率</td><td>提升 2.1 倍（权重和 Prompt 完全不变）</td></tr>
+</table>
+
+<h3>ast_edit：结构化代码重写</h3>
+<p>比 Hashline 更高层的编辑工具，用 ast-grep 模式匹配后结构化重写：</p>
+
+<pre>
+# 把所有 console.log(...) 替换掉
+ast_edit: console.log($X) &rarr; logger.debug($X)
+</pre>
+
+<p>ast_edit 先返回一个 <strong>proposed（预览）卡片</strong>，Agent 确认后调用 resolve 才真正落盘——原子操作，要么全部成功，要么全部不变。</p>
+
+<h3>ast_grep：结构化代码查询</h3>
+<p>支持 50+ 语言的 Tree-sitter 语法匹配：</p>
+
+<pre>
+# 找出所有没有 await 的 async 函数调用
+ast_grep: "promise.then($X)"
+</pre>
+<hr>
+
+<h2>LSP 集成：IDE 知道的，Agent 也知道</h2>
+<p>omp 集成了完整的 LSP（Language Server Protocol）客户端，支持 14 种操作。</p>
+
+<h3>配置 LSP 服务器</h3>
+<p>在项目目录的 .omp/ 里配置，或通过 omp 的配置向导：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: blue;"># ~/.omp/agent/settings.yml（示例片段）</span><span style="color: #007F45;"><br />
+lsp</span>:<span style="color: #007F45;"><br />
+&nbsp; servers</span>:<span style="color: #007F45;"><br />
+&nbsp; &nbsp; typescript</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; command</span><span style="font-weight: bold; color: brown;">: </span>typescript-language-server<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; args</span><span style="font-weight: bold; color: brown;">: </span><span class="br0">&#91;</span><span style="color: #CF00CF;">&quot;--stdio&quot;</span><span class="br0">&#93;</span><span style="color: #007F45;"><br />
+&nbsp; &nbsp; rust-analyzer</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; command</span><span style="font-weight: bold; color: brown;">: </span>rust-analyzer<span style="color: #007F45;"><br />
+&nbsp; &nbsp; python</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; command</span><span style="font-weight: bold; color: brown;">: </span>pylsp<br />
+
+</div>
+</div>
+
+<h3>14 个 LSP 操作</h3>
+
+<table class="reference">
+<tr><th>操作</th><th>说明</th></tr>
+<tr><td>diagnostics</td><td>获取文件/工作区的诊断错误（类似 IDE 红波浪线）</td></tr>
+<tr><td>hover</td><td>获取符号的类型信息和文档注释</td></tr>
+<tr><td>definition</td><td>跳转到定义</td></tr>
+<tr><td>references</td><td>查找所有引用</td></tr>
+<tr><td>rename</td><td>重命名符号（通过 workspace/willRenameFiles，确保 re-export 和 barrel 文件同步更新）</td></tr>
+<tr><td>code_action</td><td>获取并执行代码动作（如自动导入、修复 lint 错误）</td></tr>
+<tr><td>completion</td><td>获取补全列表</td></tr>
+<tr><td>signature_help</td><td>获取函数签名帮助</td></tr>
+<tr><td>document_symbols</td><td>获取文件内所有符号</td></tr>
+<tr><td>workspace_symbols</td><td>在整个工作区搜索符号</td></tr>
+<tr><td>format</td><td>格式化文件</td></tr>
+<tr><td>range_format</td><td>格式化选定范围</td></tr>
+<tr><td>implementation</td><td>跳转到接口实现</td></tr>
+<tr><td>type_definition</td><td>跳转到类型定义</td></tr>
+</table>
+
+<h3>重命名的正确做法</h3>
+<p>普通 Agent 做重命名：搜索字符串，逐个替换，容易漏掉或误替换。omp 的做法是通过 LSP 协议完成：</p>
+
+<pre>
+&gt; 把 formatBytes 函数重命名为 humanizeFileSize
+
+# omp 内部执行：
+lsp.references("formatBytes")   &rarr; 找到 5 处引用，分布在 3 个文件
+lsp.rename("formatBytes", "humanizeFileSize")  &rarr; 通过 LSP workspace/willRenameFiles
+search "formatBytes"            &rarr; 0 matches  ✓ 完成
+</pre>
+
+<p>Re-exports、barrel 文件（index.ts）、aliased imports 全部正确更新，因为重命名走的是 LSP 协议而不是文本替换。</p>
+<hr>
+
+<h2>调试器集成（DAP）</h2>
+<p>omp 实现了完整的 DAP（Debug Adapter Protocol）客户端，支持 28 个调试操作。</p>
+
+<h3>支持的调试器</h3>
+
+<table class="reference">
+<tr><th>语言</th><th>调试器</th></tr>
+<tr><td>C / C++ / Rust</td><td>lldb-dap / codelldb</td></tr>
+<tr><td>Go</td><td>dlv（Delve）</td></tr>
+<tr><td>Python</td><td>debugpy</td></tr>
+<tr><td>Node.js / TypeScript</td><td>Node.js built-in inspector</td></tr>
+<tr><td>通用</td><td>任何兼容 DAP 的调试器</td></tr>
+</table>
+
+<h3>典型场景：定位 C 程序崩溃</h3>
+
+<pre>
+&gt; 这个 C 程序一直 segfault，帮我找原因
+
+# omp 内部执行：
+debug.launch("lldb-dap", "./build/demo")
+debug.continue()         # 运行到崩溃
+debug.pause()
+debug.stackTrace()       # 查看调用栈
+debug.scopes(frameId)    # 查看局部变量
+debug.evaluate("*ptr")   # 评估表达式
+</pre>
+
+<h3>典型场景：Go 服务死锁排查</h3>
+
+<pre>
+&gt; Go 服务挂住了，帮我看看
+
+# omp 内部执行：
+debug.attach("dlv", pid)
+debug.threads()          # 列出所有 goroutine
+debug.stackTrace(threadId)  # 查看挂住的 goroutine 调用栈
+</pre>
+
+<p>不再需要满代码撒 fmt.Println 或 console.log——omp 直接驱动真正的调试器。</p>
+<hr>
+
+<h2>子 Agent（Subagents）：并行处理</h2>
+<p>当一个任务可以被拆分成相互独立的子任务时，omp 用 task 工具生成并行子 Agent，每个子 Agent 在隔离的工作区里运行，最终返回类型化的结果对象。</p>
+
+<h3>工作区隔离机制</h3>
+<p>omp 使用平台原生的文件系统快照来隔离子 Agent 的工作区：</p>
+
+<table class="reference">
+<tr><th>操作系统 / 文件系统</th><th>隔离机制</th></tr>
+<tr><td>macOS（APFS）</td><td>APFS clone（瞬时，零 copy-on-write）</td></tr>
+<tr><td>Linux（btrfs/zfs）</td><td>reflink</td></tr>
+<tr><td>Linux（overlayfs）</td><td>overlay mount</td></tr>
+<tr><td>Windows</td><td>projfs / rcopy</td></tr>
+</table>
+
+<p>每个子 Agent 拿到的是一个独立的工作区副本，互不干扰，不会产生合并冲突。</p>
+
+<h3>使用示例</h3>
+
+<pre>
+&gt; 我有三个微服务：auth-service、api-service、worker-service。
+  请同时检查它们的依赖有没有已知的安全漏洞，分别出报告。
+
+# omp 内部执行：
+task(workers=[
+  {name: "auth", workdir: "services/auth"},
+  {name: "api",  workdir: "services/api"},
+  {name: "worker", workdir: "services/worker"}
+])
+
+# 三个子 Agent 并行跑，各自输出结构化 JSON：
+# { findings: [...], severity: "high", affected: ["lodash@4.17.15"] }
+
+# 父 Agent 合并结果，汇总报告
+</pre>
+
+<h3>子 Agent 间通信（IRC）</h3>
+<p>并行子 Agent 之间可以通过 irc 工具进行短消息通信，协调分工：</p>
+
+<pre>
+# 子 Agent A：
+irc.send("ComponentsExports", {exports: ["Button", "Input"]})
+
+# 子 Agent B 收到消息后调整自己的分析范围
+</pre>
+
+<h3>拉取子 Agent 结果</h3>
+<p>父 Agent 可以用路径语法直接访问子 Agent 的结构化输出：</p>
+
+<pre>
+# 读取子 Agent findings 的第一条记录的 path 字段
+read agent://&amp;lt;subagent-id&amp;gt;/findings.0.path
+</pre>
+<hr>
+
+<h2>Hindsight：跨会话记忆</h2>
+<p>Hindsight 是 omp 的项目级记忆系统，让 Agent 在会话之间保留对代码库的理解。</p>
+
+<h3>工作原理</h3>
+<ul>
+<li><strong>retain</strong>：Agent 在运行中发现有价值的信息时，主动调用 retain 写入记忆银行</li>
+<li><strong>recall</strong>：用关键字搜索记忆银行</li>
+<li><strong>reflect</strong>：让 Hindsight 综合记忆银行里的信息，生成一个合成性回答</li>
+<li>每次会话结束时，omp 自动将会话压缩成「心智模型」，下次会话第一轮就加载</li>
+</ul>
+
+<h3>作用域</h3>
+<p>Hindsight 是<strong>项目级别</strong>的——在 A 项目学到的东西，不会泄漏到 B 项目。记忆存储在 .omp/ 目录下（或 ~/.omp/ 里按项目分片）。</p>
+
+<h3>实际效果</h3>
+<p>第一次在一个项目里使用 omp，你需要解释项目结构。使用一段时间后，omp 自己就知道：</p>
+<ul>
+<li>这个项目用什么技术栈</li>
+<li>主要模块的职责划分</li>
+<li>曾经做过哪些重构</li>
+<li>哪些文件是「地雷区」（经常出问题的地方）</li>
+</ul>
+<hr>
+
+<h2>代码执行：Python + JavaScript 双内核</h2>
+<p>大多数 Agent 工具只提供一个 Python 沙箱。omp 运行两个持久内核，并且两者都可以回调 Agent 自己的工具。</p>
+
+<h3>Python 内核（eval）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># 在 eval 工具里，Python 可以调用 omp 的 tool.*</span><br />
+<span style="color: Green;font-weight:bold;">import</span> pandas <span style="color: Green;font-weight:bold;">as</span> pd<br />
+<br />
+df <span style="color: Gray;">=</span> pd.<span style="color: #05a;">read_csv</span><span style="color: Olive;">&#40;</span>tool.<span style="color: #05a;">read</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;data/sales.csv&quot;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 用 Agent 的 read 工具加载文件</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>df.<span style="color: #05a;">describe</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+result <span style="color: Gray;">=</span> tool.<span style="color: #05a;">search</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;revenue&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;src/&quot;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 在代码库里搜索</span><br />
+
+</div>
+</div>
+
+<h3>JavaScript（Bun）内核（eval）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #006600; font-style: italic;">// 同一个 eval 会话里，可以切换到 JS 内核</span><br />
+<span style="color: #000066; font-weight: bold;">const</span> data <span style="color: #339933;">=</span> tool.<span style="color: #660066;">read</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">&quot;data/sales.csv&quot;</span><span style="color: #009900;">&#41;</span> &nbsp;<span style="color: #006600; font-style: italic;">// 同样可以调用 Agent 工具</span><br />
+<span style="color: #000066; font-weight: bold;">const</span> top <span style="color: #339933;">=</span> data.<span style="color: #660066;">split</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">'<span style="color: #000099; font-weight: bold;">\n</span>'</span><span style="color: #009900;">&#41;</span>.<span style="color: #660066;">slice</span><span style="color: #009900;">&#40;</span><span style="color: #CC0000;">1</span><span style="color: #009900;">&#41;</span><br />
+&nbsp; .<span style="color: #660066;">map</span><span style="color: #009900;">&#40;</span>line <span style="color: #339933;">=&gt;</span> line.<span style="color: #660066;">split</span><span style="color: #009900;">&#40;</span><span style="color: #3366CC;">','</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><br />
+&nbsp; .<span style="color: #660066;">sort</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#40;</span>a<span style="color: #339933;">,</span> b<span style="color: #009900;">&#41;</span> <span style="color: #339933;">=&gt;</span> <span style="color: #339933;">+</span>b<span style="color: #009900;">&#91;</span><span style="color: #CC0000;">2</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">-</span> <span style="color: #339933;">+</span>a<span style="color: #009900;">&#91;</span><span style="color: #CC0000;">2</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><br />
+&nbsp; .<span style="color: #660066;">slice</span><span style="color: #009900;">&#40;</span><span style="color: #CC0000;">0</span><span style="color: #339933;">,</span> <span style="color: #CC0000;">5</span><span style="color: #009900;">&#41;</span><br />
+<br />
+console.<span style="color: #660066;">table</span><span style="color: #009900;">&#40;</span>top<span style="color: #009900;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>双内核共享 Prelude</h3>
+<p>两个内核共享一个 prelude（预加载上下文），可以在 Python 里处理数据，然后在 JS 里生成图表，整个过程是一个连续的 eval 会话，无需离开工具界面。</p>
+<hr>
+
+<h2>流规则（Stream Rules）：实时行为纠正</h2>
+<p>这是 omp 独有的实时行为纠正机制，解决的是「模型不听话」的问题。</p>
+
+<h3>传统做法的问题</h3>
+<p>把所有规范写进 System Prompt，每次对话都要付出全量的 Token 成本，而且模型仍然可能忽略。</p>
+
+<h3>流规则的工作方式</h3>
+<p>规则是<strong>睡眠的</strong>，直到触发条件出现：</p>
+<ol>
+<li>正则表达式监听模型的流式输出</li>
+<li>一旦命中（mid-token 级别），立即中止当前流</li>
+<li>把规则内容作为系统提醒注入上下文</li>
+<li>从同一位置重新生成</li>
+<li>注入的规则在上下文压缩后仍然存活</li>
+</ol>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: blue;"># 示例：禁止使用 Box::leak</span><br />
+<span style="color: blue;"># ~/.omp/agent/rules/no-box-leak.yml</span><br />
+<span style="color: green;"><br />
+name</span><span style="font-weight: bold; color: brown;">: </span>box-leak<span style="color: green;"><br />
+pattern</span><span style="font-weight: bold; color: brown;">: </span><span style="color: #CF00CF;">&quot;Box::leak&quot;</span><span style="color: green;"><br />
+reminder</span><span style="font-weight: bold; color: brown;">: |<br />
+</span><span style="color: #303050;background-color: #F5F5F5"> &nbsp;不要在生产代码路径中使用 Box::leak。<br />
+&nbsp; 内存泄漏会导致服务在高负载下 OOM。<br />
+&nbsp; 改用 Arc&lt;str&gt; 或其他引用计数方案。</span><br />
+
+</div>
+</div>
+
+<p>效果：模型写到 Box::leak 时，流被中止，规则被注入，模型自动纠正为 Arc<str>，无需用户干预。</p>
+
+<h3>用 /omfg 快速创建规则</h3>
+<p>omp 提供了一个辅助命令让你用自然语言描述规则，它来生成正则和规则文件：</p>
+
+<pre>
+/omfg 不要在任何地方用 any 类型，要求用具体的类型定义或 unknown
+</pre>
+
+<p>omp 会生成规则、验证、保存，下次起效。</p>
+<hr>
+
+<h2>模型路由：40+ 提供商，四个角色</h2>
+<p>omp 用角色（role）而不是模型名来调度工作，实现「对的任务用对的模型」。</p>
+
+<h3>四个模型角色</h3>
+
+<table class="reference">
+<tr><th>角色</th><th>用途</th><th>CLI Flag</th><th>环境变量</th></tr>
+<tr><td>default</td><td>常规对话和代码生成</td><td>默认</td><td>—</td></tr>
+<tr><td>smol</td><td>廉价子 Agent 探索</td><td>--smol</td><td>PI_SMOL_MODEL</td></tr>
+<tr><td>slow</td><td>深度推理任务</td><td>--slow</td><td>PI_SLOW_MODEL</td></tr>
+<tr><td>plan</td><td>计划模式</td><td>--plan</td><td>PI_PLAN_MODEL</td></tr>
+</table>
+
+<pre>
+# 启动时指定角色覆盖
+$ omp --smol    # 整个会话使用 smol 模型（低成本）
+$ omp --slow    # 使用慢速推理模型（高质量）
+$ omp --plan    # 使用计划专用模型
+</pre>
+
+<h3>会话中切换模型</h3>
+
+<pre>
+/model                     # 打开交互式模型选择器
+/model claude-sonnet-4.6   # 切换到指定模型
+Ctrl+P                     # 循环切换当前角色的可用模型
+</pre>
+
+<h3>自定义提供商（~/.omp/agent/models.yml）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+span style="color: #007F45;"><br />
+providers</span>:<span style="color: #007F45;"><br />
+&nbsp; my-company-llm</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; type</span><span style="font-weight: bold; color: brown;">: </span>openai-completions<span style="color: green;"><br />
+&nbsp; &nbsp; baseUrl</span><span style="font-weight: bold; color: brown;">: </span>https://llm.internal.company.com/v1<span style="color: green;"><br />
+&nbsp; &nbsp; apiKey</span><span style="font-weight: bold; color: brown;">: </span><span style="color: #CF00CF;">&quot;${MY_LLM_KEY}&quot;</span><span style="color: #007F45;"><br />
+&nbsp; &nbsp; models</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; - id</span><span style="font-weight: bold; color: brown;">: </span>gpt-4o<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; &nbsp; name</span><span style="font-weight: bold; color: brown;">: </span>Internal GPT-4o<br />
+
+</div>
+</div>
+
+<h3>故障转移链</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: blue;"># 当 Claude 遭遇 429 限速时，自动切到 GPT</span><span style="color: #007F45;"><br />
+retry</span>:<span style="color: #007F45;"><br />
+&nbsp; fallbackChains</span>:<span style="color: #007F45;"><br />
+&nbsp; &nbsp; default</span><span style="font-weight: bold; color: brown;">:<br />
+</span> &nbsp; &nbsp; &nbsp;- anthropic/claude-sonnet-<span style="">4.6</span><br />
+&nbsp; &nbsp; &nbsp; - openai/gpt-4o<br />
+&nbsp; &nbsp; &nbsp; - google/gemini-<span style="">2.0</span>-flash<br />
+
+</div>
+</div>
+
+<h3>路径级模型绑定</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: blue;"># 这个特定仓库强制用 deepseek（低成本），不影响全局配置</span><span style="color: #007F45;"><br />
+models</span>:<span style="color: #007F45;"><br />
+&nbsp; enabledModels</span>:<span style="color: green;"><br />
+&nbsp; &nbsp; - path</span><span style="font-weight: bold; color: brown;">: </span>~/projects/side-project<span style="color: green;"><br />
+&nbsp; &nbsp; &nbsp; models</span><span style="font-weight: bold; color: brown;">: </span><span class="br0">&#91;</span><span style="color: #CF00CF;">&quot;deepseek/deepseek-coder&quot;</span><span class="br0">&#93;</span><br />
+
+</div>
+</div>
+
+<h3>证书轮转（多 Key 负载均衡）</h3>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+span style="color: #007F45;"><br />
+providers</span>:<span style="color: #007F45;"><br />
+&nbsp; anthropic</span>:<span style="color: #007F45;"><br />
+&nbsp; &nbsp; apiKeys</span><span style="font-weight: bold; color: brown;">:<br />
+</span> &nbsp; &nbsp; &nbsp;- <span style="color: #CF00CF;">&quot;${ANTHROPIC_KEY_1}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; - <span style="color: #CF00CF;">&quot;${ANTHROPIC_KEY_2}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; - <span style="color: #CF00CF;">&quot;${ANTHROPIC_KEY_3}&quot;</span><br />
+&nbsp; &nbsp; <span style="color: blue;"># 自动轮转，单个 Key 超限后切到下一个</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>常用斜杠命令速查</h2>
+<p>在对话输入框里输入 / 触发命令补全。</p>
+
+<table class="reference">
+<tr><th>命令</th><th>功能</th></tr>
+<tr><td>/model</td><td>打开模型选择器</td></tr>
+<tr><td>/login</td><td>登录提供商（OAuth）</td></tr>
+<tr><td>/resume</td><td>恢复历史会话</td></tr>
+<tr><td>/review</td><td>对当前分支 / 指定 commit / 未提交改动做代码审查</td></tr>
+<tr><td>/commit</td><td>智能拆分 commit</td></tr>
+<tr><td>/omfg</td><td>用自然语言创建流规则</td></tr>
+<tr><td>/debug</td><td>打开调试/报告/性能分析工具</td></tr>
+<tr><td>/hotkeys</td><td>查看所有快捷键</td></tr>
+<tr><td>/reload-plugins</td><td>热重载插件</td></tr>
+<tr><td>/compact</td><td>手动压缩上下文（节省 Token）</td></tr>
+<tr><td>/?</td><td>显示帮助</td></tr>
+</table>
+
+<h3>/review：带优先级的代码审查</h3>
+
+<pre>
+# 审查当前分支 vs main
+/review
+
+# 审查指定 commit
+/review abc1234
+
+# 审查未提交的改动
+/review --unstaged
+</pre>
+
+<p>omp 生成专门的 reviewer 子 Agent 并行扫描，每个问题按 P0-P3 优先级排序，并给出置信度评分。P0 = 阻止上线，P3 = 可选改进。</p>
+
+<h3>/commit：原子提交拆分</h3>
+
+<pre>
+$ omp commit
+</pre>
+
+<p>omp 读取整个工作树（git_overview + git_file_diff + git_hunk），把不相关的改动拆分成独立的原子 commit，按依赖顺序排列：</p>
+<ul>
+<li>源代码 commit 排在测试、文档、配置之前</li>
+<li>有依赖关系的改动不会被错误分组</li>
+<li>循环依赖被拒绝，不会写入任何内容</li>
+<li>package-lock.json、Cargo.lock 等 lockfile 不参与分析</li>
+</ul>
+<hr>
+
+<h2>插件与扩展</h2>
+<p>omp 的插件是 TypeScript 模块，使用和内置工具完全相同的 API，没有任何保留接口。</p>
+
+<h3>安装插件</h3>
+
+<pre>
+$ omp install &amp;lt;plugin-name&amp;gt;          # 从 npm 安装
+$ omp install github:user/repo       # 从 GitHub 安装
+$ omp install ./path/to/plugin       # 从本地路径安装
+</pre>
+
+<h3>创建插件</h3>
+<p>你可以直接让 omp 帮你写：</p>
+
+<pre>
+&gt; 给我创建一个插件，添加 /deploy 命令，
+  自动运行测试、构建、然后 SSH 上传到生产服务器
+</pre>
+
+<p>omp 会生成插件代码，你 /reload-plugins 后立即生效。</p>
+
+<h3>热重载</h3>
+<p>修改插件代码后无需重启 omp：</p>
+
+<pre>
+/reload-plugins
+</pre>
+
+<h3>ACP：在 Zed 编辑器里使用 omp</h3>
+
+<pre>
+$ omp acp
+</pre>
+
+<p>通过 Agent Client Protocol 将 omp 接入 Zed 编辑器。omp 会读取你正在编辑的 buffer，通过编辑器的保存路径写文件，在编辑器的终端里启动 shell，破坏性操作会触发权限弹窗。</p>
+<hr>
+
+<h2>从其他工具迁移</h2>
+<p>omp 的一大优点是<strong>开箱即读</strong>其他工具已经创建的配置文件，无需迁移脚本：</p>
+
+<table class="reference">
+<tr><th>工具</th><th>配置文件</th><th>omp 读取方式</th></tr>
+<tr><td>Cursor</td><td>.cursor/rules/*.mdc</td><td>自动继承</td></tr>
+<tr><td>Claude Code</td><td>.claude/settings.json、CLAUDE.md</td><td>自动继承</td></tr>
+<tr><td>Cline</td><td>.clinerules</td><td>自动继承</td></tr>
+<tr><td>GitHub Copilot</td><td>.github/copilot/instructions.md（applyTo）</td><td>自动继承</td></tr>
+<tr><td>Codex</td><td>AGENTS.md</td><td>自动继承</td></tr>
+<tr><td>Windsurf</td><td>.windsurfrules</td><td>自动继承</td></tr>
+<tr><td>Gemini CLI</td><td>.gemini/ 配置</td><td>自动继承</td></tr>
+</table>
+
+<p>第一次运行 omp 时，它扫描工作目录，自动加载检测到的所有格式。</p>
+<hr>
+
+<h2>资源与社区</h2>
+
+<ul>
+<li>官网：<a href="https://omp.sh" target="_blank" rel="noopener noreferrer">omp.sh</a></li>
+<li>GitHub：<a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener noreferrer">github.com/can1357/oh-my-pi</a>（MIT 开源）</li>
+<li>工具文档：<a href="https://omp.sh/docs/tools" target="_blank" rel="noopener noreferrer">omp.sh/docs/tools</a></li>
+<li>提供商文档：<a href="https://omp.sh/docs/providers" target="_blank" rel="noopener noreferrer">omp.sh/docs/providers</a></li>
+<li>SDK 文档：<a href="https://omp.sh/docs/sdk" target="_blank" rel="noopener noreferrer">omp.sh/docs/sdk</a></li>
+<li>Changelog：<a href="https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/CHANGELOG.md" target="_blank" rel="noopener noreferrer">github.com/can1357/oh-my-pi/CHANGELOG.md</a></li>
+<li>npm：<a href="https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent" target="_blank" rel="noopener noreferrer">@oh-my-pi/pi-coding-agent</a></li>
+<li>Discord：<a href="https://discord.gg/4NMW9cdXZa" target="_blank" rel="noopener noreferrer">discord.gg/4NMW9cdXZa</a></li>
+</ul>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/vibe-coding/kilo-code-usage.html" rel="prev"> Kilo Code 入门教程</a> </div>
+			<div class="next-design-link"><a href="/vibe-coding/vibe-coding-practice.html" rel="next"> Vibe Coding 实战项目</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31633' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31633;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31633, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31633},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31633;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

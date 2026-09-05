@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rust 简介 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/rust/rust-intro.html" />
+<meta name="keywords" content="Rust 简介">
+<meta name="description" content="Rust 简介 Rust 是一门由 Mozilla Research 主导开发的系统级编程语言，以内存安全、零成本抽象和无畏并发为核心设计目标。   Rust 诞生于 2006 年，最初是 Mozilla 员工 Graydon Hoare 的个人项目，后于 2009 年由 Mozilla 正式赞助并组建团队开发。 Rust 的设计初衷是解决 C/C++ 在系统编程中长期存在的痛点：内存安全问题（空指针、悬垂指针、缓冲区溢出）和并发编程的..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>Rust 教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="Rust 教程"  href="/rust/rust-tutorial.html" >
+			Rust 教程			</a>
+			<a target="_top"  title="Rust 简介" href="/rust/rust-intro.html">Rust 简介	</a>			<a target="_top" data-p="par" title="Rust 环境搭建"  href="/rust/rust-setup.html" >
+			Rust 环境搭建			</a>
+						<a target="_top" data-p="par" title="Cargo 教程"  href="/rust/cargo-tutorial.html" >
+			Cargo 教程			</a>
+						<a target="_top" data-p="par" title="Rust 输出到命令行"  href="/rust/rust-println.html" >
+			Rust 输出到命令行			</a>
+						<a target="_top" data-p="par" title="Rust 基础语法"  href="/rust/rust-basic-syntax.html" >
+			Rust 基础语法			</a>
+			<a target="_top"  title="Rust 运算符" href="/rust/rust-operators.html">Rust 运算符</a>			<a target="_top" data-p="par" title="Rust 数据类型"  href="/rust/rust-data-types.html" >
+			Rust 数据类型			</a>
+						<a target="_top" data-p="par" title="Rust 注释"  href="/rust/rust-comments.html" >
+			Rust 注释			</a>
+						<a target="_top" data-p="par" title="Rust 函数"  href="/rust/rust-function.html" >
+			Rust 函数			</a>
+						<a target="_top" data-p="par" title="Rust 条件语句"  href="/rust/rust-conditions.html" >
+			Rust 条件语句			</a>
+						<a target="_top" data-p="par" title="Rust 循环"  href="/rust/rust-loop.html" >
+			Rust 循环			</a>
+			<a target="_top" title="Rust 迭代器" href="/rust/rust-iter.html">Rust 迭代器</a>
+<a target="_top" title="Rust 闭包" href="/rust/rust-closure.html">Rust 闭包</a>			<a target="_top" data-p="par" title="Rust 所有权"  href="/rust/rust-ownership.html" >
+			Rust 所有权			</a>
+						<a target="_top" data-p="par" title="Rust Slice（切片）类型"  href="/rust/rust-slice.html" >
+			Rust Slice（切片）类型			</a>
+						<a target="_top" data-p="par" title="Rust 结构体"  href="/rust/rust-struct.html" >
+			Rust 结构体			</a>
+						<a target="_top" data-p="par" title="Rust 枚举类"  href="/rust/rust-enum.html" >
+			Rust 枚举类			</a>
+						<a target="_top" data-p="par" title="Rust 组织管理"  href="/rust/rust-project-management.html" >
+			Rust 组织管理			</a>
+						<a target="_top" data-p="par" title="Rust 错误处理"  href="/rust/rust-error-handle.html" >
+			Rust 错误处理			</a>
+						<a target="_top" data-p="par" title="Rust 泛型与特性"  href="/rust/rust-generics.html" >
+			Rust 泛型与特性			</a>
+						<a target="_top" data-p="par" title="Rust 生命周期"  href="/rust/rust-lifetime.html" >
+			Rust 生命周期			</a>
+						<a target="_top" data-p="par" title="Rust 文件与 IO"  href="/rust/rust-file-io.html" >
+			Rust 文件与 IO			</a>
+						<a target="_top" data-p="par" title="Rust 集合与字符串"  href="/rust/rust-collection-string.html" >
+			Rust 集合与字符串			</a>
+						<a target="_top" data-p="par" title="Rust 面向对象"  href="/rust/rust-object.html" >
+			Rust 面向对象			</a>
+						<a target="_top" data-p="par" title="Rust 并发编程"  href="/rust/rust-concurrency.html" >
+			Rust 并发编程			</a>
+						<a target="_top" data-p="par" title="Rust 宏"  href="/rust/rust-macros.html" >
+			Rust 宏			</a>
+						<a target="_top" data-p="par" title="Rust 智能指针"  href="/rust/rust-smart-pointers.html" >
+			Rust 智能指针			</a>
+						<a target="_top" data-p="par" title="Rust 异步编程 async/await"  href="/rust/rust-async-await.html" >
+			Rust 异步编程			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/rust/rust-operators.html" rel="prev"> Rust 运算符</a> </div>
+			<div class="next-design-link"></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>Rust 简介</h1>
+<p>Rust 是一门由 Mozilla Research 主导开发的系统级编程语言，以<span class="marked">内存安全</span>、<span class="marked">零成本抽象</span>和<span class="marked">无畏并发</span>为核心设计目标。</p>
+
+
+<p>Rust 诞生于 2006 年，最初是 Mozilla 员工 Graydon Hoare 的个人项目，后于 2009 年由 Mozilla 正式赞助并组建团队开发。</p>
+<p>Rust 的设计初衷是解决 C/C++ 在系统编程中长期存在的痛点：<span class="marked">内存安全问题</span>（空指针、悬垂指针、缓冲区溢出）和<span class="marked">并发编程的复杂性</span>（数据竞争、死锁）。</p>
+<p><img decoding="async" src="../wp-content/uploads/2020/04/102ccb46-f01a-4b0b-bb62-73f390352c7f.webp"></p>
+<blockquote><p>Rust 的设计哲学是「在编译期消灭 bug」——通过强大的类型系统和所有权机制，让编译器帮你检查出内存错误和数据竞争，而不是等到运行时才发现问题。</p></blockquote>
+
+<p>Rust 语言吉祥物是一只名叫 Ferris 的螃蟹，亲切可爱，代表 Rust 社区友好、包容的文化。</p>
+
+<p>Rust 的关键设计目标可以归纳为以下几点：</p>
+
+<table class="reference">
+  <tr><th>设计目标</th><th>说明</th></tr>
+  <tr><td>内存安全（无 GC）</td><td>通过所有权系统在编译期保证内存安全，无需垃圾回收器</td></tr>
+  <tr><td>零成本抽象</td><td>高级语言特性在编译后无运行时开销，与手写底层代码性能一致</td></tr>
+  <tr><td>无畏并发</td><td>类型系统和所有权规则在编译期杜绝数据竞争</td></tr>
+  <tr><td>实用性</td><td>既能写操作系统内核，也能写 Web 应用，覆盖全栈场景</td></tr>
+  <tr><td>强类型推断</td><td>编译器自动推导大部分类型，减少样板代码</td></tr>
+  <tr><td>丰富的工具链</td><td>Cargo（包管理+构建）、rustfmt（格式化）、clippy（代码检查）开箱即用</td></tr>
+</table>
+<hr>
+
+<h2>Rust 语言的发展历史</h2>
+<p>Rust 从个人项目到全球广泛采用的系统语言，走过了近二十年的发展历程。</p>
+
+<table class="reference">
+  <tr><th>时间</th><th>版本/事件</th><th>说明</th></tr>
+  <tr><td>2006 年</td><td>个人项目</td><td>Graydon Hoare 开始设计 Rust 语言</td></tr>
+  <tr><td>2009 年</td><td>Mozilla 赞助</td><td>Mozilla 正式支持 Rust 开发并组建团队</td></tr>
+  <tr><td>2010 年</td><td>首次公开</td><td>在 Mozilla 峰会上首次对外公开 Rust 编译器（OCaml 编写）</td></tr>
+  <tr><td>2011 年</td><td>自举完成</td><td>Rust 编译器用 Rust 自身重写，摆脱 OCaml 依赖</td></tr>
+  <tr><td>2015 年 5 月</td><td>Rust 1.0</td><td>首个稳定版本发布，标志着语言正式可用于生产环境</td></tr>
+  <tr><td>2018 年 12 月</td><td>Rust 2018 Edition</td><td>首个 Edition 发布，优化语法和模块系统（NLL 借用检查器落地）</td></tr>
+  <tr><td>2019 年</td><td>异步生态成形</td><td>async/await 语法稳定，Tokio 等异步运行时成熟</td></tr>
+  <tr><td>2021 年</td><td>Rust 基金会成立</td><td>AWS、Google、华为、微软、Mozilla 联合成立 Rust 基金会</td></tr>
+  <tr><td>2021 年 10 月</td><td>Rust 2021 Edition</td><td>引入 disjoint capture、IntoIterator for arrays 等改进</td></tr>
+  <tr><td>2022 年</td><td>Linux 内核采用</td><td>Linux 6.1 正式合并 Rust 支持，Rust 成为内核开发第二语言</td></tr>
+  <tr><td>2024 年 2 月</td><td>Rust 2024 Edition</td><td>进一步优化语言一致性和开发者体验</td></tr>
+</table>
+
+<blockquote><p>2021 年 Rust 基金会的成立是一个里程碑事件。AWS、Google、华为、微软和 Mozilla 五家科技巨头共同承诺保障 Rust 的长期独立发展，消除了社区对「单一公司主导」的担忧。</p></blockquote>
+
+<p>Rust 采用<span class="marked">六周一个稳定版本</span>的发布节奏，同时通过<span class="tag1">Edition</span>机制（每 3 年左右发布一次）处理不兼容的语言变更。同一个项目可以混合使用不同 Edition 的 crate，编译器保证向后兼容。</p>
+<hr>
+
+<h2>Rust 语言的核心特性</h2>
+<p>Rust 的特性集合围绕「安全、高效、实用」三个维度展开。以下逐一拆解 Rust 最核心的语言特性。</p>
+
+<h3>所有权系统（Ownership）</h3>
+<p>所有权是 Rust 最独特、最重要的特性。它在编译期管理内存，无需垃圾回收器，也无需手动 malloc/free。</p>
+
+<p>所有权有三大规则：</p>
+
+<table class="reference">
+  <tr><th>规则</th><th>说明</th><th>含义</th></tr>
+  <tr><td>每个值有且仅有一个所有者</td><td>一个值在同一时刻只能被一个变量拥有</td><td>杜绝 double-free 和悬垂指针</td></tr>
+  <tr><td>所有者离开作用域，值被释放</td><td>变量离开其作用域时，Rust 自动调用 drop 释放内存</td><td>无需手动管理内存</td></tr>
+  <tr><td>同一时刻：要么一个可变引用，要么多个不可变引用</td><td>读写互斥，读读共存</td><td>编译期杜绝数据竞争</td></tr>
+</table>
+
+
+<p>代码层面的直观感受：当变量被赋值给另一个变量时，所有权发生转移（move），原变量失效。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// s1 获得字符串的所有权（数据存储在堆上）</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> s1 <span style="">=</span> String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;Hello, RUNOOB!&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 所有权从 s1 转移到 s2，此后 s1 不再有效</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> s2 <span style="">=</span> s1<span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// println!(&quot;{}&quot;, s1); // 编译错误！s1 已被 moved</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{}&quot;</span><span style="">,</span> s2<span style="">&#41;</span><span style="">;</span> &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 正确：s2 现在是所有者</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 基本类型（存储在栈上）实现了 Copy trait，不会发生 move</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> x <span style="">=</span> <span style="color: #0000dd;">42</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> y <span style="">=</span> x<span style="">;</span> &nbsp;<span style="color: #a50; font-style: italic;">// x 仍然有效，因为 i32 实现了 Copy</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;x = {}, y = {}&quot;</span><span style="">,</span> x<span style="">,</span> y<span style="">&#41;</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// 都能使用</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 不可变引用：可以同时存在多个</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> s3 <span style="">=</span> <span style="">&amp;</span>s2<span style="">;</span> <span style="color: #a50; font-style: italic;">// 不可变借用</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> s4 <span style="">=</span> <span style="">&amp;</span>s2<span style="">;</span> <span style="color: #a50; font-style: italic;">// 另一个不可变借用，允许</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;s3 = {}, s4 = {}&quot;</span><span style="">,</span> s3<span style="">,</span> s4<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 可变引用：同一时刻只能有一个</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> data <span style="">=</span> String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;runoob&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> r <span style="">=</span> <span style="">&amp;</span><span style="color: #708;">mut</span> data<span style="">;</span> <span style="color: #a50; font-style: italic;">// 可变借用</span><br />
+&nbsp; &nbsp; r.push_str<span style="">&#40;</span><span style="color: #a11;">&quot;!&quot;</span><span style="">&#41;</span><span style="">;</span> &nbsp; <span style="color: #a50; font-style: italic;">// 通过可变引用修改原值</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;修改后: {}&quot;</span><span style="">,</span> r<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// s3 和 s4 的作用域已结束，所以可以创建可变引用</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>所有权系统是 Rust 学习曲线的「陡坡」。初学者常常与编译器「战斗」，但一旦理解，你会发现那些被编译器拦截的错误，在 C/C++ 中可能就是致命的运行时 bug。</p></blockquote>
+
+<h3>模式匹配（Pattern Matching）</h3>
+<p>Rust 的 <span class="tag1">match</span> 表达式极其强大，编译器会<span class="marked">穷尽性检查</span>所有情况，确保不会遗漏任何分支。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// match 与数字匹配</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> score <span style="">=</span> <span style="color: #0000dd;">85</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">match</span> score <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #0000dd;">90</span>..<span style="">=</span><span style="color: #0000dd;">100</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB 评级: A&quot;</span><span style="">&#41;</span><span style="">,</span> <span style="color: #a50; font-style: italic;">// 范围匹配</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #0000dd;">60</span>..<span style="">=</span><span style="color: #0000dd;">89</span> &nbsp;<span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB 评级: B&quot;</span><span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #0000dd;">0</span>..<span style="">=</span><span style="color: #0000dd;">59</span> &nbsp; <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB 评级: C&quot;</span><span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; _ <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;无效分数&quot;</span><span style="">&#41;</span><span style="">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 通配符，匹配所有剩余情况</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// match 解构元组</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> pair <span style="">=</span> <span style="">&#40;</span><span style="color: #0000dd;">3</span><span style="">,</span> <span style="color: #0000dd;">7</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">match</span> pair <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#40;</span><span style="color: #0000dd;">0</span><span style="">,</span> y<span style="">&#41;</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;第一个是 0，第二个是 {}&quot;</span><span style="">,</span> y<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#40;</span>x<span style="">,</span> <span style="color: #0000dd;">0</span><span style="">&#41;</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;第一个是 {}，第二个是 0&quot;</span><span style="">,</span> x<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#40;</span>x<span style="">,</span> y<span style="">&#41;</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;两个值: {} 和 {}&quot;</span><span style="">,</span> x<span style="">,</span> y<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>枚举与 Option/Result</h3>
+<p>Rust 的枚举（enum）可以携带数据，配合 match 使用能实现安全且表达力强大的控制流。</p>
+<p>标准库中的 <span class="tag1">Option&lt;T&gt;</span> 和 <span class="tag1">Result&lt;T, E&gt;</span> 是两个最核心的枚举类型，分别处理「可能为空」和「可能出错」的场景——Rust 没有 null 和异常。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">use</span> std<span style="">::</span><span style="color: #164;">fs</span><span style="">;</span><br />
+<br />
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// Option&lt;T&gt;: 值可能存在也可能不存在（替代 null）</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> numbers <span style="">=</span> vec<span style="">!</span><span style="">&#91;</span><span style="color: #0000dd;">10</span><span style="">,</span> <span style="color: #0000dd;">20</span><span style="">,</span> <span style="color: #0000dd;">30</span><span style="">&#93;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> first <span style="">=</span> numbers.get<span style="">&#40;</span><span style="color: #0000dd;">0</span><span style="">&#41;</span><span style="">;</span> &nbsp; <span style="color: #a50; font-style: italic;">// 返回 Option&lt;&amp;i32&gt;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> missing <span style="">=</span> numbers.get<span style="">&#40;</span><span style="color: #0000dd;">5</span><span style="">&#41;</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// 返回 Option&lt;&amp;i32&gt;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #708;">match</span> first <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; Some<span style="">&#40;</span><span style="">&amp;</span>val<span style="">&#41;</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;第一个元素: {}&quot;</span><span style="">,</span> val<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; None <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;没有找到&quot;</span><span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 更简洁的写法：if let</span><br />
+&nbsp; &nbsp; <span style="color: #708;">if</span> <span style="color: #708;">let</span> Some<span style="">&#40;</span><span style="">&amp;</span>val<span style="">&#41;</span> <span style="">=</span> missing <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;找到: {}&quot;</span><span style="">,</span> val<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span> <span style="color: #708;">else</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;索引 5 不存在&quot;</span><span style="">&#41;</span><span style="">;</span> &nbsp;<span style="color: #a50; font-style: italic;">// 预期走这个分支</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// Result&lt;T, E&gt;: 操作可能成功也可能失败（替代异常）</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> content <span style="">=</span> fs<span style="">::</span><span style="color: #164;">read_to_string</span><span style="">&#40;</span><span style="color: #a11;">&quot;config.txt&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">match</span> content <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; Ok<span style="">&#40;</span>text<span style="">&#41;</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;文件内容: {}&quot;</span><span style="">,</span> text<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; Err<span style="">&#40;</span>e<span style="">&#41;</span> <span style="">=&gt;</span> println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;读取失败: {}&quot;</span><span style="">,</span> e<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>Rust 没有 null 值，也没有 try-catch 异常机制。Option 和 Result 是编译期强制处理的——如果你忘记检查，代码无法通过编译。这从根本上消灭了空指针异常和未捕获异常。</p></blockquote>
+
+<h3>零成本抽象</h3>
+<p>Rust 的高阶特性（迭代器、闭包、泛型）在编译后与手写的底层循环完全等价，不产生额外运行时开销。</p>
+<p>这意味着你可以用类似函数式的风格写代码，同时获得和 C 一样的高性能。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> data <span style="">=</span> vec<span style="">!</span><span style="">&#91;</span><span style="color: #0000dd;">1</span><span style="">,</span> <span style="color: #0000dd;">2</span><span style="">,</span> <span style="color: #0000dd;">3</span><span style="">,</span> <span style="color: #0000dd;">4</span><span style="">,</span> <span style="color: #0000dd;">5</span><span style="">,</span> <span style="color: #0000dd;">6</span><span style="">,</span> <span style="color: #0000dd;">7</span><span style="">,</span> <span style="color: #0000dd;">8</span><span style="">,</span> <span style="color: #0000dd;">9</span><span style="">,</span> <span style="color: #0000dd;">10</span><span style="">&#93;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 迭代器链式调用 —— 看起来像高级抽象</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 编译后展开为与手写 for 循环等价的机器码</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> result<span style="">:</span> Vec<span style="">&lt;</span>i32<span style="">&gt;</span> <span style="">=</span> data<br />
+&nbsp; &nbsp; &nbsp; &nbsp; .iter<span style="">&#40;</span><span style="">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 获取迭代器</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .filter<span style="">&#40;</span><span style="">|&amp;</span>x<span style="">|</span> x <span style="">%</span> <span style="color: #0000dd;">2</span> <span style="">==</span> <span style="color: #0000dd;">0</span><span style="">&#41;</span> <span style="color: #a50; font-style: italic;">// 筛选偶数</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .map<span style="">&#40;</span><span style="">|&amp;</span>x<span style="">|</span> x <span style="">*</span> x<span style="">&#41;</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 求平方</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .collect<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 收集为 Vec</span><br />
+<br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{:?}&quot;</span><span style="">,</span> result<span style="">&#41;</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// [4, 16, 36, 64, 100]</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>无畏并发（Fearless Concurrency）</h3>
+<p>Rust 的类型系统和所有权规则在<span class="marked">编译期</span>杜绝数据竞争。Send 和 Sync trait 自动标记类型是否可以安全地在线程间传递或共享。</p>
+<p>如果你试图在多线程中共享非线程安全的数据，编译器会直接报错——而不是等到线上运行时才出现诡异的并发 bug。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">use</span> std<span style="">::</span><span style="color: #164;">sync</span><span style="">::</span><span style="">&#123;</span>Arc<span style="">,</span> Mutex<span style="">&#125;</span><span style="">;</span><br />
+<span style="color: #708;">use</span> std<span style="">::</span><span style="color: #164;">thread</span><span style="">;</span><br />
+<br />
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// Arc（原子引用计数）用于在多线程间共享所有权</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// Mutex 提供互斥访问</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> counter <span style="">=</span> Arc<span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span>Mutex<span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span><span style="color: #0000dd;">0</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> handles <span style="">=</span> vec<span style="">!</span><span style="">&#91;</span><span style="">&#93;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> i <span style="color: #708;">in</span> <span style="color: #0000dd;">0</span>..<span style="color: #0000dd;">10</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// clone Arc，使每个线程持有同一份数据的引用</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> counter <span style="">=</span> Arc<span style="">::</span><span style="color: #164;">clone</span><span style="">&#40;</span><span style="">&amp;</span>counter<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> handle <span style="">=</span> thread<span style="">::</span><span style="color: #164;">spawn</span><span style="">&#40;</span>move <span style="">||</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// lock() 获取互斥锁，返回 MutexGuard</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> num <span style="">=</span> counter.lock<span style="">&#40;</span><span style="">&#41;</span>.unwrap<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="">*</span>num <span style="">+=</span> <span style="color: #0000dd;">1</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// 通过解引用修改内部值</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;线程 {} 累加完成，当前值: {}&quot;</span><span style="">,</span> i<span style="">,</span> <span style="">*</span>num<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#125;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; handles.push<span style="">&#40;</span>handle<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 等待所有线程完成</span><br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> handle <span style="color: #708;">in</span> handles <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; handle.join<span style="">&#40;</span><span style="">&#41;</span>.unwrap<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;最终计数: {}&quot;</span><span style="">,</span> <span style="">*</span>counter.lock<span style="">&#40;</span><span style="">&#41;</span>.unwrap<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>Cargo：一体化的构建工具</h3>
+<p>Cargo 是 Rust 的官方包管理器和构建系统，集成了依赖管理、编译、测试、文档生成和发布功能。</p>
+<p>对比 C/C++ 生态中需要手动配置 CMake/Makefile 和包管理器的分散体验，Cargo 提供了「开箱即用」的一体化体验。</p>
+
+<table class="reference">
+  <tr><th>命令</th><th>功能</th><th>典型场景</th></tr>
+  <tr><td>cargo new project</td><td>创建新项目</td><td>初始化项目，自动生成 Cargo.toml 和 src/main.rs</td></tr>
+  <tr><td>cargo build</td><td>编译项目（debug 模式）</td><td>开发调试</td></tr>
+  <tr><td>cargo build --release</td><td>编译项目（优化模式）</td><td>生产发布，开启所有编译器优化</td></tr>
+  <tr><td>cargo run</td><td>编译并运行</td><td>快速测试代码</td></tr>
+  <tr><td>cargo test</td><td>运行测试</td><td>单元测试、集成测试、文档测试</td></tr>
+  <tr><td>cargo check</td><td>快速检查代码能否编译（不生成二进制）</td><td>IDE 中的实时语法检查</td></tr>
+  <tr><td>cargo doc --open</td><td>生成并打开文档</td><td>浏览依赖库的 API 文档</td></tr>
+  <tr><td>cargo clippy</td><td>代码风格检查（lint）</td><td>发现不推荐写法和潜在问题</td></tr>
+  <tr><td>cargo fmt</td><td>代码格式化</td><td>统一代码风格</td></tr>
+  <tr><td>cargo publish</td><td>发布到 crates.io</td><td>发布开源库</td></tr>
+</table>
+
+<blockquote><p>cargo check 是开发中非常有用的命令。它只检查语法和类型，不生成可执行文件，速度比 cargo build 快很多。大多数 IDE 的 Rust 插件在保存文件时都会自动执行 cargo check。</p></blockquote>
+<hr>
+
+<h2>Rust 语言的应用领域</h2>
+<p>Rust 凭借内存安全和高性能的优势，正在多个领域迅速扩展。</p>
+
+
+<h3>系统编程与高性能服务端</h3>
+<p>这是 Rust 的「主场」——适合需要极致性能且对内存安全有高要求的场景。异步运行时 <span class="tag1">Tokio</span> 和 Web 框架 <span class="tag1">Actix Web</span>、<span class="tag1">Axum</span> 在高并发场景中表现卓越。</p>
+
+<h3>WebAssembly</h3>
+<p>Rust 是<span class="marked">编译到 WebAssembly 的最佳语言之一</span>。它的零成本抽象和无 GC 特性让 Wasm 产物体积小、性能高。</p>
+<p>前端框架 <span class="tag1">Yew</span> 和 <span class="tag1">Leptos</span> 允许用 Rust 编写 SPA 应用。Figma、Cloudflare Workers 等都在生产环境中重度使用 Rust + Wasm。</p>
+
+<h3>嵌入式与 IoT</h3>
+<p>Rust 的 <span class="tag1">no_std</span> 模式允许在没有操作系统的裸机上运行，适合 MCU、传感器等资源受限设备。</p>
+<p><span class="tag1">RTIC</span>（实时中断驱动并发框架）和 <span class="tag1">Embassy</span>（异步嵌入式框架）是嵌入式 Rust 的代表项目。</p>
+
+<h3>CLI 工具</h3>
+<p>Rust 编译为独立二进制文件且性能优异，造就了大量明星 CLI 工具：</p>
+
+<table class="reference">
+  <tr><th>工具</th><th>功能</th><th>替代对象</th></tr>
+  <tr><td>ripgrep (rg)</td><td>极速代码搜索</td><td>grep</td></tr>
+  <tr><td>fd</td><td>快速文件搜索</td><td>find</td></tr>
+  <tr><td>bat</td><td>带语法高亮的文件查看</td><td>cat</td></tr>
+  <tr><td>delta</td><td>语法高亮的 Git diff</td><td>git diff</td></tr>
+  <tr><td>zoxide</td><td>智能目录跳转</td><td>cd</td></tr>
+  <tr><td>dust</td><td>磁盘空间分析</td><td>du</td></tr>
+</table>
+
+<h3>区块链与 Web3</h3>
+<p>Rust 在区块链领域有重要地位。<span class="tag1">Solana</span> 链的核心用 Rust 编写，<span class="tag1">Sui</span>、<span class="tag1">Aptos</span>、<span class="tag1">Polkadot（Substrate）</span> 等新公链也均以 Rust 为主要开发语言。</p>
+
+<h3>数据库与数据基础设施</h3>
+<p>高性能数据库和数据处理系统是 Rust 的优势领域：<span class="tag1">TiKV</span>（分布式 KV 存储，TiDB 的存储层）、<span class="tag1">SurrealDB</span>、<span class="tag1">Polars</span>（DataFrame 库）、<span class="tag1">Databend</span>（云数据仓库）等均使用 Rust 构建。</p>
+
+<h3>操作系统与基础设施</h3>
+<p>Rust 已进入 Linux 内核（6.1+），Google 在 Android 中使用 Rust 重写蓝牙和 Wi-Fi 栈，微软也在 Windows 内核中使用 Rust 重写部分组件。</p>
+<p>业余项目方面，<span class="tag1">Redox OS</span> 是一个完全用 Rust 从头编写的类 Unix 操作系统。</p>
+<hr>
+
+<h2>快速开始</h2>
+<p>Rust 官方提供了极其方便的安装工具 rustup，一条命令搞定编译器、包管理器和文档。</p>
+
+<h3>安装 Rust</h3>
+
+<pre>
+# Unix/macOS
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# 验证安装
+$ rustc --version
+rustc 1.85.0 (4d91de4e4 2025-02-17)
+
+$ cargo --version
+cargo 1.85.0
+</pre>
+
+<h3>第一个 Rust 程序</h3>
+<p>使用 Cargo 创建项目是最推荐的方式，它会自动生成标准的项目结构。</p>
+
+<pre>
+# 创建新项目
+$ cargo new hello_runoob
+     Created binary (application) `hello_runoob` package
+
+# 项目结构
+hello_runoob/
+├── Cargo.toml     # 项目元数据和依赖配置
+└── src/
+    └── main.rs    # 程序入口文件
+</pre>
+
+<p>Cargo.toml 是项目的配置文件，类似于 Node.js 的 package.json：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>package<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+name = <span style="color: #a10;">&quot;hello_runoob&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 包名（必填，使用下划线分隔）</span><br />
+version = <span style="color: #a10;">&quot;0.1.0&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #666666; font-style: italic;"># 版本号（必填，遵循语义化版本）</span><br />
+edition = <span style="color: #a10;">&quot;2024&quot;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #666666; font-style: italic;"># Rust Edition（必填，影响语言语法规则）</span><br />
+<br />
+<span style="color: #7a0874; font-weight: bold;">&#91;</span>dependencies<span style="color: #7a0874; font-weight: bold;">&#93;</span><br />
+<span style="color: #666666; font-style: italic;"># 在这里声明项目依赖，例如：</span><br />
+<span style="color: #666666; font-style: italic;"># serde = { version = &quot;1.0&quot;, features = [&quot;derive&quot;] }</span><br />
+
+</div>
+</div>
+
+<p>默认生成的 main.rs 包含一个最简单的 Hello World 程序：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50; font-style: italic;">// 文件路径：src/main.rs</span><br />
+<span style="color: #a50; font-style: italic;">// Rust 程序入口：每个可执行程序必须有 main 函数</span><br />
+<br />
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// println! 是一个宏（注意后面的 ! 符号）</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 宏在编译时展开为更复杂的代码</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;Hello, RUNOOB!&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;欢迎来到 Rust 语言的世界&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<pre>
+# 编译并运行
+$ cargo run
+   Compiling hello_runoob v0.1.0
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running `target/debug/hello_runoob`
+Hello, RUNOOB!
+欢迎来到 Rust 语言的世界
+</pre>
+<hr>
+
+<h2>基础语法概览</h2>
+<p>Rust 的语法借鉴了函数式语言和系统语言的优点。以下快速浏览最常用的语法元素，每个示例都是可直接运行的完整程序。</p>
+
+<h3>变量与可变性</h3>
+<p>Rust 中的变量<span class="marked">默认不可变</span>（immutable）。这迫使开发者明确标注哪些数据会变化，让代码意图更清晰，也让编译器更容易优化。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 不可变变量（默认）：声明后不能重新赋值</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> name <span style="">=</span> <span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// name = &quot;other&quot;; // 编译错误！不可变变量不能重新赋值</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;名称: {}&quot;</span><span style="">,</span> name<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 可变变量：使用 mut 关键字显式声明</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> score <span style="">=</span> <span style="color: #0000dd;">0</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;初始分数: {}&quot;</span><span style="">,</span> score<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; score <span style="">=</span> <span style="color: #0000dd;">100</span><span style="">;</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 可以修改</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;更新后分数: {}&quot;</span><span style="">,</span> score<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 变量遮蔽（Shadowing）：用 let 重新声明同名变量</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> x <span style="">=</span> <span style="color: #0000dd;">5</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> x <span style="">=</span> x <span style="">+</span> <span style="color: #0000dd;">1</span><span style="">;</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 新变量 x 遮蔽旧 x，值为 6</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> x <span style="">=</span> x <span style="">*</span> <span style="color: #0000dd;">2</span><span style="">;</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 再次遮蔽，值为 12</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;x 的最终值: {}&quot;</span><span style="">,</span> x<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 常量：编译时确定，必须标注类型，命名习惯用全大写</span><br />
+&nbsp; &nbsp; <span style="color: #708;">const</span> MAX_POINTS<span style="">:</span> <span style="color: #05a;">u32</span> <span style="">=</span> <span style="color: #0000dd;">100</span>_000<span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;最大点数: {}&quot;</span><span style="">,</span> MAX_POINTS<span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<blockquote><p>变量遮蔽（Shadowing）和 mut 不是一回事。遮蔽是用 let 重新声明一个同名新变量，可以改变类型；而 mut 只是让同一个变量允许修改值，类型不变。</p></blockquote>
+
+<h3>基本数据类型</h3>
+<p>Rust 是静态类型语言，编译器在编译时必须知道所有变量的类型。</p>
+
+<table class="reference">
+  <tr><th>类别</th><th>类型</th><th>示例</th><th>说明</th></tr>
+  <tr><td>有符号整数</td><td>i8, i16, i32, i64, i128, isize</td><td>let x: i32 = -42;</td><td>默认整数类型为 i32</td></tr>
+  <tr><td>无符号整数</td><td>u8, u16, u32, u64, u128, usize</td><td>let y: u64 = 100;</td><td>usize 用于索引和长度</td></tr>
+  <tr><td>浮点数</td><td>f32, f64</td><td>let pi: f64 = 3.14;</td><td>默认浮点类型为 f64</td></tr>
+  <tr><td>布尔值</td><td>bool</td><td>let ok: bool = true;</td><td>true 或 false</td></tr>
+  <tr><td>字符</td><td>char</td><td>let c = 'R';</td><td>4 字节，表示 Unicode 标量值</td></tr>
+  <tr><td>元组</td><td>(T1, T2, ...)</td><td>let t: (i32, f64) = (10, 3.14);</td><td>固定长度，类型可不同</td></tr>
+  <tr><td>数组</td><td>[T; N]</td><td>let a: [i32; 3] = [1, 2, 3];</td><td>固定长度，类型相同，分配在栈上</td></tr>
+  <tr><td>切片</td><td>&amp;[T]</td><td>let s: &amp;[i32] = &amp;a[..];</td><td>对数组或 Vec 的引用视图</td></tr>
+  <tr><td>动态数组</td><td>Vec&lt;T&gt;</td><td>let v: Vec&lt;i32&gt; = vec![1,2,3];</td><td>可变长度，分配在堆上</td></tr>
+  <tr><td>字符串</td><td>String / &amp;str</td><td>let s = String::from("hi");</td><td>String 可修改，&amp;str 是引用</td></tr>
+</table>
+
+<h3>控制流程</h3>
+<p>Rust 的控制流程包括 <span class="tag1">if</span>、<span class="tag1">loop</span>、<span class="tag1">while</span>、<span class="tag1">for</span> 和 <span class="tag1">match</span>。其中 if 和 loop 可以作为表达式返回值。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> score <span style="">=</span> <span style="color: #0000dd;">75</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// if 是表达式，可以返回值（各分支必须返回相同类型）</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> grade <span style="">=</span> <span style="color: #708;">if</span> score <span style="">&gt;=</span> <span style="color: #0000dd;">90</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;A&quot;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span> <span style="color: #708;">else</span> <span style="color: #708;">if</span> score <span style="">&gt;=</span> <span style="color: #0000dd;">60</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;B&quot;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span> <span style="color: #708;">else</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;C&quot;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB 评级: {}&quot;</span><span style="">,</span> grade<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// loop 无限循环（用 break 退出，可带返回值）</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> count <span style="">=</span> <span style="color: #0000dd;">0</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> result <span style="">=</span> <span style="color: #708;">loop</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; count <span style="">+=</span> <span style="color: #0000dd;">1</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">if</span> count <span style="">==</span> <span style="color: #0000dd;">5</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">break</span> count <span style="">*</span> <span style="color: #0000dd;">2</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// break 后跟值，作为 loop 的返回值</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#125;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;loop 返回值: {}&quot;</span><span style="">,</span> result<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// while 条件循环</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> n <span style="">=</span> <span style="color: #0000dd;">3</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">while</span> n <span style="">&gt;</span> <span style="color: #0000dd;">0</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;倒计时: {}&quot;</span><span style="">,</span> n<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; n <span style="">-=</span> <span style="color: #0000dd;">1</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// for in 遍历（最常用）</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> items <span style="">=</span> <span style="">&#91;</span><span style="color: #a11;">&quot;apple&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;banana&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;cherry&quot;</span><span style="">&#93;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> <span style="">&#40;</span>i<span style="">,</span> item<span style="">&#41;</span> <span style="color: #708;">in</span> items.iter<span style="">&#40;</span><span style="">&#41;</span>.enumerate<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;第 {} 个: {}&quot;</span><span style="">,</span> i <span style="">+</span> <span style="color: #0000dd;">1</span><span style="">,</span> item<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// for in 范围遍历</span><br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> num <span style="color: #708;">in</span> <span style="color: #0000dd;">1</span>..<span style="">=</span><span style="color: #0000dd;">3</span> <span style="">&#123;</span> <span style="color: #a50; font-style: italic;">// 1..=3 表示 1, 2, 3（包含两端）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;数字: {}&quot;</span><span style="">,</span> num<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>函数</h3>
+<p>Rust 函数使用 <span class="tag1">fn</span> 关键字声明，参数和返回值必须显式标注类型。最后一个表达式的值即为返回值（无需 return 关键字）。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50; font-style: italic;">// 普通函数：接收两个 i32，返回它们的和</span><br />
+<span style="color: #708;">fn</span> add<span style="">&#40;</span>a<span style="">:</span> <span style="color: #05a;">i32</span><span style="">,</span> b<span style="">:</span> <span style="color: #05a;">i32</span><span style="">&#41;</span> <span style="">-&gt;</span> <span style="color: #05a;">i32</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; a <span style="">+</span> b &nbsp;<span style="color: #a50; font-style: italic;">// 最后一个表达式自动作为返回值（注意末尾没有分号）</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// 多返回值：使用元组返回多个值</span><br />
+<span style="color: #708;">fn</span> divide<span style="">&#40;</span>a<span style="">:</span> <span style="color: #05a;">f64</span><span style="">,</span> b<span style="">:</span> <span style="color: #05a;">f64</span><span style="">&#41;</span> <span style="">-&gt;</span> <span style="">&#40;</span><span style="color: #05a;">f64</span><span style="">,</span> String<span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">if</span> b <span style="">==</span> <span style="color:#800080;">0.0</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">return</span> <span style="">&#40;</span><span style="color:#800080;">0.0</span><span style="">,</span> String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;错误：除数不能为零&quot;</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+&nbsp; &nbsp; <span style="">&#40;</span>a <span style="">/</span> b<span style="">,</span> String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;OK&quot;</span><span style="">&#41;</span><span style="">&#41;</span> <span style="color: #a50; font-style: italic;">// 返回元组</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// 泛型函数：使用 trait bound 限定类型参数的行为</span><br />
+<span style="color: #708;">fn</span> largest<span style="">&lt;</span>T<span style="">:</span> PartialOrd<span style="">&gt;</span><span style="">&#40;</span>list<span style="">:</span> <span style="">&amp;</span><span style="">&#91;</span>T<span style="">&#93;</span><span style="">&#41;</span> <span style="">-&gt;</span> <span style="">&amp;</span>T <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> largest <span style="">=</span> <span style="">&amp;</span>list<span style="">&#91;</span><span style="color: #0000dd;">0</span><span style="">&#93;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> item <span style="color: #708;">in</span> list <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">if</span> item <span style="">&gt;</span> largest <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; largest <span style="">=</span> item<span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#125;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+&nbsp; &nbsp; largest<br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 调用普通函数</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> sum <span style="">=</span> add<span style="">&#40;</span><span style="color: #0000dd;">10</span><span style="">,</span> <span style="color: #0000dd;">20</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;10 + 20 = {}&quot;</span><span style="">,</span> sum<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 调用多返回值函数</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="">&#40;</span>result<span style="">,</span> msg<span style="">&#41;</span> <span style="">=</span> divide<span style="">&#40;</span><span style="color:#800080;">10.0</span><span style="">,</span> <span style="color:#800080;">2.0</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;10 / 2 = {} ({})&quot;</span><span style="">,</span> result<span style="">,</span> msg<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 除零情况</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="">&#40;</span>result<span style="">,</span> msg<span style="">&#41;</span> <span style="">=</span> divide<span style="">&#40;</span><span style="color:#800080;">10.0</span><span style="">,</span> <span style="color:#800080;">0.0</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;10 / 0 = {} ({})&quot;</span><span style="">,</span> result<span style="">,</span> msg<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 调用泛型函数</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> nums <span style="">=</span> vec<span style="">!</span><span style="">&#91;</span><span style="color: #0000dd;">3</span><span style="">,</span> <span style="color: #0000dd;">7</span><span style="">,</span> <span style="color: #0000dd;">2</span><span style="">,</span> <span style="color: #0000dd;">9</span><span style="">,</span> <span style="color: #0000dd;">5</span><span style="">&#93;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB 最大数: {}&quot;</span><span style="">,</span> largest<span style="">&#40;</span><span style="">&amp;</span>nums<span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>结构体与 impl 块</h3>
+<p>Rust 使用 <span class="tag1">struct</span> 定义数据结构，用 <span class="tag1">impl</span> 块为结构体实现方法。这与 Go 的方法定义方式类似，但语言组织上更紧凑。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50; font-style: italic;">// 定义结构体（类似 C 的 struct，但功能更强）</span><br />
+<span style="color: #708;">struct</span> User <span style="">&#123;</span><br />
+&nbsp; &nbsp; name<span style="">:</span> String<span style="">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// String 类型，拥有数据的所有权</span><br />
+&nbsp; &nbsp; email<span style="">:</span> String<span style="">,</span><br />
+&nbsp; &nbsp; active<span style="">:</span> <span style="color: #05a;">bool</span><span style="">,</span><br />
+&nbsp; &nbsp; login_count<span style="">:</span> <span style="color: #05a;">u64</span><span style="">,</span> &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// u64 无符号 64 位整数</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// impl 块为 User 实现方法</span><br />
+<span style="color: #708;">impl</span> User <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 关联函数（类似静态方法）：创建新实例</span><br />
+&nbsp; &nbsp; <span style="color: #708;">fn</span> new<span style="">&#40;</span>name<span style="">:</span> String<span style="">,</span> email<span style="">:</span> String<span style="">&#41;</span> <span style="">-&gt;</span> User <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; User <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name<span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; email<span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; active<span style="">:</span> <span style="color: #219;">true</span><span style="">,</span> &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 默认值</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; login_count<span style="">:</span> <span style="color: #0000dd;">0</span><span style="">,</span> &nbsp; <span style="color: #a50; font-style: italic;">// 默认值</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#125;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 方法：&amp;self 表示对实例的不可变引用</span><br />
+&nbsp; &nbsp; <span style="color: #708;">fn</span> summary<span style="">&#40;</span><span style="">&amp;</span><span style="color: #708;">self</span><span style="">&#41;</span> <span style="">-&gt;</span> String <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; format<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{} ({}) - 登录次数: {}&quot;</span><span style="">,</span> <span style="color: #708;">self</span>.name<span style="">,</span> <span style="color: #708;">self</span>.email<span style="">,</span> <span style="color: #708;">self</span>.login_count<span style="">&#41;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 方法：&amp;mut self 表示对实例的可变引用</span><br />
+&nbsp; &nbsp; <span style="color: #708;">fn</span> login<span style="">&#40;</span><span style="">&amp;</span><span style="color: #708;">mut</span> <span style="color: #708;">self</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">self</span>.login_count <span style="">+=</span> <span style="color: #0000dd;">1</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 使用关联函数创建实例</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> user <span style="">=</span> User<span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;runoob&quot;</span><span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;runoob@example.com&quot;</span><span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; <span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{}&quot;</span><span style="">,</span> user.summary<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 模拟登录</span><br />
+&nbsp; &nbsp; user.login<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; user.login<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;登录 {} 次&quot;</span><span style="">,</span> user.login_count<span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+<hr>
+
+<h2>常用示例</h2>
+<p>以下通过两个接近真实场景的完整示例，展示 Rust 在实际开发中的典型用法。</p>
+
+<h3>构建 HTTP API 服务</h3>
+<p>使用 Axum 框架（基于 Tokio 异步运行时）构建一个带 JSON 响应的 HTTP API。</p>
+<p>首先在 Cargo.toml 中添加依赖：</p>
+
+<pre>
+# Cargo.toml
+[dependencies]
+axum = "0.8"              # Web 框架
+tokio = { version = "1", features = ["full"] }  # 异步运行时
+serde = { version = "1", features = ["derive"] } # 序列化
+serde_json = "1"           # JSON 支持
+</pre>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50; font-style: italic;">// 文件路径：src/main.rs</span><br />
+<span style="color: #708;">use</span> axum<span style="">::</span><span style="">&#123;</span><br />
+&nbsp; &nbsp; extract<span style="">::</span><span style="color: #164;">Query</span><span style="">,</span><br />
+&nbsp; &nbsp; response<span style="">::</span><span style="color: #164;">Json</span><span style="">,</span><br />
+&nbsp; &nbsp; routing<span style="">::</span><span style="color: #164;">get</span><span style="">,</span><br />
+&nbsp; &nbsp; Router<span style="">,</span><br />
+<span style="">&#125;</span><span style="">;</span><br />
+<span style="color: #708;">use</span> serde<span style="">::</span><span style="">&#123;</span>Deserialize<span style="">,</span> Serialize<span style="">&#125;</span><span style="">;</span><br />
+<span style="color: #708;">use</span> std<span style="">::</span><span style="color: #164;">collections</span><span style="">::</span><span style="color: #05a;">HashMap</span><span style="">;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// 请求参数结构体（反序列化）</span><br />
+#<span style="">&#91;</span>derive<span style="">&#40;</span>Deserialize<span style="">&#41;</span><span style="">&#93;</span><br />
+<span style="color: #708;">struct</span> HelloParams <span style="">&#123;</span><br />
+&nbsp; &nbsp; name<span style="">:</span> Option<span style="">&lt;</span>String<span style="">&gt;,</span> <span style="color: #a50; font-style: italic;">// Option 表示可选参数</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// 响应结构体（序列化）</span><br />
+#<span style="">&#91;</span>derive<span style="">&#40;</span>Serialize<span style="">&#41;</span><span style="">&#93;</span><br />
+<span style="color: #708;">struct</span> ApiResponse <span style="">&#123;</span><br />
+&nbsp; &nbsp; code<span style="">:</span> <span style="color: #05a;">u16</span><span style="">,</span><br />
+&nbsp; &nbsp; message<span style="">:</span> String<span style="">,</span><br />
+&nbsp; &nbsp; data<span style="">:</span> Option<span style="">&lt;</span>HashMap<span style="">&lt;</span>String<span style="">,</span> String<span style="">&gt;&gt;,</span> <span style="color: #a50; font-style: italic;">// 可选的数据字段</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// 处理 GET /hello 请求</span><br />
+<span style="color: #a50; font-style: italic;">// Query(HelloParams) 自动从 URL 查询参数中提取 name</span><br />
+async <span style="color: #708;">fn</span> hello_handler<span style="">&#40;</span>Query<span style="">&#40;</span>params<span style="">&#41;</span><span style="">:</span> Query<span style="">&lt;</span>HelloParams<span style="">&gt;</span><span style="">&#41;</span> <span style="">-&gt;</span> Json<span style="">&lt;</span>ApiResponse<span style="">&gt;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> name <span style="">=</span> params.name.unwrap_or_else<span style="">&#40;</span><span style="">||</span> String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> data <span style="">=</span> <span style="color: #05a;">HashMap</span><span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; data.insert<span style="">&#40;</span><span style="color: #a11;">&quot;name&quot;</span>.to_string<span style="">&#40;</span><span style="">&#41;</span><span style="">,</span> name.clone<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; Json<span style="">&#40;</span>ApiResponse <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; code<span style="">:</span> <span style="color: #0000dd;">200</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; message<span style="">:</span> format<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;你好，{}！欢迎访问 Rust HTTP 服务&quot;</span><span style="">,</span> name<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; data<span style="">:</span> Some<span style="">&#40;</span>data<span style="">&#41;</span><span style="">,</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><span style="">&#41;</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #a50; font-style: italic;">// #[tokio::main] 宏将 async fn main 转换为 Tokio 运行时</span><br />
+#<span style="">&#91;</span>tokio<span style="">::</span><span style="color: #164;">main</span><span style="">&#93;</span><br />
+async <span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 构建路由</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> app <span style="">=</span> Router<span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .route<span style="">&#40;</span><span style="color: #a11;">&quot;/hello&quot;</span><span style="">,</span> get<span style="">&#40;</span>hello_handler<span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 绑定地址并启动服务</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> listener <span style="">=</span> tokio<span style="">::</span><span style="color: #164;">net</span><span style="">::</span><span style="color: #05a;">TcpListener</span><span style="">::</span><span style="color: #164;">bind</span><span style="">&#40;</span><span style="color: #a11;">&quot;0.0.0.0:8080&quot;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .await<br />
+&nbsp; &nbsp; &nbsp; &nbsp; .unwrap<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB 服务器启动，监听地址: http://localhost:8080&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;访问示例: http://localhost:8080/hello?name=Rust开发者&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; axum<span style="">::</span><span style="color: #164;">serve</span><span style="">&#40;</span>listener<span style="">,</span> app<span style="">&#41;</span>.await.unwrap<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<pre>
+$ cargo run
+RUNOOB 服务器启动，监听地址: http://localhost:8080
+访问示例: http://localhost:8080/hello?name=Rust开发者
+
+# 使用 curl 测试
+$ curl http://localhost:8080/hello?name=Rust开发者
+{"code":200,"message":"你好，Rust开发者！欢迎访问 Rust HTTP 服务","data":{"name":"Rust开发者"}}
+
+$ curl http://localhost:8080/hello
+{"code":200,"message":"你好，RUNOOB！欢迎访问 Rust HTTP 服务","data":{"name":"RUNOOB"}}
+</pre>
+
+<blockquote><p>Axum 是 Rust 生态中最流行的 Web 框架之一，由 Tokio 团队维护。它充分利用 Rust 的类型系统，将路由参数提取、状态共享等操作在编译期进行检查，大幅减少了运行时错误。</p></blockquote>
+
+<h3>文件批量处理工具</h3>
+<p>这是一个接近真实场景的 CLI 工具：递归遍历目录，统计所有文件的行数和大小，按扩展名分类汇总。</p>
+<p>在 Cargo.toml 中添加依赖：</p>
+
+<pre>
+# Cargo.toml
+[dependencies]
+walkdir = "2"  # 递归遍历目录
+</pre>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50; font-style: italic;">// 文件路径：src/main.rs</span><br />
+<span style="color: #708;">use</span> std<span style="">::</span><span style="color: #164;">collections</span><span style="">::</span><span style="color: #05a;">HashMap</span><span style="">;</span><br />
+<span style="color: #708;">use</span> std<span style="">::</span><span style="color: #164;">fs</span><span style="">;</span><br />
+<span style="color: #708;">use</span> walkdir<span style="">::</span><span style="color: #164;">WalkDir</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// 递归遍历目录的第三方库</span><br />
+<br />
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> path <span style="">=</span> <span style="color: #a11;">&quot;.&quot;</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// 从当前目录开始扫描</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 统计信息：按文件扩展名分组</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// HashMap&lt;扩展名, (文件数量, 总行数, 总大小字节)&gt;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> stats<span style="">:</span> HashMap<span style="">&lt;</span>String<span style="">,</span> <span style="">&#40;</span>usize<span style="">,</span> usize<span style="">,</span> <span style="color: #05a;">u64</span><span style="">&#41;</span><span style="">&gt;</span> <span style="">=</span> <span style="color: #05a;">HashMap</span><span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// WalkDir 递归遍历目录，自动跳过隐藏文件和 .git 目录</span><br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> entry <span style="color: #708;">in</span> WalkDir<span style="">::</span><span style="color: #164;">new</span><span style="">&#40;</span>path<span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .into_iter<span style="">&#40;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .filter_map<span style="">&#40;</span><span style="">|</span>e<span style="">|</span> e.ok<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span> <span style="color: #a50; font-style: italic;">// 过滤掉无法访问的条目</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; .filter<span style="">&#40;</span><span style="">|</span>e<span style="">|</span> e.file_type<span style="">&#40;</span><span style="">&#41;</span>.is_file<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span> <span style="color: #a50; font-style: italic;">// 只处理文件</span><br />
+&nbsp; &nbsp; <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 获取文件扩展名</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> ext <span style="">=</span> entry<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .path<span style="">&#40;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .extension<span style="">&#40;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .and_then<span style="">&#40;</span><span style="">|</span>e<span style="">|</span> e.to_str<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .unwrap_or<span style="">&#40;</span><span style="color: #a11;">&quot;(无扩展名)&quot;</span><span style="">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; .to_lowercase<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 读取文件内容（仅文本文件，二进制文件可能乱码但不影响统计）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">if</span> <span style="color: #708;">let</span> Ok<span style="">&#40;</span>content<span style="">&#41;</span> <span style="">=</span> fs<span style="">::</span><span style="color: #164;">read_to_string</span><span style="">&#40;</span>entry.path<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> line_count <span style="">=</span> content.lines<span style="">&#40;</span><span style="">&#41;</span>.count<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> size <span style="">=</span> entry.metadata<span style="">&#40;</span><span style="">&#41;</span>.map<span style="">&#40;</span><span style="">|</span>m<span style="">|</span> m.len<span style="">&#40;</span><span style="">&#41;</span><span style="">&#41;</span>.unwrap_or<span style="">&#40;</span><span style="color: #0000dd;">0</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #708;">let</span> <span style="">&#40;</span>count<span style="">,</span> lines<span style="">,</span> total_size<span style="">&#41;</span> <span style="">=</span> stats.entry<span style="">&#40;</span>ext<span style="">&#41;</span>.or_insert<span style="">&#40;</span><span style="">&#40;</span><span style="color: #0000dd;">0</span><span style="">,</span> <span style="color: #0000dd;">0</span><span style="">,</span> <span style="color: #0000dd;">0</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="">*</span>count <span style="">+=</span> <span style="color: #0000dd;">1</span><span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="">*</span>lines <span style="">+=</span> line_count<span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="">*</span>total_size <span style="">+=</span> size<span style="">;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="">&#125;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 按文件数量降序排列并输出</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> sorted<span style="">:</span> Vec<span style="">&lt;</span>_<span style="">&gt;</span> <span style="">=</span> stats.into_iter<span style="">&#40;</span><span style="">&#41;</span>.collect<span style="">&#40;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; sorted.sort_by<span style="">&#40;</span><span style="">|</span>a<span style="">,</span> b<span style="">|</span> b.1 <span style="color:#800080;">.0</span>.cmp<span style="">&#40;</span><span style="">&amp;</span>a.1 <span style="color:#800080;">.0</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;=== RUNOOB 目录文件统计 ===&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{:&lt;15} {:&gt;8} {:&gt;10} {:&gt;12}&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;扩展名&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;文件数&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;总行数&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;总大小(bytes)&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{}&quot;</span><span style="">,</span> <span style="color: #a11;">&quot;-&quot;</span>.repeat<span style="">&#40;</span><span style="color: #0000dd;">50</span><span style="">&#41;</span><span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="color: #708;">for</span> <span style="">&#40;</span>ext<span style="">,</span> <span style="">&#40;</span>count<span style="">,</span> lines<span style="">,</span> size<span style="">&#41;</span><span style="">&#41;</span> <span style="color: #708;">in</span> <span style="">&amp;</span>sorted <span style="">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{:&lt;15} {:&gt;8} {:&gt;10} {:&gt;12}&quot;</span><span style="">,</span> ext<span style="">,</span> count<span style="">,</span> lines<span style="">,</span> size<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; <span style="">&#125;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<pre>
+$ cargo run --release
+=== RUNOOB 目录文件统计 ===
+扩展名            文件数       总行数   总大小(bytes)
+--------------------------------------------------
+rs                  12        856        28432
+toml                 3         45         1534
+md                   2        120         3412
+html                 1        510        14256
+(无扩展名)            1          8          210
+</pre>
+<hr>
+
+<h2>常用工具与命令速查</h2>
+<p>除了 Cargo 自带的功能外，Rust 生态提供了一系列提升开发效率的工具：</p>
+
+<table class="reference">
+  <tr><th>命令</th><th>功能</th><th>说明</th></tr>
+  <tr><td>rustup update</td><td>更新 Rust 工具链</td><td>升级 rustc、cargo 等到最新稳定版</td></tr>
+  <tr><td>rustup component add rustfmt</td><td>安装代码格式化工具</td><td>保存时自动格式化代码</td></tr>
+  <tr><td>rustup component add clippy</td><td>安装代码检查工具</td><td>发现不推荐的写法和潜在 bug</td></tr>
+  <tr><td>rustup doc</td><td>打开本地文档</td><td>离线查看标准库和 The Book</td></tr>
+  <tr><td>cargo add &lt;crate&gt;</td><td>添加依赖</td><td>自动编辑 Cargo.toml 并获取最新版本</td></tr>
+  <tr><td>cargo update</td><td>更新依赖版本</td><td>根据 Cargo.toml 的版本约束更新 Cargo.lock</td></tr>
+  <tr><td>cargo tree</td><td>查看依赖树</td><td>可视化项目的完整依赖关系</td></tr>
+  <tr><td>cargo bench</td><td>运行基准测试</td><td>测量代码性能</td></tr>
+  <tr><td>cargo install &lt;tool&gt;</td><td>安装 Rust 编写的 CLI 工具</td><td>如 cargo install ripgrep</td></tr>
+</table>
+<hr>
+
+<h2>注意事项与常见问题</h2>
+<p>以下是 Rust 初学者最容易面对的挑战和最佳实践建议。</p>
+
+<h3>与编译器「战斗」是正常的</h3>
+<p>Rust 的学习曲线是公认的前陡后缓。<span class="marked">所有权和借用检查</span>是初学时最大的障碍。</p>
+
+<blockquote><p>当你写的代码被编译器反复拒绝时，不要灰心——这恰恰说明编译器在帮你拦截潜在的运行时 bug。随着经验积累，你会逐渐习惯用 Rust 的方式思考，编译器将成为你最可靠的伙伴而非敌人。</p></blockquote>
+
+<h3>String 和 &amp;str 的区别</h3>
+<p>这是 Rust 初学者最容易混淆的概念。<span class="tag1">String</span> 是拥有所有权的堆分配字符串（可修改），<span class="tag1">&amp;str</span> 是对字符串数据的不可变引用（借用的视图），通常是 &amp;String 自动解引用而来。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #708;">fn</span> main<span style="">&#40;</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// String: 拥有所有权，可修改，在堆上</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> <span style="color: #708;">mut</span> s <span style="">=</span> String<span style="">::</span><span style="color: #164;">from</span><span style="">&#40;</span><span style="color: #a11;">&quot;Hello&quot;</span><span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// &amp;str: 引用，不可修改，通常作为函数参数</span><br />
+&nbsp; &nbsp; <span style="color: #708;">let</span> slice<span style="">:</span> <span style="">&amp;</span><span style="color: #05a;">str</span> <span style="">=</span> <span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// 字符串字面量本身就是 &amp;str</span><br />
+<br />
+&nbsp; &nbsp; s.push_str<span style="">&#40;</span><span style="color: #a11;">&quot;, world!&quot;</span><span style="">&#41;</span><span style="">;</span> <span style="color: #a50; font-style: italic;">// String 可以修改</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{}&quot;</span><span style="">,</span> s<span style="">&#41;</span><span style="">;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;{}&quot;</span><span style="">,</span> slice<span style="">&#41;</span><span style="">;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50; font-style: italic;">// 函数参数选用 &amp;str（而非 String）更灵活</span><br />
+&nbsp; &nbsp; greet<span style="">&#40;</span><span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="">&#41;</span><span style="">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 可以直接传 &amp;str</span><br />
+&nbsp; &nbsp; greet<span style="">&#40;</span><span style="">&amp;</span>s<span style="">&#41;</span><span style="">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50; font-style: italic;">// 也可以通过 &amp;String 自动转为 &amp;str</span><br />
+<span style="">&#125;</span><br />
+<br />
+<span style="color: #708;">fn</span> greet<span style="">&#40;</span>name<span style="">:</span> <span style="">&amp;</span><span style="color: #05a;">str</span><span style="">&#41;</span> <span style="">&#123;</span><br />
+&nbsp; &nbsp; println<span style="">!</span><span style="">&#40;</span><span style="color: #a11;">&quot;你好，{}！&quot;</span><span style="">,</span> name<span style="">&#41;</span><span style="">;</span><br />
+<span style="">&#125;</span><br />
+
+</div>
+</div>
+
+<h3>错误处理：panic! vs Result</h3>
+<p>Rust 区分<span class="marked">不可恢复的错误</span>（使用 <span class="tag1">panic!</span>，程序终止）和<span class="marked">可恢复的错误</span>（使用 <span class="tag1">Result</span>，调用方决定如何处理）。</p>
+<p>在库代码中，应返回 Result 而非 panic!，让调用方有选择权。在应用程序中，可根据具体情况决定。</p>
+
+<h3>unsafe：慎用但必要</h3>
+<p>Rust 提供了 <span class="tag1">unsafe</span> 关键字，允许进行裸指针操作、调用外部函数（FFI）等底层操作。</p>
+<p>unsafe 并非「禁用安全检查」，而是让开发者承担编译器无法自动保证的那部分安全责任。大多数应用程序代码无需使用 unsafe——如果你发现自己在频繁使用它，可能是设计上需要调整。</p>
+
+<h3>编译时间较长</h3>
+<p>Rust 以编译时间长而闻名，尤其是大型项目。这是因为编译器在编译期做了大量检查（所有权分析、生命周期验证、trait 解析等）和优化。</p>
+<p>缓解措施：使用 <span class="tag1">cargo check</span> 代替 cargo build 进行日常开发；将大型 crate 拆分为子 crate 以利用增量编译；使用 <span class="tag1">sccache</span> 缓存编译结果；升级硬件（尤其是 SSD 和更多 CPU 核心）。</p>
+
+<h3>学习路径建议</h3>
+<p>对于 Rust 初学者，推荐以下学习顺序：</p>
+<ul>
+  <li>通读 <a target="_blank" href="https://doc.rust-lang.org/book/">The Rust Programming Language</a>（官方书，免费），重点理解所有权章节</li>
+  <li>在 Rust Playground（play.rust-lang.org）上边读边写，即时获得编译器反馈</li>
+  <li>通过 <a target="_blank" href="https://github.com/rust-lang/rustlings">Rustlings</a> 做小型练习，巩固语法</li>
+  <li>阅读 <a target="_blank" href="https://doc.rust-lang.org/stable/rust-by-example/">Rust by Example</a>，通过实例学习</li>
+  <li>尝试用 Rust 重写一个自己熟悉的小项目，在实践中理解 Rust 的设计权衡</li>
+</ul>
+<hr>
+
+<h2>总结</h2>
+<p>Rust 以<span class="marked">内存安全（无 GC）</span>、<span class="marked">零成本抽象</span>和<span class="marked">无畏并发</span>三大核心优势，在系统编程、高性能服务、WebAssembly 和区块链等领域占据了独特的生态位。</p>
+<p>虽然学习曲线较陡，但编译器严格的检查在长期项目中转化为极高的代码质量和可维护性——这也是为什么越来越多的公司和开源项目选择 Rust。</p>
+
+<p>Rust 的优势和适用场景总结如下：</p>
+
+<table class="reference">
+  <tr><th>维度</th><th>Rust 的表现</th></tr>
+  <tr><td>学习曲线</td><td>较陡（所有权系统需要理解和适应），但概念稳定，学会后受益终身</td></tr>
+  <tr><td>编译速度</td><td>较慢（大量编译期检查），但有 cargo check 和增量编译缓解</td></tr>
+  <tr><td>运行时性能</td><td>与 C/C++ 同级，远超带 GC 的语言</td></tr>
+  <tr><td>内存安全</td><td>编译期保证，无需 GC，无空指针、悬垂指针、缓冲区溢出</td></tr>
+  <tr><td>并发安全</td><td>编译期杜绝数据竞争，无惧并发</td></tr>
+  <tr><td>生态成熟度</td><td>快速增长，在系统编程、WebAssembly、区块链领域已非常成熟</td></tr>
+  <tr><td>最适合</td><td>系统编程、高性能后端、WebAssembly、嵌入式、区块链、CLI 工具、数据库</td></tr>
+  <tr><td>不太适合</td><td>快速原型开发（编译时间）、GUI 桌面应用、游戏开发（与成熟引擎相比）</td></tr>
+</table>			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/rust/rust-operators.html" rel="prev"> Rust 运算符</a> </div>
+			<div class="next-design-link"></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31394' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31394;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31394, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31394},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31394;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

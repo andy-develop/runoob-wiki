@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLP 进阶技术 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-nlp-advanced.html" />
+<meta name="keywords" content="NLP 进阶技术">
+<meta name="description" content="NLP 进阶技术   我们其实每天都在与 NLP 打交道，用手机输入法打字时的联想词、邮件应用自动过滤的垃圾邮件、翻译软件帮你看懂的外文网站——这些都是自然语言处理（Natural Language Processing，NLP）的应用。  在 ChatGPT 出现之前，NLP 已经发展了几十年，但技术门槛很高。你需要了解分词、词性标注、句法分析、语义角色标注等一长串概念，还要手工设计特征，才能让机器&#039;懂&#039;一点语言。..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-computer-vision.html" rel="prev"> 计算机视觉 AI</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-frontier-research.html" rel="next"> 前沿研究动态</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>NLP 进阶技术</h1>
+
+
+<p>我们其实每天都在与 NLP 打交道，用手机输入法打字时的联想词、邮件应用自动过滤的垃圾邮件、翻译软件帮你看懂的外文网站——这些都是自然语言处理（Natural Language Processing，NLP）的应用。</p>
+
+<p>在 ChatGPT 出现之前，NLP 已经发展了几十年，但技术门槛很高。你需要了解分词、词性标注、句法分析、语义角色标注等一长串概念，还要手工设计特征，才能让机器"懂"一点语言。</p>
+
+<p>今天，大语言模型让这一切变得简单。但理解 NLP 的技术脉络，能让你更透彻地理解为什么大模型能做到这些事，以及它的局限性在哪里。</p>
+
+<p><span class="marked">本模块将带你从词向量开始，一路走到今天的大语言模型，建立完整的 NLP 知识体系</span>。</p>
+<p><img decoding="async" src="../wp-content/uploads/2026/06/87edab90-9365-4830-9960-c7871ace4d78.png"></p>
+<blockquote>
+<p>学习路径：词向量 → 预训练模型 → BERT/GPT/T5 三大范式 → 下游任务（分类、NER、翻译、摘要）。每一步都有对应的代码示例，帮助你把理论落地。</p>
+</blockquote>
+
+<hr>
+
+<h2>预训练语言模型演进史</h2>
+
+<p>NLP 的发展可以清晰地划分为几个阶段，每个阶段都有标志性的技术突破。</p>
+
+<h3>Word2Vec：词向量的革命</h3>
+
+<p>在 2013 年之前，计算机处理文字的方式很原始。</p>
+
+<p>通常用"独热编码"（One-Hot Encoding）：每个词对应一个超长的向量，只有一个位置是 1，其他都是 0。比如词表有 10 万个词，每个词就是一个 10 万维的向量。</p>
+
+<p>这种方式的问题显而易见：向量里没有语义信息，"猫"和"狗"的距离，跟"猫"和"桌子"的距离一样远。</p>
+
+<p>Word2Vec 的核心思想是：<span class="marked">一个词的含义，由它周围的词来定义</span>。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># Word2Vec 基本概念演示</span><br />
+<span style="color: #a50"># 使用 gensim 库训练一个简单的词向量模型</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 首先安装 gensim：pip install gensim</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">from</span> gensim.<span style="color: #05a;">models</span> <span style="color: Green;font-weight:bold;">import</span> Word2Vec<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<br />
+<span style="color: #a50"># 准备训练数据：一些简单的句子</span><br />
+sentences <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;我&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;喜欢&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;吃&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;苹果&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;我&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;喜欢&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;吃&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;香蕉&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;猫&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;喜欢&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;吃&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;鱼&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;狗&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;喜欢&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;吃&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;肉&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;苹果&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;是&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;一种&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;水果&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;香蕉&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;是&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;一种&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;水果&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;猫&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;是&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;一种&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;动物&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;狗&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;是&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;一种&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;动物&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;是&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;一个&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;编程&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;网站&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;学习&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;编程&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;去&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: #a50"># 训练 Word2Vec 模型</span><br />
+<span style="color: #a50"># vector_size: 词向量的维度</span><br />
+<span style="color: #a50"># window: 上下文窗口大小（看前后几个词）</span><br />
+<span style="color: #a50"># min_count: 忽略出现次数少于这个值的词</span><br />
+<span style="color: #a50"># workers: 并行训练的线程数</span><br />
+model <span style="color: Gray;">=</span> Word2Vec<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; sentences<span style="color: Gray;">=</span>sentences<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; vector_size<span style="color: Gray;">=</span><span style="color: Maroon;">50</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 每个词用 50 维向量表示</span><br />
+&nbsp; &nbsp; window<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 看前后 3 个词</span><br />
+&nbsp; &nbsp; min_count<span style="color: Gray;">=</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 所有词都保留</span><br />
+&nbsp; &nbsp; workers<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; epochs<span style="color: Gray;">=</span><span style="color: Maroon;">100</span> &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 训练 100 轮</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 获取词向量</span><br />
+apple_vector <span style="color: Gray;">=</span> model.<span style="color: #05a;">wv</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;苹果&quot;</span><span style="color: Olive;">&#93;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;'苹果' 的词向量（前 10 维）：{apple_vector[:10]}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;词向量维度：{len(apple_vector)}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 计算词之间的相似度</span><br />
+similarity <span style="color: Gray;">=</span> model.<span style="color: #05a;">wv</span>.<span style="color: #05a;">similarity</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;苹果&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;香蕉&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;'苹果' 和 '香蕉' 的相似度：{similarity:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+similarity <span style="color: Gray;">=</span> model.<span style="color: #05a;">wv</span>.<span style="color: #05a;">similarity</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;苹果&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;猫&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;'苹果' 和 '猫' 的相似度：{similarity:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 找出最相似的词</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>与 '猫' 最相似的词：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> word<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">wv</span>.<span style="color: #05a;">most_similar</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;猫&quot;</span><span style="color: Gray;">,</span> topn<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;{word}: {score:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>与 'RUNOOB' 最相似的词：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> word<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">wv</span>.<span style="color: #05a;">most_similar</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="color: Gray;">,</span> topn<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;{word}: {score:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 经典的词向量运算：国王 - 男人 + 女人 ≈ 女王</span><br />
+<span style="color: #a50"># 在我们的小语料里试试：水果 - 苹果 + 鱼 ≈ ?</span><br />
+<span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;苹果&quot;</span> <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">wv</span> <span style="color: Green;font-weight:bold;">and</span> <span style="color: #a11;">&quot;鱼&quot;</span> <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">wv</span> <span style="color: Green;font-weight:bold;">and</span> <span style="color: #a11;">&quot;水果&quot;</span> <span style="color: Green;font-weight:bold;">in</span> model.<span style="color: #05a;">wv</span>:<br />
+&nbsp; &nbsp; result <span style="color: Gray;">=</span> model.<span style="color: #05a;">wv</span>.<span style="color: #05a;">most_similar</span><span style="color: Olive;">&#40;</span>positive<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;水果&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;鱼&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> negative<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;苹果&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> topn<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\n</span>'水果' - '苹果' + '鱼' ≈&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> word<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> result:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;{word}: {score:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>Word2Vec 的成功证明了一点：<span class="marked">语义可以用向量空间来表示</span>。</p>
+
+<p>但它有一个局限：每个词只有一个固定的向量，不管上下文是什么。比如"打"在"打电话"和"打游戏"里是不同的意思，但 Word2Vec 给的是同一个向量。</p>
+
+<h3>ELMo：上下文相关词向量</h3>
+
+<p>2018 年出现的 ELMo（Embeddings from Language Models）解决了这个问题。</p>
+
+<p>ELMo 的思路是：<span class="marked">不预先给每个词一个固定向量，而是看整个句子，再给这个词生成向量</span>。</p>
+
+<p>同样是"打"字，在"我打电话"里是一个向量，在"我打游戏"里是另一个向量。</p>
+
+<p>ELMo 使用双向 LSTM（长短期记忆网络）来建模上下文，这是第一次大规模使用"预训练 + 微调"的范式。</p>
+
+<h3>GPT-1：单向预训练</h3>
+
+<p>同样是 2018 年，OpenAI 发布了 GPT-1（Generative Pre-training Transformer）。</p>
+
+<p>它的特点是：</p>
+
+<p>1. 使用 Transformer 解码器，而不是 LSTM</p>
+
+<p>2. 单向：只看前面的词，预测下一个词</p>
+
+<p>3. 生成式：可以续写文本</p>
+
+<p>GPT-1 证明了 Transformer 在 NLP 任务上的巨大潜力。</p>
+
+<h3>BERT：双向预训练</h3>
+
+<p>2018 年底，Google 发布 BERT（Bidirectional Encoder Representations from Transformers），彻底改变了 NLP 领域。</p>
+
+<p>BERT 的核心创新是：</p>
+
+<p>1. 双向：同时看前后文</p>
+
+<p>2. MLM（Masked Language Model）：随机遮住一些词，让模型预测</p>
+
+<p>3. NSP（Next Sentence Prediction）：判断两个句子是不是连续的</p>
+
+<p>BERT 在 11 个 NLP 任务上取得了当时最好的成绩，标志着 NLP 进入"预训练模型时代"。</p>
+
+<h3>GPT-3 到 ChatGPT 的跃升</h3>
+
+<p>2020 年，GPT-3 发布，参数量达到 1750 亿。</p>
+
+<p>人们发现，当模型足够大、数据足够多时，会出现"涌现"（Emergence）现象——模型突然具备了小模型没有的能力，比如少样本学习、复杂推理。</p>
+
+<p>2022 年底，ChatGPT 发布，通过 RLHF（人类反馈强化学习）让模型的输出更符合人类偏好，AI 真正走向大众。</p>
+
+<p>让我们用一张表格总结这段演进史：</p>
+
+<table class="reference">
+<tr><th>年份</th><th>模型</th><th>核心思想</th><th>历史地位</th></tr>
+<tr><td>2013</td><td>Word2Vec</td><td>用词周围的词定义它的含义</td><td>词向量革命，语义的向量化表示</td></tr>
+<tr><td>2018</td><td>ELMo</td><td>上下文相关的词向量</td><td>首次实现一词多义的向量表示</td></tr>
+<tr><td>2018</td><td>GPT-1</td><td>Transformer 解码器，单向预训练</td><td>证明 Transformer 的潜力</td></tr>
+<tr><td>2018</td><td>BERT</td><td>Transformer 编码器，双向预训练</td><td>NLP 进入预训练模型时代</td></tr>
+<tr><td>2020</td><td>GPT-3</td><td>1750 亿参数，涌现能力</td><td>展示大模型的无限可能</td></tr>
+<tr><td>2022</td><td>ChatGPT</td><td>RLHF + 对话能力</td><td>AI 真正走向大众</td></tr>
+</table>
+
+<hr>
+
+<h2>BERT 深度解析</h2>
+
+<p>BERT 是 NLP 发展史上的里程碑，值得我们深入理解。</p>
+
+<h3>MLM（掩码语言模型）任务</h3>
+
+<p>BERT 的核心预训练任务是 MLM：随机把句子里 15% 的词替换成 [MASK]，让模型预测原来的词是什么。</p>
+
+<p>比如句子："我喜欢吃苹果"，可能变成："我 [MASK] 吃苹果"，模型要预测 [MASK] 是"喜欢"。</p>
+
+<p>为什么这样做？因为这迫使模型同时利用前后文的信息，而不只是看左边或右边。</p>
+
+<p>实际操作中，这 15% 的词不是全换成 [MASK]，而是：</p>
+
+<p>1. 80% 的时间换成 [MASK]</p>
+
+<p>2. 10% 的时间换成一个随机词</p>
+
+<p>3. 10% 的时间保持原词不变</p>
+
+<p>这样做是为了让模型更健壮——它不能确定某个词是不是被替换了，必须真正理解上下文。</p>
+
+<h3>NSP（下句预测）任务</h3>
+
+<p>BERT 的第二个预训练任务是 NSP：给两个句子 A 和 B，判断 B 是不是 A 后面真正的下一句。</p>
+
+<p>正例：A="我喜欢吃苹果"，B="苹果是一种水果"</p>
+
+<p>负例：A="我喜欢吃苹果"，B="今天天气真好"</p>
+
+<p>这个任务帮助模型理解句子之间的关系，对问答、自然语言推理等任务很有帮助。</p>
+
+<h3>BERT 的适用场景</h3>
+
+<p>BERT 是"编码器"架构，擅长理解语言，适合做：</p>
+
+<p>文本分类、情感分析、命名实体识别、问答、自然语言推理等。</p>
+
+<p>它不太擅长生成文本，这是 GPT 的强项。</p>
+
+<h3>微调 BERT 的标准流程</h3>
+
+<p>让我们用 Hugging Face Transformers 库，实战微调 BERT 做文本分类：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 使用 Hugging Face 微调 BERT 做文本分类</span><br />
+<span style="color: #a50"># 任务：判断句子是积极还是消极情感</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 首先安装依赖：</span><br />
+<span style="color: #a50"># pip install transformers datasets torch scikit-learn</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">import</span> torch<br />
+<span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> <span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; BertTokenizer<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; BertForSequenceClassification<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; TrainingArguments<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; Trainer<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">from</span> datasets <span style="color: Green;font-weight:bold;">import</span> Dataset<span style="color: Gray;">,</span> load_metric<br />
+<span style="color: Green;font-weight:bold;">import</span> numpy <span style="color: Green;font-weight:bold;">as</span> np<br />
+<span style="color: Green;font-weight:bold;">from</span> sklearn.<span style="color: #05a;">model_selection</span> <span style="color: Green;font-weight:bold;">import</span> train_test_split<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 1. 准备数据</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 构造一个简单的情感分类数据集</span><br />
+texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;这个产品真的很好用，我很喜欢&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;质量太差了，非常失望&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 教程写得很清晰，学习起来很轻松&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;物流很慢，包装也破损了&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;这款手机拍照效果很棒&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;服务态度不好，不会再来了&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;书的内容很精彩，推荐购买&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;电影很无聊，看得睡着了&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;这家餐厅的菜很好吃&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;游戏 bug 太多，体验很差&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 的 NLP 教程帮助很大&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;这个软件界面设计得很好&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;快递员态度很友好&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;衣服尺码不准，颜色也不对&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;酒店环境很安静，睡得很好&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;客服回复很慢，问题没解决&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+labels <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><br />
+<span style="color: Olive;">&#93;</span> &nbsp;<span style="color: #a50"># 1=积极，0=消极</span><br />
+<br />
+<span style="color: #a50"># 划分训练集和验证集</span><br />
+train_texts<span style="color: Gray;">,</span> val_texts<span style="color: Gray;">,</span> train_labels<span style="color: Gray;">,</span> val_labels <span style="color: Gray;">=</span> train_test_split<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; texts<span style="color: Gray;">,</span> labels<span style="color: Gray;">,</span> test_size<span style="color: Gray;">=</span><span style="color: Maroon;">0.25</span><span style="color: Gray;">,</span> random_state<span style="color: Gray;">=</span><span style="color: Maroon;">42</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 创建 Dataset 对象</span><br />
+train_dataset <span style="color: Gray;">=</span> Dataset.<span style="color: #05a;">from_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: train_texts<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;label&quot;</span>: train_labels<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+val_dataset <span style="color: Gray;">=</span> Dataset.<span style="color: #05a;">from_dict</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: val_texts<span style="color: Gray;">,</span> <span style="color: #a11;">&quot;label&quot;</span>: val_labels<span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 2. 加载 tokenizer 和模型</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 使用中文 BERT 模型</span><br />
+model_name <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;bert-base-chinese&quot;</span><br />
+<br />
+tokenizer <span style="color: Gray;">=</span> BertTokenizer.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span>model_name<span style="color: Olive;">&#41;</span><br />
+model <span style="color: Gray;">=</span> BertForSequenceClassification.<span style="color: #05a;">from_pretrained</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model_name<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; num_labels<span style="color: Gray;">=</span><span style="color: Maroon;">2</span> &nbsp;<span style="color: #a50"># 二分类任务</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 3. 数据预处理：把文本转换成模型输入</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> tokenize_function<span style="color: Olive;">&#40;</span>examples<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> tokenizer<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; examples<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;text&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; padding<span style="color: Gray;">=</span><span style="color: #a11;">&quot;max_length&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; max_length<span style="color: Gray;">=</span><span style="color: Maroon;">64</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 应用预处理</span><br />
+tokenized_train <span style="color: Gray;">=</span> train_dataset.<span style="color: Teal;">map</span><span style="color: Olive;">&#40;</span>tokenize_function<span style="color: Gray;">,</span> batched<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+tokenized_val <span style="color: Gray;">=</span> val_dataset.<span style="color: Teal;">map</span><span style="color: Olive;">&#40;</span>tokenize_function<span style="color: Gray;">,</span> batched<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 4. 定义评估指标</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+metric <span style="color: Gray;">=</span> load_metric<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;accuracy&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> compute_metrics<span style="color: Olive;">&#40;</span>eval_pred<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; logits<span style="color: Gray;">,</span> labels <span style="color: Gray;">=</span> eval_pred<br />
+&nbsp; &nbsp; predictions <span style="color: Gray;">=</span> np.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> axis<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> metric.<span style="color: #05a;">compute</span><span style="color: Olive;">&#40;</span>predictions<span style="color: Gray;">=</span>predictions<span style="color: Gray;">,</span> references<span style="color: Gray;">=</span>labels<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 5. 配置训练参数</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+training_args <span style="color: Gray;">=</span> TrainingArguments<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; output_dir<span style="color: Gray;">=</span><span style="color: #a11;">&quot;./runoob-bert-sentiment&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 输出目录</span><br />
+&nbsp; &nbsp; num_train_epochs<span style="color: Gray;">=</span><span style="color: Maroon;">3</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 训练轮数</span><br />
+&nbsp; &nbsp; per_device_train_batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 训练批次大小</span><br />
+&nbsp; &nbsp; per_device_eval_batch_size<span style="color: Gray;">=</span><span style="color: Maroon;">4</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 评估批次大小</span><br />
+&nbsp; &nbsp; warmup_steps<span style="color: Gray;">=</span><span style="color: Maroon;">5</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 预热步数</span><br />
+&nbsp; &nbsp; weight_decay<span style="color: Gray;">=</span><span style="color: Maroon;">0.01</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 权重衰减</span><br />
+&nbsp; &nbsp; logging_dir<span style="color: Gray;">=</span><span style="color: #a11;">&quot;./logs&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color: #a50"># 日志目录</span><br />
+&nbsp; &nbsp; logging_steps<span style="color: Gray;">=</span><span style="color: Maroon;">10</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; evaluation_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;epoch&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 每个 epoch 评估一次</span><br />
+&nbsp; &nbsp; save_strategy<span style="color: Gray;">=</span><span style="color: #a11;">&quot;epoch&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; learning_rate<span style="color: Gray;">=</span><span style="color: Maroon;">2e-5</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; load_best_model_at_end<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 6. 创建 Trainer 并开始训练</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+trainer <span style="color: Gray;">=</span> Trainer<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; model<span style="color: Gray;">=</span>model<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; args<span style="color: Gray;">=</span>training_args<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; train_dataset<span style="color: Gray;">=</span>tokenized_train<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; eval_dataset<span style="color: Gray;">=</span>tokenized_val<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; compute_metrics<span style="color: Gray;">=</span>compute_metrics<span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 开始训练（注释掉，因为这需要较长时间和 GPU）</span><br />
+<span style="color: #a50"># print(&quot;开始训练...&quot;)</span><br />
+<span style="color: #a50"># trainer.train()</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 7. 使用训练好的模型进行预测</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: #a50"># 这里我们直接用原始模型演示预测流程</span><br />
+<span style="color: #a50"># 实际使用时，应该用 trainer 训练后保存的模型</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> predict_sentiment<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> model<span style="color: Gray;">,</span> tokenizer<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;预测句子情感&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; inputs <span style="color: Gray;">=</span> tokenizer<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; text<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; return_tensors<span style="color: Gray;">=</span><span style="color: #a11;">&quot;pt&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; padding<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; truncation<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; max_length<span style="color: Gray;">=</span><span style="color: Maroon;">64</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; model.<span style="color: Teal;">eval</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">with</span> torch.<span style="color: #05a;">no_grad</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; outputs <span style="color: Gray;">=</span> model<span style="color: Olive;">&#40;</span>**inputs<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; logits <span style="color: Gray;">=</span> outputs.<span style="color: #05a;">logits</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; probabilities <span style="color: Gray;">=</span> torch.<span style="color: #05a;">softmax</span><span style="color: Olive;">&#40;</span>logits<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; prediction <span style="color: Gray;">=</span> torch.<span style="color: #05a;">argmax</span><span style="color: Olive;">&#40;</span>probabilities<span style="color: Gray;">,</span> dim<span style="color: Gray;">=</span>-<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; label_map <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><span style="color: Maroon;">0</span>: <span style="color: #a11;">&quot;消极&quot;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">1</span>: <span style="color: #a11;">&quot;积极&quot;</span><span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; confidence <span style="color: Gray;">=</span> probabilities<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>prediction<span style="color: Olive;">&#93;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: text<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;sentiment&quot;</span>: label_map<span style="color: Olive;">&#91;</span>prediction<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;confidence&quot;</span>: confidence<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;negative_prob&quot;</span>: probabilities<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;positive_prob&quot;</span>: probabilities<span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">item</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+<span style="color: #a50"># 测试几个句子</span><br />
+test_texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 教程真的很棒！&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;这个产品质量太差了&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;今天天气真好&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;我不太喜欢这个电影&quot;</span><span style="color: Gray;">,</span><br />
+<span style="color: Olive;">&#93;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;测试模型预测（使用预训练的 bert-base-chinese）：&quot;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">for</span> text <span style="color: Green;font-weight:bold;">in</span> test_texts:<br />
+&nbsp; &nbsp; <span style="color: #a50"># 注意：这里直接用原始模型，没有微调，效果仅供演示</span><br />
+&nbsp; &nbsp; result <span style="color: Gray;">=</span> predict_sentiment<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> model<span style="color: Gray;">,</span> tokenizer<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{result['text']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;情感：{result['sentiment']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;置信度：{result['confidence']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;积极概率：{result['positive_prob']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;消极概率：{result['negative_prob']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<blockquote>
+<p>注意：上面的代码演示了完整流程，但实际微调 BERT 需要 GPU 和较长时间。在生产环境中，你也可以考虑使用更轻量的模型（如 distilbert），或者直接使用大模型的 API。</p>
+</blockquote>
+
+<hr>
+
+<h2>GPT 系列深度解析</h2>
+
+<p>GPT（Generative Pre-trained Transformer）走了一条与 BERT 不同的路。</p>
+
+<h3>自回归语言模型</h3>
+
+<p>GPT 是"自回归"的：一个词一个词地生成，每一步都用之前生成的所有词来预测下一个词。</p>
+
+<p>比如要生成"我喜欢吃苹果"，过程是：</p>
+
+<p>1. 输入"我"，预测下一个词是"喜欢"</p>
+
+<p>2. 输入"我喜欢"，预测下一个词是"吃"</p>
+
+<p>3. 输入"我喜欢吃"，预测下一个词是"苹果"</p>
+
+<p>这种方式天生适合文本生成。</p>
+
+<h3>Decoder-Only 架构</h3>
+
+<p>GPT 只用 Transformer 的解码器，而 BERT 只用编码器。</p>
+
+<p>解码器的特点是有"掩码自注意力"（Masked Self-Attention）——每个位置只能看到它左边的位置，不能看到右边。</p>
+
+<p>这很合理，因为生成文本时是从左到右的，你不能偷看还没生成的词。</p>
+
+<h3>Scaling Law 的发现</h3>
+
+<p>GPT 系列最重要的发现是 Scaling Law（缩放定律）：<span class="marked">模型性能与模型大小、数据量、计算量呈幂律关系</span>。</p>
+
+<p>简单说就是：模型越大、数据越多、训练越久，效果就越好，而且这种提升是可预测的，没有明显的平台期。</p>
+
+<p>这就是为什么 GPT 系列一直在"做大"：GPT-1（1.17 亿）→ GPT-2（15 亿）→ GPT-3（1750 亿）。</p>
+
+<hr>
+
+<h2>T5 与 Seq2Seq 范式</h2>
+
+<p>还有第三种范式：编码器-解码器（Encoder-Decoder）结构，T5 是其中的代表。</p>
+
+<h3>文本到文本的统一框架</h3>
+
+<p>T5（Text-to-Text Transfer Transformer）的核心思想是：<span class="marked">把所有 NLP 任务都统一成"文本到文本"的格式</span>。</p>
+
+<p>比如：</p>
+
+<p>文本分类：输入"分类：这电影很好看" → 输出"积极"</p>
+
+<p>翻译：输入"翻译英文到中文：Hello world" → 输出"你好世界"</p>
+
+<p>摘要：输入"摘要：这是一篇关于...的文章" → 输出"本文主要讲了..."</p>
+
+<p>这种统一框架的好处是：同一个模型可以做各种任务，不需要为每个任务改模型结构。</p>
+
+<h3>编码器-解码器的工作方式</h3>
+
+<p>编码器负责理解输入文本，解码器负责生成输出文本。</p>
+
+<p>以翻译为例：</p>
+
+<p>1. 编码器读取"Hello world"，生成一个"理解"后的表示</p>
+
+<p>2. 解码器根据这个表示，一个词一个词地生成"你好世界"</p>
+
+<p>解码器可以"关注"编码器的不同位置——比如生成"你好"时，更多关注"Hello"，生成"世界"时，更多关注"world"。</p>
+
+<hr>
+
+<h2>三大范式对比：BERT vs GPT vs T5</h2>
+
+<p>让我们用一张表格对比这三种架构：</p>
+
+<table class="reference">
+<tr><th>特性</th><th>BERT</th><th>GPT</th><th>T5</th></tr>
+<tr><td>架构</td><td>Encoder-only</td><td>Decoder-only</td><td>Encoder-Decoder</td></tr>
+<tr><td>注意力</td><td>双向（看前后文）</td><td>单向（只看前文）</td><td>编码器双向，解码器单向</td></tr>
+<tr><td>预训练任务</td><td>MLM（掩码预测）</td><td>自回归语言建模</td><td>Span Corruption</td></tr>
+<tr><td>擅长任务</td><td>理解类：分类、NER、问答</td><td>生成类：续写、对话</td><td>转换类：翻译、摘要、改写</td></tr>
+<tr><td>代表模型</td><td>BERT、RoBERTa、ALBERT</td><td>GPT-1/2/3/4、ChatGPT</td><td>T5、BART、mT5</td></tr>
+<tr><td>典型应用</td><td>情感分析、垃圾邮件过滤</td><td>写作助手、对话机器人</td><td>机器翻译、文档摘要</td></tr>
+</table>
+
+<blockquote>
+<p>今天的大模型大多采用 Decoder-only 架构（GPT 路线），因为它在生成方面表现最好，而且通过 Scaling Law 可以持续提升。但在特定任务上，另外两种架构仍有优势。</p>
+</blockquote>
+
+<hr>
+
+<h2>文本分类</h2>
+
+<p>文本分类是最常见的 NLP 任务之一，也是初学者最好的入门任务。</p>
+
+<h3>多类别分类实战</h3>
+
+<p>多类别分类就是给文本分配一个标签，标签有多个选项。</p>
+
+<p>比如：新闻分类（科技、体育、娱乐、财经）、客服工单分类、产品评论分类等。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 文本分类实战：多种方案对比</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">from</span> typing <span style="color: Green;font-weight:bold;">import</span> List<span style="color: Gray;">,</span> Dict<span style="color: Gray;">,</span> Any<br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 方案一：传统机器学习 + TF-IDF</span><br />
+<span style="color: #a50"># 适合小数据集，可解释性强</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> traditional_text_classification_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用传统方法做文本分类&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> sklearn.<span style="color: #05a;">feature_extraction</span>.<span style="color: #05a;">text</span> <span style="color: Green;font-weight:bold;">import</span> TfidfVectorizer<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> sklearn.<span style="color: #05a;">naive_bayes</span> <span style="color: Green;font-weight:bold;">import</span> MultinomialNB<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> sklearn.<span style="color: #05a;">pipeline</span> <span style="color: Green;font-weight:bold;">import</span> Pipeline<br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 训练数据</span><br />
+&nbsp; &nbsp; texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;我今天买了一支股票，涨了很多&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;基金定投是不错的理财方式&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;这个球队的前锋进球了&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;NBA 季后赛真精彩&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;这款手机的相机拍照很棒&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 的编程教程很清晰&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;这个电影的剧情很感人&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;那张专辑的歌曲很好听&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; labels <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;财经&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;财经&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;体育&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;体育&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;科技&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;科技&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;娱乐&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;娱乐&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 创建流水线：TF-IDF + 朴素贝叶斯</span><br />
+&nbsp; &nbsp; pipeline <span style="color: Gray;">=</span> Pipeline<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;tfidf&quot;</span><span style="color: Gray;">,</span> TfidfVectorizer<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 把文本转换成 TF-IDF 特征</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;classifier&quot;</span><span style="color: Gray;">,</span> MultinomialNB<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 朴素贝叶斯分类器</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 训练</span><br />
+&nbsp; &nbsp; pipeline.<span style="color: #05a;">fit</span><span style="color: Olive;">&#40;</span>texts<span style="color: Gray;">,</span> labels<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试</span><br />
+&nbsp; &nbsp; test_texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;股票跌了，心情很不好&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;篮球比赛最后一秒绝杀&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;新出的笔记本电脑性能很强&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 新出的 NLP 教程&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; predictions <span style="color: Gray;">=</span> pipeline.<span style="color: #05a;">predict</span><span style="color: Olive;">&#40;</span>test_texts<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; probabilities <span style="color: Gray;">=</span> pipeline.<span style="color: #05a;">predict_proba</span><span style="color: Olive;">&#40;</span>test_texts<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;方案一：传统机器学习 + TF-IDF&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> text<span style="color: Gray;">,</span> pred<span style="color: Gray;">,</span> probs <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">zip</span><span style="color: Olive;">&#40;</span>test_texts<span style="color: Gray;">,</span> predictions<span style="color: Gray;">,</span> probabilities<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;预测：{pred}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;各类概率：{dict(zip(pipeline.classes_, probs))}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 方案二：使用 Hugging Face pipeline</span><br />
+<span style="color: #a50"># 适合快速原型，无需训练</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> huggingface_pipeline_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用 Hugging Face 的预训练 pipeline&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;方案二：Hugging Face Pipeline&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 使用情感分析 pipeline（英文）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; classifier <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;sentiment-analysis&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; test_texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;I love RUNOOB tutorials!&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;This movie is terrible.&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; results <span style="color: Gray;">=</span> classifier<span style="color: Olive;">&#40;</span>test_texts<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> text<span style="color: Gray;">,</span> result <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">zip</span><span style="color: Olive;">&#40;</span>test_texts<span style="color: Gray;">,</span> results<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;情感：{result['label']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;置信度：{result['score']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> <span style="color: Teal;">Exception</span> <span style="color: Green;font-weight:bold;">as</span> e:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;需要先安装 transformers：pip install transformers&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;错误：{e}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 方案三：使用大模型 API（推荐）</span><br />
+<span style="color: #a50"># 适合生产环境，效果最好</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> llm_based_classification_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用大模型做文本分类（模拟）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;方案三：大模型分类（演示思路）&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 实际使用时，调用 OpenAI/Anthropic 等 API</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 这里演示分类的 prompt 设计</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> classify_with_llm<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> categories: List<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Dict<span style="color: Olive;">&#91;</span><span style="color: Teal;">str</span><span style="color: Gray;">,</span> Any<span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;用 LLM 做分类的模拟函数&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 真实场景：调用 LLM API</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># prompt = f&quot;&quot;&quot;请对以下文本进行分类，只返回类别名称。</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 文本：{text}</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 可选类别：{', '.join(categories)}&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 这里做一个简单的关键词匹配来模拟</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; category_map <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;财经&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;股票&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;基金&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;理财&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;投资&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;体育&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;篮球&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;足球&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;比赛&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;进球&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;科技&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;手机&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;电脑&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;编程&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;教程&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;娱乐&quot;</span>: <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;电影&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;音乐&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;专辑&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;歌曲&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> category<span style="color: Gray;">,</span> keywords <span style="color: Green;font-weight:bold;">in</span> category_map.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">any</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">keyword</span> <span style="color: Green;font-weight:bold;">in</span> text <span style="color: Green;font-weight:bold;">for</span> <span style="color: #05a;">keyword</span> <span style="color: Green;font-weight:bold;">in</span> keywords<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;category&quot;</span>: category<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;confidence&quot;</span>: <span style="color: Maroon;">0.9</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;reasoning&quot;</span>: f<span style="color: #a11;">&quot;包含关键词：{', '.join([k for k in keywords if k in text])}&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;category&quot;</span>: <span style="color: #a11;">&quot;其他&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;confidence&quot;</span>: <span style="color: Maroon;">0.5</span><span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; test_texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;股票涨了很开心&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;足球世界杯开幕了&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 新出的编程教程&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; categories <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;财经&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;体育&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;科技&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;娱乐&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;其他&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> text <span style="color: Green;font-weight:bold;">in</span> test_texts:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; result <span style="color: Gray;">=</span> classify_with_llm<span style="color: Olive;">&#40;</span>text<span style="color: Gray;">,</span> categories<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;分类：{result['category']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;置信度：{result['confidence']:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;reasoning&quot;</span> <span style="color: Green;font-weight:bold;">in</span> result:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;理由：{result['reasoning']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 运行演示</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; traditional_text_classification_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; llm_based_classification_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>少样本分类方法</h3>
+
+<p>少样本学习（Few-Shot Learning）是大模型带来的新能力——只需要给几个例子，模型就能学会分类。</p>
+
+<p>比如：</p>
+
+<p>文本：这个产品很好用 → 标签：积极</p>
+
+<p>文本：质量太差了 → 标签：消极</p>
+
+<p>文本：[你的新文本] → 标签：？</p>
+
+<p>大模型看了这两个例子，就能理解任务，对新文本做出合理分类。</p>
+
+<h3>大模型 vs 小模型的选择</h3>
+
+<p>什么时候用什么方案？这里有一个决策指南：</p>
+
+<table class="reference">
+<tr><th>场景</th><th>推荐方案</th><th>理由</th></tr>
+<tr><td>数据量小（< 1000 条）</td><td>大模型少样本学习</td><td>小模型学不出来，大模型泛化能力强</td></tr>
+<tr><td>数据量大（> 10000 条）</td><td>微调小模型（如 BERT）</td><td>成本更低，推理更快</td></tr>
+<tr><td>需要快速验证</td><td>大模型 API</td><td>不用训练，立即可用</td></tr>
+<tr><td>生产环境，高吞吐</td><td>微调小模型 + 蒸馏</td><td>推理速度快，成本可控</td></tr>
+<tr><td>类别经常变化</td><td>大模型 Prompt 工程</td><td>不用重新训练，改 prompt 即可</td></tr>
+</table>
+
+<hr>
+
+<h2>命名实体识别（NER）</h2>
+
+<p>命名实体识别（Named Entity Recognition，NER）就是从文本里找出特定的实体，比如人名、地名、组织机构名。</p>
+
+<h3>序列标注框架</h3>
+
+<p>NER 通常建模为"序列标注"任务：给每个词打一个标签，说明它是不是实体的一部分。</p>
+
+<p>比如句子："张三在 Google 工作"，标注可能是：</p>
+
+<p>张三 → B-PER（人名开始）</p>
+
+<p>在 → O（非实体）</p>
+
+<p>Google → B-ORG（机构开始）</p>
+
+<p>工作 → O</p>
+
+<h3>BIO 标注格式</h3>
+
+<p>最常用的标注格式是 BIO：</p>
+
+<p>B-XXX：实体开始</p>
+
+<p>I-XXX：实体内部</p>
+
+<p>O：非实体</p>
+
+<p>举个例子："王小明在北京的微软公司上班"，标注为：</p>
+
+<p>王 → B-PER</p>
+
+<p>小 → I-PER</p>
+
+<p>明 → I-PER</p>
+
+<p>在 → O</p>
+
+<p>北 → B-LOC</p>
+
+<p>京 → I-LOC</p>
+
+<p>的 → O</p>
+
+<p>微 → B-ORG</p>
+
+<p>软 → I-ORG</p>
+
+<p>公 → I-ORG</p>
+
+<p>司 → I-ORG</p>
+
+<p>上 → O</p>
+
+<p>班 → O</p>
+
+<h3>实战应用</h3>
+
+<p>让我们用 Hugging Face 做 NER：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># NER 实战：使用 Hugging Face 做命名实体识别</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> ner_with_huggingface<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用预训练 NER 模型&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;NER 实战：Hugging Face&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> transformers <span style="color: Green;font-weight:bold;">import</span> pipeline<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 加载 NER pipeline</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 英文 NER</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ner_pipeline <span style="color: Gray;">=</span> pipeline<span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;ner&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;dbmdz/bert-large-cased-finetuned-conll03-english&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; grouped_entities<span style="color: Gray;">=</span><span style="color: Teal;">True</span> &nbsp;<span style="color: #a50"># 把同一个实体的多个 token 合并</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; test_text <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;John Smith works at Google in New York City. He loves RUNOOB tutorials.&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; results <span style="color: Gray;">=</span> ner_pipeline<span style="color: Olive;">&#40;</span>test_text<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{test_text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;识别到的实体：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> entity <span style="color: Green;font-weight:bold;">in</span> results:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;- {entity['word']}: {entity['entity_group']} (置信度: {entity['score']:.4f})&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> <span style="color: Teal;">Exception</span> <span style="color: Green;font-weight:bold;">as</span> e:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;需要先安装 transformers：pip install transformers&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;错误：{e}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 中文 NER：使用正则 + 关键词（简单场景）</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> simple_chinese_ner<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;简单的中文 NER：使用正则表达式和词典&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">re</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;简单中文 NER：正则 + 词典&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 实体词典（实际场景中会更大）</span><br />
+&nbsp; &nbsp; person_names <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;张三&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;李四&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;王小明&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;刘德华&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; organizations <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;Google&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;微软&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;阿里巴巴&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;腾讯&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; locations <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;北京&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;上海&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;深圳&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;纽约&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;伦敦&quot;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 正则模式</span><br />
+&nbsp; &nbsp; patterns <span style="color: Gray;">=</span> <span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;PERSON&quot;</span>: <span style="color: #a11;">&quot;|&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">re</span>.<span style="color: #05a;">escape</span><span style="color: Olive;">&#40;</span>name<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> name <span style="color: Green;font-weight:bold;">in</span> person_names<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;ORG&quot;</span>: <span style="color: #a11;">&quot;|&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">re</span>.<span style="color: #05a;">escape</span><span style="color: Olive;">&#40;</span>org<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> org <span style="color: Green;font-weight:bold;">in</span> organizations<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;LOC&quot;</span>: <span style="color: #a11;">&quot;|&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">re</span>.<span style="color: #05a;">escape</span><span style="color: Olive;">&#40;</span>loc<span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> loc <span style="color: Green;font-weight:bold;">in</span> locations<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;PHONE&quot;</span>: r<span style="color: #a11;">&quot;1[3-9]<span style="color: #000099; font-weight: bold;">\d</span>{9}&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 手机号</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;EMAIL&quot;</span>: r<span style="color: #a11;">&quot;<span style="color: #000099; font-weight: bold;">\w</span>+@<span style="color: #000099; font-weight: bold;">\w</span>+<span style="color: #000099; font-weight: bold;">\.</span><span style="color: #000099; font-weight: bold;">\w</span>+&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 邮箱</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#125;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> extract_entities<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;从文本中提取实体&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; entities <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> entity_type<span style="color: Gray;">,</span> pattern <span style="color: Green;font-weight:bold;">in</span> patterns.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> match <span style="color: Green;font-weight:bold;">in</span> <span style="color: #05a;">re</span>.<span style="color: #05a;">finditer</span><span style="color: Olive;">&#40;</span>pattern<span style="color: Gray;">,</span> text<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; entities.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;text&quot;</span>: match.<span style="color: #05a;">group</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;type&quot;</span>: entity_type<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;start&quot;</span>: match.<span style="color: #05a;">start</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;end&quot;</span>: match.<span style="color: #05a;">end</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 按位置排序</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; entities.<span style="color: #05a;">sort</span><span style="color: Olive;">&#40;</span>key<span style="color: Gray;">=</span><span style="color: Green;font-weight:bold;">lambda</span> x: x<span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;start&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> entities<br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试</span><br />
+&nbsp; &nbsp; test_texts <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;张三在 Google 工作，手机号是 13800138000&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;王小明去北京的微软公司出差&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;有问题联系 support@runoob.com&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 是一个很好的学习网站&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> text <span style="color: Green;font-weight:bold;">in</span> test_texts:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; entities <span style="color: Gray;">=</span> extract_entities<span style="color: Olive;">&#40;</span>text<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> entities:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;识别到的实体：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> ent <span style="color: Green;font-weight:bold;">in</span> entities:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;- {ent['text']}: {ent['type']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;未识别到实体&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 大模型做 NER</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> ner_with_llm<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;使用大模型做 NER 的思路演示&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;大模型做 NER（演示思路）&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> extract_entities_with_llm<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;用 LLM 做 NER（模拟）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 真实场景：构造 prompt 调用 LLM</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># prompt = f&quot;&quot;&quot;请从以下文本中提取命名实体。</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 只返回 JSON 格式，包含实体类型：PERSON（人名）、ORG（机构）、LOC（地点）。</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 文本：{text}&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 这里做简单模拟</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; entities <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 简单的关键词匹配来模拟</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;张三&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; entities.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: <span style="color: #a11;">&quot;张三&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;PERSON&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;Google&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; entities.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: <span style="color: #a11;">&quot;Google&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;ORG&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;北京&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; entities.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: <span style="color: #a11;">&quot;北京&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;LOC&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: #a11;">&quot;RUNOOB&quot;</span> <span style="color: Green;font-weight:bold;">in</span> text:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; entities.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;text&quot;</span>: <span style="color: #a11;">&quot;RUNOOB&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;type&quot;</span>: <span style="color: #a11;">&quot;ORG&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> entities<br />
+<br />
+&nbsp; &nbsp; test_text <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;张三在北京的 Google 公司工作，他经常上 RUNOOB 学习&quot;</span><br />
+&nbsp; &nbsp; entities <span style="color: Gray;">=</span> extract_entities_with_llm<span style="color: Olive;">&#40;</span>test_text<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;文本：{test_text}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;识别到的实体：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> ent <span style="color: Green;font-weight:bold;">in</span> entities:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot; &nbsp;- {ent['text']}: {ent['type']}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 运行演示</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; simple_chinese_ner<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; ner_with_llm<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<hr>
+
+<h2>机器翻译</h2>
+
+<p>机器翻译是 NLP 最经典的应用之一，也是最早商业化的应用。</p>
+
+<h3>神经机器翻译原理</h3>
+
+<p>早期的机器翻译是规则的，后来是统计的，现在都是神经的。</p>
+
+<p>神经机器翻译（Neural Machine Translation，NMT）通常是 Encoder-Decoder 架构：</p>
+
+<p>1. Encoder 读取源语言句子，生成语义表示</p>
+
+<p>2. Decoder 根据语义表示，生成目标语言句子</p>
+
+<p>Attention 机制让解码器在生成每个词时，可以"关注"源语言句子的不同位置——这是翻译质量提升的关键。</p>
+
+<h3>评估指标：BLEU Score</h3>
+
+<p>怎么衡量翻译质量？BLEU（Bilingual Evaluation Understudy）是最常用的指标。</p>
+
+<p>BLEU 的核心思想是：<span class="marked">机器翻译结果与人工翻译结果的 n-gram 重合度越高，质量越好</span>。</p>
+
+<p>BLEU 分数范围是 0 到 1，越高越好。一般来说：</p>
+
+<p>0.1 以下：基本不通</p>
+
+<p>0.1-0.3：能看懂大概意思</p>
+
+<p>0.3-0.5：翻译质量不错</p>
+
+<p>0.5 以上：接近人工翻译</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># BLEU 分数计算演示</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> bleu_score_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;演示 BLEU 分数的计算&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;BLEU 分数演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 注意：实际使用时建议用 sacrebleu 库</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 这里做概念演示</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> <span style="color: #05a;">collections</span> <span style="color: Green;font-weight:bold;">import</span> Counter<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">math</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> compute_ngrams<span style="color: Olive;">&#40;</span>tokens<span style="color: Gray;">,</span> n<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算 n-gram&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Olive;">&#91;</span><span style="color: Teal;">tuple</span><span style="color: Olive;">&#40;</span>tokens<span style="color: Olive;">&#91;</span>i:i+n<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>tokens<span style="color: Olive;">&#41;</span>-n+<span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> simple_bleu<span style="color: Olive;">&#40;</span>reference: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> candidate: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> max_n: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">4</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;简单的 BLEU 计算（概念演示）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ref_tokens <span style="color: Gray;">=</span> reference.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cand_tokens <span style="color: Gray;">=</span> candidate.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 计算 brevity penalty（短句惩罚）</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ref_len <span style="color: Gray;">=</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>ref_tokens<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cand_len <span style="color: Gray;">=</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>cand_tokens<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> cand_len <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> cand_len <span style="color: Gray;">&lt;=</span> ref_len:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bp <span style="color: Gray;">=</span> <span style="color: #05a;">math</span>.<span style="color: #05a;">exp</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span> - ref_len / cand_len<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bp <span style="color: Gray;">=</span> <span style="color: Maroon;">1.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 计算各个 n-gram 的精确率</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; precisions <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> n <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> max_n + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ref_ngrams <span style="color: Gray;">=</span> Counter<span style="color: Olive;">&#40;</span>compute_ngrams<span style="color: Olive;">&#40;</span>ref_tokens<span style="color: Gray;">,</span> n<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; cand_ngrams <span style="color: Gray;">=</span> Counter<span style="color: Olive;">&#40;</span>compute_ngrams<span style="color: Olive;">&#40;</span>cand_tokens<span style="color: Gray;">,</span> n<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> cand_ngrams:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; precisions.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">0.0</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">continue</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 统计匹配的数量</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; matches <span style="color: Gray;">=</span> <span style="color: Maroon;">0</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> ngram<span style="color: Gray;">,</span> count <span style="color: Green;font-weight:bold;">in</span> cand_ngrams.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; matches +<span style="color: Gray;">=</span> <span style="color: Teal;">min</span><span style="color: Olive;">&#40;</span>count<span style="color: Gray;">,</span> ref_ngrams.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span>ngram<span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; total <span style="color: Gray;">=</span> <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span>cand_ngrams.<span style="color: #05a;">values</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; precisions.<span style="color: #05a;">append</span><span style="color: Olive;">&#40;</span>matches / total <span style="color: Green;font-weight:bold;">if</span> total <span style="color: Gray;">&gt;</span> <span style="color: Maroon;">0</span> <span style="color: Green;font-weight:bold;">else</span> <span style="color: Maroon;">0.0</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 几何平均</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">all</span><span style="color: Olive;">&#40;</span>p <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span> <span style="color: Green;font-weight:bold;">for</span> p <span style="color: Green;font-weight:bold;">in</span> precisions<span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; geo_mean <span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 避免 log(0)</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; log_sum <span style="color: Gray;">=</span> <span style="color: Teal;">sum</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">math</span>.<span style="color: #05a;">log</span><span style="color: Olive;">&#40;</span>p + <span style="color: Maroon;">1e-10</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> p <span style="color: Green;font-weight:bold;">in</span> precisions<span style="color: Olive;">&#41;</span> / max_n<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; geo_mean <span style="color: Gray;">=</span> <span style="color: #05a;">math</span>.<span style="color: #05a;">exp</span><span style="color: Olive;">&#40;</span>log_sum<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; bleu <span style="color: Gray;">=</span> bp * geo_mean<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> bleu<br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试</span><br />
+&nbsp; &nbsp; reference <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;the cat sat on the mat&quot;</span><br />
+&nbsp; &nbsp; candidates <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;the cat sat on the mat&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 完全匹配</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;the cat was on the mat&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 一个词不同</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;the cat sat on a mat&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp;<span style="color: #a50"># 冠词不同</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;a cat sat on the mat&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;the dog sat on the mat&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 一个词错误</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;mat the on sat cat the&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 顺序全乱</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;hello world&quot;</span><span style="color: Gray;">,</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 完全不相关</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;参考翻译：{reference}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> candidate <span style="color: Green;font-weight:bold;">in</span> candidates:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; bleu <span style="color: Gray;">=</span> simple_bleu<span style="color: Olive;">&#40;</span>reference<span style="color: Gray;">,</span> candidate<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;候选翻译：{candidate}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;BLEU 分数：{bleu:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 中文例子</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;中文翻译示例：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">30</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; ref <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;我 喜欢 吃 苹果&quot;</span><br />
+&nbsp; &nbsp; cand1 <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;我 喜欢 吃 苹果&quot;</span><br />
+&nbsp; &nbsp; cand2 <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;我 爱 吃 苹果&quot;</span><br />
+&nbsp; &nbsp; cand3 <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;苹果 我 喜欢 吃&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;参考：{ref}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;候选 1：{cand1}, BLEU: {simple_bleu(ref, cand1):.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;候选 2：{cand2}, BLEU: {simple_bleu(ref, cand2):.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;候选 3：{cand3}, BLEU: {simple_bleu(ref, cand3):.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; bleu_score_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<h3>LLM 时代的翻译质量</h3>
+
+<p>大模型出现后，机器翻译质量又上了一个台阶。</p>
+
+<p>传统翻译模型是双语平行数据训练的，而大模型用海量文本训练，对语言的理解更深刻。</p>
+
+<p>大模型在翻译上的优势：</p>
+
+<p>1. 上下文理解更好：能处理歧义、多义词</p>
+
+<p>2. 风格控制：可以指定翻译的语气、风格</p>
+
+<p>3. 术语一致性：可以给术语表，保证专有名词翻译一致</p>
+
+<p>4. 多语言能力：一个模型能做几十上百种语言的互译</p>
+
+<hr>
+
+<h2>情感分析</h2>
+
+<p>情感分析就是判断文本的情感倾向——积极、消极，还是中性。</p>
+
+<h3>细粒度情感分析</h3>
+
+<p>简单的情感分析是二分类（积极/消极），更细粒度的可以是：</p>
+
+<p>1. 情感打分：1-5 星，1 分最消极，5 分最积极</p>
+
+<p>2. 情感分类：愤怒、喜悦、悲伤、惊讶等</p>
+
+<p>3. 方面级情感分析（Aspect-Based Sentiment Analysis）：不仅判断整体情感，还分析对具体方面的情感。</p>
+
+<p>比如："这家餐厅菜很好吃，但服务太慢了"</p>
+
+<p>整体情感：中性偏积极</p>
+
+<p>方面级情感：</p>
+
+<p>菜品 → 积极</p>
+
+<p>服务 → 消极</p>
+
+<h3>多语言情感模型</h3>
+
+<p>现在的情感模型可以处理多种语言，不需要为每种语言单独训练。</p>
+
+<p>常用的多语言模型：</p>
+
+<p>XLM-RoBERTa、mBERT（多语言 BERT）、Llama、Claude 等大模型。</p>
+
+<hr>
+
+<h2>文本摘要</h2>
+
+<p>文本摘要就是把长文本缩短，保留核心信息。</p>
+
+<h3>抽取式 vs 生成式摘要</h3>
+
+<p>有两种主要的摘要方式：</p>
+
+<p><strong>抽取式摘要</strong>：从原文中挑选最重要的句子，拼在一起。</p>
+
+<p>优点：信息准确，不会编造</p>
+
+<p>缺点：不够流畅，可能包含冗余信息</p>
+
+<p><strong>生成式摘要</strong>：让模型"理解"原文，然后用自己的话写摘要。</p>
+
+<p>优点：流畅、简洁，可以概括原文</p>
+
+<p>缺点：可能"幻觉"，编造原文没有的信息</p>
+
+<p>大模型时代，生成式摘要成为主流，但使用时需要注意幻觉问题。</p>
+
+<h3>ROUGE 评估指标</h3>
+
+<p>摘要质量怎么评估？ROUGE 是最常用的指标。</p>
+
+<p>ROUGE 有几个变种：</p>
+
+<p>ROUGE-1：基于 unigram（单个词）的匹配</p>
+
+<p>ROUGE-2：基于 bigram（两个词）的匹配</p>
+
+<p>ROUGE-L：基于最长公共子序列</p>
+
+<p>和 BLEU 类似，ROUGE 也是看机器生成的摘要和人工参考摘要的重合度。</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 文本摘要：ROUGE 指标 + 简单抽取式摘要</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> rouge_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;ROUGE 指标演示&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;ROUGE 指标演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> <span style="color: #05a;">collections</span> <span style="color: Green;font-weight:bold;">import</span> Counter<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> compute_rouge_1<span style="color: Olive;">&#40;</span>reference: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> candidate: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">float</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算 ROUGE-1（unigram F1）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ref_tokens <span style="color: Gray;">=</span> reference.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cand_tokens <span style="color: Gray;">=</span> candidate.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> ref_tokens <span style="color: Green;font-weight:bold;">or</span> <span style="color: Green;font-weight:bold;">not</span> cand_tokens:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ref_counts <span style="color: Gray;">=</span> Counter<span style="color: Olive;">&#40;</span>ref_tokens<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cand_counts <span style="color: Gray;">=</span> Counter<span style="color: Olive;">&#40;</span>cand_tokens<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 计算匹配的数量</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; matches <span style="color: Gray;">=</span> <span style="color: Maroon;">0</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> <span style="color: #05a;">token</span><span style="color: Gray;">,</span> count <span style="color: Green;font-weight:bold;">in</span> cand_counts.<span style="color: #05a;">items</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; matches +<span style="color: Gray;">=</span> <span style="color: Teal;">min</span><span style="color: Olive;">&#40;</span>count<span style="color: Gray;">,</span> ref_counts.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #05a;">token</span><span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; precision <span style="color: Gray;">=</span> matches / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>cand_tokens<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; recall <span style="color: Gray;">=</span> matches / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>ref_tokens<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> precision + recall <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; f1 <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span> * precision * recall / <span style="color: Olive;">&#40;</span>precision + recall<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f1<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> compute_lcs<span style="color: Olive;">&#40;</span>a: <span style="color: Teal;">list</span><span style="color: Gray;">,</span> b: <span style="color: Teal;">list</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">int</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算最长公共子序列长度&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; m<span style="color: Gray;">,</span> n <span style="color: Gray;">=</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>a<span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>b<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; dp <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span> * <span style="color: Olive;">&#40;</span>n + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> _ <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span>m + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> m + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> j <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">range</span><span style="color: Olive;">&#40;</span><span style="color: Maroon;">1</span><span style="color: Gray;">,</span> n + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> a<span style="color: Olive;">&#91;</span>i-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span> <span style="color: Gray;">==</span> b<span style="color: Olive;">&#91;</span>j-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dp<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>j<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> dp<span style="color: Olive;">&#91;</span>i-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>j-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span> + <span style="color: Maroon;">1</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">else</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dp<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>j<span style="color: Olive;">&#93;</span> <span style="color: Gray;">=</span> <span style="color: Teal;">max</span><span style="color: Olive;">&#40;</span>dp<span style="color: Olive;">&#91;</span>i-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>j<span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> dp<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>j-<span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> dp<span style="color: Olive;">&#91;</span>m<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#91;</span>n<span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> compute_rouge_l<span style="color: Olive;">&#40;</span>reference: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> candidate: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">float</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算 ROUGE-L（最长公共子序列 F1）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; ref_tokens <span style="color: Gray;">=</span> reference.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; cand_tokens <span style="color: Gray;">=</span> candidate.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> ref_tokens <span style="color: Green;font-weight:bold;">or</span> <span style="color: Green;font-weight:bold;">not</span> cand_tokens:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; lcs_len <span style="color: Gray;">=</span> compute_lcs<span style="color: Olive;">&#40;</span>ref_tokens<span style="color: Gray;">,</span> cand_tokens<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; precision <span style="color: Gray;">=</span> lcs_len / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>cand_tokens<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; recall <span style="color: Gray;">=</span> lcs_len / <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>ref_tokens<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> precision + recall <span style="color: Gray;">==</span> <span style="color: Maroon;">0</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; f1 <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span> * precision * recall / <span style="color: Olive;">&#40;</span>precision + recall<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> f1<br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试</span><br />
+&nbsp; &nbsp; reference <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;自然语言处理是人工智能的重要分支，研究计算机与人类语言的交互。&quot;</span><br />
+&nbsp; &nbsp; candidates <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;自然语言处理是人工智能的重要分支，研究计算机与人类语言的交互。&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 完全匹配</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;自然语言处理研究计算机与人类语言的交互，是人工智能的重要分支。&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 顺序调整</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;自然语言处理是人工智能的分支，研究计算机与语言的交互。&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 删减版</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;RUNOOB 是一个编程学习网站。&quot;</span><span style="color: Gray;">,</span> &nbsp;<span style="color: #a50"># 不相关</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;参考摘要：{reference}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> candidate <span style="color: Green;font-weight:bold;">in</span> candidates:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; rouge1 <span style="color: Gray;">=</span> compute_rouge_1<span style="color: Olive;">&#40;</span>reference<span style="color: Gray;">,</span> candidate<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; rougel <span style="color: Gray;">=</span> compute_rouge_l<span style="color: Olive;">&#40;</span>reference<span style="color: Gray;">,</span> candidate<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;候选摘要：{candidate}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;ROUGE-1: {rouge1:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;ROUGE-L: {rougel:.4f}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> simple_extractive_summarization<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;简单的抽取式摘要：基于词频选重要句子&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;简单抽取式摘要演示&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;-&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">import</span> <span style="color: #05a;">re</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">from</span> <span style="color: #05a;">collections</span> <span style="color: Green;font-weight:bold;">import</span> Counter<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> split_sentences<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">list</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;简单的中文分句&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 按句号、感叹号、问号分句</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; sentences <span style="color: Gray;">=</span> <span style="color: #05a;">re</span>.<span style="color: #05a;">split</span><span style="color: Olive;">&#40;</span>r<span style="color: #a11;">'[。！？]'</span><span style="color: Gray;">,</span> text<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 过滤空字符串</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; sentences <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>s.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> s <span style="color: Green;font-weight:bold;">in</span> sentences <span style="color: Green;font-weight:bold;">if</span> s.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> sentences<br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> get_word_frequency<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> Counter:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算词频（简单演示：用字符级 n-gram 模拟）&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 实际场景应该用分词工具，如 jieba</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 这里简单用 uni-gram</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; chars <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>c <span style="color: Green;font-weight:bold;">for</span> c <span style="color: Green;font-weight:bold;">in</span> text <span style="color: Green;font-weight:bold;">if</span> c.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> Counter<span style="color: Olive;">&#40;</span>chars<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> sentence_score<span style="color: Olive;">&#40;</span>sentence: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> word_freq: Counter<span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">float</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;计算句子得分&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> sentence:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: Maroon;">0.0</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 简单的得分：句子中词的频率之和 / 句子长度</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; total_score <span style="color: Gray;">=</span> <span style="color: Maroon;">0.0</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">for</span> char <span style="color: Green;font-weight:bold;">in</span> sentence:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; total_score +<span style="color: Gray;">=</span> word_freq.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span>char<span style="color: Gray;">,</span> <span style="color: Maroon;">0</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 归一化</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> total_score / <span style="color: Olive;">&#40;</span><span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>sentence<span style="color: Olive;">&#41;</span> + <span style="color: Maroon;">1</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">def</span> extractive_summary<span style="color: Olive;">&#40;</span>text: <span style="color: Teal;">str</span><span style="color: Gray;">,</span> num_sentences: <span style="color: Teal;">int</span> <span style="color: Gray;">=</span> <span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;抽取式摘要&quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; sentences <span style="color: Gray;">=</span> split_sentences<span style="color: Olive;">&#40;</span>text<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Teal;">len</span><span style="color: Olive;">&#40;</span>sentences<span style="color: Olive;">&#41;</span> <span style="color: Gray;">&lt;=</span> num_sentences:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> text<br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 计算词频</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; word_freq <span style="color: Gray;">=</span> get_word_frequency<span style="color: Olive;">&#40;</span>text<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 计算每个句子的得分</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span><span style="color: Olive;">&#40;</span>i<span style="color: Gray;">,</span> sentence_score<span style="color: Olive;">&#40;</span>s<span style="color: Gray;">,</span> word_freq<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span> <span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> s <span style="color: Green;font-weight:bold;">in</span> <span style="color: Teal;">enumerate</span><span style="color: Olive;">&#40;</span>sentences<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#93;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 按得分排序，选最高的几个</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; scores.<span style="color: #05a;">sort</span><span style="color: Olive;">&#40;</span>key<span style="color: Gray;">=</span><span style="color: Green;font-weight:bold;">lambda</span> x: x<span style="color: Olive;">&#91;</span><span style="color: Maroon;">1</span><span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span> reverse<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; top_indices <span style="color: Gray;">=</span> <span style="color: Olive;">&#91;</span>i <span style="color: Green;font-weight:bold;">for</span> i<span style="color: Gray;">,</span> score <span style="color: Green;font-weight:bold;">in</span> scores<span style="color: Olive;">&#91;</span>:num_sentences<span style="color: Olive;">&#93;</span><span style="color: Olive;">&#93;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; top_indices.<span style="color: #05a;">sort</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span> &nbsp;<span style="color: #a50"># 保持原文顺序</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 拼接结果</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; summary <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;。&quot;</span>.<span style="color: #05a;">join</span><span style="color: Olive;">&#40;</span>sentences<span style="color: Olive;">&#91;</span>i<span style="color: Olive;">&#93;</span> <span style="color: Green;font-weight:bold;">for</span> i <span style="color: Green;font-weight:bold;">in</span> top_indices<span style="color: Olive;">&#41;</span> + <span style="color: #a11;">&quot;。&quot;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> summary<br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 测试文本</span><br />
+&nbsp; &nbsp; test_text <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+自然语言处理是人工智能的重要分支。它研究如何让计算机理解和生成人类语言。<br />
+这项技术有很多应用，包括机器翻译、情感分析、问答系统等。<br />
+近年来，大语言模型的出现让自然语言处理取得了重大突破。<br />
+RUNOOB 网站提供了很多优秀的编程教程，帮助开发者学习新技能。<br />
+&quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;原文：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>test_text.<span style="color: #05a;">strip</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; summary <span style="color: Gray;">=</span> extractive_summary<span style="color: Olive;">&#40;</span>test_text<span style="color: Gray;">,</span> num_sentences<span style="color: Gray;">=</span><span style="color: Maroon;">2</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;抽取式摘要：&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>summary<span style="color: Olive;">&#41;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; rouge_demo<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;=&quot;</span> * <span style="color: Maroon;">50</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; simple_extractive_summarization<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-computer-vision.html" rel="prev"> 计算机视觉 AI</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-frontier-research.html" rel="next"> 前沿研究动态</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31524' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31524;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31524, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31524},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31524;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>

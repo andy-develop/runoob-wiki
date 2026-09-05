@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 工作流自动化 | 菜鸟教程</title>
+<script>
+window.RUNOOB_CONFIG = {
+  darkCssUrl: "https://www.runoob.com/wp-content/themes/runoob/dark-mode.css?v=1.125"
+};
+
+(function () {
+  var t = localStorage.getItem('runoob-theme') || 'light';
+
+  document.documentElement.setAttribute('data-theme', t);
+
+  if (t === 'dark') {
+    loadDarkCss();
+  }
+
+  function loadDarkCss() {
+    if (document.getElementById('dark-theme-css')) return;
+
+    var link = document.createElement('link');
+    link.id = 'dark-theme-css';
+    link.rel = 'stylesheet';
+    link.href = window.RUNOOB_CONFIG.darkCssUrl;
+
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+  
+
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="../static.char123.com/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static.char123.com/images/icon/mobile-icon.png">
+  <meta name="apple-mobile-web-app-title" content="菜鸟教程">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="../wp-content/themes/runoob/style.css" media="all">
+  <link rel="stylesheet" href="../static.jyshare.com/assets/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+
+  <!-- jQuery（IE 条件注释已无意义，现代浏览器直接加载） -->
+  <script src="../static.char123.com/assets/libs/jquery.min.js"></script>
+
+<link rel="manifest" href="/manifest.webmanifest.html">
+<meta name="theme-color" content="#10151c">
+<link rel="apple-touch-icon" href="/pwa/icon-192.png.html">
+<meta name="application-name" content="菜鸟教程">
+<meta name="apple-mobile-web-app-title" content="菜鸟教程">
+  <!-- WordPress head 钩子，必须紧贴 </head> 前 -->
+  <meta name='robots' content='max-image-preview:large' />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+
+
+<link rel="canonical" href="/ai/ai-workflow-auto.html" />
+<meta name="keywords" content="AI 工作流自动化">
+<meta name="description" content="AI 工作流自动化    大家应该都碰到过这样的经历： 	  每天早上到公司，先花半小时看邮件，筛选出重要的，然后一一回复。 	  收到客户反馈后，要手动整理、分类，再发给相应的负责人。 	  社交媒体要定期更新，每次都要写文案、配图、定时发布。     这些重复性工作消耗了你大量的时间，但它们其实不需要太多思考。    AI 工作流自动化就是解决这类问题的：把重复的、规则明确的任务，交给 AI 自动完成。 工作流自动化的核心目标是：把..">
+</head>
+<body>
+
+<!-- 头部 -->
+<div class="container logo-search">
+
+  <div class="col search row-search-mobile">
+    <form action="/">
+      <input class="placeholder" placeholder="搜索……" name="s" autocomplete="off">
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col logo">
+      <h1><a href="/index.html">菜鸟教程 -- 学的不仅是技术，更是梦想！</a></h1>
+    </div>
+
+        <div class="col right-list">
+      <button class="btn btn-responsive-nav btn-inverse" id="pull">
+        <i class="fa fa-navicon"></i>
+      </button>
+    </div>
+    
+    <div class="col search search-desktop last">
+      <div class="search-input">
+        <form action="/" target="_blank">
+          <input class="placeholder" id="s" name="s" placeholder="搜索……" autocomplete="off" style="height:44px;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- 导航栏 -->
+<style>
+/* 主题切换按钮 */
+/* ===== 主题变量（核心）===== */
+:root {
+  --theme-bg: #ffffff;
+  --theme-border: #e5e7eb;
+  --theme-icon: #333;
+  --theme-hover: #f3f4f6;
+}
+
+.dark {
+  --theme-bg: #1f2937;
+  --theme-border: #374151;
+  --theme-icon: #e5e7eb;
+  --theme-hover: #374151;
+}
+
+/* ===== 按钮容器 ===== */
+.nav-theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== 按钮本体 ===== */
+.nav-theme-toggle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+  border: 1px solid var(--theme-border);
+
+  background: var(--theme-bg);
+  color: var(--theme-icon);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ===== 图标大小 ===== */
+.nav-theme-toggle i {
+  font-size: 14px;
+}
+
+/* ===== hover 效果 ===== */
+.nav-theme-toggle button:hover {
+  background: var(--theme-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== 点击反馈 ===== */
+.nav-theme-toggle button:active {
+  transform: scale(0.95);
+}
+
+/* ===== 当前激活态（可选）===== */
+.nav-theme-toggle button.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+</style>
+<!-- 导航栏 -->
+<nav class="container navigation" aria-label="主导航">
+  <div class="row">
+    <div class="col nav">
+
+      <!-- PC 导航 -->
+      <ul class="pc-nav" id="runoob-detail-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/js/js-tutorial.html">JavaScript</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="void(0);.html" data-id="vue">Vue</a></li>
+        <li><a href="/react/react-tutorial.html">React</a></li>
+        <li><a href="/python3/python3-tutorial.html">Python3</a></li>
+        <li><a href="/java/java-tutorial.html">Java</a></li>
+        <li><a href="/cprogramming/c-tutorial.html">C</a></li>
+        <li><a href="/cplusplus/cpp-tutorial.html">C++</a></li>
+        <li><a href="/csharp/csharp-tutorial.html">C#</a></li>
+        <li><a href="void(0);.html" data-id="aiNav">AI</a></li>
+        <li><a href="/go/go-tutorial.html">Go</a></li>
+        <li><a href="/sql/sql-tutorial.html">SQL</a></li>
+        <li><a href="/linux/linux-tutorial.html">Linux</a></li>
+        <li><a href="/vscode/vscode-tutorial.html">VS Code</a></li>
+        <li><a href="void(0);.html" data-id="bootstrap">Bootstrap</a></li>
+        <li><a href="/git/git-tutorial.html">Git</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+
+        <!-- 主题切换按钮，固定在最右侧 -->
+        <li class="nav-theme-toggle">
+          <button id="moon" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- 移动端导航 -->
+      <ul class="mobile-nav">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/html/html-tutorial.html">HTML</a></li>
+        <li><a href="/css/css-tutorial.html">CSS</a></li>
+        <li><a href="/js/js-tutorial.html">JS</a></li>
+        <li><a href="/browser-history.html">本地书签</a></li>
+        <li><a href="void(0).html" class="search-reveal">搜索</a></li>
+
+        <!-- 移动端主题切换 -->
+        <li class="nav-theme-toggle">
+          <button id="moon-mobile" title="切换暗色模式" aria-label="切换暗色模式" style="display:none">
+            <i class="fa fa-moon-o"></i>
+          </button>
+          <button id="sun-mobile" title="切换亮色模式" aria-label="切换亮色模式" style="display:none">
+            <i class="fa fa-sun-o"></i>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- 二级导航 -->
+<div class="container sub-navigation sub-navigation-articles" style="display:none">
+  <div class="row">
+    <div class="col nav-sub">
+
+      <ul id="vue">
+        <li class="cat-item"><a href="/vue3/vue3-tutorial.html">Vue3 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/vue/vue-tutorial.html">Vue2 教程 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="bootstrap">
+        <li class="cat-item"><a href="/bootstrap/bootstrap-tutorial.html">Bootstrap3 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+      <ul id="aiNav">
+        <li class="cat-item"><a href="/ml/ml-tutorial.html">机器学习 <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/pytorch/pytorch-tutorial.html">PyTorch <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/tensorflow/tensorflow-tutorial.html">TensorFlow <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/sklearn/sklearn-tutorial.html">Sklearn <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/nlp/nlp-tutorial.html">NLP <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ai-agent/ai-agent-tutorial.html">AI Agent <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/ollama/ollama-tutorial.html">Ollama <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+        <li class="cat-item"><a href="/claude-code/coding-plan.html">Coding Plan <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      </ul>
+
+    </div>
+  </div>
+</div><!--  内容  -->
+<div class="container main">
+	<!-- 中间 -->
+	<div class="row">
+	
+<div class="runoob-col-md2">
+<div class="left-column">
+	<div class="tab" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+	<i class="fa fa-list" aria-hidden="true"></i> 
+	<span>AI 入门教程</span>
+
+	</div>
+	<div class="sidebar-box gallery-list">
+		<div class="design" id="leftcolumn">
+						<a target="_top" data-p="par" title="AI 入门教程"  href="/ai/ai-tutorial.html" >
+			AI 入门教程			</a>
+						<a target="_top" data-p="par" title="AI 简介"  href="/ai/ai-into.html" >
+			AI 简介			</a>
+			<a target="_top" title="AGI 简介" href="/ai/agi-intro.html">AGI 简介</a>
+<a target="_top" title="大模型相关概念" href="/ai/llm-intro.html">大模型相关概念</a>			<a target="_top" data-p="par" title="Prompt 提示词"  href="/ai/ai-prompt.html" >
+			Prompt 提示词			</a>
+						<a target="_top" data-p="par" title="AI 工具全景"  href="/ai/ai-tools.html" >
+			AI 工具全景			</a>
+						<a target="_top" data-p="par" title="AI 工作原理"  href="/ai/how-ai-works.html" >
+			AI 工作原理			</a>
+						<a target="_top" data-p="par" title="AI 伦理与安全"  href="/ai/ai-ethics.html" >
+			AI 伦理与安全			</a>
+						<a target="_top" data-p="par" title="AI 应用场景"  href="/ai/ai-use-cases.html" >
+			AI 应用场景			</a>
+						<a target="_top" data-p="par" title="AI 行业生态"  href="/ai/ai-industry.html" >
+			AI 行业生态			</a>
+						<a target="_top" data-p="par" title="Prompt 工程进阶"  href="/ai/prompt-engineering-advance.html" >
+			Prompt 工程进阶			</a>
+						<a target="_top" data-p="par" title="AI API 开发"  href="/ai/ai-api-development.html" >
+			AI API 开发			</a>
+						<a target="_top" data-p="par" title="RAG 检索增强生成"  href="/ai/ai-rag.html" >
+			RAG 检索增强生成			</a>
+			<a target="_top"  title="AI 智能体" href="/ai/ai-agent.html">AI 智能体</a>			<a target="_top" data-p="par" title="AI 多模态"  href="/ai/ai-multimodal.html" >
+			AI 多模态			</a>
+						<a target="_top" data-p="par" title="AI 工作流自动化"  href="/ai/ai-workflow-auto.html" >
+			AI 工作流自动化			</a>
+						<a target="_top" data-p="par" title="AI 产品设计"  href="/ai/ai-product-design.html" >
+			AI 产品设计			</a>
+						<a target="_top" data-p="par" title="本地模型部署"  href="/ai/ai-local-model-deployment.html" >
+			本地模型部署			</a>
+						<a target="_top" data-p="par" title="AI 安全进阶"  href="/ai/ai-security.html" >
+			AI 安全进阶			</a>
+						<a target="_top" data-p="par" title="Transformer 深度解析"  href="/ai/ai-transformer.html" >
+			Transformer 深度解析			</a>
+						<a target="_top" data-p="par" title="模型微调 Fine-tuning"  href="/ai/ai-fine-tuning.html" >
+			模型微调 Fine-tuning			</a>
+						<a target="_top" data-p="par" title="RLHF 对齐训练"  href="/ai/ai-rlhf.html" >
+			RLHF 对齐训练			</a>
+						<a target="_top" data-p="par" title="向量数据库"  href="/ai/ai-vector-database.html" >
+			向量数据库			</a>
+						<a target="_top" data-p="par" title="AI 工程化部署"  href="/ai/ai-deployment.html" >
+			AI 工程化部署			</a>
+						<a target="_top" data-p="par" title="深度学习基础"  href="/ai/ai-deep-learning.html" >
+			深度学习基础			</a>
+						<a target="_top" data-p="par" title="计算机视觉 AI"  href="/ai/ai-computer-vision.html" >
+			计算机视觉 AI			</a>
+						<a target="_top" data-p="par" title="NLP 进阶技术"  href="/ai/ai-nlp-advanced.html" >
+			NLP 进阶技术			</a>
+						<a target="_top" data-p="par" title="前沿研究动态"  href="/ai/ai-frontier-research.html" >
+			前沿研究动态			</a>
+						<a target="_top" data-p="par" title="AI 系统架构"  href="/ai/ai-system-architecture.html" >
+			AI 系统架构			</a>
+						<a target="_top" data-p="par" title="AI 评测与安全研究"  href="/ai/ai-evaluation.html" >
+			AI 评测与安全研究			</a>
+				
+		</div>
+	</div>	
+</div>
+</div>	<div class="col middle-column">
+		
+	
+	<div class="article">
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-multimodal.html" rel="prev"> AI 多模态</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-product-design.html" rel="next"> AI 产品设计</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+		<div class="article-body">
+		
+			<div class="article-intro" id="content">
+			
+			<h1>AI 工作流自动化</h1>
+
+
+
+<p>大家应该都碰到过这样的经历：</p>
+	<ul>
+<li>
+<p>每天早上到公司，先花半小时看邮件，筛选出重要的，然后一一回复。</p></li>
+	<li>
+
+<p>收到客户反馈后，要手动整理、分类，再发给相应的负责人。</p></li>
+	<li>
+
+<p>社交媒体要定期更新，每次都要写文案、配图、定时发布。</p></li></ul>
+
+
+
+
+<p>这些重复性工作消耗了你大量的时间，但它们其实不需要太多思考。</p>
+
+
+<blockquote>
+<p>AI 工作流自动化就是解决这类问题的：把重复的、规则明确的任务，交给 AI 自动完成。</p>
+<p>工作流自动化的核心目标是：<span class="marked">把你的时间从执行解放出来，用在决策上</span>。</p>
+</blockquote>
+
+<hr>
+
+<h2>什么是 AI 工作流</h2>
+
+<p>AI 工作流是把多个 AI 能力和工具串联起来，形成一个自动化流程。</p>
+
+<p>简单说就是：当某个事件发生时，触发一系列操作，AI 在中间做理解、判断和生成。</p>
+
+<h3>工作流自动化的概念</h3>
+
+<p>一个典型的工作流由三部分组成：</p>
+
+<table class="reference">
+<tr><th>组成部分</th><th>作用</th><th>常见例子</th></tr>
+<tr><td>触发器（Trigger）</td><td>什么情况下开始执行</td><td>收到新邮件、定时到点、有人提交表单</td></tr>
+<tr><td>动作（Action）</td><td>执行什么操作</td><td>发送消息、保存数据、生成内容</td></tr>
+<tr><td>条件（Condition）</td><td>不同情况做不同处理</td><td>如果是紧急邮件就通知，否则整理摘要</td></tr>
+</table>
+
+<p>举个具体例子：</p>
+<ul>
+	<li>
+<p>触发器：每 6 小时检查一次指定的新闻网站。</p></li><li>
+
+
+<p>动作一：AI 抓取新闻内容，筛选出与你行业相关的。</p></li><li>
+
+<p>动作二：AI 把相关新闻总结成 100 字以内的摘要。</p></li><li>
+
+<p>动作三：把摘要发送到你的 Slack 频道。</p></li></ul>
+
+
+
+<p>这就是一个完整的 AI 工作流。设置好之后，它会自动运行，不需要你任何操作。</p>
+
+<h3>AI 工作流 vs 传统自动化</h3>
+
+<p>AI 工作流和传统自动化最大的区别在于：AI 能处理非结构化内容，能做判断。</p>
+
+<table class="reference">
+<tr><th>对比项</th><th>传统自动化</th><th>AI 工作流</th></tr>
+<tr><td>处理内容</td><td>只能处理结构化数据</td><td>能理解文本、图片、语音</td></tr>
+<tr><td>规则来源</td><td>需要人写死规则</td><td>AI 能根据内容做判断</td></tr>
+<tr><td>灵活性</td><td>规则一变就要重写</td><td>调整提示词就能改变行为</td></tr>
+<tr><td>适用场景</td><td>简单、重复、确定性任务</td><td>需要理解、判断的复杂任务</td></tr>
+</table>
+
+<p>比如收到邮件后转发给张三——这是传统自动化，规则明确。</p>
+
+<p>收到邮件后，AI 判断重要程度，重要的立刻通知，不重要的整理摘要每周发一次——这是 AI 工作流，需要理解和判断。</p>
+
+<hr>
+
+<h2>n8n 工作流平台</h2>
+
+<p>n8n 是一个开源的工作流自动化工具，可以自托管，也可以使用云端版本。</p>
+
+<p>n8n 的特点是完全可视化操作，用拖拽的方式就能搭建复杂的工作流。</p><p>
+开源地址：<a href="https://github.com/n8n-io/n8n" target="_blank">https://github.com/n8n-io/n8n</a></p>
+
+<h3>n8n 安装</h3>
+<p>通过 npx 一键体验 n8n（需预先安装 Node.js 环境）：</p>
+<pre>
+npx n8n</pre>
+<p>也可使用 Docker 部署运行：</p>
+<pre>
+# 创建数据持久化卷
+docker volume create n8n_data
+# 启动 n8n 容器
+docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n</pre>
+
+
+<p>部署完成后，在浏览器打开 http://localhost:5678 就能看到 n8n 的界面。</p>
+<p><img decoding="async" src="../wp-content/uploads/2026/06/n8n-screenshot-readme-scaled.png"></p>
+<p>如果你不想自己搭建，也可以使用 n8n Cloud 云端版本 <a href="https://n8n.io/" target="_blank">https://n8n.io/</a>，直接注册就能用。</p>
+
+<h3>核心概念：节点、连接、触发器</h3>
+
+<p>n8n 的界面由画布和节点组成，理解三个核心概念就能开始使用：</p>
+
+<table class="reference">
+<tr><th>概念</th><th>作用</th><th>说明</th></tr>
+<tr><td>节点（Node）</td><td>执行具体操作</td><td>比如"发送邮件"、"调用 OpenAI"、"保存数据"</td></tr>
+<tr><td>连接（Connection）</td><td>串联节点</td><td>从一个节点拖到另一个节点，定义执行顺序</td></tr>
+<tr><td>触发器（Trigger）</td><td>启动工作流</td><td>每个工作流的第一个节点，定义"什么时候开始"</td></tr>
+</table>
+
+<p>创建工作流的基本步骤：</p>
+	<ul>
+<li>
+<p>1. 在画布上添加一个触发器节点（比如"定时触发"或"Webhook"）。</p></li><li>
+
+
+<p>2. 添加第一个动作节点，配置它的参数。</p></li><li>
+
+<p>3. 从触发器拖一条线连到动作节点。</p></li><li>
+
+<p>4. 继续添加更多节点，依次连接。</p></li><li>
+
+<p>5. 点击"测试"，看流程是否正常运行。</p></li><li>
+
+<p>6. 激活工作流，让它自动运行。</p></li></ul>
+
+
+
+<h3>集成 OpenAI 节点</h3>
+
+<p>n8n 内置了 OpenAI 节点，可以直接调用 GPT 模型。</p>
+
+<p>配置步骤：</p>
+<ul>
+<li>
+<p>1. 在节点列表中找到 OpenAI，拖到画布上。</p></li><li>
+
+<p>2. 在节点设置中添加你的 OpenAI API Key。</p></li><li>
+
+<p>3. 选择要使用的模型（比如 gpt-3.5-turbo 或 gpt-4）。</p></li><li>
+
+<p>4. 编写提示词，可以引用前面节点的输出数据。</p></li></ul>
+
+
+
+<p>一个典型的提示词配置可能长这样：</p>
+
+<pre>
+请把下面的邮件内容总结成 3 句话摘要：
+
+{{$json.body}}
+
+摘要：
+</pre>
+
+<p>其中 {{$json.body}} 是引用前面邮件节点的正文内容。</p>
+
+<h3>实战：自动总结邮件并发送 Slack 通知</h3>
+
+<p>我们来搭建一个完整的工作流：收到邮件后，AI 总结内容，然后发送到 Slack。</p>
+
+<p>这个工作流需要三个节点：</p>
+<ul>
+<li>
+<p>1. 邮件触发器：当收到新邮件时触发。</p></li><li>
+
+<p>2. OpenAI 节点：把邮件内容总结成摘要。</p></li><li>
+
+<p>3. Slack 节点：把摘要发送到指定频道。</p></li></ul>
+
+<p>配置要点：</p>
+	<ul>
+<li>
+<p>邮件节点：配置 IMAP 或使用 n8n 的邮件触发器。</p></li>
+	<li>
+
+<p>OpenAI 节点：提示词设为总结这封邮件，不超过 100 字，输入引用邮件的正文。</p></li>
+	<li>
+
+<p>Slack 节点：配置 Slack Bot Token，选择频道，消息内容引用 OpenAI 的输出。</p></li></ul>
+
+
+
+
+<p>连接这三个节点，测试通过后激活，工作流就会自动运行了。</p>
+
+<blockquote>
+<p>n8n 的节点库非常丰富，支持 Gmail、Notion、Airtable、Google Sheets 等数百种服务。花时间探索一下节点库，你会发现很多可以自动化的场景。</p>
+</blockquote>
+
+<hr>
+
+<h2>Make（原 Integromat）</h2>
+
+<p>Make 是另一个流行的工作流自动化平台，原名 Integromat，2021 年更名为 Make。</p>
+
+<p>和 n8n 相比，Make 更偏向商业用户，界面更精致，付费版功能更强。</p>
+
+<h3>Make 与 n8n 的对比</h3>
+
+<table class="reference">
+<tr><th>对比项</th><th>n8n</th><th>Make</th></tr>
+<tr><td>开源</td><td>是，可自托管</td><td>否，纯 SaaS</td></tr>
+<tr><td>免费版</td><td>自托管完全免费</td><td>有，功能受限</td></tr>
+<tr><td>界面</td><td>偏技术向</td><td>更友好、精美</td></tr>
+<tr><td>节点数量</td><td>数百个</td><td>数千个</td></tr>
+<tr><td>企业功能</td><td>需付费版</td><td>完善</td></tr>
+<tr><td>学习曲线</td><td>稍陡</td><td>较平缓</td></tr>
+</table>
+
+<p>简单总结：如果你想自己掌控、有技术能力，选 n8n；如果你想要更简单易用、企业级支持，选 Make。</p>
+
+<h3>AI 模块使用</h3>
+
+<p>Make 内置了多个 AI 相关模块：</p>
+
+<p>OpenAI 模块：调用 GPT、DALL-E、Whisper 等模型。</p>
+
+<p>Make AI 模块：Make 自家的 AI 功能，可以智能处理数据。</p>
+
+<p>其他 AI 工具：支持 Anthropic Claude、Google AI、Midjourney 等。</p>
+
+<p>在 Make 中使用 AI 的流程：</p>
+	<ul>
+<li>
+<p>1. 在模块库中搜索 OpenAI或你想用的 AI 工具。</p></li><li>
+
+
+<p>2. 拖拽到场景画布上。</p></li><li>
+
+<p>3. 配置 API 密钥和参数。</p></li><li>
+
+<p>4. 把前面模块的数据传给 AI 模块。</p></li><li>
+
+<p>5. 把 AI 的输出传给后面的模块。</p></li></ul>
+
+
+
+<p>Make 的一个特色是 AI 提示词助手——你可以用自然语言描述你想做什么，它会帮你生成提示词。</p>
+
+<h3>实战示例</h3>
+
+<p>我们用 Make 做一个"社交媒体内容自动生成"的工作流：</p>
+<ul>
+<li>
+<p>1. 触发器：每周一早上 9 点定时触发。</p></li><li>
+
+<p>2. Google Sheets 模块：读取你预先准备的产品更新和活动信息。</p></li><li>
+
+<p>3. OpenAI 模块：根据表格内容生成微博、LinkedIn、Twitter 三个平台的文案。</p></li><li>
+
+<p>4. Airtable 模块：把生成的文案保存到审核表格。</p></li><li>
+
+<p>5. Slack 模块：通知你"本周内容已生成，请到 Airtable 审核"。</p></li></ul>
+
+
+
+<p>整个流程设置好后，每周一都会自动运行。你只需要审核和微调内容，不用从零开始写文案。</p>
+
+<hr>
+
+<h2>Zapier AI 自动化</h2>
+
+<p>Zapier 是工作流自动化领域的鼻祖，成立于 2011 年。</p>
+
+<p>Zapier 的特点是连接的应用最多（超过 6000 个），使用最简单。</p>
+
+<h3>Zapier 基础使用</h3>
+
+<p>Zapier 把工作流叫做 Zap，创建一个 Zap 的步骤：</p>
+<ul>
+<li>
+<p>1. 选择触发应用和触发事件（比如"Gmail 收到新邮件"）。</p></li><li>
+
+<p>2. 连接你的账户，配置触发条件。</p></li><li>
+
+<p>3. 选择第一个动作应用和动作事件（比如"OpenAI 生成文本"）。</p></li><li>
+
+<p>4. 配置动作参数，引用触发器的数据。</p></li><li>
+
+<p>5. 可以继续添加更多动作。</p></li><li>
+
+<p>6. 测试并启用 Zap。</p></li></ul>
+
+
+
+<p>Zapier 的界面比 n8n 和 Make 更简化，每个步骤都是表单式的，不用拖拽连线。</p>
+
+<h3>AI Actions 功能</h3>
+
+<p>Zapier 推出了专门的 AI Actions 功能，让你用自然语言描述想做什么，它自动配置整个 Zap。</p>
+
+<p>比如你输入：</p>
+
+<pre>
+当我收到带有"发票"标签的邮件时，把附件保存到 Google Drive，
+然后用 AI 提取金额和日期，记录到 Airtable，
+最后给我发一条 Slack 通知。
+</pre>
+
+<p>Zapier AI 会自动识别出需要哪些步骤，帮你配置好各个节点。</p>
+
+<p>你也可以用 AI 来帮你写提示词。比如在调用 GPT 时，你说"帮我写个提示词来总结这封邮件"，AI 会生成专业的提示词模板。</p>
+
+<h3>适合场景</h3>
+
+<p>Zapier 最适合这些场景：</p>
+
+<table class="reference">
+<tr><th>场景</th><th>为什么选 Zapier</th></tr>
+<tr><td>连接小众应用</td><td>Zapier 支持 6000+ 应用，很多别家没有</td></tr>
+<tr><td>个人简单自动化</td><td>界面最简单，上手最快</td></tr>
+<tr><td>非技术用户</td><td>不需要任何技术背景</td></tr>
+<tr><td>快速原型验证</td><td>几分钟就能搭好一个工作流</td></tr>
+</table>
+
+<blockquote>
+<p>工具选择建议：<span class="marked">新手从 Zapier 开始，想深入掌控用 n8n，企业级需求选 Make</span>。其实三个工具的核心思路是一样的，学会一个再换另一个很容易。</p>
+</blockquote>
+
+<hr>
+
+<h2>自定义 GPT 与 Claude Projects</h2>
+
+<p>除了用工作流工具串联多个服务，你也可以创建专门的 AI 助手来处理特定任务。</p>
+
+<p>OpenAI 的 GPTs 和 Anthropic 的 Claude Projects 都是这类工具。</p>
+
+<h3>创建专属 AI 助手</h3>
+
+<p>以 OpenAI GPTs 为例，创建一个自定义助手的步骤：</p>
+<ul>
+<li>
+<p>1. 访问 ChatGPT 官网，点击"Explore" → "Create a GPT"。</p></li><li>
+
+<p>2. 在"Create"标签页，用自然语言描述你想要的助手。</p></li><li>
+
+<p>比如："你是一个 runoob 技术文档编辑，负责把复杂的技术概念解释得通俗易懂，适合初学者阅读。"</p></li><li>
+
+<p>3. 在"Configure"标签页，配置更详细的设置。</p></li><li>
+
+<p>4. 添加知识库文件（可选）。</p></li><li>
+
+<p>5. 配置功能（比如联网搜索、代码解释器）。</p></li><li>
+
+<p>6. 测试、调整，最后发布。</p></li></ul>
+
+
+
+<p>Claude Projects 的创建流程类似，在 Claude 官网的 Projects 功能中操作。</p>
+
+<h3>知识库上传</h3>
+
+<p>自定义 AI 助手的一大优势是可以上传你自己的知识库。</p>
+
+<p>支持的文件格式通常包括：</p>
+
+<table class="reference">
+<tr><th>格式</th><th>说明</th></tr>
+<tr><td>PDF</td><td>最常用，适合文档、报告、书籍</td></tr>
+<tr><td>TXT</td><td>纯文本，简单通用</td></tr>
+<tr><td>DOCX</td><td>Word 文档</td></tr>
+<tr><td>CSV</td><td>表格数据</td></tr>
+<tr><td>JSON</td><td>结构化数据</td></tr>
+</table>
+
+<p>上传后，AI 会根据这些知识来回答问题。</p>
+
+<p>比如你可以把公司的产品文档、客服手册、历史案例都上传，创建一个"内部知识助手"，员工有问题直接问它。</p>
+
+<p>或者把你写过的所有文章上传，创建一个"写作风格助手"，它会模仿你的风格来写新内容。</p>
+
+<h3>指令定制</h3>
+
+<p>指令（Instructions）是自定义助手的核心，它定义了 AI 的角色、行为方式和输出格式。</p>
+
+<p>一个好的指令通常包括：</p>
+	<ul>
+<li>
+<p>角色定义：你是谁，做什么的。</p></li>
+	<li>
+
+<p>行为准则：你应该怎么做，不应该怎么做。</p></li>
+	<li>
+
+<p>输出格式：回答的结构是什么样的。</p></li>
+	<li>
+
+<p>约束条件：有什么禁忌和注意事项。</p></li></ul>
+
+
+
+
+<p>举个指令的例子：</p>
+
+<pre>
+你是 runoob 的技术文档助手。
+
+你的任务是把复杂的技术概念解释得通俗易懂，适合初学者。
+
+回答时请遵循这些规则：
+1. 先用一句话简单解释是什么
+2. 然后用生活中的例子类比
+3. 最后给出一个最简单的代码示例
+4. 如果有重要的注意事项，用加粗标出
+
+不要使用太深的术语，必要术语要解释。
+保持语气友好、鼓励，像老师在教学生。
+</pre>
+
+<p>指令写得越具体，AI 的表现就越稳定。</p>
+
+<hr>
+
+<h2>Webhook 与触发器</h2>
+
+<p>Webhook 是工作流自动化中非常重要的概念，它让外部系统能够实时触发你的工作流。</p>
+
+<h3>Webhook 的工作原理</h3>
+
+<p>简单说，Webhook 就是一个"URL 回调地址"。</p>
+
+<p>传统的方式是"轮询"：你的系统每隔一段时间去问外部系统"有新数据吗？"——这很低效。</p>
+
+<p>Webhook 是"推送"：外部系统有新数据时，主动给你发送 HTTP 请求，通知你。</p>
+
+<p>Webhook 的工作流程：</p>
+<ul>
+<li>
+<p>1. 你在 n8n/Make/Zapier 中创建一个 Webhook 触发器，得到一个 URL。</p></li><li>
+
+<p>2. 把这个 URL 配置到外部系统（比如 GitHub、Stripe、你的网站）。</p></li><li>
+
+<p>3. 当外部系统发生事件时（比如有人提交代码、有人付款），它向这个 URL 发送数据。</p></li><li>
+
+<p>4. 你的工作流接收到数据，开始执行。</p></li></ul>
+
+
+
+<p>Webhook 是实时的，事件发生后几毫秒内就能触发工作流。</p>
+
+<h3>事件驱动的自动化</h3>
+
+<p>Webhook 让事件驱动的自动化成为可能。</p>
+
+<p>常见的 Webhook 事件源：</p>
+
+<table class="reference">
+<tr><th>事件源</th><th>典型事件</th><th>用途示例</th></tr>
+<tr><td>GitHub</td><td>有人提交代码、有人提 Issue</td><td>收到 Issue 时自动用 AI 回复</td></tr>
+<tr><td>Stripe</td><td>有人付款、订阅过期</td><td>收到付款时发送感谢邮件</td></tr>
+<tr><td>Typeform</td><td>有人提交表单</td><td>表单提交后 AI 分析内容并分配</td></tr>
+<tr><td>Shopify</td><td>新订单、库存预警</td><td>新订单时自动生成发货单</td></tr>
+<tr><td>你的网站</td><td>用户注册、留言</td><td>新用户注册时欢迎邮件</td></tr>
+</table>
+
+<p>我们用 Python 来实现一个简单的 Webhook 接收 + AI 处理流程：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #a50"># ============================================</span><br />
+<span style="color: #a50"># 简单的 Webhook 服务器 + AI 处理流程</span><br />
+<span style="color: #a50"># 使用 Flask 接收 Webhook，调用 OpenAI 处理</span><br />
+<span style="color: #a50"># ============================================</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">from</span> flask <span style="color: Green;font-weight:bold;">import</span> Flask<span style="color: Gray;">,</span> request<span style="color: Gray;">,</span> jsonify<br />
+<span style="color: Green;font-weight:bold;">import</span> openai<br />
+<span style="color: Green;font-weight:bold;">import</span> json<br />
+<br />
+<span style="color: #a50"># 初始化 Flask 应用</span><br />
+app <span style="color: Gray;">=</span> Flask<span style="color: Olive;">&#40;</span>__name__<span style="color: Olive;">&#41;</span><br />
+<br />
+<span style="color: #a50"># 配置 OpenAI（请替换为你的 API Key）</span><br />
+openai.<span style="color: #05a;">api_key</span> <span style="color: Gray;">=</span> <span style="color: #a11;">&quot;sk-your-api-key-here&quot;</span><br />
+<br />
+<span style="color: Green;font-weight:bold;">def</span> process_with_ai<span style="color: Olive;">&#40;</span>content: <span style="color: Teal;">str</span><span style="color: Olive;">&#41;</span> -<span style="color: Gray;">&gt;</span> <span style="color: Teal;">str</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 用 AI 处理接收到的内容<br />
+&nbsp; &nbsp; 这里做一个简单的&quot;内容分类+摘要&quot;<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; prompt <span style="color: Gray;">=</span> f<span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 请分析下面的内容，做两件事：<br />
+&nbsp; &nbsp; 1. 分类：判断是&quot;问题&quot;、&quot;建议&quot;还是&quot;感谢&quot;<br />
+&nbsp; &nbsp; 2. 摘要：用一句话总结核心内容<br />
+<br />
+&nbsp; &nbsp; 内容：<br />
+&nbsp; &nbsp; {content}<br />
+<br />
+&nbsp; &nbsp; 请用 JSON 格式返回，格式如下：<br />
+&nbsp; &nbsp; {{<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;category&quot;: &quot;问题/建议/感谢&quot;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;summary&quot;: &quot;摘要内容&quot;<br />
+&nbsp; &nbsp; }}<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+<br />
+&nbsp; &nbsp; response <span style="color: Gray;">=</span> openai.<span style="color: #05a;">ChatCompletion</span>.<span style="color: #05a;">create</span><span style="color: Olive;">&#40;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; model<span style="color: Gray;">=</span><span style="color: #a11;">&quot;gpt-3.5-turbo&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; messages<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;system&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: <span style="color: #a11;">&quot;你是 runoob 的内容分析助手。&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;role&quot;</span>: <span style="color: #a11;">&quot;user&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;content&quot;</span>: prompt<span style="color: Olive;">&#125;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#93;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; temperature<span style="color: Gray;">=</span><span style="color: Maroon;">0.7</span><br />
+&nbsp; &nbsp; <span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> response.<span style="color: #05a;">choices</span><span style="color: Olive;">&#91;</span><span style="color: Maroon;">0</span><span style="color: Olive;">&#93;</span>.<span style="color: #05a;">message</span>.<span style="color: #05a;">content</span><br />
+<br />
+<br />
+<span style="color: Gray;">@</span>app.<span style="color: #05a;">route</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;/webhook&quot;</span><span style="color: Gray;">,</span> methods<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;POST&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">def</span> webhook_handler<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 接收 Webhook 的端点<br />
+&nbsp; &nbsp; 外部系统向这个 URL 发送 POST 请求<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 获取请求数据</span><br />
+&nbsp; &nbsp; data <span style="color: Gray;">=</span> request.<span style="color: #05a;">get_json</span><span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;收到 Webhook 数据：{data}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 提取我们需要的内容（根据实际情况调整字段名）</span><br />
+&nbsp; &nbsp; <span style="color: #a50"># 这里假设传来的数据有一个 &quot;content&quot; 字段</span><br />
+&nbsp; &nbsp; content <span style="color: Gray;">=</span> data.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;content&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">if</span> <span style="color: Green;font-weight:bold;">not</span> content:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> jsonify<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;status&quot;</span>: <span style="color: #a11;">&quot;error&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;message&quot;</span>: <span style="color: #a11;">&quot;缺少 content 字段&quot;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">400</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: #a50"># 用 AI 处理内容</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">try</span>:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; ai_result <span style="color: Gray;">=</span> process_with_ai<span style="color: Olive;">&#40;</span>content<span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;AI 处理结果：{ai_result}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 解析 AI 返回的 JSON</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; parsed_result <span style="color: Gray;">=</span> json.<span style="color: #05a;">loads</span><span style="color: Olive;">&#40;</span>ai_result<span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 这里可以把结果存到数据库、发送通知等</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 为了演示，我们只是打印出来</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; category <span style="color: Gray;">=</span> parsed_result.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;category&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;未知&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; summary <span style="color: Gray;">=</span> parsed_result.<span style="color: #05a;">get</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;summary&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;分类：{category}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;摘要：{summary}&quot;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a50"># 返回成功响应</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> jsonify<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;status&quot;</span>: <span style="color: #a11;">&quot;success&quot;</span><span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;category&quot;</span>: category<span style="color: Gray;">,</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #a11;">&quot;summary&quot;</span>: summary<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><br />
+<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">except</span> <span style="color: Teal;">Exception</span> <span style="color: Green;font-weight:bold;">as</span> e:<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span>f<span style="color: #a11;">&quot;处理出错：{e}&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; &nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> jsonify<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#123;</span><span style="color: #a11;">&quot;status&quot;</span>: <span style="color: #a11;">&quot;error&quot;</span><span style="color: Gray;">,</span> <span style="color: #a11;">&quot;message&quot;</span>: <span style="color: Teal;">str</span><span style="color: Olive;">&#40;</span>e<span style="color: Olive;">&#41;</span><span style="color: Olive;">&#125;</span><span style="color: Olive;">&#41;</span><span style="color: Gray;">,</span> <span style="color: Maroon;">500</span><br />
+<br />
+<br />
+<span style="color: Gray;">@</span>app.<span style="color: #05a;">route</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;/test&quot;</span><span style="color: Gray;">,</span> methods<span style="color: Gray;">=</span><span style="color: Olive;">&#91;</span><span style="color: #a11;">&quot;GET&quot;</span><span style="color: Olive;">&#93;</span><span style="color: Olive;">&#41;</span><br />
+<span style="color: Green;font-weight:bold;">def</span> test_page<span style="color: Olive;">&#40;</span><span style="color: Olive;">&#41;</span>:<br />
+&nbsp; &nbsp; <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; 一个简单的测试页面，方便测试 Webhook<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">return</span> <span style="color: #a11;">&quot;&quot;&quot;<br />
+&nbsp; &nbsp; &lt;html&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;body&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;h1&gt;测试 Webhook&lt;/h1&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;form action=&quot;/webhook&quot; method=&quot;post&quot;&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;textarea name=&quot;content&quot; placeholder=&quot;输入测试内容&quot;&gt;&lt;/textarea&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;br&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;button type=&quot;submit&quot;&gt;发送&lt;/button&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/form&gt;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/body&gt;<br />
+&nbsp; &nbsp; &lt;/html&gt;<br />
+&nbsp; &nbsp; &quot;&quot;&quot;</span><br />
+<br />
+<br />
+<span style="color: Green;font-weight:bold;">if</span> __name__ <span style="color: Gray;">==</span> <span style="color: #a11;">&quot;__main__&quot;</span>:<br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Webhook 服务器启动在 http://localhost:5000&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;Webhook 地址：http://localhost:5000/webhook&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; <span style="color: Green;font-weight:bold;">print</span><span style="color: Olive;">&#40;</span><span style="color: #a11;">&quot;测试页面：http://localhost:5000/test&quot;</span><span style="color: Olive;">&#41;</span><br />
+&nbsp; &nbsp; app.<span style="color: #05a;">run</span><span style="color: Olive;">&#40;</span>port<span style="color: Gray;">=</span><span style="color: Maroon;">5000</span><span style="color: Gray;">,</span> debug<span style="color: Gray;">=</span><span style="color: Teal;">True</span><span style="color: Olive;">&#41;</span><br />
+
+</div>
+</div>
+
+<p>运行这个服务器后，你可以在浏览器打开 http://localhost:5000/test 来测试，或者用 curl 发送测试请求：</p>
+
+<div class="example">
+<h2 class="example">实例</h2>
+<div class="example_code">
+
+<span style="color: #666666; font-style: italic;"># 发送测试 Webhook 请求</span><br />
+curl <span style="color: #660033;">-X</span> POST http:<span style="color: #000000; font-weight: bold;">//</span>localhost:<span style="color: #000000;">5000</span><span style="color: #000000; font-weight: bold;">/</span>webhook \<br />
+&nbsp; <span style="color: #660033;">-H</span> <span style="color: #a10;">&quot;Content-Type: application/json&quot;</span> \<br />
+&nbsp; <span style="color: #660033;">-d</span> <span style="color: #a10;">'{<br />
+&nbsp; &nbsp; &quot;content&quot;: &quot;runoob 的教程写得太好了！要是能多一些 AI 工作流的实战例子就更好了。&quot;<br />
+&nbsp; }'</span><br />
+
+</div>
+</div>
+
+<p>如果一切正常，你会看到 AI 返回的分类和摘要。</p>
+
+<blockquote>
+<p>生产环境使用 Webhook 时，记得加上验证机制——比如验证签名、检查来源 IP、使用 API Key。否则任何人都能向你的 Webhook 发送请求，可能导致安全问题。</p>
+</blockquote>
+
+<hr>
+
+<h2>实战项目合集</h2>
+
+<p>这一节我们给出三个完整的实战项目思路，你可以直接套用这些模板。</p>
+
+<h3>自动生成每日新闻简报</h3>
+
+<p>目标：每天早上自动收集行业新闻，AI 筛选并总结，发送到你的邮箱或 Slack。</p>
+
+<p>需要的工具：n8n/Make/Zapier、RSS 源、OpenAI、邮件/Slack。</p>
+
+<p>工作流步骤：</p>
+<ul>
+<li>
+<p>1. 定时触发器：每天早上 8 点触发。</p></li><li>
+
+<p>2. RSS 节点：读取你关注的几个行业媒体 RSS。</p></li><li>
+
+<p>3. 去重节点：过滤掉重复的新闻。</p></li><li>
+
+<p>4. OpenAI 节点：逐条阅读新闻，判断是否与你行业相关。</p></li><li>
+
+<p>5. OpenAI 节点：把相关新闻总结成摘要。</p></li><li>
+
+<p>6. OpenAI 节点：把所有摘要整理成一封邮件，加上标题和导语。</p></li><li>
+
+<p>7. 邮件节点：发送到你的邮箱。</p></li></ul>
+
+
+
+<p>提示词示例：</p>
+
+<pre>
+请阅读下面这篇新闻的标题和摘要，判断它是否与"AI 技术应用"相关。
+
+只需要回答"是"或"否"，不要解释。
+
+新闻标题：{{$json.title}}
+新闻摘要：{{$json.summary}}
+</pre>
+
+<h3>社交媒体内容自动发布</h3>
+
+<p>目标：根据产品动态，自动生成多平台社交媒体文案，审核后定时发布。</p>
+
+<p>需要的工具：Make/Zapier、Airtable、OpenAI、Buffer/Hootsuite。</p>
+
+<p>工作流步骤：</p>
+<ul>
+<li>
+<p>1. Airtable 触发器：当你在 Airtable 中添加一条"产品动态"记录时触发。</p></li><li>
+
+<p>2. OpenAI 节点：根据产品动态生成微博文案（活泼风格）。</p></li><li>
+
+<p>3. OpenAI 节点：根据产品动态生成 LinkedIn 文案（专业风格）。</p></li><li>
+
+<p>4. OpenAI 节点：根据产品动态生成 Twitter 文案（简洁风格）。</p></li><li>
+
+<p>5. Airtable 节点：把三个平台的文案写入"待审核"表格。</p></li><li>
+
+<p>6. Slack 节点：通知你有新内容待审核。</p></li><li>
+
+<p>7. （人工审核后）Buffer 节点：定时发布到各平台。</p></li></ul>
+
+
+
+<p>这个流程既自动化，又保留了人工审核的控制权——毕竟社交媒体直接面向客户，还是要把把关。</p>
+
+<h3>客户反馈自动分类</h3>
+
+<p>目标：收到客户反馈后，AI 自动分类、分析情感、分配给相应负责人。</p>
+
+<p>需要的工具：n8n、Typeform/表单工具、OpenAI、Airtable、Slack。</p>
+
+<p>工作流步骤：</p>
+<ul>
+<li>
+<p>1. Webhook 触发器：客户在网站提交反馈时触发。</p></li><li>
+
+<p>2. OpenAI 节点：分析反馈的情感（正面/中性/负面）。</p></li><li>
+
+<p>3. OpenAI 节点：分类反馈类型（Bug/功能请求/使用问题/感谢）。</p></li><li>
+
+<p>4. OpenAI 节点：提取关键词和优先级。</p></li><li>
+
+<p>5. Airtable 节点：把所有信息保存到反馈数据库。</p></li><li>
+
+<p>6. 条件分支：如果是负面反馈且高优先级，走紧急流程；否则走普通流程。</p></li><li>
+
+<p>7. Slack 节点：紧急反馈通知技术负责人，普通反馈通知客服。</p></li><li>
+
+<p>8. OpenAI 节点：生成一个礼貌的自动回复，感谢客户反馈。</p></li></ul>
+
+
+
+<p>9. 邮件节点：把自动回复发送给客户。</p>
+
+<p>这个流程能让客户立刻收到回复，同时内部也能快速响应重要问题。</p>
+
+<blockquote>
+<p>设计工作流的一个原则：<span class="marked">先自动化"收集、整理、分发"这些机械性工作，把"判断、决策、创意"留给人</span>。不要试图让 AI 做所有决定，人机协作效果最好。</p>
+</blockquote>
+
+<hr>
+
+<h2>三个工具对比总结</h2>
+
+<p>我们把 n8n、Make、Zapier 三个主流工具做一个全面对比，帮你选择：</p>
+
+<table class="reference">
+<tr><th>对比项</th><th>n8n</th><th>Make</th><th>Zapier</th></tr>
+<tr><td>开源</td><td>是</td><td>否</td><td>否</td></tr>
+<tr><td>自托管</td><td>支持</td><td>不支持</td><td>不支持</td></tr>
+<tr><td>免费方案</td><td>自托管完全免费</td><td>免费版限制操作数</td><td>免费版限制 Zaps 数</td></tr>
+<tr><td>连接应用数</td><td>数百个</td><td>数千个</td><td>6000+</td></tr>
+<tr><td>界面风格</td><td>可视化画布</td><td>精致画布</td><td>步骤表单</td></tr>
+<tr><td>学习曲线</td><td>中等</td><td>较低</td><td>最低</td></tr>
+<tr><td>企业功能</td><td>需付费版</td><td>完善</td><td>完善</td></tr>
+<tr><td>技术门槛</td><td>稍高（自托管）</td><td>低</td><td>最低</td></tr>
+<tr><td>适合人群</td><td>开发者、技术团队</td><td>中小企业、团队</td><td>个人、新手</td></tr>
+</table>
+
+			<!-- 其他扩展 -->
+						
+			</div>
+			
+		</div>
+
+
+<div class="archive-list" style="display:none;font-size: 14px;line-height: 1.8;margin-top: 20px;padding: 10px;">
+<div class="archive-list-item">
+    <div class="post-intro" style="width: 100%;" id="ai-info">
+	  AI 思考中...
+    </div>
+</div>
+</div>
+		
+		<div class="previous-next-links">
+			<div class="previous-design-link"><i style="font-size:16px;" class="fa fa-arrow-left" aria-hidden="true"></i> <a href="/ai/ai-multimodal.html" rel="prev"> AI 多模态</a> </div>
+			<div class="next-design-link"><a href="/ai/ai-product-design.html" rel="next"> AI 产品设计</a> <i style="font-size:16px;" class="fa fa-arrow-right" aria-hidden="true"></i></div>
+		</div>
+
+
+		
+		<div class="sidebar-box ">
+		
+
+		</div>
+		<!-- 笔记列表 -->
+		<style>
+.wrapper {
+  /*text-transform: uppercase; */
+  background: #ececec;
+  color: #555;
+  cursor: pointer;
+  font-family: "Gill Sans", Impact, sans-serif;
+  font-size: 20px;
+  position: relative;
+  text-align: center;
+  width: 200px;
+  -webkit-transform: translateZ(0); /* webkit flicker fix */
+  -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.wrapper .tooltip {
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: left;
+  background: #96b97d;
+  bottom: 100%;
+  color: #fff;
+  display: block;
+  left: -25px;
+  margin-bottom: 15px;
+  opacity: 0;
+  padding: 14px;
+  pointer-events: none;
+  position: absolute;
+  
+  -webkit-transform: translateY(10px);
+     -moz-transform: translateY(10px);
+      -ms-transform: translateY(10px);
+       -o-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: all .25s ease-out;
+     -moz-transition: all .25s ease-out;
+      -ms-transition: all .25s ease-out;
+       -o-transition: all .25s ease-out;
+          transition: all .25s ease-out;
+  -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+     -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+      -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+       -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+.tooltip a {
+	color:#fff;
+}
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.wrapper .tooltip:before {
+  bottom: -20px;
+  content: " ";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}  
+
+/* CSS Triangles - see Trevor's post */
+.wrapper .tooltip:after {
+  border-left: solid transparent 10px;
+  border-right: solid transparent 10px;
+  border-top: solid #96b97d 10px;
+  bottom: -10px;
+  content: " ";
+  height: 0;
+  left: 20%;
+  margin-left: -13px;
+  position: absolute;
+  width: 0;
+}
+.wrapper .tooltip1 {
+	margin-left: 50px;
+	padding-top: 0px;
+}
+/*
+.wrapper:hover .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateY(0px);
+     -moz-transform: translateY(0px);
+      -ms-transform: translateY(0px);
+       -o-transform: translateY(0px);
+          transform: translateY(0px);
+}
+*/
+/* IE can just show/hide with no transition */
+.lte8 .wrapper .tooltip {
+  display: none;
+}
+
+.lte8 .wrapper:hover .tooltip {
+  display: block;
+}
+
+</style>
+
+<link rel="stylesheet" href="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.css">
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.vanilla.js"></script>
+<script src="../static.char123.com/assets/upvotejs/dist/upvotejs/upvotejs.jquery.js"></script>
+<div id="respond" class="no_webshot"> 
+		<div class="comment-signarea" style=" padding: 20px 20px;"> 
+	<h3 class="text-muted" id="share_code" style="color: #799961;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> 点我分享笔记</h3>
+	<!--
+	<p style="font-size:14px;">笔记需要是本篇文章的内容扩展！</p><br>
+	<p style="font-size:12px;"><a href="/tougao.html" target="_blank">文章投稿，可点击这里</a></p>
+	<p style="font-size:14px;"><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>
+		<h3 class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> 分享笔记前必须<a href=";.html" class="runoob-pop">登录</a>！</h3>
+		<p><a href="/w3cnote/runoob-user-test-intro.html" target="_blank">注册邀请码获取方式</a></p>-->
+	</div>
+		
+	<form action="/wp-content/themes/runoob/option/addnote.php" method="post" id="commentform" style="display:none;">
+		<div class="comt">
+			<div class="comt-title">
+				<i style="font-size:36px;" class="fa fa-user-circle" aria-hidden="true"></i>				<p><a id="cancel-comment-reply-link" href=";.html">取消</a></p>
+			</div>
+			<div class="comt-box">
+			<div id="mded"></div>
+			
+				<div class="comt-ctrl">
+					<div class="comt-tips"><input type='hidden' name='comment_post_ID' value='31511' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</div>
+					<button type="submit" name="submit" id="submit" tabindex="5"><i class="fa fa-pencil" aria-hidden="true"></i> 分享笔记</button>
+				</div>
+			</div>
+		
+				
+					<div class="comt-comterinfo"> 
+						<ul id="comment-author-info">
+							<li class="form-inline"><label class="hide" for="author">昵称</label><input class="ipt" type="text" name="author" id="author" value="" tabindex="2" placeholder="昵称"><span class="text-muted">昵称 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="email">邮箱</label><input class="ipt" type="text" name="email" id="email" value="" tabindex="3" placeholder="邮箱"><span class="text-muted">邮箱 (必填)</span></li>
+							<li class="form-inline"><label class="hide" for="url">引用地址</label><input class="ipt" type="text" name="url" id="url" value="" tabindex="4" placeholder="引用地址"><span class="text-muted">引用地址</span></li>
+						</ul>
+					</div>
+				
+			
+		</div>
+
+	</form>
+	</div>
+<script type="text/javascript">
+$(function() {
+	//初始化编辑器
+	
+	var editor = new Simditor({
+	  textarea: $('#mded'),
+	  placeholder: '写笔记...',
+	  upload:false,
+	 // upload: {url:'/api/comment_upload_file.php',params: null,fileKey: 'upload_file',connectionCount: 1,leaveConfirm: '文件正在上传，您确定离开?'},
+	  defaultImage: 'https://www.runoob.com/images/logo.png',
+	  codeLanguages: '',
+	  autosave: 'editor-content',
+	  toolbar: [  'bold','code','ul','ol','image' ]
+	});
+	editor.on('selectionchanged', function() {
+		$(".code-popover").hide();
+	});
+
+	// 提交数据
+	$("#share_code").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		
+	});
+	$("#user_add_note").click(function() {
+		$(".comment-signarea").hide();
+		$("#commentform").show();
+		$('html, body').animate({
+       	    scrollTop: $("#respond").offset().top
+    	}, 200);
+	});
+
+	// 提交笔记
+	var commentform=$('#commentform');
+	commentform.prepend('<div id="comment-status" style="display:none;" ></div>');
+	var statusdiv=$('#comment-status');
+	
+	commentform.submit(function(e){
+		e.preventDefault();
+		var noteContent = editor.getValue();
+		// console.log(noteContent);
+		noteContent = noteContent.replace(/<pre><code>/g,"<pre>");
+		noteContent = noteContent.replace(/<\/code><\/pre>/g,"</pre>");
+		
+		// 系列化表单数据
+		var comment_parent = 0;
+		var is_user_logged_in = $("#is_user_logged_in").val();
+		var comment_post_ID =  31511;
+		var _wp_unfiltered_html_comment = $("#_wp_unfiltered_html_comment").val();
+		var comment = noteContent;
+		var author = $("#author").val();
+		var url = $("#url").val();
+		var email = $("#email").val();
+		if(isBlank(author) && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入昵称！</p>').show();
+		} else if(isBlank(email)  && is_user_logged_in==0) {
+			statusdiv.html('<p  class="ajax-error">请输入邮箱！</p>').show();
+		} else {
+			// var formdata=commentform.serialize() + "&comment=" + noteContent ;
+			// 添加状态信息
+			statusdiv.html('<p>Processing...</p>').show();
+			// 获取表单提交地址
+			var formurl=commentform.attr('action');
+			
+			// 异步提交
+			$.ajax({
+					type: 'post',
+					url: formurl,
+					dataType:'json',
+					data: {"comment_parent":comment_parent,"comment_post_ID":comment_post_ID, "_wp_unfiltered_html_comment":_wp_unfiltered_html_comment,"comment":comment,"url":url, "email":email,"author":author},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+					statusdiv.html('<p class="ajax-error" >数据不完整或表单提交太快了！</p>').show();
+				},
+				success: function(data, textStatus){
+					if(data.errorno=="0") {
+						$("#submit").prop('disabled', true);
+						statusdiv.html('<p class="ajax-success" >笔记已提交审核，感谢分享笔记！</p>').show();
+						alert('笔记已提交审核，感谢分享笔记！');
+					}else{
+						statusdiv.html('<p class="ajax-error" >'+data.msg+'</p>').show();
+					}
+					commentform.find('textarea[name=comment]').val('');
+				}
+			});
+			setTimeout(function(){
+		        $("#submit").prop('disabled', false);
+		    }, 10*1000);
+		}
+		return false;
+
+	});
+	$(".comt-author").click(function() {
+		href = $(this).children("a").attr("href");
+		if(href.indexOf("/note/")!=-1) {
+			var win = window.open(href, '_blank');
+  			win.focus();
+		}
+	});
+	$(".comt-meta span").hover(function(){
+		$(this).children(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).children(".tooltip").removeAttr("style");
+	});
+	/*
+	$(".wrapper i").hover(function(){
+		$(this).siblings(".tooltip").css({ "opacity": 1, "pointer-events": "auto"});
+	},function(){
+		$(this).siblings(".tooltip").css({ "opacity": 0, "pointer-events": "auto"});
+	});
+	*/
+	//Upvote.create('runoobvote-id', {callback: vote_callback});
+	var ajaxurl = 'https://www.runoob.com/wp-admin/admin-ajax.php';
+	var callback = function(data) {
+		//console.log($('#runoobvote-id').upvote('upvoted'));
+		//console.log($('#runoobvote-id').upvote('downvoted'));
+		//console.log(data);
+		_vote_action = data.action;
+		id_arr = data.id.split('-');
+		um_id= id_arr[2];
+		//console.log(um_id);
+		
+		var re = /^[1-9]+/;
+		if (re.test(um_id)) { 
+			var ajax_data = {
+				_vote_action: _vote_action,
+				action: "pinglun_zan",
+				um_id: um_id,
+				um_action: "ding"
+			};
+			//console.log(ajax_data);
+			$.post(ajaxurl,ajax_data,function(status){
+				//if(status.vote_num>999) {
+				//	_voteHtml = '<span style="display: block; text-align: center;font-size: 20px; color: #6a737c; margin: 8px 0;">'+kFormatter(status.vote_num) +'</span>';
+				//	$("#runoobvote-id-" + um_id + " .count").hide().after(_voteHtml);
+				//}
+				
+			});
+		}
+	};
+	if($('#comments').length && $('.upvotejs').length){
+		$('.upvotejs').upvote({id: 31511, callback: callback});
+	
+		$.post(ajaxurl,{"action":"pinglun_zan","postid":31511},function(data){  
+			$(data).each(function(key,value) {
+				$("#runoobvote-id-" + value.commid + " .upvote").addClass(value.upvotejs_class);
+				$("#runoobvote-id-" + value.commid + " .downvote").addClass(value.downvote_class);
+				$("#runoobvote-id-" + value.commid + " .count").text(value.upvote_count);
+			})
+		},'json');
+		
+	}
+	
+	
+});
+function isBlank(str) {
+    return (!str || /^\s*$/.test(str));
+}
+function kFormatter(num) {
+	// return num;
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+}
+
+</script>
+
+<link rel="stylesheet" href="../wp-content/themes/runoob/assets/css/qa.css">
+<link rel="stylesheet" type="text/css" href="../static.char123.com/assets/simditor/2.3.6/styles/simditor.min.css" />
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/module.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/hotkeys.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/uploader.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor.min.js"></script>
+<script type="text/javascript" src="../static.char123.com/assets/simditor/2.3.6/scripts/simditor-autosave.js"></script>
+	</div>
+</div>
+	
+
+<!-- 右边栏 -->
+<div class="fivecol last right-column">
+
+<style>
+.sidebar-tree .double-li {
+    width:300px;
+}
+.sidebar-tree .double-li li {
+    width: 44%;
+    line-height: 1.5em;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    display: inline;
+}
+</style>
+
+    
+        <div class="sidebar-box re-box re-box-large">
+        <div class="sidebar-box recommend-here" style="margin: 0 auto;">
+            <a href="void(0);.html" style="font-size: 16px; color:#64854c;font-weight:bold;"> <i class="fa fa-list" aria-hidden="true"></i> 分类导航</a>
+        </div>
+    <div class="sidebar-box sidebar-cate">
+        
+        <div class="sidebar-tree" >
+            <ul><li style="margin: 0;"><a href="void(0);.html" class="tit"> Python / 数据科学</a><ul class="double-li"><li><a title="Python 教程" href="/python3/python3-tutorial.html">Python 教程</a></li><li><a title="Python2.x 教程" href="/python/python-tutorial.html">Python2.x 教程</a></li><li><a title="FastAPI 教程" href="/fastapi/fastapi-tutorial.html">FastAPI 教程</a></li><li><a title="Flask 教程" href="/flask/flask-tutorial.html">Flask 教程</a></li><li><a title="Django 教程" href="/django/django-tutorial.html">Django 教程</a></li><li><a title="NumPy 教程" href="/numpy/numpy-tutorial.html">NumPy 教程</a></li><li><a title="Pandas 教程" href="/pandas/pandas-tutorial.html">Pandas 教程</a></li><li><a title="SciPy 教程" href="/scipy/scipy-tutorial.html">SciPy 教程</a></li><li><a title="Matplotlib 教程" href="/matplotlib/matplotlib-tutorial.html">Matplotlib 教程</a></li><li><a title="Dash 教程" href="/dash/dash-tutorial.html">Dash 教程</a></li><li><a title="Jupyter Notebook 教程" href="/jupyter-notebook/jupyter-notebook-tutorial.html">Jupyter Notebook 教程</a></li><li><a title="Pillow 教程" href="/pillow/pillow-tutorial.html">Pillow 教程</a></li><li><a title="量化交易" href="/qt/qt-tutorial.html">量化交易</a></li><li><a title="R 教程" href="/r/r-tutorial.html">R 教程</a></li><li><a title="Julia 教程" href="/julia/julia-tutorial.html">Julia 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> AI / 智能开发</a><ul class="double-li"><li><a title="AI Agent（智能体）" href="/ai-agent/ai-agent-tutorial.html">AI Agent（智能体）</a></li><li><a title="AI（人工智能）" href="/ai/ai-tutorial.html">AI（人工智能）</a></li><li><a title="Codex 教程" href="/codex/codex-tutorial.html">Codex 教程</a></li><li><a title="Vibe Coding 教程" href="/vibe-coding/vibe-coding-tutorial.html">Vibe Coding 教程</a></li><li><a title="Claude Code" href="/claude-code/claude-code-tutorial.html">Claude Code</a></li><li><a title="OpenCode" href="/opencode/opencode-tutorial.html">OpenCode</a></li><li><a title="Skills（技能）" href="/skills/skills-tutorial.html">Skills（技能）</a></li><li><a title="Ollama 教程" href="/ollama/ollama-tutorial.html">Ollama 教程</a></li><li><a title="Hermes Agent" href="/hermes-agent/hermes-agent-tutorial.html">Hermes Agent</a></li><li><a title="DeepSeek Harness" href="/deepseek-harness/deepseek-harness-tutorial.html">DeepSeek Harness</a></li><li><a title="Pi Agent" href="/pi-agent/pi-agent-tutorial.html">Pi Agent</a></li><li><a title="AI 数学基础" href="/ai-math/ai-math-tutorial.html">AI 数学基础</a></li><li><a title="TensorFlow 教程" href="/tensorflow/tensorflow-tutorial.html">TensorFlow 教程</a></li><li><a title="PyTorch 教程" href="/pytorch/pytorch-tutorial.html">PyTorch 教程</a></li><li><a title="Scikit-learn 教程" href="/sklearn/sklearn-tutorial.html">Scikit-learn 教程</a></li><li><a title="机器 教程" href="/ml/ml-tutorial.html">机器 教程</a></li><li><a title="LangChain" href="/langchain/langchain-tutorial.html">LangChain</a></li><li><a title="自然语言处理 NLP" href="/nlp/nlp-tutorial.html">自然语言处理 NLP</a></li><li><a title="OpenCV 教程" href="/opencv/opencv-tutorial.html">OpenCV 教程</a></li><li><a title="Selenium 教程" href="/selenium/selenium-tutorial.html">Selenium 教程</a></li><li><a title="Playwright 教程" href="/playwright/playwright-tutorial.html">Playwright 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 前端开发</a><ul class="double-li"><li><a title="HTML 教程" href="/html/html-tutorial.html">HTML 教程</a></li><li><a title="HTML5 教程" href="/html/html5-intro.html">HTML5 教程</a></li><li><a title="CSS 教程" href="/css/css-tutorial.html">CSS 教程</a></li><li><a title="CSS3 教程" href="/css3/css3-tutorial.html">CSS3 教程</a></li><li><a title="JavaScript 教程" href="/js/js-tutorial.html">JavaScript 教程</a></li><li><a title="HTML DOM 教程" href="/htmldom/htmldom-tutorial.html">HTML DOM 教程</a></li><li><a title="TypeScript 教程" href="/typescript/ts-tutorial.html">TypeScript 教程</a></li><li><a title="AJAX 教程" href="/ajax/ajax-tutorial.html">AJAX 教程</a></li><li><a title="JSON 教程" href="/json/json-tutorial.html">JSON 教程</a></li><li><a title="Tailwind CSS 教程" href="/tailwindcss/tailwindcss-tutorial.html">Tailwind CSS 教程</a></li><li><a title="Bootstrap4 教程" href="/bootstrap4/bootstrap4-tutorial.html">Bootstrap4 教程</a></li><li><a title="Bootstrap5 教程" href="/bootstrap5/bootstrap5-tutorial.html">Bootstrap5 教程</a></li><li><a title="Foundation 教程" href="/foundation/foundation-tutorial.html">Foundation 教程</a></li><li><a title="Vue.js 教程" href="/vue2/vue-tutorial.html">Vue.js 教程</a></li><li><a title="Vue3 教程" href="/vue3/vue3-tutorial.html">Vue3 教程</a></li><li><a title="React 教程" href="/react/react-tutorial.html">React 教程</a></li><li><a title="Next.js 教程" href="/nextjs/nextjs-tutorial.html">Next.js 教程</a></li><li><a title="AngularJS 教程" href="/angularjs/angularjs-tutorial.html">AngularJS 教程</a></li><li><a title="Angular 教程" href="/angularjs2/angularjs2-tutorial.html">Angular 教程</a></li><li><a title="jQuery 教程" href="/jquery/jquery-tutorial.html">jQuery 教程</a></li><li><a title="jQuery UI 教程" href="/jqueryui/jqueryui-tutorial.html">jQuery UI 教程</a></li><li><a title="jQuery EasyUI 教程" href="/jeasyui/jqueryeasyui-tutorial.html">jQuery EasyUI 教程</a></li><li><a title="ECharts 教程" href="/echarts/echarts-tutorial.html">ECharts 教程</a></li><li><a title="Chart.js 教程" href="/chartjs/chartjs-tutorial.html">Chart.js 教程</a></li><li><a title="Highcharts 教程" href="/highcharts/highcharts-tutorial.html">Highcharts 教程</a></li><li><a title="Google 地图 教程" href="/googleapi/google-maps-basic.html">Google 地图 教程</a></li><li><a title="SVG 教程" href="/svg/svg-tutorial.html">SVG 教程</a></li><li><a title="Font Awesome 教程" href="/font-awesome/fontawesome-tutorial.html">Font Awesome 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 后端开发</a><ul class="double-li"><li><a title="Node.js 教程" href="/nodejs/nodejs-tutorial.html">Node.js 教程</a></li><li><a title="Electron 教程" href="/electron/electron-tutorial.html">Electron 教程</a></li><li><a title="PHP 教程" href="/php/php-tutorial.html">PHP 教程</a></li><li><a title="Java 教程" href="/java/java-tutorial.html">Java 教程</a></li><li><a title="Go 教程" href="/go/go-tutorial.html">Go 教程</a></li><li><a title="Rust 教程" href="/rust/rust-tutorial.html">Rust 教程</a></li><li><a title="C# 教程" href="/csharp/csharp-tutorial.html">C# 教程</a></li><li><a title="Servlet 教程" href="/servlet/servlet-tutorial.html">Servlet 教程</a></li><li><a title="JSP 教程" href="/jsp/jsp-tutorial.html">JSP 教程</a></li><li><a title="ASP 教程" href="/asp/asp-tutorial.html">ASP 教程</a></li><li><a title="AppML 教程" href="/appml/appml-tutorial.html">AppML 教程</a></li><li><a title="VBScript 教程" href="/vbscript/vbscript-tutorial.html">VBScript 教程</a></li><li><a title="Swagger 教程" href="/swagger/swagger-tutorial.html">Swagger 教程</a></li><li><a title="RESTful API 教程" href="/restfulapi/restful-api-tutorial.html">RESTful API 教程</a></li><li><a title="Docker 教程" href="/docker/docker-tutorial.html">Docker 教程</a></li><li><a title="Linux 教程" href="/linux/linux-tutorial.html">Linux 教程</a></li><li><a title="ZooKeeper 教程" href="/w3cnote/zookeeper-tutorial.html">ZooKeeper 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 数据库</a><ul class="double-li"><li><a title="SQL 教程" href="/sql/sql-tutorial.html">SQL 教程</a></li><li><a title="MySQL 教程" href="/mysql/mysql-tutorial.html">MySQL 教程</a></li><li><a title="PostgreSQL 教程" href="/postgresql/postgresql-tutorial.html">PostgreSQL 教程</a></li><li><a title="SQLite 教程" href="/sqlite/sqlite-tutorial.html">SQLite 教程</a></li><li><a title="MongoDB 教程" href="/mongodb/mongodb-tutorial.html">MongoDB 教程</a></li><li><a title="Redis 教程" href="/redis/redis-tutorial.html">Redis 教程</a></li><li><a title="Memcached 教程" href="../memcached/memcached-tutorial.html">Memcached 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 移动开发</a><ul class="double-li"><li><a title="Android 教程" href="/w3cnote/android-tutorial-intro.html">Android 教程</a></li><li><a title="Flutter 教程" href="/flutter/flutter-tutorial.html">Flutter 教程</a></li><li><a title="Ionic 教程" href="/ionic/ionic-tutorial.html">Ionic 教程</a></li><li><a title="jQuery Mobile 教程" href="/jquerymobile/jquerymobile-tutorial.html">jQuery Mobile 教程</a></li><li><a title="Swift 教程" href="/swift/swift-tutorial.html">Swift 教程</a></li><li><a title="Kotlin 教程" href="/kotlin/kotlin-tutorial.html">Kotlin 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> DevOps / 工程化</a><ul class="double-li"><li><a title="Git 教程" href="/git/git-tutorial.html">Git 教程</a></li><li><a title="SVN 教程" href="/svn/svn-tutorial.html">SVN 教程</a></li><li><a title="CMake 教程" href="/cmake/cmake-tutorial.html">CMake 教程</a></li><li><a title="Maven 教程" href="/maven/maven-tutorial.html">Maven 教程</a></li><li><a title="VS Code 教程" href="/vscode/vscode-tutorial.html">VS Code 教程</a></li><li><a title="Obsidian 教程" href="/obsidian/obsidian-tutorial.html">Obsidian 教程</a></li><li><a title="PyCharm 教程" href="/pycharm/pycharm-tutorial.html">PyCharm 教程</a></li><li><a title="Eclipse 教程" href="/eclipse/eclipse-tutorial.html">Eclipse 教程</a></li><li><a title="Markdown 教程" href="/markdown/md-tutorial.html">Markdown 教程</a></li><li><a title="LaTeX 教程" href="/latex/latex-tutorial.html">LaTeX 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 编程语言</a><ul class="double-li"><li><a title="C 教程" href="/c/c-tutorial.html">C 教程</a></li><li><a title="C++ 教程" href="/cplusplus/cpp-tutorial.html">C++ 教程</a></li><li><a title="Zig 教程" href="/zig/zig-tutorial.html">Zig 教程</a></li><li><a title="Scala 教程" href="/scala/scala-tutorial.html">Scala 教程</a></li><li><a title="Ruby 教程" href="/ruby/ruby-tutorial.html">Ruby 教程</a></li><li><a title="Perl 教程" href="/perl/perl-tutorial.html">Perl 教程</a></li><li><a title="Lua 教程" href="/lua/lua-tutorial.html">Lua 教程</a></li><li><a title="Dart 教程" href="/dart/dart-tutorial.html">Dart 教程</a></li><li><a title="汇编语言 教程" href="/assembly/assembly-tutorial.html">汇编语言 教程</a></li><li><a title="Verilog 教程" href="/w3cnote/verilog-tutorial.html">Verilog 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 计算机基础</a><ul class="double-li"><li><a title="计算机组成原理" href="/computer-organization/computer-organization-tutorial.html">计算机组成原理</a></li><li><a title="数据结构与算法" href="/data-structures/data-structures-tutorial.html">数据结构与算法</a></li><li><a title="C 语言数据结构与算法" href="/c-dsa/c-dsa-tutorial.html">C 语言数据结构与算法</a></li><li><a title="设计模式" href="/design-pattern/design-pattern-tutorial.html">设计模式</a></li><li><a title="Python 设计模式" href="/python-design-pattern/python-design-pattern-tutorial.html">Python 设计模式</a></li><li><a title="正则表达式" href="/regexp/regexp-tutorial.html">正则表达式</a></li><li><a title="HTTP 教程" href="/http/http-tutorial.html">HTTP 教程</a></li><li><a title="TCP/IP 教程" href="/tcpip/tcpip-tutorial.html">TCP/IP 教程</a></li><li><a title="网络协议" href="/np/np-tutorial.html">网络协议</a></li><li><a title="W3C 教程" href="/w3c/w3c-tutorial.html">W3C 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> XML / Web Service</a><ul class="double-li"><li><a title="XML 教程" href="/xml/xml-tutorial.html">XML 教程</a></li><li><a title="DTD 教程" href="/dtd/dtd-tutorial.html">DTD 教程</a></li><li><a title="XML DOM 教程" href="/dom/dom-tutorial.html">XML DOM 教程</a></li><li><a title="XSLT 教程" href="/xsl/xsl-tutorial.html">XSLT 教程</a></li><li><a title="XPath 教程" href="/xpath/xpath-tutorial.html">XPath 教程</a></li><li><a title="XQuery 教程" href="/xquery/xquery-tutorial.html">XQuery 教程</a></li><li><a title="XLink 教程" href="/xlink/xlink-tutorial.html">XLink 教程</a></li><li><a title="XPointer 教程" href="/xlink/xlink-tutorial.html">XPointer 教程</a></li><li><a title="XML Schema 教程" href="/schema/schema-tutorial.html">XML Schema 教程</a></li><li><a title="XSL-FO 教程" href="/xslfo/xslfo-tutorial.html">XSL-FO 教程</a></li><li><a title="Web Service 教程" href="/webservices/webservices-tutorial.html">Web Service 教程</a></li><li><a title="WSDL 教程" href="/wsdl/wsdl-tutorial.html">WSDL 教程</a></li><li><a title="SOAP 教程" href="/soap/soap-tutorial.html">SOAP 教程</a></li><li><a title="RSS 教程" href="/rss/rss-tutorial.html">RSS 教程</a></li><li><a title="RDF 教程" href="/rdf/rdf-tutorial.html">RDF 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> .NET</a><ul class="double-li"><li><a title="ASP.NET 教程" href="/aspnet/aspnet-tutorial.html">ASP.NET 教程</a></li><li><a title="MVC 教程" href="/aspnet/mvc-intro.html">MVC 教程</a></li><li><a title="Razor 教程" href="/aspnet/razor-intro.html">Razor 教程</a></li><li><a title="Web Forms 教程" href="/aspnet/aspnet-intro.html">Web Forms 教程</a></li><li><a title="Web Pages 教程" href="/aspnet/webpages-intro.html">Web Pages 教程</a></li><li><a title="PowerShell 教程" href="/powershell/powershell-tutorial.html">PowerShell 教程</a></li></ul></li><li style="margin: 0;"><a href="void(0);.html" class="tit"> 网站建设</a><ul class="double-li"><li><a title="网站建设指南" href="/web/web-buildingprimer.html">网站建设指南</a></li><li><a title="浏览器信息" href="/browsers/browser-information.html">浏览器信息</a></li><li><a title="网站主机教程" href="/hosting/hosting-tutorial.html">网站主机教程</a></li><li><a title="网站品质" href="/quality/quality-tutorial.html">网站品质</a></li></ul></li></ul>            </div>
+    
+    </div>
+    </div>
+    <br>
+    
+    <div class="sidebar-box re-box re-box-large">
+        
+        
+    </div>
+</div></div>
+
+</div>
+
+<script>
+var aid = 31511;
+function coll() {
+	$.post( '/wp-content/themes/runoob/option/user/userinfo.php', {aid:aid, action:"collarticle", opt:'add'},function( data ) {
+		if(data.error==0) {
+			$("#content").find("h1:first").find("a").attr("href","javascript:void(0);");
+			$("#content").find("h1:first").find("img").attr("src","http://www.runoob.com/wp-content/themes/runoob/assets/img/coll2.png").css({width:32+"px",height:32+"px"});
+		}
+		alert(data.msg);
+	},'json');
+}
+
+(function () {
+    // 1. 仅 HTML 页面
+    if (!document.contentType || !document.contentType.includes('text/html')) return;
+
+    // 2. 容器判断
+    var container = document.querySelector('.article-intro');
+    if (!container) return;
+
+    var h1 = container.querySelector('h1');
+    if (!h1) return;
+
+    // 3. URL 判断
+    var url = window.location.href.toLowerCase();
+    var version = null;
+
+    if (url.includes('/python3/')) {
+        version = 'Python3.x';
+    } else if (url.includes('/python/')) {
+        version = 'Python2.x';
+    }
+
+    if (!version) return;
+
+    // 4. 防重复
+    if (h1.querySelector('.py-version-badge')) return;
+
+    // 5. 创建标签
+    var badge = document.createElement('span');
+    badge.className = 'py-version-badge';
+    badge.innerText = version;
+
+    // 6. 样式（核心：float 实现右上角）
+    badge.style.float = 'right';
+    badge.style.fontSize = '12px';
+    badge.style.padding = '2px 8px';
+    badge.style.borderRadius = '999px';
+
+   // 自适应亮/暗色 + 渐变背景（增强版）
+	badge.style.color = 'inherit';
+
+	// 渐变背景（低透明度，不影响暗黑模式）
+	if (version.includes('3')) {
+		badge.style.background = 'linear-gradient(90deg, rgba(79,172,254,0.15), rgba(0,242,254,0.15))';
+	} else {
+		badge.style.background = 'linear-gradient(90deg, rgba(161,140,209,0.15), rgba(251,194,235,0.15))';
+	}
+
+	// 边框弱化（更精致）
+	badge.style.border = '1px solid rgba(127,127,127,0.3)';
+
+	// 提升可读性
+	badge.style.opacity = '0.95';
+
+    // 微调位置（更贴近“右上角”）
+    badge.style.marginTop = '4px';
+    badge.style.marginLeft = '10px';
+
+    // 7. 插入到 h1 最前面（让 float 生效更稳定）
+    h1.insertBefore(badge, h1.firstChild);
+
+})();
+</script>
+
+
+<!-- 反馈对话框开始 -->
+
+<script src="../wp-content/themes/runoob/assets/js/runoob-article-dir.min.js"></script>
+<!-- 底部 -->
+<div id="footer" class="mar-t50">
+   <div class="runoob-block">
+    <div class="runoob cf">
+     <dl>
+      <dt>
+       在线实例
+      </dt>
+      <dd>
+       &middot;<a target="_blank" href="/html/html-examples.html">HTML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/css/css-examples.html">CSS 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/js/js-examples.html">JavaScript 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/ajx/ajax-examples.html">Ajax 实例</a>
+      </dd>
+       <dd>
+       &middot;<a target="_blank" href="/jquery/jquery-examples.html">jQuery 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/xml/xml-examples.html">XML 实例</a>
+      </dd>
+      <dd>
+       &middot;<a target="_blank" href="/java/java-examples.html">Java 实例</a>
+      </dd>
+     
+     </dl>
+     <dl>
+      <dt>
+      字符集&工具
+      </dt>
+      <dd>
+       &middot; <a target="_blank" href="/charsets/html-charsets.html">HTML 字符集设置</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-ascii.html">HTML ASCII 字符集</a>
+      </dd>
+     <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6939/">JS 混淆/加密</a>
+      </dd> 
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6232/">PNG/JPEG 图片压缩</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="/tags/html-colorpicker.html">HTML 拾色器</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/53">JSON 格式化工具</a>
+      </dd>
+      <dd>
+       &middot; <a target="_blank" href="https://www.jyshare.com/front-end/6680/">随机数生成器</a>
+      </dd>
+     </dl>
+     <dl>
+      <dt>
+       最新更新
+      </dt>
+                  <dd>
+              &middot;
+              <a href="/ollama/ollama-appendix-commands.html" title="Ollama 命令完整手册">
+                Ollama 命令完整...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-upgrade-migration.html" title="Ollama 版本升级与迁移">
+                Ollama 版本升级...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-troubleshooting.html" title="Ollama 常见问题">
+                Ollama 常见问题              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-agent-workflow.html" title="Ollama 多模型协作与 Agent 工作流">
+                Ollama 多模型协...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-chatgpt-webapp.html" title="Ollama 搭建类似 ChatGPT 网页应用">
+                Ollama 搭建类似...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-coding-assistant.html" title="Ollama 本地 AI 编程助手">
+                Ollama 本地 AI ...              </a>
+            </dd>
+                      <dd>
+              &middot;
+              <a href="/ollama/ollama-rag-project.html" title="Ollama RAG：本地私人知识库问答">
+                Ollama RAG：本...              </a>
+            </dd>
+               </dl>
+     <dl>
+      <dt>
+       站点信息
+      </dt>
+      <dd>
+       &middot;
+       <a href="admin@runoob.com.html" target="_blank" rel="external nofollow" >意见反馈</a>
+       </dd>
+      <dd>
+       &middot;
+      <a target="_blank" href="/disclaimer.html">免责声明</a>
+       </dd>
+      <dd>
+       &middot;
+       <a target="_blank" href="/aboutus.html">关于我们</a>
+       </dd>
+       <dd>
+       &middot;
+       <a target="_blank" href="/for-beginner-developers.html">写给初学者</a>
+       </dd>
+      <dd>
+       &middot; <a target="_blank" href="/archives.html">文章归档</a>
+      </dd>
+    
+     </dl>
+    
+     <div class="search-share">
+      <div class="app-download">
+        <div>
+         <strong>关注微信</strong>
+        </div>
+      </div>
+      <div class="share">
+      <img width="128" height="128" src="../wp-content/themes/runoob/assets/images/qrcode.png" />
+       </div>
+     </div>
+     
+    </div>
+   </div>
+   <div class="w-1000 copyright">
+     Copyright &copy; 2013-2026    <strong><a href="/index.html" target="_blank">菜鸟教程</a></strong>&nbsp;
+    <strong><a href="/index.html" target="_blank">runoob.com</a></strong> All Rights Reserved. 备案号：<a target="_blank" rel="nofollow" href="https://beian.miit.gov.cn/">闽ICP备15012807号-1</a>
+   </div>
+  </div>
+  <div class="fixed-btn">
+    <a class="go-top"    href="void(0).html" title="返回顶部">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+    <a class="bm-opener" href="void(0).html" title="收藏与历史">
+      <i class="fa fa-history"></i>
+    </a>
+    <a class="writer"    href="void(0).html" title="标记/收藏" style="display:none">
+      <i class="fa fa-bookmark-o"></i>
+      <span class="bm-badge"></span>
+    </a>
+  </div>
+
+<div style="display:none;">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84264393-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-84264393-2');
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3eec0b7da6548cf07db3bc477ea905ee";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</div>
+
+<script>
+window.jsui={
+    www: 'https://www.runoob.com',
+    uri: 'https://www.runoob.com/wp-content/themes/runoob'
+};
+</script>
+
+<script src="../static.char123.com/assets/libs/clipboard.min.js"></script>
+<script src="../static.char123.com/assets/libs/hl/run_prettify.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/main.min.js"></script>
+<script src="../wp-content/themes/runoob/assets/js/bookmark.js"></script>
+<script src="../static.char123.com/assets/libs/marked.umd.js"></script>
+</body>
+</html>
